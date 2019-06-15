@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace GrooveNoteAPI.Data.Migrations
+namespace GrooveNoteDAL.Data.Migrations
 {
     public partial class CreateIdentitySchema : Migration
     {
