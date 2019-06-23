@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using GrooveNoteAPI.Configurations;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
+using GrooveNoteAPI.Middlewares;
 
 namespace GrooveNoteAPI
 {
@@ -24,7 +26,7 @@ namespace GrooveNoteAPI
 
             Configuration = builder.Build();
         }
-              
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -34,7 +36,18 @@ namespace GrooveNoteAPI
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
-            });           
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
+                });
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -46,7 +59,7 @@ namespace GrooveNoteAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -62,10 +75,13 @@ namespace GrooveNoteAPI
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseCors("AllowAll");
-
             app.UseAuthentication();
+
+            ConfigureLog(loggerFactory);
+
+            RegisterMiddlewares(app);
+
             app.UseMvc(routes =>
             {
                 RegisterRouting(routes);

@@ -5,11 +5,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using GrooveNoteAPI.Models;
+using Microsoft.Extensions.Logging;
 
 namespace GrooveNoteAPI.Controllers
 {
     public class HomeController : Controller
     {
+        public HomeController(ILogger<HomeController> logger)
+        {
+            logger.LogError("HomeController is created as new instance", typeof(HomeController));
+        }
         public IActionResult Index()
         {
             return View();

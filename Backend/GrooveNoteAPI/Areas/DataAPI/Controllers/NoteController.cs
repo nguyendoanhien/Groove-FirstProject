@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using GrooveNoteDAL.Models.Note;
 using GrooveNoteDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Logging;
 
 namespace GrooveNoteAPI.Areas.DataAPI.Controllers
 {

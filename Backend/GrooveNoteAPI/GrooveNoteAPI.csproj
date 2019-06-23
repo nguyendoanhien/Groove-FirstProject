@@ -8,16 +8,22 @@
 
   <ItemGroup>
     <Compile Remove="Data\**" />
+    <Compile Remove="logs\**" />
     <Content Remove="Data\**" />
+    <Content Remove="logs\**" />
     <EmbeddedResource Remove="Data\**" />
+    <EmbeddedResource Remove="logs\**" />
     <None Remove="Data\**" />
+    <None Remove="logs\**" />
   </ItemGroup>
 
 
   <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="2.2.11" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
   </ItemGroup>
 
@@ -31,6 +37,13 @@
     <Folder Include="Areas\DataAPI\Data\" />
     <Folder Include="Areas\DataAPI\Models\" />
     <Folder Include="Areas\DataAPI\Views\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Update="log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
