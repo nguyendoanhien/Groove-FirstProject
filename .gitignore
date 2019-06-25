@@ -6,5 +6,5 @@
 /PersonalNotesAPI/.vs
 /PersonalNotesAPI/PersonalNotesAPI/obj
 
-Backend/GrooveNoteAPI/wwwroot/
 Backend/GrooveNoteAPI/logs
+Backend/GrooveNoteAPI/wwwroot/lib
