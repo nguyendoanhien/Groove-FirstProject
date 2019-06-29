@@ -4,7 +4,6 @@ import { AuthService } from '../auth/auth.service';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoginModel } from '../../account/login/login.model';
-import { UserProfileState } from '../../states/userprofile.state';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Subject, Observable } from 'rxjs';
 import { catchError, retry, map } from 'rxjs/operators';

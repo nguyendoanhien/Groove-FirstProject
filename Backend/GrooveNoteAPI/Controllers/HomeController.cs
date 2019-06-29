@@ -13,7 +13,7 @@ namespace GrooveNoteAPI.Controllers
     {
         public HomeController(ILogger<HomeController> logger)
         {
-            logger.LogError("HomeController is created as new instance", typeof(HomeController));
+            logger.LogTrace("HomeController is created as new instance", typeof(HomeController));
         }
         public IActionResult Index()
         {

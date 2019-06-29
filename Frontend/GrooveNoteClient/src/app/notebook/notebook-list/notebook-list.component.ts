@@ -1,14 +1,16 @@
-import {CollectionViewer, SelectionChange} from '@angular/cdk/collections';
-import {FlatTreeControl} from '@angular/cdk/tree';
-import {Component, Injectable, OnInit} from '@angular/core';
-import {BehaviorSubject, merge, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import { parse } from 'path';
+import { CollectionViewer, SelectionChange } from '@angular/cdk/collections';
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { Component, Injectable, OnInit } from '@angular/core';
+import { BehaviorSubject, merge, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { NotebookNodeModel, NodeType } from './notebook-node.model';
+
+
 
 /** Flat node with expandable and level information */
 export class DynamicFlatNode {
   constructor(public item: string, public level = 1, public expandable = false,
-              public isLoading = false) {}
+    public isLoading = false) { }
 }
 
 /**
@@ -22,6 +24,16 @@ export class DynamicDatabase {
     ['Apple', ['Fuji', 'Macintosh']],
     ['Onion', ['Yellow', 'White', 'Purple']]
   ]);
+  // dataMap = new Map<NotebookNodeModel, NotebookNodeModel[]>([
+  //   [new NotebookNodeModel(1, 'Fruits', NodeType.Notebook), [
+  //     new NotebookNodeModel(11, 'Apple', NodeType.Notebook),
+  //     new NotebookNodeModel(12, 'Orange', NodeType.Notebook),
+  //     new NotebookNodeModel(13, 'Banana', NodeType.Notebook)]],
+  //   [new NotebookNodeModel(2, 'Vegetables', NodeType.Notebook), [
+  //     new NotebookNodeModel(21, 'Tomato', NodeType.Notebook),
+  //     new NotebookNodeModel(22, 'Potato', NodeType.Notebook),
+  //     new NotebookNodeModel(23, 'Onion', NodeType.Notebook)]]
+  // ]);
 
   rootLevelNodes: string[] = ['Fruits', 'Vegetables'];
 
@@ -57,7 +69,7 @@ export class DynamicDataSource {
   }
 
   constructor(private _treeControl: FlatTreeControl<DynamicFlatNode>,
-              private _database: DynamicDatabase) {}
+    private _database: DynamicDatabase) { }
 
   connect(collectionViewer: CollectionViewer): Observable<DynamicFlatNode[]> {
     this._treeControl.expansionModel.onChange.subscribe(change => {
@@ -100,7 +112,7 @@ export class DynamicDataSource {
       } else {
         let count = 0;
         for (let i = index + 1; i < this.data.length
-          && this.data[i].level > node.level; i++, count++) {}
+          && this.data[i].level > node.level; i++ , count++) { }
         this.data.splice(index + 1, count);
       }
 
@@ -138,7 +150,7 @@ export class NotebookListComponent implements OnInit {
 
   hasChild = (_: number, _nodeData: DynamicFlatNode) => _nodeData.expandable;
 
-  nodeClick(node){
+  nodeClick(node) {
     debugger;
     alert(JSON.stringify(node));
   }
