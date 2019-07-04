@@ -1,0 +1,29 @@
+<div>
+  <span>Name:</span> <input type="text" [(ngModel)]="fromUser">
+  <button (click)="joinToHub()">Join</button>
+</div>
+
+<div>
+  <span>Group:</span> <input [(ngModel)]="groupName">
+  <button (click)="connectToGroup()">Join to group</button>
+</div>
+
+
+<div>
+  <span>New message: </span>
+  <input type="text" [(ngModel)]="newMessage" required>
+  <br>
+  <span><input type="text" [(ngModel)]="toUser"></span>
+  <button (click)="sendToUser()">Send to user</button>
+  <br>
+  <button (click)="sendToGroup()">Send to group</button>
+</div>
+
+
+<div>
+  <ol>
+    <li *ngFor="let message of messages;">
+      {{message.from}} : {{message.payload}}
+    </li>
+  </ol>
+</div>

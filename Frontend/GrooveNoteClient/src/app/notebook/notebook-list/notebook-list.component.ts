@@ -151,7 +151,6 @@ export class NotebookListComponent implements OnInit {
   hasChild = (_: number, _nodeData: DynamicFlatNode) => _nodeData.expandable;
 
   nodeClick(node) {
-    debugger;
     alert(JSON.stringify(node));
   }
 }

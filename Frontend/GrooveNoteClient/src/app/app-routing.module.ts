@@ -12,6 +12,10 @@ const routes: Routes = [
     path: 'notebook',
     loadChildren: () => import('./notebook/notebook.module').then(mod => mod.NotebookModule)
   },
+  {
+    path: 'chat',
+    loadChildren: () => import('./chat/chat.module').then(mod => mod.ChatModule)
+  },
   { path: '**', component: PageNotFoundComponent }
 ];
 

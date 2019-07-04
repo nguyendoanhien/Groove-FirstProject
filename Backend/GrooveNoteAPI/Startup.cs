@@ -9,6 +9,7 @@ using GrooveNoteAPI.Configurations;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using GrooveNoteAPI.Middlewares;
+using GrooveNoteAPI.Hubs;
 
 namespace GrooveNoteAPI
 {
@@ -40,13 +41,23 @@ namespace GrooveNoteAPI
 
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll",
+                options.AddPolicy("AllowAPIClient",
                 builder =>
                 {
                     builder.AllowAnyOrigin()
                            .AllowAnyHeader()
-                           .AllowAnyMethod();
+                           .AllowAnyMethod()
+                           .AllowCredentials();
                 });
+
+                options.AddPolicy("AllowHubClient",
+               builder =>
+               {
+                   builder.WithOrigins("http://localhost:4200")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
+               });
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -56,6 +67,9 @@ namespace GrooveNoteAPI
             RegisterAutoMapperProfiles(services);
 
             DiConfiguration.Register(services);
+
+            // Register SignalR
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,17 +89,29 @@ namespace GrooveNoteAPI
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCors("AllowAll");
+
+            //app.UseCors("AllowAPIClient");
+            app.UseCors("AllowHubClient");
+
+
             app.UseAuthentication();
 
             ConfigureLog(loggerFactory);
 
             RegisterMiddlewares(app);
 
+            // Using SignalR
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<MessageHub>("/chatHub");
+            });
+
             app.UseMvc(routes =>
             {
                 RegisterRouting(routes);
             });
+
+
         }
     }
 }
