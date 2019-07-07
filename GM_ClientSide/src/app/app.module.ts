@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
@@ -19,32 +19,29 @@ import { fuseConfig } from 'app/fuse-config';
 import { AppComponent } from 'app/app.component';
 import { LayoutModule } from 'app/layout/layout.module';
 // services
-import {ChatService} from './apps/chat/chat.service';
+import { ChatService } from './apps/chat/chat.service';
 import { FakeDbService } from './fake-api/fake-api.service';
-const appRoutes: Routes = [
-    {
-        path        : 'apps',
-        loadChildren: './apps/apps.module#AppsModule'
-    },
-    {
-        path      : '**',
-        redirectTo: './apps/apps.module#AppsModule'
-    }
-];
+import { AppRoutingModule } from './app-routing.module';
+import { TokenHttpInterceptor } from './core/auth/token.httpinterceptor';
+import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
+import { UserProfileService } from './core/identity/userprofile.service';
+import { AuthService } from './core/auth/auth.service';
+import { AuthRouteGuardService } from './core/auth/authrouteguard.service';
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
+        PageNotFoundComponent
     ],
-    imports     : [
+    imports: [
         BrowserModule,
         BrowserAnimationsModule,
         HttpClientModule,
-        RouterModule.forRoot(appRoutes),
+        AppRoutingModule,
 
         TranslateModule.forRoot(),
         InMemoryWebApiModule.forRoot(FakeDbService, {
-            delay             : 0,
+            delay: 0,
             passThruUnknownUrl: true
         }),
         // Material moment date module
@@ -64,11 +61,20 @@ const appRoutes: Routes = [
         // App modules
         LayoutModule
     ],
-    bootstrap   : [
+    bootstrap: [
         AppComponent
     ],
-    providers:[ChatService]
+    providers: [
+        ChatService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: TokenHttpInterceptor,
+            multi: true
+        },
+        UserProfileService,
+        AuthService,
+        AuthRouteGuardService],
+       
 })
-export class AppModule
-{
+export class AppModule {
 }

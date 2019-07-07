@@ -3,7 +3,7 @@
 ################################################################################
 
 /.vs/Backend
-/GrooveNoteAPI/bin/Debug/netcoreapp2.2
-/GrooveNoteAPI/obj
-/GrooveNoteDAL/bin/Debug/netcoreapp2.2
-/GrooveNoteDAL/obj
+/GrooveMessengerAPI/bin/Debug/netcoreapp2.2
+/GrooveMessengerAPI/obj
+/GrooveMessengerDAL/bin/Debug/netcoreapp2.2
+/GrooveMessengerDAL/obj
