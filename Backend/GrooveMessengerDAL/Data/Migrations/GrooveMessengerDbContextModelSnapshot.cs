@@ -4,63 +4,20 @@ using GrooveMessengerDAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace GrooveMessengerDAL.Data.Migrations
+namespace GrooveMessengerDAL.Migrations
 {
-    [DbContext(typeof(GrooveNoteDbContext))]
-    [Migration("20190614101600_AddTableNotes")]
-    partial class AddTableNotes
+    [DbContext(typeof(GrooveMessengerDbContext))]
+    partial class GrooveMessengerDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("GrooveMessengerDAL.Entities.NoteEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnName("CreatedBy");
-
-                    b.Property<DateTime?>("CreatedOn")
-                        .IsRequired()
-                        .HasColumnName("CreatedOn");
-
-                    b.Property<bool?>("Deleted")
-                        .HasColumnName("Deleted");
-
-                    b.Property<string>("Description")
-                        .HasColumnName("Description")
-                        .HasMaxLength(255);
-
-                    b.Property<byte[]>("Timestamp")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnName("Title")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnName("UpdatedBy");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnName("UpdatedOn");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Notes");
-                });
 
             modelBuilder.Entity("GrooveMessengerDAL.Models.ApplicationUser", b =>
                 {
@@ -71,6 +28,9 @@ namespace GrooveMessengerDAL.Data.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
+
+                    b.Property<string>("DisplayName")
+                        .HasMaxLength(50);
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);

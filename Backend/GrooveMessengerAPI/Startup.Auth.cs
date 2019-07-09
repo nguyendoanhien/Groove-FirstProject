@@ -6,12 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using GrooveMessengerDAL;
 using GrooveMessengerDAL.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace GrooveMessengerAPI
 {
@@ -76,7 +74,7 @@ namespace GrooveMessengerAPI
 
         public void RegisterIdentity(IServiceCollection services)
         {
-            services.AddDbContext<GrooveNoteDbContext>(options =>
+            services.AddDbContext<GrooveMessengerDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
@@ -87,7 +85,7 @@ namespace GrooveMessengerAPI
                     options.Lockout.MaxFailedAccessAttempts = 5;
                     options.Lockout.AllowedForNewUsers = true;
                 })
-                .AddEntityFrameworkStores<GrooveNoteDbContext>()
+                .AddEntityFrameworkStores<GrooveMessengerDbContext>()
                 .AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>
@@ -108,7 +106,6 @@ namespace GrooveMessengerAPI
                 // User settings
                 options.User.RequireUniqueEmail = true;
             });
-
             services.ConfigureApplicationCookie(options =>
             {
                 // Cookie settings

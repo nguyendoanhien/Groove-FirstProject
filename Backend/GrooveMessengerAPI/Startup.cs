@@ -73,7 +73,7 @@ namespace GrooveMessengerAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -99,7 +99,7 @@ namespace GrooveMessengerAPI
             ConfigureLog(loggerFactory);
 
             RegisterMiddlewares(app);
-
+            SeedRootUserDatabase(serviceProvider);
             // Using SignalR
             app.UseSignalR(routes =>
             {

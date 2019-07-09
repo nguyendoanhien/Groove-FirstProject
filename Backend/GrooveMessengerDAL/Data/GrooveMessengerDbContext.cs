@@ -7,22 +7,20 @@ using Microsoft.EntityFrameworkCore;
 using GrooveMessengerDAL.Entities;
 using GrooveMessengerDAL.Models;
 using GrooveMessengerDAL.Services.Interface;
-using GrooveMessengerDAL.Configurations;
 
 namespace GrooveMessengerDAL.Data
 {
-    public class GrooveNoteDbContext : IdentityDbContext<ApplicationUser>
+    public class GrooveMessengerDbContext : IdentityDbContext<ApplicationUser>
     {
         private readonly IUserResolverService _userResolverService;
 
-        public GrooveNoteDbContext(DbContextOptions<GrooveNoteDbContext> options,
+        public GrooveMessengerDbContext(DbContextOptions<GrooveMessengerDbContext> options,
             IUserResolverService userResolverService)
             : base(options)
         {
             _userResolverService = userResolverService;
         }
-
-        public GrooveNoteDbContext(DbContextOptions<GrooveNoteDbContext> options)
+        public GrooveMessengerDbContext(DbContextOptions<GrooveMessengerDbContext> options)
             : base(options)
         {
         }
@@ -34,7 +32,7 @@ namespace GrooveMessengerDAL.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
 
-            builder.ApplyConfiguration(new NoteMappingConfiguration());
+            // builder.ApplyConfiguration(new NoteMappingConfiguration());
         }
 
         private void SaveChangeOverride()
@@ -92,7 +90,7 @@ namespace GrooveMessengerDAL.Data
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
 
-        public DbSet<NoteEntity> Notes { get; set; }
+        //public DbSet<NoteEntity> Notes { get; set; }
 
     }
 }
