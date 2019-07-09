@@ -14,7 +14,6 @@ namespace GrooveMessengerAPI.Controllers
         }
         public IActionResult Index()
         {
-            throw new NullReferenceException("sadsadsa");
             return View();
         }
 
