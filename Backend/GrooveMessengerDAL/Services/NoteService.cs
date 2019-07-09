@@ -12,13 +12,13 @@ namespace GrooveMessengerDAL.Services
 {
     public class NoteService : INoteService
     {
-        private IGenericRepository<NoteEntity, int, GrooveNoteDbContext> _noteRepository;
+        private IGenericRepository<NoteEntity, int, GrooveMessengerDbContext> _noteRepository;
         private IMapper _mapper;
-        private IUowBase<GrooveNoteDbContext> _uow;
+        private IUowBase<GrooveMessengerDbContext> _uow;
 
         public NoteService(
-            IGenericRepository<NoteEntity, int, GrooveNoteDbContext> notesRepo,
-            IUowBase<GrooveNoteDbContext> uow,
+            IGenericRepository<NoteEntity, int, GrooveMessengerDbContext> notesRepo,
+            IUowBase<GrooveMessengerDbContext> uow,
             IMapper mapper
             )
         {

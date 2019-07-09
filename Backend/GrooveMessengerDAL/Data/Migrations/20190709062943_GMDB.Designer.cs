@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace GrooveMessengerDAL.Data.Migrations
+namespace GrooveMessengerDAL.Migrations
 {
-    [DbContext(typeof(GrooveNoteDbContext))]
-    [Migration("20190614101455_UpdateIdentitySchema")]
-    partial class UpdateIdentitySchema
+    [DbContext(typeof(GrooveMessengerDbContext))]
+    [Migration("20190709062943_GMDB")]
+    partial class GMDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -30,6 +30,9 @@ namespace GrooveMessengerDAL.Data.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
+
+                    b.Property<string>("DisplayName")
+                        .HasMaxLength(50);
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
