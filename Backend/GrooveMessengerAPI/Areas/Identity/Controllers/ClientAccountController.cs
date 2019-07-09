@@ -26,7 +26,6 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             _logger = logger;
             _config = config;
         }
-
         [HttpGet]
         [Route("")]
         [Route("index")]
@@ -44,10 +43,11 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             return Ok();
         }
         [HttpPost("confirmemail")]
-        public async Task<IActionResult> ConfirmEmail([FromBody]RegisterModel model)
+        public async Task<IActionResult> ConfirmEmail([FromBody]EmailConfirmationModel model)
         {
             return Ok();
         }
+
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(LoginModel data)
