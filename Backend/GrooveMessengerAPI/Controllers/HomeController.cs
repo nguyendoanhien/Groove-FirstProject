@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using GrooveMessengerAPI.Models;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace GrooveMessengerAPI.Controllers
 {
@@ -17,6 +14,7 @@ namespace GrooveMessengerAPI.Controllers
         }
         public IActionResult Index()
         {
+            throw new NullReferenceException("sadsadsa");
             return View();
         }
 

@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
+using GrooveMessengerAPI.Areas.Identity.Models;
 using GrooveMessengerAPI.Auth;
 using GrooveMessengerDAL.Models;
 using Microsoft.AspNetCore.Identity;
@@ -12,20 +14,15 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
     [ApiController]
     public class ClientAccountController : ControllerBase
     {
-        public class LoginModel
-        {
-            public string Username { get; set; }
-            public string Password { get; set; }
-
-        }
-
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly ILogger<LoginModel> _logger;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<ClientAccountController> _logger;
         private readonly IConfiguration _config;
 
-        public ClientAccountController(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, IConfiguration config)
+        public ClientAccountController(SignInManager<ApplicationUser> signInManager, ILogger<ClientAccountController> logger, UserManager<ApplicationUser> userManager, IConfiguration config)
         {
             _signInManager = signInManager;
+            _userManager = userManager;
             _logger = logger;
             _config = config;
         }
@@ -37,8 +34,20 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
         {
             return Ok();
         }
-
-
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody]RegisterModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+        [HttpPost("confirmemail")]
+        public async Task<IActionResult> ConfirmEmail([FromBody]RegisterModel model)
+        {
+            return Ok();
+        }
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(LoginModel data)
