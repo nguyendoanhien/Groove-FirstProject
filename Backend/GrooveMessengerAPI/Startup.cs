@@ -10,6 +10,7 @@ using AutoMapper;
 using Microsoft.Extensions.Logging;
 using GrooveMessengerAPI.Middlewares;
 using GrooveMessengerAPI.Hubs;
+using GrooveMessengerAPI.Auth;
 
 namespace GrooveMessengerAPI
 {
@@ -70,6 +71,7 @@ namespace GrooveMessengerAPI
 
             // Register SignalR
             services.AddSignalR();
+            services.AddScoped<IAuthEmailSenderUtil, AuthEmailSenderUtil>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
