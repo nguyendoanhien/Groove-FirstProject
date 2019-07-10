@@ -8,7 +8,7 @@ namespace GrooveMessengerAPI
         public void RegisterMiddlewares(IApplicationBuilder builder)
         {
             //builder.UseAuthorizationTokenCheckMiddleware();
-            builder.UseClientCheckMiddlewareMiddleware();
+            // builder.UseClientCheckMiddlewareMiddleware();
         }
     }
 }
