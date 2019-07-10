@@ -2,9 +2,10 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
+import {Router} from "@angular/router"
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
+import { RegisterModel } from './register.model';
 
 @Component({
     selector     : 'register',
@@ -16,14 +17,13 @@ import { fuseAnimations } from '@fuse/animations';
 export class RegisterComponent implements OnInit, OnDestroy
 {
     registerForm: FormGroup;
-
+    isAcceptTerms:boolean = false;
+    isLoading:boolean = false;
+    registerModel:RegisterModel;
     // Private
     private _unsubscribeAll: Subject<any>;
-
-    constructor(
-        private _fuseConfigService: FuseConfigService,
-        private _formBuilder: FormBuilder
-    )
+    
+    constructor(private _fuseConfigService: FuseConfigService, private _formBuilder: FormBuilder, private _router: Router)
     {
         // Configure the layout
         this._fuseConfigService.config = {
@@ -42,25 +42,33 @@ export class RegisterComponent implements OnInit, OnDestroy
                 }
             }
         };
-
         // Set the private defaults
         this._unsubscribeAll = new Subject();
     }
-
+    /**
+     * On click events
+     */
+    onCreateAnAccount(){
+        console.log(this.registerModel);
+        // handle here - if register successful please redirect to /account/mail-confirmation
+        this.isLoading = true;
+        // this._router.navigate(['/account/mail-confirmation']);
+    }
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
     // -----------------------------------------------------------------------------------------------------
-
+    
     /**
      * On init
      */
     ngOnInit(): void
     {
+        this.registerModel = new RegisterModel();
         this.registerForm = this._formBuilder.group({
-            name           : ['', Validators.required],
-            email          : ['', [Validators.required, Validators.email]],
-            password       : ['', Validators.required],
-            passwordConfirm: ['', [Validators.required, confirmPasswordValidator]]
+            name           : [this.registerModel.name, [Validators.required,Validators.minLength(6),]],
+            email          : [this.registerModel.email, [Validators.required, Validators.email]],
+            password       : [this.registerModel.password, [Validators.required,Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)]],
+            passwordConfirm: ['Haunc10081997', [Validators.required, confirmPasswordValidator]]
         });
 
         // Update the validity of the 'passwordConfirm' field

@@ -21,6 +21,7 @@ import { LayoutModule } from 'app/layout/layout.module';
 // services
 import { ChatService } from './apps/chat/chat.service';
 import { FakeDbService } from './fake-api/fake-api.service';
+import {} from './core/identity/register.service';
 import { AppRoutingModule } from './app-routing.module';
 import { TokenHttpInterceptor } from './core/auth/token.httpinterceptor';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
