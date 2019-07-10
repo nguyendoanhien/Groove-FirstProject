@@ -2381,7 +2381,7 @@
       ]
     },
     "System.IO/4.3.0": {
-      "sha512": "3qjaHvxQPDpSOYICjUoTsmoq5u6QJAFRUITgeT/4gqkF1bajbSmb1kwSxEA8AHlofqgcKJcM8udgieRNhaJ5Cg==",
+      "sha512": "wVjuisvgQIn8q+OPFrm3cLzZYVtuUmZMt8DhQIijFYYe/ZIE4+WG2cgRd4KFIxSaaYoNIcw8Yo0T5xrMQSbwaw==",
       "type": "package",
       "path": "system.io/4.3.0",
       "files": [
@@ -2615,7 +2615,7 @@
       ]
     },
     "System.Linq.Queryable/4.0.1": {
-      "sha512": "Yn/WfYe9RoRfmSLvUt2JerP0BTGGykCZkQPgojaxgzF2N0oPo+/AhB8TXOpdCcNlrG3VRtsamtK2uzsp3cqRVw==",
+      "sha512": "Bqfh3YEMS1iyOcwNLs1ay2/lRqh2PcpV9Z4oP/fQ5/AqjFsb9jHIaR/csi87CqcZsmG0bc49/LH0bMVxVbeBqg==",
       "type": "package",
       "path": "system.linq.queryable/4.0.1",
       "files": [
@@ -2767,7 +2767,7 @@
       ]
     },
     "System.Reflection/4.3.0": {
-      "sha512": "KMiAFoW7MfJGa9nDFNcfu+FpEdiHpWgTcS2HdMpDvt9saK3y/G4GwprPyzqjFH9NTaGPQeWNHU+iDlDILj96aQ==",
+      "sha512": "RKh7q8jZ/6FsFzE1CGaEasPMNVRlC4cDJMaPfo6cdZerfBOHbROUv1vij/1rNlgBbdzPWeLL9j+HNXwV4SDrEQ==",
       "type": "package",
       "path": "system.reflection/4.3.0",
       "files": [
@@ -2847,7 +2847,7 @@
       ]
     },
     "System.Reflection.Emit/4.3.0": {
-      "sha512": "228FG0jLcIwTVJyz8CLFKueVqQK36ANazUManGaJHkO0icjiIypKW7YLWLIWahyIkdh5M7mV2dJepllLyA1SKg==",
+      "sha512": "oPh02eG2TTJ8giTLUw49aozrO+udEVwGsfDwulG7VVzx/futXQh+CG9SOJ/wCNSJFGAaY26/HEUO/O1iTNuWOw==",
       "type": "package",
       "path": "system.reflection.emit/4.3.0",
       "files": [
@@ -2882,7 +2882,7 @@
       ]
     },
     "System.Reflection.Emit.ILGeneration/4.3.0": {
-      "sha512": "59tBslAk9733NXLrUJrwNZEzbMAcu8k344OYo+wfSVygcgZ9lgBdGIzH/nrg3LYhXceynyvTc8t5/GD4Ri0/ng==",
+      "sha512": "EkSI+SuAVTbqpKuzDNtC7FmKv5fHXmZk/AfVJ/Uswm/iEyc6hbV3x/7nQ+uHAPJ8PGQ7+suuHX3Fm2JqW/6iGg==",
       "type": "package",
       "path": "system.reflection.emit.ilgeneration/4.3.0",
       "files": [
@@ -3014,7 +3014,7 @@
       ]
     },
     "System.Reflection.Primitives/4.3.0": {
-      "sha512": "5RXItQz5As4xN2/YUDxdpsEkMhvw3e6aNveFXUn4Hl/udNTCNhnKp8lT9fnc3MhvGKh1baak5CovpuQUXHAlIA==",
+      "sha512": "z51ojy4IhXfVW9VI9mKTfkQO3K3QmbKGoRc81HlTT5/Rnxafw1rZEBxRRK76QgQ7q1VDGSMfNbBbZBV9mv/T8A==",
       "type": "package",
       "path": "system.reflection.primitives/4.3.0",
       "files": [
@@ -3179,7 +3179,7 @@
       ]
     },
     "System.Runtime/4.3.0": {
-      "sha512": "JufQi0vPQ0xGnAczR13AUFglDyVYt4Kqnz1AZaiKZ5+GICq0/1MH/mO/eAJHt/mHW1zjKBJd7kV26SrxddAhiw==",
+      "sha512": "wvZ4BEqPcLjWym7WrHwvkJHu+4O7s+yOHcJ3EzJ9oOuEXySDo8ULZTTM/8+j+TB3WctEfW0ceYzfcNvMHR7dyg==",
       "type": "package",
       "path": "system.runtime/4.3.0",
       "files": [
@@ -3460,7 +3460,7 @@
       ]
     },
     "System.Text.Encoding/4.3.0": {
-      "sha512": "BiIg+KWaSDOITze6jGQynxg64naAPtqGHBwDrLaCtixsa5bKiR8dpPOHA7ge3C0JJQizJE+sfkz1wV+BAKAYZw==",
+      "sha512": "YmgU2CaTBegWhHMFJgKMNwb/ou6EbY/8PVHqddeJ4peLz5gU+E7Hc67Qb3f1cA1iakwk4iYb/970HSXaUAUYJA==",
       "type": "package",
       "path": "system.text.encoding/4.3.0",
       "files": [
@@ -3645,7 +3645,7 @@
       ]
     },
     "System.Threading.Tasks/4.3.0": {
-      "sha512": "LbSxKEdOUhVe8BezB/9uOGGppt+nZf6e1VFyw6v3DN6lqitm0OSn2uXMOdtP0M3W4iMcqcivm2J6UgqiwwnXiA==",
+      "sha512": "Vl4fV3VQm9CKUFV2TgCsybZ5ZSorCmgM77JBHMSIENLrsNTxa8l4itO8ZPTxFsziLsoDoAiC5LH8rFKJfdT3jQ==",
       "type": "package",
       "path": "system.threading.tasks/4.3.0",
       "files": [
@@ -3724,23 +3724,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\intern05\\.nuget\\packages\\": {},
+    "C:\\Users\\intern04\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\intern05\\Documents\\gm\\Backend\\GrooveMessengerDAL\\GrooveMessengerDAL.csproj",
+      "projectUniqueName": "C:\\Users\\intern04\\Desktop\\MiniProject\\Backend\\GrooveMessengerDAL\\GrooveMessengerDAL.csproj",
       "projectName": "GrooveMessengerDAL",
-      "projectPath": "C:\\Users\\intern05\\Documents\\gm\\Backend\\GrooveMessengerDAL\\GrooveMessengerDAL.csproj",
-      "packagesPath": "C:\\Users\\intern05\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\intern05\\Documents\\gm\\Backend\\GrooveMessengerDAL\\obj\\",
+      "projectPath": "C:\\Users\\intern04\\Desktop\\MiniProject\\Backend\\GrooveMessengerDAL\\GrooveMessengerDAL.csproj",
+      "packagesPath": "C:\\Users\\intern04\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\intern04\\Desktop\\MiniProject\\Backend\\GrooveMessengerDAL\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\intern05\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\intern04\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
