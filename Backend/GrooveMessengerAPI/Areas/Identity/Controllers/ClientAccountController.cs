@@ -1,5 +1,11 @@
-﻿using System.Net;
+﻿using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
+using crypto;
+using Google.Apis.Auth;
 using GrooveMessengerAPI.Areas.Identity.Models;
 using GrooveMessengerAPI.Auth;
 using GrooveMessengerDAL.Models;
@@ -7,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
 {
@@ -69,5 +76,86 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             }
             return Unauthorized("Password is incorrect");
         }
+        [HttpPost]
+        [Route("logingoogle")]
+        public async Task<ObjectResult> LoginGoogle(string accessToken)
+        {
+            try
+            {
+                //SimpleLogger.Log("userView = " + userView.tokenId);
+                var payload = GoogleJsonWebSignature.ValidateAsync(accessToken, new GoogleJsonWebSignature.ValidationSettings()).Result;
+                //var user = await _authService.Authenticate(payload);
+
+                ExternalLoginInfo info = new ExternalLoginInfo(null, "Google", payload.Subject, "Google");
+                var resultFindByMail = await _userManager.FindByEmailAsync(payload.Email);
+                var resultFindByLoginExternal = await _userManager.FindByLoginAsync("Google", payload.Subject);
+                var tokenString = AuthTokenUtil.GetJwtTokenString(payload.Email, _config);
+
+                var user = new ApplicationUser { UserName = payload.Email, Email = payload.Email, DisplayName = payload.Name };
+                if (resultFindByMail == null)
+                {
+                    //var info = await _signInManager.GetExternalLoginInfoAsync();
+
+                    var resultCreate = await _userManager.CreateAsync(user);
+                    if (resultCreate.Succeeded)
+                    {
+                        var resultLogin = await _userManager.AddLoginAsync(user, info);
+                       
+                        return new OkObjectResult(tokenString);
+                    }
+                }
+                else
+                {
+                    if (resultFindByLoginExternal == null)
+                    {
+                        var resultLogin = await _userManager.AddLoginAsync(resultFindByMail, info);
+                    }
+                   await _signInManager.SignInAsync(resultFindByMail, isPersistent: false);
+                  
+                        //_logger.LogInformation("User logged in.");
+                        //return LocalRedirect(returnUrl);
+
+                       
+                 
+                }
+
+          
+                return new OkObjectResult(tokenString);
+
+                //SimpleLogger.Log(payload.ExpirationTimeSeconds.ToString());
+
+
+            }
+            catch (Exception ex)
+            {
+                //Helpers.SimpleLogger.Log(ex);
+                BadRequest(ex.Message);
+            }
+            return BadRequest("Error !");
+        }
+        //public async Task<ApplicationUser> Authenticate(Google.Apis.Auth.GoogleJsonWebSignature.Payload payload)
+        //{
+        //    await Task.Delay(1);
+        //    return this.FindUserOrAdd(payload);
+        //}
+
+        //private ApplicationUser FindUserOrAdd(Google.Apis.Auth.GoogleJsonWebSignature.Payload payload)
+        //{
+        //    var u = _users.Where(x => x.email == payload.Email).FirstOrDefault();
+        //    if (u == null)
+        //    {
+        //        u = new ApplicationUser()
+        //        {
+        //            id = Guid.NewGuid(),
+        //            name = payload.Name,
+        //            email = payload.Email,
+        //            oauthSubject = payload.Subject,
+        //            oauthIssuer = payload.Issuer
+        //        };
+        //        _users.Add(u);
+        //    }
+        //    this.PrintUsers();
+        //    return u;
+        //}
     }
 }

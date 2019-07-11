@@ -7,7 +7,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { UserProfileService } from 'app/core/identity/userprofile.service';
 import { Router } from '@angular/router';
 import { stringify } from 'querystring';
-
+import { AuthService, GoogleLoginProvider, FacebookLoginProvider } from 'angularx-social-login';
 @Component({
     selector: 'login',
     templateUrl: './login.component.html',
@@ -28,7 +28,8 @@ export class LoginComponent implements OnInit {
         private _fuseConfigService: FuseConfigService,
         private _formBuilder: FormBuilder,
         private _userProfileService: UserProfileService,
-        private _cookieService: CookieService
+        private _cookieService: CookieService,
+        private _authService: AuthService,
     ) {
         // Configure the layout
         this._fuseConfigService.config = {
@@ -61,7 +62,7 @@ export class LoginComponent implements OnInit {
             this.checkRemember = true;
             this.loginForm = this._formBuilder.group({
                 userName: [this._cookieService.get('userName'), [Validators.required, Validators.email]],
-                password: [this._cookieService.get('password'), [Validators.required,  Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)]]
+                password: [this._cookieService.get('password'), [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)]]
             });
         } else {
             this.loginForm = this._formBuilder.group({
@@ -77,8 +78,8 @@ export class LoginComponent implements OnInit {
     }
 
     onLogin() {
-        
-        this._userProfileService.logIn(this.loginForm.value).subscribe(res => {this.rememberLogin() }, err => alert(err.error));
+
+        this._userProfileService.logIn(this.loginForm.value).subscribe(res => { this.rememberLogin() }, err => alert(err.error));
     }
 
     rememberLogin() {
@@ -90,6 +91,16 @@ export class LoginComponent implements OnInit {
             this._cookieService.deleteAll()
 
         }
+    }
+
+    signinWithGoogle(): void {
+
+        const socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
+
+        this._authService.signIn(socialPlatformProvider)
+            .then((userData) => {
+                this._userProfileService.logInGoogle(userData.idToken);
+            });
     }
 
 }

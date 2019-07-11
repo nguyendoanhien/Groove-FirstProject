@@ -5,11 +5,15 @@ import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoginModel } from '../../account/login/login.model';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Subject, Observable, of } from 'rxjs';
+// <<<<<<< HEAD
+// import { Subject, Observable, of } from 'rxjs';
+// =======
+import { Subject, Observable, Subscription } from 'rxjs';
 import { catchError, retry, map } from 'rxjs/operators';
 import { UserProfileModel } from 'app/account/user-profile/user-profile.model';
 
 const authUrl = environment.authUrl;
+const authGoogleUrl = environment.authGoogleUrl;
 
 @Injectable()
 export class UserProfileService {
@@ -41,14 +45,30 @@ export class UserProfileService {
 
             return this.http.post<any>(authUrl, body, httpOptions)
                 .pipe(
-                    map((token: string) => { 
+                    map((token: string) => {
                         this.parseJwtToken(token);
-                        this.router.navigate(["apps","chat"]); 
+                        this.router.navigate(["apps", "chat"]);
                     })
                 )
         }
     }
 
+    logInGoogle(googleAccessToken: string) {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Accept': 'text/html, application/xhtml+xml, */*',
+                'Content-Type': 'application/json'
+            }),
+            responseType: 'text' as 'json'
+        };
+
+        return this.http.post<string>(authGoogleUrl + `?accessToken=${googleAccessToken}`, null, httpOptions).pipe(
+            map((token: string) => { 
+                this.parseJwtToken(token);
+                this.router.navigate(["apps", "chat"]);
+            })
+        ).subscribe();
+    }
     logOut(): Promise<boolean> {
         this.authService.clearToken();
         return this.router.navigate(['account', 'login']);
@@ -65,6 +85,7 @@ export class UserProfileService {
         userProfileModel.SecurityAccessToken = jwt;
         this.userProfile = userProfileModel;
         this.displayNameSub$.next(this.userProfile.DisplayName);
+        console.log(this.userProfile.DisplayName)
     }
 
     loadStoredUserProfile() {
