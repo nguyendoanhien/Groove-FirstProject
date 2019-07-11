@@ -3,18 +3,20 @@ import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
 import { RegisterService } from 'app/core/identity/register.service';
-import { Router } from "@angular/router"
+import { Router, ActivatedRoute } from "@angular/router"
 import { MailConfirmModel } from './mail-confirmer.model';
+import { Route } from '@angular/compiler/src/core';
 @Component({
-    selector     : 'mail-confirmer',
-    templateUrl  : './mail-confirmer.component.html',
-    styleUrls    : ['./mail-confirmer.component.scss'],
+    selector: 'mail-confirmer',
+    templateUrl: './mail-confirmer.component.html',
+    styleUrls: ['./mail-confirmer.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations: fuseAnimations
 })
-export class MailConfirmerComponent implements OnInit
-{
-    isLoading : boolean;
+export class MailConfirmerComponent implements OnInit {
+    ctoken: string;
+    userid: string;
+    isLoading: boolean;
     /**
      * Constructor
      *
@@ -25,19 +27,19 @@ export class MailConfirmerComponent implements OnInit
     constructor(
         private _fuseConfigService: FuseConfigService,
         private _registerService: RegisterService,
+        private _route: ActivatedRoute,
         private _router: Router
-    )
-    {
+    ) {
         // Configure the layout
         this._fuseConfigService.config = {
             layout: {
-                navbar   : {
+                navbar: {
                     hidden: true
                 },
-                toolbar  : {
+                toolbar: {
                     hidden: true
                 },
-                footer   : {
+                footer: {
                     hidden: true
                 },
                 sidepanel: {
@@ -49,28 +51,29 @@ export class MailConfirmerComponent implements OnInit
     async ngOnInit() {
         this.isLoading = true;
         var model = await this.getParams();
-        this._registerService.confirmEmail(model).subscribe(sussess=>{
+        this._registerService.confirmEmail(model).subscribe(sussess => {
             this.isLoading = false;
             this._router.navigate(['/apps/chat']);
-        },fail=>{
+        }, fail => {
             this.isLoading = false;
             console.log(fail);
         });
-      }
-    getParams() : MailConfirmModel {
-        var model : MailConfirmModel = new MailConfirmModel();
+    }
+    getParams(): MailConfirmModel {
+        var model: MailConfirmModel = new MailConfirmModel();
         var urlOrigin = window.location.href;
         var regexp = new RegExp(/[^&?]*?=[^&?]*/g);
-        var matches:any;
+        var matches: any;
         var values = [];
         while (matches = regexp.exec(urlOrigin)) {
-          values.push(matches[0]);
+            values.push(matches[0]);
         }
+        console.log(values);
         var regexUserId = new RegExp(/(?<=userid=).*$/);
         var regexCtoken = new RegExp(/(?<=ctoken=).*$/);
-       
+
         model.ctoken = regexCtoken.exec(values[0]).toString();
         model.userId = regexUserId.exec(values[1]).toString();
         return model;
-      }
+    }
 }

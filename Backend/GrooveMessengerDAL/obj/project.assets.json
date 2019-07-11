@@ -3724,23 +3724,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\intern05\\.nuget\\packages\\": {},
+    "C:\\Users\\intern03\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\intern05\\Documents\\gm\\Backend\\GrooveMessengerDAL\\GrooveMessengerDAL.csproj",
+      "projectUniqueName": "C:\\Users\\intern03\\Documents\\gm_team-2\\Backend\\GrooveMessengerDAL\\GrooveMessengerDAL.csproj",
       "projectName": "GrooveMessengerDAL",
-      "projectPath": "C:\\Users\\intern05\\Documents\\gm\\Backend\\GrooveMessengerDAL\\GrooveMessengerDAL.csproj",
-      "packagesPath": "C:\\Users\\intern05\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\intern05\\Documents\\gm\\Backend\\GrooveMessengerDAL\\obj\\",
+      "projectPath": "C:\\Users\\intern03\\Documents\\gm_team-2\\Backend\\GrooveMessengerDAL\\GrooveMessengerDAL.csproj",
+      "packagesPath": "C:\\Users\\intern03\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\intern03\\Documents\\gm_team-2\\Backend\\GrooveMessengerDAL\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\intern05\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\intern03\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

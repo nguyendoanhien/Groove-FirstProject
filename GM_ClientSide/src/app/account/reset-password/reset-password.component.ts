@@ -7,7 +7,7 @@ import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
 import { ResetPasswordService } from 'app/services/reset-password.service';
 import { ResetPassword } from '../../models/ResetPassword';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
     selector: 'reset-password',
     templateUrl: './reset-password.component.html',
@@ -26,6 +26,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
         private _fuseConfigService: FuseConfigService,
         private _formBuilder: FormBuilder,
         private _resetPasswordService: ResetPasswordService,
+        private _route: Router,
         private _router: ActivatedRoute
     ) {
         // Configure the layout
@@ -58,13 +59,16 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-
         this.token = this._router.snapshot.queryParamMap.get('token');
         this.userid = this._router.snapshot.queryParamMap.get('userid');
         this.resetPasswordForm = this._formBuilder.group({
-            name: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
-            password: ['', Validators.required, Validators.minLength(8), Validators.maxLength(40)],
+            password: ['', [
+                Validators.required,
+                Validators.minLength(8),
+                Validators.maxLength(40),
+                Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)
+            ]],
             passwordConfirm: ['', [Validators.required, confirmPasswordValidator]]
         });
 
@@ -92,13 +96,17 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
      * On destroy
      */
     onSubmit(): void {
-        debugger
         const resetPassword: ResetPassword = {
+            email: this.resetPasswordForm.get('email').value,
             userid: this.userid,
             ctoken: this.token,
             newpassword: this.resetPasswordForm.get('password').value,
         };
-        this._resetPasswordService.resetPassword(resetPassword);
+        console.log(resetPassword);
+        this._resetPasswordService.resetPassword(resetPassword).subscribe(val => {
+            this._route.navigate(['/account/login']);
+        }, err => console.log(err));
+
     }
 }
 

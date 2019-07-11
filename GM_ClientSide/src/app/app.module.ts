@@ -61,8 +61,8 @@ import { RegisterService } from './core/identity/register.service';
         FuseThemeOptionsModule,
 
         // App modules
-        LayoutModule,
-        AccountModule
+        LayoutModule
+        // AccountModule
     ],
     bootstrap: [
         AppComponent
@@ -76,8 +76,11 @@ import { RegisterService } from './core/identity/register.service';
         },
         UserProfileService,
         AuthService,
-        AuthRouteGuardService,RegisterService],
-       ResetPasswordService
+        AuthRouteGuardService,
+        RegisterService,
+        ResetPasswordService
+    ]
+
 })
 export class AppModule {
 }
