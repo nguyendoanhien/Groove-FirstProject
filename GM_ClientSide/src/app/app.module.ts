@@ -27,6 +27,7 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
 import { UserProfileService } from './core/identity/userprofile.service';
 import { AuthService } from './core/auth/auth.service';
 import { AuthRouteGuardService } from './core/auth/authrouteguard.service';
+import { ResetPasswordService } from './services/reset-password.service';
 import { RegisterService } from './core/identity/register.service';
 
 @NgModule({
@@ -61,6 +62,7 @@ import { RegisterService } from './core/identity/register.service';
 
         // App modules
         LayoutModule
+        // AccountModule
     ],
     bootstrap: [
         AppComponent
@@ -74,8 +76,11 @@ import { RegisterService } from './core/identity/register.service';
         },
         UserProfileService,
         AuthService,
-        AuthRouteGuardService,RegisterService],
-       
+        AuthRouteGuardService,
+        RegisterService,
+        ResetPasswordService
+    ]
+
 })
 export class AppModule {
 }

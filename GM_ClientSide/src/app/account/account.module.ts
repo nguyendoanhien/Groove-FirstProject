@@ -11,6 +11,7 @@ import {ResetPasswordComponent} from './reset-password/reset-password.component'
 import {MailConfirmComponent} from './mail-confirm/mail-confirm.component';
 import {MailConfirmerComponent} from './mail-confirmer/mail-confirmer.component';
 const matModules = [MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatCheckboxModule];
+import { ResetPasswordService } from 'app/services/reset-password.service';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ const matModules = [MatFormFieldModule, MatInputModule, MatIconModule, MatButton
     matModules,
     FormsModule,
     ReactiveFormsModule
-  ]
+  ],
+ providers: [ResetPasswordService]
 })
 export class AccountModule { }

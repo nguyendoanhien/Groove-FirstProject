@@ -5,5 +5,6 @@
         public string UserId { get; set; }
         public string Ctoken { get; set; }
         public string NewPassword { get; set; }
+        public string Email { get; set; }
     }
 }
