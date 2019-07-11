@@ -1,9 +1,9 @@
 diff a/Backend/.vs/config/applicationhost.config b/Backend/.vs/config/applicationhost.config	(rejected hunks)
-@@ -157,6 +157,7 @@
+@@ -157,7 +157,6 @@
        </site>
        <site name="GrooveMessengerAPI" id="2">
          <application path="/" applicationPool="GrooveMessengerAPI AppPool">
-+          <virtualDirectory path="/" physicalPath="C:\Users\intern01\Documents\GrooveMessenger\Backend\GrooveMessengerAPI" />
+-          <virtualDirectory path="/" physicalPath="C:\Users\intern01\Documents\GrooveMessenger\Backend\GrooveMessengerAPI" />
          </application>
          <bindings>
            <binding protocol="http" bindingInformation="*:51339:localhost" />
