@@ -15,7 +15,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class ForgotPasswordComponent implements OnInit {
     forgotPasswordForm: FormGroup;
-
+    isLoading:boolean= false;
     /**
      * Constructor
      *
@@ -62,6 +62,7 @@ export class ForgotPasswordComponent implements OnInit {
     }
 
     onSubmit(): void {
+        this.isLoading = true;
         const email = this.forgotPasswordForm.get('email').value;
         this._resetPasswordService.forgotPassword(email).subscribe(val => {
             this._route.navigate(['/account/login']);
