@@ -11,3 +11,17 @@ C:\GrooveIntern\MINI_PROJECT\Backend\GrooveMessengerDAL\obj\Debug\netcoreapp2.2\
 C:\GrooveIntern\MINI_PROJECT\Backend\GrooveMessengerDAL\obj\Debug\netcoreapp2.2\GrooveMessengerDAL.csproj.CopyComplete
 C:\GrooveIntern\MINI_PROJECT\Backend\GrooveMessengerDAL\obj\Debug\netcoreapp2.2\GrooveMessengerDAL.dll
 C:\GrooveIntern\MINI_PROJECT\Backend\GrooveMessengerDAL\obj\Debug\netcoreapp2.2\GrooveMessengerDAL.pdb
+C:\Users\intern01\Documents\GrooveMessenger\Backend\GrooveMessengerDAL\bin\Debug\netcoreapp2.2\GrooveMessengerDAL.deps.json
+C:\Users\intern01\Documents\GrooveMessenger\Backend\GrooveMessengerDAL\bin\Debug\netcoreapp2.2\GrooveMessengerDAL.dll
+C:\Users\intern01\Documents\GrooveMessenger\Backend\GrooveMessengerDAL\bin\Debug\netcoreapp2.2\GrooveMessengerDAL.pdb
+C:\Users\intern01\Documents\GrooveMessenger\Backend\GrooveMessengerDAL\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Http.Abstractions.dll
+C:\Users\intern01\Documents\GrooveMessenger\Backend\GrooveMessengerDAL\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\intern01\Documents\GrooveMessenger\Backend\GrooveMessengerDAL\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Http.Abstractions.xml
+C:\Users\intern01\Documents\GrooveMessenger\Backend\GrooveMessengerDAL\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Identity.EntityFrameworkCore.xml
+C:\Users\intern01\Documents\GrooveMessenger\Backend\GrooveMessengerDAL\obj\Debug\netcoreapp2.2\GrooveMessengerDAL.csprojAssemblyReference.cache
+C:\Users\intern01\Documents\GrooveMessenger\Backend\GrooveMessengerDAL\obj\Debug\netcoreapp2.2\GrooveMessengerDAL.csproj.CoreCompileInputs.cache
+C:\Users\intern01\Documents\GrooveMessenger\Backend\GrooveMessengerDAL\obj\Debug\netcoreapp2.2\GrooveMessengerDAL.AssemblyInfoInputs.cache
+C:\Users\intern01\Documents\GrooveMessenger\Backend\GrooveMessengerDAL\obj\Debug\netcoreapp2.2\GrooveMessengerDAL.AssemblyInfo.cs
+C:\Users\intern01\Documents\GrooveMessenger\Backend\GrooveMessengerDAL\obj\Debug\netcoreapp2.2\GrooveMessengerDAL.csproj.CopyComplete
+C:\Users\intern01\Documents\GrooveMessenger\Backend\GrooveMessengerDAL\obj\Debug\netcoreapp2.2\GrooveMessengerDAL.dll
+C:\Users\intern01\Documents\GrooveMessenger\Backend\GrooveMessengerDAL\obj\Debug\netcoreapp2.2\GrooveMessengerDAL.pdb

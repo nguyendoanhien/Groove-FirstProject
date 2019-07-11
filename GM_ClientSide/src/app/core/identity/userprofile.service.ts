@@ -14,7 +14,14 @@ import { UserProfileModel } from 'app/account/user-profile/user-profile.model';
 
 const authUrl = environment.authUrl;
 const authGoogleUrl = environment.authGoogleUrl;
-
+const authFBUrl = environment.authFacebookUrl;
+const httpOptions = {
+    headers: new HttpHeaders({
+        'Accept': 'text/html, application/xhtml+xml, */*',
+        'Content-Type': 'application/json'
+    }),
+    responseType: 'text' as 'json'
+};
 @Injectable()
 export class UserProfileService {
 
@@ -24,7 +31,7 @@ export class UserProfileService {
         private http: HttpClient) {
         this.userProfile = new UserProfileModel();
     }
-
+    
     public displayNameSub$: Subject<string> = new Subject<string>();
 
     logIn(loginModel: LoginModel) {
@@ -54,13 +61,7 @@ export class UserProfileService {
     }
 
     logInGoogle(googleAccessToken: string) {
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Accept': 'text/html, application/xhtml+xml, */*',
-                'Content-Type': 'application/json'
-            }),
-            responseType: 'text' as 'json'
-        };
+
 
         return this.http.post<string>(authGoogleUrl + `?accessToken=${googleAccessToken}`, null, httpOptions).pipe(
             map((token: string) => { 
@@ -69,6 +70,17 @@ export class UserProfileService {
             })
         ).subscribe();
     }
+
+    logInFacebook(facebookAccessToken:string) {
+        return this.http.post<string>(authFBUrl + `?token=${facebookAccessToken}`, null, httpOptions)
+        .pipe(
+            map((token: string) => {
+                this.parseJwtToken(token);
+                this.router.navigate(['apps','chat']);
+            })
+        ).subscribe()
+    }
+
     logOut(): Promise<boolean> {
         this.authService.clearToken();
         return this.router.navigate(['account', 'login']);
