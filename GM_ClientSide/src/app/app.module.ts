@@ -28,7 +28,8 @@ import { UserProfileService } from './core/identity/userprofile.service';
 import { AuthService } from './core/auth/auth.service';
 import { AuthRouteGuardService } from './core/auth/authrouteguard.service';
 import { ResetPasswordService } from './services/reset-password.service';
-import { AccountModule } from './account/account.module';
+import { RegisterService } from './core/identity/register.service';
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -75,10 +76,8 @@ import { AccountModule } from './account/account.module';
         },
         UserProfileService,
         AuthService,
-        AuthRouteGuardService,
-        ResetPasswordService
-    ],
-
+        AuthRouteGuardService,RegisterService],
+       ResetPasswordService
 })
 export class AppModule {
 }
