@@ -5,6 +5,7 @@ import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
 import { AuthService, GoogleLoginProvider, FacebookLoginProvider } from 'angularx-social-login';
 import { UserProfileService } from 'app/core/identity/userprofile.service';
+import * as jwt_decode from "jwt-decode";
 @Component({
     selector: 'login',
     templateUrl: './login.component.html',
@@ -65,6 +66,7 @@ export class LoginComponent implements OnInit {
 
         this._authService.signIn(socialPlatformProvider)
             .then((userData) => {
+                console.log(jwt_decode(userData.idToken))
                 console.log(userData)
                 this._userProfileService.logInGoogle(userData.idToken);
             });
