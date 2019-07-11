@@ -9,6 +9,8 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import {ForgotPasswordComponent} from './forgot-password/forgot-password.component';
 import {ResetPasswordComponent} from './reset-password/reset-password.component'
+import {CookieService} from 'ngx-cookie-service';
+
 const matModules = [MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatCheckboxModule];
 
 
@@ -20,6 +22,7 @@ const matModules = [MatFormFieldModule, MatInputModule, MatIconModule, MatButton
     matModules,
     FormsModule,
     ReactiveFormsModule
-  ]
+  ],
+  providers:[CookieService]
 })
 export class AccountModule { }

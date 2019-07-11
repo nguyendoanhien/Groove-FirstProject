@@ -52,7 +52,12 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
         [Route("login")]
         public async Task<IActionResult> Login(LoginModel data)
         {
-
+            
+            var checkUser = await _userManager.FindByNameAsync(data.Username);
+            if (checkUser == null)
+            {
+                return Unauthorized("Your username hasn't joined our system, please click Sign Up link to register");
+            }
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, set lockoutOnFailure: true
             var result = await _signInManager.PasswordSignInAsync(data.Username, data.Password, false, lockoutOnFailure: true);
@@ -62,7 +67,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                 var tokenString = AuthTokenUtil.GetJwtTokenString(data.Username, _config);
                 return new ObjectResult(tokenString);
             }
-            return Unauthorized();
+            return Unauthorized("Password is incorrect");
         }
     }
 }

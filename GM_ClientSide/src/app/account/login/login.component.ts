@@ -1,20 +1,23 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CookieService } from 'ngx-cookie-service';
 
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
+import { UserProfileService } from 'app/core/identity/userprofile.service';
+import { Router } from '@angular/router';
+import { stringify } from 'querystring';
 
 @Component({
-    selector     : 'login',
-    templateUrl  : './login.component.html',
-    styleUrls    : ['./login.component.scss'],
+    selector: 'login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations: fuseAnimations
 })
-export class LoginComponent implements OnInit
-{
+export class LoginComponent implements OnInit {
     loginForm: FormGroup;
-
+    checkRemember: Boolean = false;
     /**
      * Constructor
      *
@@ -23,19 +26,20 @@ export class LoginComponent implements OnInit
      */
     constructor(
         private _fuseConfigService: FuseConfigService,
-        private _formBuilder: FormBuilder
-    )
-    {
+        private _formBuilder: FormBuilder,
+        private _userProfileService: UserProfileService,
+        private _cookieService: CookieService
+    ) {
         // Configure the layout
         this._fuseConfigService.config = {
             layout: {
-                navbar   : {
+                navbar: {
                     hidden: true
                 },
-                toolbar  : {
+                toolbar: {
                     hidden: true
                 },
-                footer   : {
+                footer: {
                     hidden: true
                 },
                 sidepanel: {
@@ -52,11 +56,42 @@ export class LoginComponent implements OnInit
     /**
      * On init
      */
-    ngOnInit(): void
-    {
-        this.loginForm = this._formBuilder.group({
-            email   : ['', [Validators.required, Validators.email]],
-            password: ['', Validators.required]
-        });
+    ngOnInit(): void {
+        if (this._cookieService.get('userName')) {
+            this.checkRemember = true;
+            this.loginForm = this._formBuilder.group({
+                userName: [this._cookieService.get('userName'), [Validators.required, Validators.email]],
+                password: [this._cookieService.get('password'), [Validators.required,  Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)]]
+            });
+        } else {
+            this.loginForm = this._formBuilder.group({
+                userName: ['', [Validators.required, Validators.email]],
+                password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)]]
+            });
+        }
+
+        // if(localStorage.getItem('token')!=null)
+        // {
+        //     this.router.navigate(['apps','chat']);
+        // }
     }
+
+    onLogin() {
+        
+        this._userProfileService.logIn(this.loginForm.value).subscribe(res => {this.rememberLogin() }, err => alert(err.error));
+    }
+
+    rememberLogin() {
+        if (this.checkRemember) {
+            this._cookieService.set('userName', this.loginForm.value.userName);
+            this._cookieService.set('password', this.loginForm.value.password);
+
+        } else {
+            this._cookieService.deleteAll()
+
+        }
+    }
+
 }
+
+// root123@gmail.com  Root1234

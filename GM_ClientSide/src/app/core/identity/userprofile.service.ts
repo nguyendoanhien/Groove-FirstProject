@@ -1,11 +1,11 @@
 import { Router } from '@angular/router';
-import { Injectable } from '@angular/core';
+import { Injectable, ErrorHandler } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoginModel } from '../../account/login/login.model';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, of } from 'rxjs';
 import { catchError, retry, map } from 'rxjs/operators';
 import { UserProfileModel } from 'app/account/user-profile/user-profile.model';
 
@@ -16,8 +16,8 @@ export class UserProfileService {
 
     private userProfile: UserProfileModel;
     constructor(private router: Router,
-                private authService: AuthService,
-                private http: HttpClient) {
+        private authService: AuthService,
+        private http: HttpClient) {
         this.userProfile = new UserProfileModel();
     }
 
@@ -39,15 +39,18 @@ export class UserProfileService {
                 responseType: "text" as 'json'
             };
 
-            return this.http.post<string>(authUrl, body, httpOptions)
+            return this.http.post<any>(authUrl, body, httpOptions)
                 .pipe(
-                    map((token: string) => this.parseJwtToken(token))
+                    map((token: string) => { 
+                        this.parseJwtToken(token);
+                        this.router.navigate(["apps","chat"]); 
+                    })
                 )
-                .subscribe();
         }
     }
 
     logOut(): Promise<boolean> {
+        this.authService.clearToken();
         return this.router.navigate(['account', 'login']);
     }
 
