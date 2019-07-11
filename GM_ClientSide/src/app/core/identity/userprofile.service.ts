@@ -1,17 +1,27 @@
 import { Router } from '@angular/router';
-import { Injectable } from '@angular/core';
+import { Injectable, ErrorHandler } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoginModel } from '../../account/login/login.model';
 import { JwtHelperService } from '@auth0/angular-jwt';
+// <<<<<<< HEAD
+// import { Subject, Observable, of } from 'rxjs';
+// =======
 import { Subject, Observable, Subscription } from 'rxjs';
 import { catchError, retry, map } from 'rxjs/operators';
 import { UserProfileModel } from 'app/account/user-profile/user-profile.model';
 
 const authUrl = environment.authUrl;
 const authGoogleUrl = environment.authGoogleUrl;
-
+const authFBUrl = environment.authFacebookUrl;
+const httpOptions = {
+    headers: new HttpHeaders({
+        'Accept': 'text/html, application/xhtml+xml, */*',
+        'Content-Type': 'application/json'
+    }),
+    responseType: 'text' as 'json'
+};
 @Injectable()
 export class UserProfileService {
 
@@ -21,7 +31,7 @@ export class UserProfileService {
         private http: HttpClient) {
         this.userProfile = new UserProfileModel();
     }
-
+    
     public displayNameSub$: Subject<string> = new Subject<string>();
 
     logIn(loginModel: LoginModel) {
@@ -40,32 +50,39 @@ export class UserProfileService {
                 responseType: "text" as 'json'
             };
 
-            return this.http.post<string>(authUrl, body, httpOptions)
+            return this.http.post<any>(authUrl, body, httpOptions)
                 .pipe(
-                    map((token: string) => this.parseJwtToken(token))
+                    map((token: string) => {
+                        this.parseJwtToken(token);
+                        this.router.navigate(["apps", "chat"]);
+                    })
                 )
-                .subscribe();
         }
     }
+
     logInGoogle(googleAccessToken: string) {
 
 
+        return this.http.post<string>(authGoogleUrl + `?accessToken=${googleAccessToken}`, null, httpOptions).pipe(
+            map((token: string) => { 
+                this.parseJwtToken(token);
+                this.router.navigate(["apps", "chat"]);
+            })
+        ).subscribe();
+    }
 
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Accept': 'text/html, application/xhtml+xml, */*',
-                'Content-Type': 'application/json'
-            }),
-            responseType: 'text' as 'json'
-        };
-
-        return this.http.post<string>(authGoogleUrl + `?accessToken=${googleAccessToken}`, null, httpOptions) .pipe(
-            map((token: string) => { this.parseJwtToken(token); })
-          ).subscribe();
-
+    logInFacebook(facebookAccessToken:string) {
+        return this.http.post<string>(authFBUrl + `?token=${facebookAccessToken}`, null, httpOptions)
+        .pipe(
+            map((token: string) => {
+                this.parseJwtToken(token);
+                this.router.navigate(['apps','chat']);
+            })
+        ).subscribe()
     }
 
     logOut(): Promise<boolean> {
+        this.authService.clearToken();
         return this.router.navigate(['account', 'login']);
     }
 

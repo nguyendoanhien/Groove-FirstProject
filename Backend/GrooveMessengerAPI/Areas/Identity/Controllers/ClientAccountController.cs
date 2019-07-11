@@ -1,12 +1,14 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using crypto;
 using Google.Apis.Auth;
 using GrooveMessengerAPI.Areas.Identity.Models;
+using GrooveMessengerAPI.Areas.Identity.Models.ModelsSocial;
 using GrooveMessengerAPI.Auth;
 using GrooveMessengerDAL.Models;
 using Microsoft.AspNetCore.Identity;
@@ -14,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
 {
@@ -25,6 +28,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<ClientAccountController> _logger;
         private readonly IConfiguration _config;
+        private static readonly HttpClient Client = new HttpClient();
 
         public ClientAccountController(SignInManager<ApplicationUser> signInManager, ILogger<ClientAccountController> logger, UserManager<ApplicationUser> userManager, IConfiguration config)
         {
@@ -59,7 +63,12 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
         [Route("login")]
         public async Task<IActionResult> Login(LoginModel data)
         {
-
+            
+            var checkUser = await _userManager.FindByNameAsync(data.Username);
+            if (checkUser == null)
+            {
+                return Unauthorized("Your username hasn't joined our system, please click Sign Up link to register");
+            }
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, set lockoutOnFailure: true
             var result = await _signInManager.PasswordSignInAsync(data.Username, data.Password, false, lockoutOnFailure: true);
@@ -69,7 +78,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                 var tokenString = AuthTokenUtil.GetJwtTokenString(data.Username, _config);
                 return new ObjectResult(tokenString);
             }
-            return Unauthorized();
+            return Unauthorized("Password is incorrect");
         }
         [HttpPost]
         [Route("logingoogle")]
@@ -105,7 +114,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                     {
                         var resultLogin = await _userManager.AddLoginAsync(resultFindByMail, info);
                     }
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+                   await _signInManager.SignInAsync(resultFindByMail, isPersistent: false);
                   
                         //_logger.LogInformation("User logged in.");
                         //return LocalRedirect(returnUrl);
@@ -152,5 +161,53 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
         //    this.PrintUsers();
         //    return u;
         //}
+
+        [HttpPost]
+        [Route("loginfacebook")]
+        public async Task<ObjectResult> Fblogin(string token)
+        {
+            var AppId = _config["ApplicationFacebook:AppId"].ToString();
+            var AppSecret = _config["ApplicationFacebook:AppSecret"].ToString();
+
+            var appAccessTokenResponse = await Client.GetStringAsync($"https://graph.facebook.com/oauth/access_token?client_id={AppId}&client_secret={AppSecret}&grant_type=client_credentials");
+            var appAccessToken = JsonConvert.DeserializeObject<FacebookAppAccessToken>(appAccessTokenResponse);
+            // 2. validate the user access token
+            var userAccessTokenValidationResponse = await Client.GetStringAsync($"https://graph.facebook.com/debug_token?input_token={token}&access_token={appAccessToken.AccessToken}");
+            var userAccessTokenValidation = JsonConvert.DeserializeObject<FacebookUserAccessTokenValidation>(userAccessTokenValidationResponse);
+
+            if (!userAccessTokenValidation.Data.IsValid)
+            {
+                return BadRequest("false to login with FB");
+            }
+
+            // 3. we've got a valid token so we can request user data from fb
+            var userInfoResponse = await Client.GetStringAsync($"https://graph.facebook.com/v2.8/me?fields=id,email,first_name,last_name,name,gender,locale,birthday,picture&access_token={token}");
+            var userInfo = JsonConvert.DeserializeObject<FacebookUserData>(userInfoResponse);
+
+            ExternalLoginInfo info = new ExternalLoginInfo(null, "Facebook", userInfo.Id, "Facebook");
+
+            var user = await _userManager.FindByEmailAsync(userInfo.Email);
+            if (user == null)
+            {
+                var appUser = new ApplicationUser
+                {
+                    Email = userInfo.Email,
+                    DisplayName = userInfo.Name,
+                    UserName = userInfo.Email
+                };
+
+                var result = await _userManager.CreateAsync(appUser);
+                var resultLogin = await _userManager.AddLoginAsync(appUser, info);
+
+            }
+            else
+            {
+                var resultLogin = await _userManager.AddLoginAsync(user, info);
+            }
+            var refreshToken = AuthTokenUtil.GetJwtTokenString(userInfo.Email, _config);
+            return new OkObjectResult(refreshToken);
+        }
     }
+
+    
 }
