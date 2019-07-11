@@ -7,19 +7,21 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import {ForgotPasswordComponent} from './forgot-password/forgot-password.component';
-import {ResetPasswordComponent} from './reset-password/reset-password.component'
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { ResetPasswordService } from 'app/services/reset-password.service';
 const matModules = [MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatCheckboxModule];
 
 
 @NgModule({
-  declarations: [LoginComponent,RegisterComponent,ResetPasswordComponent,ForgotPasswordComponent, UserProfileComponent],
-  imports: [
-    CommonModule,
-    AccountRoutingModule,
-    matModules,
-    FormsModule,
-    ReactiveFormsModule
-  ]
+    declarations: [LoginComponent, RegisterComponent, ResetPasswordComponent, ForgotPasswordComponent, UserProfileComponent],
+    imports: [
+        CommonModule,
+        AccountRoutingModule,
+        matModules,
+        FormsModule,
+        ReactiveFormsModule
+    ],
+    providers: [ResetPasswordService]
 })
 export class AccountModule { }

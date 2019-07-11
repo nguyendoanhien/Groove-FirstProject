@@ -27,7 +27,8 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
 import { UserProfileService } from './core/identity/userprofile.service';
 import { AuthService } from './core/auth/auth.service';
 import { AuthRouteGuardService } from './core/auth/authrouteguard.service';
-
+import { ResetPasswordService } from './services/reset-password.service';
+import { AccountModule } from './account/account.module';
 @NgModule({
     declarations: [
         AppComponent,
@@ -59,7 +60,8 @@ import { AuthRouteGuardService } from './core/auth/authrouteguard.service';
         FuseThemeOptionsModule,
 
         // App modules
-        LayoutModule
+        LayoutModule,
+        AccountModule
     ],
     bootstrap: [
         AppComponent
@@ -73,8 +75,10 @@ import { AuthRouteGuardService } from './core/auth/authrouteguard.service';
         },
         UserProfileService,
         AuthService,
-        AuthRouteGuardService],
-       
+        AuthRouteGuardService,
+        ResetPasswordService
+    ],
+
 })
 export class AppModule {
 }

@@ -5,36 +5,39 @@ import { takeUntil } from 'rxjs/internal/operators';
 
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
-
+import { ResetPasswordService } from 'app/services/reset-password.service';
+import { ResetPassword } from '../../models/ResetPassword';
+import { ActivatedRoute } from '@angular/router';
 @Component({
-    selector     : 'reset-password',
-    templateUrl  : './reset-password.component.html',
-    styleUrls    : ['./reset-password.component.scss'],
+    selector: 'reset-password',
+    templateUrl: './reset-password.component.html',
+    styleUrls: ['./reset-password.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations: fuseAnimations
 })
-export class ResetPasswordComponent implements OnInit, OnDestroy
-{
+export class ResetPasswordComponent implements OnInit, OnDestroy {
     resetPasswordForm: FormGroup;
-
+    token: string;
+    userid: string;
     // Private
     private _unsubscribeAll: Subject<any>;
 
     constructor(
         private _fuseConfigService: FuseConfigService,
-        private _formBuilder: FormBuilder
-    )
-    {
+        private _formBuilder: FormBuilder,
+        private _resetPasswordService: ResetPasswordService,
+        private _router: ActivatedRoute
+    ) {
         // Configure the layout
         this._fuseConfigService.config = {
             layout: {
-                navbar   : {
+                navbar: {
                     hidden: true
                 },
-                toolbar  : {
+                toolbar: {
                     hidden: true
                 },
-                footer   : {
+                footer: {
                     hidden: true
                 },
                 sidepanel: {
@@ -54,12 +57,14 @@ export class ResetPasswordComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
+
+        this.token = this._router.snapshot.queryParamMap.get('token');
+        this.userid = this._router.snapshot.queryParamMap.get('userid');
         this.resetPasswordForm = this._formBuilder.group({
-            name           : ['', Validators.required],
-            email          : ['', [Validators.required, Validators.email]],
-            password       : ['', Validators.required],
+            name: ['', Validators.required],
+            email: ['', [Validators.required, Validators.email]],
+            password: ['', Validators.required, Validators.minLength(8), Validators.maxLength(40)],
             passwordConfirm: ['', [Validators.required, confirmPasswordValidator]]
         });
 
@@ -70,16 +75,30 @@ export class ResetPasswordComponent implements OnInit, OnDestroy
             .subscribe(() => {
                 this.resetPasswordForm.get('passwordConfirm').updateValueAndValidity();
             });
+
+        // Add 
+
     }
 
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
+    }
+    /**
+     * On destroy
+     */
+    onSubmit(): void {
+        debugger
+        const resetPassword: ResetPassword = {
+            userid: this.userid,
+            ctoken: this.token,
+            newpassword: this.resetPasswordForm.get('password').value,
+        };
+        this._resetPasswordService.resetPassword(resetPassword);
     }
 }
 
@@ -91,28 +110,24 @@ export class ResetPasswordComponent implements OnInit, OnDestroy
  */
 export const confirmPasswordValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
 
-    if ( !control.parent || !control )
-    {
+    if (!control.parent || !control) {
         return null;
     }
 
     const password = control.parent.get('password');
     const passwordConfirm = control.parent.get('passwordConfirm');
 
-    if ( !password || !passwordConfirm )
-    {
+    if (!password || !passwordConfirm) {
         return null;
     }
 
-    if ( passwordConfirm.value === '' )
-    {
+    if (passwordConfirm.value === '') {
         return null;
     }
 
-    if ( password.value === passwordConfirm.value )
-    {
+    if (password.value === passwordConfirm.value) {
         return null;
     }
 
-    return {passwordsNotMatching: true};
+    return { passwordsNotMatching: true };
 };
