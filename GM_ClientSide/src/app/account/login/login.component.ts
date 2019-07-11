@@ -100,9 +100,9 @@ export class LoginComponent implements OnInit {
 
         this._authService.signIn(socialPlatformProvider)
             .then((userData) => {
-                console.log(jwt_decode(userData.idToken));
-                console.log(userData);
+
                 this._userProfileService.logInGoogle(userData.idToken);
+              
             });
     }
 

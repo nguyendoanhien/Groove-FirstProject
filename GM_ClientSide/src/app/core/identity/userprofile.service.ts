@@ -31,7 +31,7 @@ export class UserProfileService {
         private http: HttpClient) {
         this.userProfile = new UserProfileModel();
     }
-    
+
     public displayNameSub$: Subject<string> = new Subject<string>();
 
     logIn(loginModel: LoginModel) {
@@ -64,21 +64,21 @@ export class UserProfileService {
 
 
         return this.http.post<string>(authGoogleUrl + `?accessToken=${googleAccessToken}`, null, httpOptions).pipe(
-            map((token: string) => { 
+            map((token: string) => {
                 this.parseJwtToken(token);
                 this.router.navigate(["apps", "chat"]);
             })
         ).subscribe();
     }
 
-    logInFacebook(facebookAccessToken:string) {
+    logInFacebook(facebookAccessToken: string) {
         return this.http.post<string>(authFBUrl + `?token=${facebookAccessToken}`, null, httpOptions)
-        .pipe(
-            map((token: string) => {
-                this.parseJwtToken(token);
-                this.router.navigate(['apps','chat']);
-            })
-        ).subscribe()
+            .pipe(
+                map((token: string) => {
+                    this.parseJwtToken(token);
+                    this.router.navigate(['apps', 'chat']);
+                })
+            ).subscribe()
     }
 
     logOut(): Promise<boolean> {
