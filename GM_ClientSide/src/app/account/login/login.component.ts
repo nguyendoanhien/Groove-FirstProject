@@ -103,6 +103,14 @@ export class LoginComponent implements OnInit {
             });
     }
 
+    signinWithFB(): void {
+        this._authService.signIn(FacebookLoginProvider.PROVIDER_ID).then(userData => {
+            this._userProfileService.logInFacebook(userData.authToken);
+
+        });
+    }
+
+
 }
 
 // root123@gmail.com  Root1234
