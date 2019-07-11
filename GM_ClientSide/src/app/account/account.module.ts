@@ -8,12 +8,13 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import {ForgotPasswordComponent} from './forgot-password/forgot-password.component';
 import {ResetPasswordComponent} from './reset-password/reset-password.component';
-import {MailConfirmComponent} from './mail-confirm/mail-confirm.component'
+import {MailConfirmComponent} from './mail-confirm/mail-confirm.component';
+import {MailConfirmerComponent} from './mail-confirmer/mail-confirmer.component';
 const matModules = [MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatCheckboxModule];
 
 
 @NgModule({
-  declarations: [LoginComponent,RegisterComponent,ResetPasswordComponent,ForgotPasswordComponent, UserProfileComponent, MailConfirmComponent],
+  declarations: [LoginComponent,RegisterComponent,ResetPasswordComponent,ForgotPasswordComponent, UserProfileComponent, MailConfirmComponent, MailConfirmerComponent],
   imports: [
     MatProgressSpinnerModule,
     CommonModule,

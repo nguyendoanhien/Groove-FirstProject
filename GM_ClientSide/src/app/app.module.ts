@@ -21,13 +21,13 @@ import { LayoutModule } from 'app/layout/layout.module';
 // services
 import { ChatService } from './apps/chat/chat.service';
 import { FakeDbService } from './fake-api/fake-api.service';
-import {} from './core/identity/register.service';
 import { AppRoutingModule } from './app-routing.module';
 import { TokenHttpInterceptor } from './core/auth/token.httpinterceptor';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { UserProfileService } from './core/identity/userprofile.service';
 import { AuthService } from './core/auth/auth.service';
 import { AuthRouteGuardService } from './core/auth/authrouteguard.service';
+import { RegisterService } from './core/identity/register.service';
 
 @NgModule({
     declarations: [
@@ -74,7 +74,7 @@ import { AuthRouteGuardService } from './core/auth/authrouteguard.service';
         },
         UserProfileService,
         AuthService,
-        AuthRouteGuardService],
+        AuthRouteGuardService,RegisterService],
        
 })
 export class AppModule {

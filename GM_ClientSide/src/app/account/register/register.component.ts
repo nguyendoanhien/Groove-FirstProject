@@ -2,39 +2,39 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import {Router} from "@angular/router"
+import { Router } from "@angular/router"
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
 import { RegisterModel } from './register.model';
+import { RegisterService } from 'app/core/identity/register.service';
 
 @Component({
-    selector     : 'register',
-    templateUrl  : './register.component.html',
-    styleUrls    : ['./register.component.scss'],
+    selector: 'register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations: fuseAnimations
 })
-export class RegisterComponent implements OnInit, OnDestroy
-{
+export class RegisterComponent implements OnInit, OnDestroy {
     registerForm: FormGroup;
-    isAcceptTerms:boolean = false;
-    isLoading:boolean = false;
-    registerModel:RegisterModel;
+    isAcceptTerms: boolean = false;
+    isLoading: boolean = false;
+    registerModel: RegisterModel;
+    emailErr : boolean = false;
     // Private
     private _unsubscribeAll: Subject<any>;
-    
-    constructor(private _fuseConfigService: FuseConfigService, private _formBuilder: FormBuilder, private _router: Router)
-    {
+
+    constructor(private _fuseConfigService: FuseConfigService, private _formBuilder: FormBuilder, private _router: Router, private registerService: RegisterService) {
         // Configure the layout
         this._fuseConfigService.config = {
             layout: {
-                navbar   : {
+                navbar: {
                     hidden: true
                 },
-                toolbar  : {
+                toolbar: {
                     hidden: true
                 },
-                footer   : {
+                footer: {
                     hidden: true
                 },
                 sidepanel: {
@@ -48,29 +48,34 @@ export class RegisterComponent implements OnInit, OnDestroy
     /**
      * On click events
      */
-    onCreateAnAccount(){
-        console.log(this.registerModel);
-        // handle here - if register successful please redirect to /account/mail-confirmation
+    onCreateAnAccount() {
+        this.emailErr = false;
         this.isLoading = true;
-        // this._router.navigate(['/account/mail-confirmation']);
+        this.registerService.register(this.registerModel).subscribe(res => {
+            this.isLoading = false;
+            this._router.navigate(['/account/mail-confirmation']);
+            this.registerService.email.next(this.registerModel.email);
+        }, err => {
+            this.isLoading = false
+            console.log(err.error.errors['Email']);
+            this.emailErr =  !err.error.errors['Email'] ? false : true;
+        });
     }
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
     // -----------------------------------------------------------------------------------------------------
-    
+
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         this.registerModel = new RegisterModel();
         this.registerForm = this._formBuilder.group({
-            name           : [this.registerModel.name, [Validators.required,Validators.minLength(6),]],
-            email          : [this.registerModel.email, [Validators.required, Validators.email]],
-            password       : [this.registerModel.password, [Validators.required,Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)]],
-            passwordConfirm: ['Haunc10081997', [Validators.required, confirmPasswordValidator]]
+            name: [this.registerModel.displayName, [Validators.required, Validators.minLength(6),]],
+            email: [this.registerModel.email, [Validators.required, Validators.email]],
+            password: [this.registerModel.password, [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)]],
+            passwordConfirm: ['', [Validators.required, confirmPasswordValidator]]
         });
-
         // Update the validity of the 'passwordConfirm' field
         // when the 'password' field changes
         this.registerForm.get('password').valueChanges
@@ -83,8 +88,7 @@ export class RegisterComponent implements OnInit, OnDestroy
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
@@ -99,28 +103,24 @@ export class RegisterComponent implements OnInit, OnDestroy
  */
 export const confirmPasswordValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
 
-    if ( !control.parent || !control )
-    {
+    if (!control.parent || !control) {
         return null;
     }
 
     const password = control.parent.get('password');
     const passwordConfirm = control.parent.get('passwordConfirm');
 
-    if ( !password || !passwordConfirm )
-    {
+    if (!password || !passwordConfirm) {
         return null;
     }
 
-    if ( passwordConfirm.value === '' )
-    {
+    if (passwordConfirm.value === '') {
         return null;
     }
 
-    if ( password.value === passwordConfirm.value )
-    {
+    if (password.value === passwordConfirm.value) {
         return null;
     }
 
-    return {passwordsNotMatching: true};
+    return { passwordsNotMatching: true };
 };

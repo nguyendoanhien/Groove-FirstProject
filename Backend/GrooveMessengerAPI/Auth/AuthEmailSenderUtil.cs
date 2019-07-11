@@ -2,6 +2,7 @@
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
+using MimeKit.Text;
 
 namespace GrooveMessengerAPI.Auth
 {
@@ -17,7 +18,7 @@ namespace GrooveMessengerAPI.Auth
             message.From.Add(new MailboxAddress("Groove messenger system", config["AuthenticationEmailSender:EmailAddress"]));
             message.To.Add(new MailboxAddress("Groove messenger system", toEmail));
             message.Subject = subject;
-            message.Body = new TextPart("plain")
+            message.Body = new TextPart(TextFormat.Html)
             {
                 Text = body
             };

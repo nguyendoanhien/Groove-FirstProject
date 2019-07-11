@@ -1,5 +1,5 @@
 export class RegisterModel{
-    name:string;
+    displayName:string;
     email:string;
     password:string;
 }

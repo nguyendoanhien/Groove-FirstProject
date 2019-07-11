@@ -48,29 +48,27 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             }
             else
             {
-                var user = _userManager.FindByEmailAsync(model.Email);
-                if (user.Result == null)
+                var new_user = new ApplicationUser() { DisplayName = model.DisplayName, Email = model.Email, UserName = model.Email };
+                var result = await _userManager.CreateAsync(new_user, model.Password);
+                if (result.Succeeded)
                 {
-                    var new_user = new ApplicationUser() { DisplayName = model.DisplayName, Email = model.Email, UserName = model.Email };
-                    var result = await _userManager.CreateAsync(new_user, model.Password);
-                    if (result.Succeeded)
-                    {
-                        string token = _userManager.GenerateEmailConfirmationTokenAsync(new_user).Result;
-                        var url = _config["EmailConfirmationRoute:Url"] + "?token=" + HttpUtility.UrlEncode(token) + "&&userid=" + new_user.Id;
-                        _authEmailSender.SendEmail(url, "Registration Confirmation Email", model.Email, _config);
-                        return Ok(url);
-                    }
-                    else
-                    {
-                        _logger.LogError(new_user.UserName + " can not be found", user);
-                        return NotFound();
-                    }
+                    string token = _userManager.GenerateEmailConfirmationTokenAsync(new_user).Result;
+                    var url = _config["EmailConfirmationRoute:Url"] + "?ctoken=" + HttpUtility.UrlEncode(token) + "&userid=" + new_user.Id;
+                    var body = "<h1>Confirm Your Email</h1>" +
+                        "<h3>Hello " + new_user.DisplayName + "</h3>" +
+                        "<h3>Tap the button below to confirm your email address.</h3>" +
+                        "<h3>If you didn't create an account with <a href='http://localhost:4200'>Groove Messenger</a>, you can safely delete this email.</h3>" +
+                        "<table border='0' cellpadding='0' cellspacing='0' width='40% ' style='background-color:#324FEA; border:1px solid #324FEA; border-radius:5px;'>" +
+                        "<tr><td align = 'center' valign = 'middle' style = 'color:#ffffff; font-family:Helvetica, Arial, sans-serif; font-size:20px; font-weight:bold; line-height:150%; padding-top:15px; padding-right:30px; padding-bottom:15px; padding-left:30px;'>" +
+                        "<a href = '" + url + "' target = '_blank' style = 'color:#ffffff; text-decoration:none;display:block' > Click to verify email </a></td></tr></table> ";
+                    _authEmailSender.SendEmail(body , "Registration Confirmation Email", model.Email, _config);
+                    return Ok();
                 }
                 else
                 {
-                    _logger.LogError("Email " + model.Email + "already exists", model);
-                    return Content("Email " + model.Email + " already exists");
+                    return BadRequest();
                 }
+               
             }
         }
         [HttpPost("confirmemail")]
@@ -85,7 +83,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             var res = await _userManager.ConfirmEmailAsync(user, model.Ctoken);
             if (res.Succeeded)
             {
-                return Ok("Success");
+                return Ok();
             }
             else
             {

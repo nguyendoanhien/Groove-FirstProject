@@ -12,7 +12,7 @@
 
             <div class="subtitle">
                 <p>
-                    A confirmation e-mail has been sent to <b>{{emailAddress}}</b>.
+                    A confirmation e-mail has been sent to <b></b>.
                 </p>
                 <p>
                     Check your inbox and click on the "Confirm my email" link to confirm your email address.
@@ -22,7 +22,9 @@
             <div class="message">
                 <a class="link" [routerLink]="'/account/login'">Go back to login page</a>
             </div>
-
+            <p *ngIf="isLoading" class="spinner" fxLayout="column" fxLayoutAlign="center center">
+                <mat-spinner color="accent" [diameter]="70"></mat-spinner>
+            </p>
         </div>
 
     </div>
