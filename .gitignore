@@ -1,9 +1,0 @@
-################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
-
-/PersonalNotesAPI/PersonalNotesAPI/bin
-/PersonalNotesAPI/.vs
-/PersonalNotesAPI/PersonalNotesAPI/obj
-
-Backend/GrooveNoteAPI/logs
