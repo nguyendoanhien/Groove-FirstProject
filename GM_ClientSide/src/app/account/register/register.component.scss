@@ -75,7 +75,7 @@ register {
                 .title {
                     font-size: 21px;
                 }
-                .register{
+                .register, .spinner, .email-already-axist{
                     flex-direction: column;
                     box-sizing: border-box;
                     display: flex;
@@ -120,7 +120,6 @@ register {
                         width: 100%;
                         margin: 16px auto;
                         display: block;
-
                         @include media-breakpoint('xs') {
                             width: 80%;
                         }
