@@ -101,8 +101,9 @@ export class LoginComponent implements OnInit {
         this._authService.signIn(socialPlatformProvider)
             .then((userData) => {
 
+                console.log(userData);
                 this._userProfileService.logInGoogle(userData.idToken);
-              
+
             });
     }
 

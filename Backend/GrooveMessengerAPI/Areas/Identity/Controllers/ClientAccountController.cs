@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
 {
@@ -24,6 +25,8 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
     [ApiController]
     public class ClientAccountController : ControllerBase
     {
+        private static readonly HttpClient client = new HttpClient();
+
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<ClientAccountController> _logger;
@@ -87,9 +90,12 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             try
             {
                 //SimpleLogger.Log("userView = " + userView.tokenId);
+                var responseString = await client.GetStringAsync($"https://www.googleapis.com/oauth2/v3/tokeninfo?id_token={accessToken}");
+                
+             
                 var payload = GoogleJsonWebSignature.ValidateAsync(accessToken, new GoogleJsonWebSignature.ValidationSettings()).Result;
                 //var user = await _authService.Authenticate(payload);
-
+                
                 ExternalLoginInfo info = new ExternalLoginInfo(null, "Google", payload.Subject, "Google");
                 var resultFindByMail = await _userManager.FindByEmailAsync(payload.Email);
                 var resultFindByLoginExternal = await _userManager.FindByLoginAsync("Google", payload.Subject);
@@ -113,6 +119,8 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                     if (resultFindByLoginExternal == null)
                     {
                         var resultLogin = await _userManager.AddLoginAsync(resultFindByMail, info);
+                        await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
+                        
                     }
                    await _signInManager.SignInAsync(resultFindByMail, isPersistent: false);
                   
