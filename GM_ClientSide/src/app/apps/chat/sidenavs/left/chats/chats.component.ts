@@ -7,6 +7,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseMatSidenavHelperService } from '@fuse/directives/fuse-mat-sidenav/fuse-mat-sidenav.service';
 
 import { ChatService } from '../../../chat.service';
+import { UserProfileService } from 'app/core/identity/userprofile.service';
 
 @Component({
     selector     : 'chat-chats-sidenav',
@@ -34,6 +35,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy
      * @param {MediaObserver} _mediaObserver
      */
     constructor(
+        private _userProfileService: UserProfileService,
         private _chatService: ChatService,
         private _fuseMatSidenavHelperService: FuseMatSidenavHelperService,
         public _mediaObserver: MediaObserver
@@ -129,6 +131,6 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy
      */
     logout(): void
     {
-        console.log('logout triggered');
+        this._userProfileService.logOut();
     }
 }

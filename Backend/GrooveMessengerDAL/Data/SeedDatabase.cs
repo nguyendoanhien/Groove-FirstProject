@@ -23,7 +23,7 @@ namespace GrooveMessengerDAL.Data
                     DisplayName = "Root user",
                     EmailConfirmed = true
                 };
-                userManager.CreateAsync(user01, "Root@123"); // admin is password
+                userManager.CreateAsync(user01, "Root1234"); // admin is password
             }
         }
     }

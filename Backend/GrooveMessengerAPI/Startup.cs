@@ -60,7 +60,12 @@ namespace GrooveMessengerAPI
                           .AllowCredentials();
                });
             });
-
+            services.AddAuthentication()
+            .AddGoogle(options =>
+            {
+                options.ClientId = "687824117544-nvc2uojbm14hc330gl8qh3lsrtl3tc4a.apps.googleusercontent.com";
+                options.ClientSecret = "ugBBsDjYS-Rz20RVlx9r7Blo";
+            });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             RegisterAuth(services);

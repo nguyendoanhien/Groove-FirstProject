@@ -23,6 +23,7 @@ import { ChatUserSidenavComponent } from './sidenavs/left/user/user.component';
 import { ChatLeftSidenavComponent } from './sidenavs/left/left.component';
 import { ChatRightSidenavComponent } from './sidenavs/right/right.component';
 import { ChatContactSidenavComponent } from './sidenavs/right/contact/contact.component';
+import { AuthRouteGuardService } from 'app/core/auth/authrouteguard.service';
 
 const routes: Routes = [
     {
@@ -30,7 +31,8 @@ const routes: Routes = [
         component: ChatComponent,
         resolve: {
             chat: ChatService
-        }
+        },
+        canActivate:[AuthRouteGuardService]
     }
 ];
 
