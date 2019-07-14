@@ -16,7 +16,7 @@ using System.Web;
 
 namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
 {
-    [Route("Indentity/[controller]")]
+    [Route("Identity/[controller]")]
     [ApiController]
     public class ClientAccountController : ControllerBase
     {
@@ -48,6 +48,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
         {
             return Ok();
         }
+
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]RegisterModel model)
         {
@@ -61,25 +62,27 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                 var result = await _userManager.CreateAsync(new_user, model.Password);
                 if (result.Succeeded)
                 {
+                    var clientAppUrl = _config.GetSection("Client").Value;
                     string token = _userManager.GenerateEmailConfirmationTokenAsync(new_user).Result;
                     var url = _config["EmailConfirmationRoute:Url"] + "?ctoken=" + HttpUtility.UrlEncode(token) + "&userid=" + new_user.Id;
                     var body = "<h1>Confirm Your Email</h1>" +
                         "<h3>Hello " + new_user.DisplayName + "</h3>" +
                         "<h3>Tap the button below to confirm your email address.</h3>" +
-                        "<h3>If you didn't create an account with <a href='http://localhost:4200'>Groove Messenger</a>, you can safely delete this email.</h3>" +
+                        "<h3>If you didn't create an account with <a href='" + clientAppUrl + "'>Groove Messenger</a>, you can safely delete this email.</h3>" +
                         "<table border='0' cellpadding='0' cellspacing='0' width='40% ' style='background-color:#324FEA; border:1px solid #324FEA; border-radius:5px;'>" +
                         "<tr><td align = 'center' valign = 'middle' style = 'color:#ffffff; font-family:Helvetica, Arial, sans-serif; font-size:20px; font-weight:bold; line-height:150%; padding-top:15px; padding-right:30px; padding-bottom:15px; padding-left:30px;'>" +
                         "<a href = '" + url + "' target = '_blank' style = 'color:#ffffff; text-decoration:none;display:block' > Click to verify email </a></td></tr></table> ";
-                    _authEmailSender.SendEmail(body , "Registration Confirmation Email", model.Email, _config);
+                    _authEmailSender.SendEmail(body, "Registration Confirmation Email", model.Email, _config);
                     return Ok();
                 }
                 else
                 {
                     return BadRequest();
                 }
-               
+
             }
         }
+
         [HttpPost("confirmemail")]
         public async Task<IActionResult> ConfirmEmail([FromBody]EmailConfirmationModel model)
         {
@@ -100,6 +103,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                 return Content("Invalid Email Content");
             }
         }
+
         [HttpPost("forgotpassword")]
         public async Task<IActionResult> Forgotpassword(string email)
         {
@@ -111,11 +115,12 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             {
                 return BadRequest();
             }
+            var clientAppUrl = _config.GetSection("Client").Value;
             string url = _config["ForgotEmailRoute:Url"] + "?token=" + HttpUtility.UrlEncode(token) + "&&userid=" + user.Id;
             var body = "<h1>Confirm Your Email</h1>" +
                         "<h3>Hello " + user.DisplayName + "</h3>" +
                         "<h3>Tap the button below to confirm your email address.</h3>" +
-                        "<h3>If you didn't create an account with <a href='http://localhost:4200'>Groove Messenger</a>, you can safely delete this email.</h3>" +
+                        "<h3>If you didn't create an account with <a href='" + clientAppUrl + "'>Groove Messenger</a>, you can safely delete this email.</h3>" +
                         "<table border='0' cellpadding='0' cellspacing='0' width='40% ' style='background-color:#324FEA; border:1px solid #324FEA; border-radius:5px;'>" +
                         "<tr><td align = 'center' valign = 'middle' style = 'color:#ffffff; font-family:Helvetica, Arial, sans-serif; font-size:20px; font-weight:bold; line-height:150%; padding-top:15px; padding-right:30px; padding-bottom:15px; padding-left:30px;'>" +
                         "<a href = '" + url + "' target = '_blank' style = 'color:#ffffff; text-decoration:none;display:block' > Click to reset your password </a></td></tr></table> ";
@@ -123,8 +128,6 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             this._authEmailSender.SendEmail(body, "Reset Password", email, _config);
             return Ok();
         }
-
-
 
         [HttpPost("resetpassword")]
         public async Task<IActionResult> Resetpassword([FromBody]ForgotPasswordModel model)
@@ -142,7 +145,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                if(user.Email != model.Email) { return BadRequest(); }
+                if (user.Email != model.Email) { return BadRequest(); }
                 var result = await _userManager.ResetPasswordAsync(user, model.Ctoken, model.NewPassword);
                 if (result.Succeeded)
                 {
@@ -156,14 +159,11 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             }
         }
 
-
-
-
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(LoginModel data)
         {
-            
+
             var checkUser = await _userManager.FindByNameAsync(data.Username);
             if (checkUser == null)
             {
@@ -180,6 +180,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             }
             return Unauthorized("Password is incorrect");
         }
+
         [HttpPost]
         [Route("logingoogle")]
         public async Task<ObjectResult> LoginGoogle(string accessToken)
@@ -199,7 +200,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                     if (resultCreate.Succeeded)
                     {
                         var resultLogin = await _userManager.AddLoginAsync(user, info);
-                       
+
                         return new OkObjectResult(tokenString);
                     }
                 }
@@ -209,9 +210,9 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                     {
                         var resultLogin = await _userManager.AddLoginAsync(resultFindByMail, info);
                     }
-                   await _signInManager.SignInAsync(resultFindByMail, isPersistent: false);                 
+                    await _signInManager.SignInAsync(resultFindByMail, isPersistent: false);
                 }
- 
+
                 return new OkObjectResult(tokenString);
 
             }
@@ -226,10 +227,10 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
         [Route("loginfacebook")]
         public async Task<ObjectResult> Fblogin(string token)
         {
-            var AppId = _config["ApplicationFacebook:AppId"].ToString();
-            var AppSecret = _config["ApplicationFacebook:AppSecret"].ToString();
+            var appId = _config["ApplicationFacebook:AppId"].ToString();
+            var appSecret = _config["ApplicationFacebook:AppSecret"].ToString();
 
-            var appAccessTokenResponse = await Client.GetStringAsync($"https://graph.facebook.com/oauth/access_token?client_id={AppId}&client_secret={AppSecret}&grant_type=client_credentials");
+            var appAccessTokenResponse = await Client.GetStringAsync($"https://graph.facebook.com/oauth/access_token?client_id={appId}&client_secret={appSecret}&grant_type=client_credentials");
             var appAccessToken = JsonConvert.DeserializeObject<FacebookAppAccessToken>(appAccessTokenResponse);
             // 2. validate the user access token
             var userAccessTokenValidationResponse = await Client.GetStringAsync($"https://graph.facebook.com/debug_token?input_token={token}&access_token={appAccessToken.AccessToken}");
@@ -268,6 +269,4 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             return new OkObjectResult(refreshToken);
         }
     }
-
-    
 }

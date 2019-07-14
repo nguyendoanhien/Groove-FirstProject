@@ -7,3 +7,7 @@
 /PersonalNotesAPI/PersonalNotesAPI/obj
 
 Backend/GrooveNoteAPI/logs
+Backend/GrooveMessengerDAL/bin
+Backend/GrooveMessengerAPI/bin
+Backend/GrooveMessengerDAL/obj
+Backend/GrooveMessengerAPI/obj

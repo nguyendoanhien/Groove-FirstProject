@@ -7,7 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
-import { ResetPasswordComponent } from './reset-password/reset-password.component'
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { CookieService } from 'ngx-cookie-service';
 import { MailConfirmComponent } from './mail-confirm/mail-confirm.component';
 import { MailConfirmerComponent } from './mail-confirmer/mail-confirmer.component';
@@ -18,18 +18,20 @@ import {
   GoogleLoginProvider,
   FacebookLoginProvider
 } from 'angularx-social-login';
+import { environment } from 'environments/environment';
+
 const matModules = [MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatCheckboxModule];
-let config = new AuthServiceConfig([
+const config = new AuthServiceConfig([
   {
     id: GoogleLoginProvider.PROVIDER_ID,
-    provider: new GoogleLoginProvider("687824117544-nvc2uojbm14hc330gl8qh3lsrtl3tc4a.apps.googleusercontent.com")
+    provider: new GoogleLoginProvider(environment.applicationGoogle.clientId)
   },
   {
     id: FacebookLoginProvider.PROVIDER_ID,
-    provider: new FacebookLoginProvider("354060818601401")
+    provider: new FacebookLoginProvider(environment.applicationFacebook.appId)
   }
 ]);
-export function provideConfig() {
+export function provideConfig(): AuthServiceConfig {
 
 
   return config;

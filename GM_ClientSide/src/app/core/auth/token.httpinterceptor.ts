@@ -9,7 +9,7 @@ import {
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
 
-const authUrl = environment.authUrl;
+const loginUrl = environment.authLoginUrl;
 
 @Injectable()
 export class TokenHttpInterceptor implements HttpInterceptor {
@@ -19,7 +19,7 @@ export class TokenHttpInterceptor implements HttpInterceptor {
   }
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const securityToken = this.authService.getToken();
-    if (request.url === authUrl) {
+    if (request.url === loginUrl) {
       request.headers.set('Content-Type', 'application/json; charset=UTF-8');
       return next.handle(request);
     } else if (securityToken.length > 0) {
