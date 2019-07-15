@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
-import { RegisterService } from 'app/core/identity/register.service';
+import { RegisterService } from 'app/core/account/register.service';
 import { Router } from "@angular/router"
 @Component({
     selector     : 'mail-confirm',
@@ -20,11 +20,13 @@ export class MailConfirmComponent
      * @param {FuseConfigService} _fuseConfigService
      * @param {RegisterService} _registerService
      * @param {Router} _router
+     * @param {ResetPasswordService} _resetPassService
      */
     constructor(
         private _fuseConfigService: FuseConfigService,
         private _registerService: RegisterService,
-        private _router: Router
+        private _router: Router,
+        private _resetPassService:
     )
     {
         this._registerService.email.subscribe(emailAddress=>emailAddress?this.emailAddress = emailAddress:this._router.navigate(['/account/register']))

@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import { ResetPassword } from 'app/models/ResetPassword';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 @Injectable({
     providedIn: 'root'
 })
 export class ResetPasswordService {
-
+    isForgot : BehaviorSubject<boolean>;
     constructor(private _http: HttpClient) {
 
     }
-
+    
     resetPassword(resetPassword: ResetPassword): Observable<any> {
         console.log(resetPassword);
         const httpOptions = {
