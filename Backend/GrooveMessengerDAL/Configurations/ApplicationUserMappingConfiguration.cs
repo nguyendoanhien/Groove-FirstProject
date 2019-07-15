@@ -9,7 +9,7 @@ namespace GrooveMessengerDAL.Configurations
     {
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
-            builder.HasOne(a => a.UserInfoEntity).WithOne(b => b.ApplicationUser).HasForeignKey<UserInfoEntity>(b => b.Id);
+            builder.Property(x => x.DisplayName).HasColumnName("DisplayName").IsRequired().HasMaxLength(120);
         }
     }
 }

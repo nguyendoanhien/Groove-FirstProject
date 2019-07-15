@@ -21,7 +21,7 @@ namespace GrooveMessengerDAL.Migrations
 
             modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoEntity", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Avatar");
@@ -37,11 +37,6 @@ namespace GrooveMessengerDAL.Migrations
                     b.Property<bool?>("Deleted")
                         .HasColumnName("Deleted");
 
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasColumnName("Display Name")
-                        .HasMaxLength(50);
-
                     b.Property<string>("Mood")
                         .HasColumnName("Mood")
                         .HasMaxLength(150);
@@ -49,17 +44,19 @@ namespace GrooveMessengerDAL.Migrations
                     b.Property<int>("Status")
                         .HasColumnName("Status");
 
-                    b.Property<byte[]>("Timestamp")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
                     b.Property<string>("UpdatedBy")
                         .HasColumnName("UpdatedBy");
 
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnName("UpdatedOn");
 
+                    b.Property<string>("UserId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("UserInfo");
                 });
@@ -75,7 +72,9 @@ namespace GrooveMessengerDAL.Migrations
                         .IsConcurrencyToken();
 
                     b.Property<string>("DisplayName")
-                        .HasMaxLength(50);
+                        .IsRequired()
+                        .HasColumnName("DisplayName")
+                        .HasMaxLength(120);
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
@@ -232,8 +231,7 @@ namespace GrooveMessengerDAL.Migrations
                 {
                     b.HasOne("GrooveMessengerDAL.Models.ApplicationUser", "ApplicationUser")
                         .WithOne("UserInfoEntity")
-                        .HasForeignKey("GrooveMessengerDAL.Entities.UserInfoEntity", "Id")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("GrooveMessengerDAL.Entities.UserInfoEntity", "UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

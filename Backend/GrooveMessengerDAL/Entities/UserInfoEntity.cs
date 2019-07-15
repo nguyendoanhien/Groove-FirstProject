@@ -7,7 +7,7 @@ using System.Text;
 
 namespace GrooveMessengerDAL.Entities
 {
-    public class UserInfoEntity: AuditBaseEntity<string>
+    public class UserInfoEntity: AuditBaseEntity<Guid>
     {
         public enum StatusName
         {
@@ -18,16 +18,14 @@ namespace GrooveMessengerDAL.Entities
             Offline
         }
 
-        [MaxLength(120), Required]
-        public string DisplayName { get; set; }
-
-        [MaxLength(150)]
+       
         public string Mood { get; set; }
 
-        [Required]
         public StatusName Status { get; set; }
 
         public string Avatar { get; set; }
+        
+        public String UserId { get; set; }
 
         public ApplicationUser ApplicationUser { get; set; }
     }
