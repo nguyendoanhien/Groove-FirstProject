@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using GrooveMessengerDAL.Entities;
 using GrooveMessengerDAL.Models;
 using GrooveMessengerDAL.Services.Interface;
+using GrooveMessengerDAL.Configurations;
 
 namespace GrooveMessengerDAL.Data
 {
@@ -32,7 +33,7 @@ namespace GrooveMessengerDAL.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
 
-            // builder.ApplyConfiguration(new NoteMappingConfiguration());
+            //builder.ApplyConfiguration(new NoteMappingConfiguration());
         }
 
         private void SaveChangeOverride()

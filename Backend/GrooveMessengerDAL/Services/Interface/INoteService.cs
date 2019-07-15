@@ -10,6 +10,7 @@ namespace GrooveMessengerDAL.Services.Interface
         IEnumerable<FullModel> GetNoteListFullModel();
         void AddNote(CreateModel note);
         EditModel GetNoteForEdit(int id);
+        Task<EditModel> GetNoteForEditAsync(int id);
         void EditNote(EditModel data);
         bool CheckExisting(int id);
         void DeleteNote(int id);
