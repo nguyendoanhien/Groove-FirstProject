@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class AuthService {
     public getToken(): string {
-        return localStorage.getItem('token') === null ? '123' : localStorage.getItem('token');
+        return localStorage.getItem('token') === null ? '' : localStorage.getItem('token');
     }
 
     public setToken(token: string) {

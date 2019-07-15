@@ -30,14 +30,14 @@ namespace GrooveMessengerAPI.Middlewares
         private Task HandleMiddlewareAsync(HttpContext context)
         {
             var origin = context.Request.Headers["Origin"];
-            var validClients = _config.GetSection("Clients").Get<List<string>>();
+            var validClients = _config.GetSection("Client").Value;
             var server = _config.GetSection("Server").Value;
 
             if (server.Equals(origin))
             {
                 return this._next(context);
             }
-            if (!string.IsNullOrEmpty(origin) && !validClients.Contains(origin))
+            if (!string.IsNullOrEmpty(origin) && !validClients.Equals(origin))
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return context.Response.WriteAsync("Error: Not valid client");

@@ -43,24 +43,31 @@ namespace GrooveMessengerAPI
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAPIClient",
-                builder =>
-                {
-                    builder.AllowAnyOrigin()
-                           .AllowAnyHeader()
-                           .AllowAnyMethod()
-                           .AllowCredentials();
-                });
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                               .AllowAnyHeader()
+                               .AllowAnyMethod()
+                               .AllowCredentials();
+                    });
+
+                var clientAppUrl = Configuration.GetSection("Client").Value;
 
                 options.AddPolicy("AllowHubClient",
-               builder =>
-               {
-                   builder.WithOrigins("http://localhost:4200")
-                          .AllowAnyHeader()
-                          .AllowAnyMethod()
-                          .AllowCredentials();
-               });
+                   builder =>
+                   {
+                       builder.WithOrigins(clientAppUrl)
+                              .AllowAnyHeader()
+                              .AllowAnyMethod()
+                              .AllowCredentials();
+                   });
             });
-
+            services.AddAuthentication()
+            .AddGoogle(options =>
+            {
+                options.ClientId = Configuration.GetSection("ApplicationGoogle:ClientId").Value;
+                options.ClientSecret = Configuration.GetSection("ApplicationGoogle:ClientSecret").Value; ;
+            });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             RegisterAuth(services);

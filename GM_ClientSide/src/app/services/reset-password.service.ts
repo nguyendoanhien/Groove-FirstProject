@@ -21,12 +21,12 @@ export class ResetPasswordService {
             }),
             responseType: "text" as 'json'
         };
-        return this._http.post<ResetPassword>(`https://localhost:44383/indentity/clientaccount/resetpassword`, resetPassword, httpOptions);
+        return this._http.post<ResetPassword>(`https://localhost:44383/identity/clientaccount/resetpassword`, resetPassword, httpOptions);
     }
 
     forgotPassword(email: string): Observable<any> {
         console.log(email);
-        return this._http.post<any>(`https://localhost:44383/indentity/clientaccount/forgotpassword?email=${email}`, email);
+        return this._http.post<any>(`https://localhost:44383/identity/clientaccount/forgotpassword?email=${email}`, email);
     }
 
 }

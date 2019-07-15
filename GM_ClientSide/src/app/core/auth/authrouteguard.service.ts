@@ -19,11 +19,8 @@ export class AuthRouteGuardService implements CanActivate, CanActivateChild {
     canActivateChild(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         return this.canActivate(next, state);
     }
-
     constructor(
         private router: Router,
         private authService: AuthService) {
-
     }
-
 }
