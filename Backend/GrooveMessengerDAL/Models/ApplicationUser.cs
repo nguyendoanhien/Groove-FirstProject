@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using GrooveMessengerDAL.Entities;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace GrooveMessengerDAL.Models
@@ -8,6 +9,9 @@ namespace GrooveMessengerDAL.Models
     {
         [StringLength(50, ErrorMessage = "50 characters maximum")]
         public string DisplayName { get; set; }
+
+
+        public UserInfoEntity UserInfoEntity { get; set; }
     }
 
 }
