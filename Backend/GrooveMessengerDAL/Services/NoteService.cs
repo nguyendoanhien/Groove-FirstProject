@@ -60,7 +60,6 @@ namespace GrooveMessengerDAL.Services
             var storedData = _noteRepository.GetSingle(data.Id);
             storedData.Title = data.Title;
             storedData.Description = data.Description;
-            storedData.Timestamp = data.Timestamp;
             _noteRepository.Edit(storedData);
             _uow.SaveChanges();
         }

@@ -11,7 +11,7 @@ export class AuthRouteGuardService implements CanActivate, CanActivateChild {
             return true;
         }
         else {
-            this.router.navigate(['/account/login']);
+            this.router.navigate(['account','login']);
             return false;
         }
     }
@@ -19,11 +19,8 @@ export class AuthRouteGuardService implements CanActivate, CanActivateChild {
     canActivateChild(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         return this.canActivate(next, state);
     }
-
     constructor(
         private router: Router,
         private authService: AuthService) {
-
     }
-
 }

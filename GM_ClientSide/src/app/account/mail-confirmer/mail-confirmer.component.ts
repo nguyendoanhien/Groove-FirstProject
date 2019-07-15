@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
-import { RegisterService } from 'app/core/identity/register.service';
+import { RegisterService } from 'app/core/account/register.service';
 import { Router, ActivatedRoute } from "@angular/router"
 import { MailConfirmModel } from './mail-confirmer.model';
 import { Route } from '@angular/compiler/src/core';
@@ -53,7 +53,7 @@ export class MailConfirmerComponent implements OnInit {
         var model = await this.getParams();
         this._registerService.confirmEmail(model).subscribe(sussess => {
             this.isLoading = false;
-            this._router.navigate(['/apps/chat']);
+            this._router.navigate(['chat']);
         }, fail => {
             this.isLoading = false;
             console.log(fail);

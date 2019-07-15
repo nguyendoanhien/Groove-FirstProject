@@ -11,7 +11,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { CookieService } from 'ngx-cookie-service';
 import { MailConfirmComponent } from './mail-confirm/mail-confirm.component';
 import { MailConfirmerComponent } from './mail-confirmer/mail-confirmer.component';
-import { ResetPasswordService } from 'app/services/reset-password.service';
+import { ResetPasswordService } from 'app/core/account/reset-password.service';
 import {
   SocialLoginModule,
   AuthServiceConfig,
