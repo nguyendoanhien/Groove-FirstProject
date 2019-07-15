@@ -12,3 +12,31 @@ chat-user-sidenav {
         }
     }
 }
+div[contenteditable="true"] {
+    box-shadow: inset 0px 1px 4px #666;
+}
+
+.input--transparent {
+    background: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0);
+}
+input {
+    border: 0;
+    outline: 0;
+    background: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0);
+    transition: width 0.3s;
+}
+.line {
+    height: 2px;
+    width: 0px;
+    position: absolute;
+    background-color: black;
+    display: inline-block;
+    transition: 0.3s width ease-in-out;
+    position: relative;
+    top: -10px;
+}
+input:focus + .line {
+    width: 100%;
+}

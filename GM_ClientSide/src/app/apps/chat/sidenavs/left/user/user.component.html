@@ -17,8 +17,30 @@
         <!-- TOOLBAR BOTTOM -->
         <mat-toolbar-row class="toolbar-bottom" fxLayout="column" fxLayoutAlign="center center">
 
-            <img [src]="user.avatar" class="avatar user-avatar huge" alt="{{user.name}}"/>
-            <div class="user-name my-8">{{user.name}}</div>
+            <img [src]="user.avatar" class="avatar user-avatar huge" alt="{{user.name}}" />
+            <!-- <div [textContent]="user.name" (input)="user.name=$event.target.textContent"
+                [attr.contenteditable]="contenteditable" class="user-name my-8 form-control">
+                {{user.name}}
+            </div> -->
+
+            <input #displayName spellcheck="false" type="text" [(ngModel)]="user.name"
+                class="user-name my-8 form-control cool-link" style="text-align: center"
+                (focus)="contenteditable = true;" (focusout)="focusOutFunction()"
+                [class.input--transparent]="!contenteditable" [readonly]="!contenteditable" />
+
+
+            <div class="line"></div>
+            <!-- <i class=" material-icons" (click)="Edit()" *ngIf="contenteditable==false">
+            edit
+            </i>
+            <div *ngIf="contenteditable==true">
+                <i class="material-icons" (click)="AcceptChange()">
+                    check
+                </i>
+                <i class="material-icons" (click)="RejectChange()">
+                    close
+                </i>
+            </div> -->
 
         </mat-toolbar-row>
         <!-- / TOOLBAR BOTTOM -->

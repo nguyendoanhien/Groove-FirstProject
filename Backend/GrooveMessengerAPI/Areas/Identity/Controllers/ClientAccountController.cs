@@ -11,6 +11,8 @@ using GrooveMessengerAPI.Areas.Identity.Models;
 using GrooveMessengerAPI.Areas.Identity.Models.ModelsSocial;
 using GrooveMessengerAPI.Auth;
 using GrooveMessengerDAL.Models;
+using GrooveMessengerDAL.Services;
+using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -31,14 +33,23 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<ClientAccountController> _logger;
         private readonly IConfiguration _config;
+        private readonly IUserResolverService _userResolverService;
+        private readonly IUserService _userService;
         private static readonly HttpClient Client = new HttpClient();
 
-        public ClientAccountController(SignInManager<ApplicationUser> signInManager, ILogger<ClientAccountController> logger, UserManager<ApplicationUser> userManager, IConfiguration config)
+        public ClientAccountController(SignInManager<ApplicationUser> signInManager
+            , ILogger<ClientAccountController> logger
+            , UserManager<ApplicationUser> userManager
+            , IConfiguration config
+            , IUserResolverService userResolverService
+            , IUserService userService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
             _config = config;
+            _userResolverService = userResolverService;
+            _userService = userService;
         }
         [HttpGet]
         [Route("")]
@@ -61,12 +72,11 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
         {
             return Ok();
         }
-
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(LoginModel data)
         {
-            
+
             var checkUser = await _userManager.FindByNameAsync(data.Username);
             if (checkUser == null)
             {
@@ -91,11 +101,11 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             {
                 //SimpleLogger.Log("userView = " + userView.tokenId);
                 var responseString = await client.GetStringAsync($"https://www.googleapis.com/oauth2/v3/tokeninfo?id_token={accessToken}");
-                
-             
+
+
                 var payload = GoogleJsonWebSignature.ValidateAsync(accessToken, new GoogleJsonWebSignature.ValidationSettings()).Result;
                 //var user = await _authService.Authenticate(payload);
-                
+
                 ExternalLoginInfo info = new ExternalLoginInfo(null, "Google", payload.Subject, "Google");
                 var resultFindByMail = await _userManager.FindByEmailAsync(payload.Email);
                 var resultFindByLoginExternal = await _userManager.FindByLoginAsync("Google", payload.Subject);
@@ -110,7 +120,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                     if (resultCreate.Succeeded)
                     {
                         var resultLogin = await _userManager.AddLoginAsync(user, info);
-                       
+
                         return new OkObjectResult(tokenString);
                     }
                 }
@@ -120,18 +130,19 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                     {
                         var resultLogin = await _userManager.AddLoginAsync(resultFindByMail, info);
                         await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
-                        
+
                     }
-                   await _signInManager.SignInAsync(resultFindByMail, isPersistent: false);
-                  
-                        //_logger.LogInformation("User logged in.");
-                        //return LocalRedirect(returnUrl);
+                    await _signInManager.SignInAsync(resultFindByMail, isPersistent: false);
 
-                       
-                 
+                    //_logger.LogInformation("User logged in.");
+                    //return LocalRedirect(returnUrl);
+
+
+
                 }
+                var claims = User.Claims;
 
-          
+
                 return new OkObjectResult(tokenString);
 
                 //SimpleLogger.Log(payload.ExpirationTimeSeconds.ToString());
@@ -145,31 +156,6 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             }
             return BadRequest("Error !");
         }
-        //public async Task<ApplicationUser> Authenticate(Google.Apis.Auth.GoogleJsonWebSignature.Payload payload)
-        //{
-        //    await Task.Delay(1);
-        //    return this.FindUserOrAdd(payload);
-        //}
-
-        //private ApplicationUser FindUserOrAdd(Google.Apis.Auth.GoogleJsonWebSignature.Payload payload)
-        //{
-        //    var u = _users.Where(x => x.email == payload.Email).FirstOrDefault();
-        //    if (u == null)
-        //    {
-        //        u = new ApplicationUser()
-        //        {
-        //            id = Guid.NewGuid(),
-        //            name = payload.Name,
-        //            email = payload.Email,
-        //            oauthSubject = payload.Subject,
-        //            oauthIssuer = payload.Issuer
-        //        };
-        //        _users.Add(u);
-        //    }
-        //    this.PrintUsers();
-        //    return u;
-        //}
-
         [HttpPost]
         [Route("loginfacebook")]
         public async Task<ObjectResult> Fblogin(string token)
@@ -215,7 +201,13 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             var refreshToken = AuthTokenUtil.GetJwtTokenString(userInfo.Email, _config);
             return new OkObjectResult(refreshToken);
         }
+        [HttpGet]
+        public Task<ApplicationUser> GetUser(string id)
+        {
+
+            return _userService.GetUser(id);
+        }
     }
 
-    
+
 }

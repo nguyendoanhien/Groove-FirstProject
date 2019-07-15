@@ -3,11 +3,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using GrooveMessengerDAL.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace GrooveMessengerDAL.Repositories.Interface
 {
     public interface IGenericRepository<TEntity, TKey, TContext>
         where TEntity : BaseEntity<TKey> where TContext : DbContext
+        
     {
         IQueryable<TEntity> GetAll();
         TEntity GetSingle(TKey entityId);

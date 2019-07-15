@@ -6,9 +6,10 @@ export const environment = {
     production: false,
     hmr: false,
     appName: 'Groove Messenger Client',
+    clientAccountController: 'https://localhost:44383/Indentity/ClientAccount',
     authUrl: 'https://localhost:44383/Indentity/ClientAccount/login',
     authGoogleUrl: 'https://localhost:44383/Indentity/ClientAccount/logingoogle',
-    authFacebookUrl:'https://localhost:44383/Indentity/ClientAccount/loginfacebook',
+    authFacebookUrl: 'https://localhost:44383/Indentity/ClientAccount/loginfacebook',
     apiUrl: 'http://localhost:33435/api/notes'
 };
 
