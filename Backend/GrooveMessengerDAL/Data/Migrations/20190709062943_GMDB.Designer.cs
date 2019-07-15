@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GrooveMessengerDAL.Migrations
 {
     [DbContext(typeof(GrooveMessengerDbContext))]
-    [Migration("20190715054439_InitDB")]
-    partial class InitDB
+    [Migration("20190709062943_GMDB")]
+    partial class GMDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,48 +20,6 @@ namespace GrooveMessengerDAL.Migrations
                 .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Avatar");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnName("CreatedBy");
-
-                    b.Property<DateTime?>("CreatedOn")
-                        .IsRequired()
-                        .HasColumnName("CreatedOn");
-
-                    b.Property<bool?>("Deleted")
-                        .HasColumnName("Deleted");
-
-                    b.Property<string>("Mood")
-                        .HasColumnName("Mood")
-                        .HasMaxLength(150);
-
-                    b.Property<int>("Status")
-                        .HasColumnName("Status");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnName("UpdatedBy");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnName("UpdatedOn");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL");
-
-                    b.ToTable("UserInfo");
-                });
 
             modelBuilder.Entity("GrooveMessengerDAL.Models.ApplicationUser", b =>
                 {
@@ -74,9 +32,7 @@ namespace GrooveMessengerDAL.Migrations
                         .IsConcurrencyToken();
 
                     b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasColumnName("DisplayName")
-                        .HasMaxLength(120);
+                        .HasMaxLength(50);
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
@@ -227,13 +183,6 @@ namespace GrooveMessengerDAL.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoEntity", b =>
-                {
-                    b.HasOne("GrooveMessengerDAL.Models.ApplicationUser", "ApplicationUser")
-                        .WithOne("UserInfoEntity")
-                        .HasForeignKey("GrooveMessengerDAL.Entities.UserInfoEntity", "UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

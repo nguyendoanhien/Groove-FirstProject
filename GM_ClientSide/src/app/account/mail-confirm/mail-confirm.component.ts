@@ -25,8 +25,7 @@ export class MailConfirmComponent
     constructor(
         private _fuseConfigService: FuseConfigService,
         private _registerService: RegisterService,
-        private _router: Router,
-        private _resetPassService:
+        private _router: Router
     )
     {
         this._registerService.email.subscribe(emailAddress=>emailAddress?this.emailAddress = emailAddress:this._router.navigate(['/account/register']))
