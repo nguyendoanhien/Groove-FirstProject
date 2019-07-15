@@ -4,14 +4,16 @@ using GrooveMessengerDAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GrooveMessengerDAL.Migrations
 {
     [DbContext(typeof(GrooveMessengerDbContext))]
-    partial class GrooveMessengerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190715085527_UserContact")]
+    partial class UserContact
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,18 +52,18 @@ namespace GrooveMessengerDAL.Migrations
                     b.Property<string>("UserId")
                         .IsRequired();
 
-                    b.Property<Guid?>("UserInfoId");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserInfoId");
+                    b.HasIndex("ContactId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserInfoContact");
                 });
 
             modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Avatar");
@@ -268,12 +270,13 @@ namespace GrooveMessengerDAL.Migrations
                 {
                     b.HasOne("GrooveMessengerDAL.Entities.UserInfoEntity", "ContactInfo")
                         .WithMany("Contacts")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("ContactId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("GrooveMessengerDAL.Entities.UserInfoEntity", "UserInfo")
                         .WithMany("Users")
-                        .HasForeignKey("UserInfoId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoEntity", b =>

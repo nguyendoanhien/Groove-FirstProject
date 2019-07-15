@@ -15,6 +15,7 @@ namespace GrooveMessengerDAL.Configurations
             builder.Property(x => x.Mood).HasColumnName("Mood").HasMaxLength(150);
             builder.Property(x => x.Status).HasColumnName("Status").IsRequired();
             builder.HasOne(a => a.ApplicationUser).WithOne(b => b.UserInfoEntity).HasForeignKey<UserInfoEntity>(b => b.UserId);
+         
             builder.HasKey(x => x.Id);
         }
     }
