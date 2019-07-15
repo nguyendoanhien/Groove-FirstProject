@@ -16,6 +16,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class ForgotPasswordComponent implements OnInit {
     forgotPasswordForm: FormGroup;
     isLoading:boolean= false;
+    isEmailAlreadyExist:boolean = true;
     /**
      * Constructor
      *
@@ -65,10 +66,11 @@ export class ForgotPasswordComponent implements OnInit {
         this.isLoading = true;
         const email = this.forgotPasswordForm.get('email').value;
         this._resetPasswordService.forgotPassword(email).subscribe(val => {
+            this.isLoading = false;
             this._route.navigate(['/account/login']);
         }, err => {
-            console.log(err);
-            window.alert("Email does not exist");
+            this.isLoading = false;
+            this.isEmailAlreadyExist = false;
         });
     }
 }
