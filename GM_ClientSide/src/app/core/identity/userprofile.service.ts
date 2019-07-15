@@ -54,7 +54,7 @@ export class UserProfileService {
                 .pipe(
                     map((token: string) => {
                         this.parseJwtToken(token);
-                        this.router.navigate(["apps", "chat"]);
+                        this.router.navigate(['chat']);
                     })
                 )
         }
@@ -66,7 +66,7 @@ export class UserProfileService {
         return this.http.post<string>(authGoogleUrl + `?accessToken=${googleAccessToken}`, null, httpOptions).pipe(
             map((token: string) => { 
                 this.parseJwtToken(token);
-                this.router.navigate(["apps", "chat"]);
+                this.router.navigate(['chat']);
             })
         ).subscribe();
     }
@@ -76,7 +76,7 @@ export class UserProfileService {
         .pipe(
             map((token: string) => {
                 this.parseJwtToken(token);
-                this.router.navigate(['apps','chat']);
+                this.router.navigate(['chat']);
             })
         ).subscribe()
     }

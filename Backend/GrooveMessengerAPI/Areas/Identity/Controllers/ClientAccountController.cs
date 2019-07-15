@@ -258,7 +258,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
 
                 var result = await _userManager.CreateAsync(appUser);
                 var resultLogin = await _userManager.AddLoginAsync(appUser, info);
-
+       
             }
             else
             {

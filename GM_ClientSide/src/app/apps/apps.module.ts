@@ -3,11 +3,17 @@ import { RouterModule } from '@angular/router';
 
 import { FuseSharedModule } from '@fuse/shared.module';
 import {AppsComponent} from './apps.component'
+import { ChatComponent } from './chat/chat.component';
+import { ChatService } from './chat/chat.service';
+import {ChatModule} from './chat/chat.module';
 const routes = [
     {
         path        : 'chat',
-        loadChildren: './chat/chat.module#ChatModule'
-    },
+        component: ChatComponent,
+        resolve: {
+            chat: ChatService
+        }
+    }
 ];
 
 @NgModule({
@@ -16,7 +22,8 @@ const routes = [
     ],
     imports     : [
         RouterModule.forChild(routes),
-        FuseSharedModule
+        FuseSharedModule,
+        ChatModule
     ]
 })
 export class AppsModule
