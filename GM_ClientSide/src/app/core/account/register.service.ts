@@ -13,6 +13,7 @@ const confirmEmailUrl = environment.authConfirmEmailUrl;
 @Injectable()
 export class RegisterService {
     email: BehaviorSubject<any>;
+    
     constructor(private router: Router, private authService: AuthService, private http: HttpClient) {
         this.email = new BehaviorSubject(null);
     }

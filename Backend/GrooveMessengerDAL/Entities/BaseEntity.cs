@@ -10,9 +10,6 @@ namespace GrooveMessengerDAL.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public TKey Id { get; set; }
 
-        [Timestamp]
-        public byte[] Timestamp { get; set; }
-
         [Column("Deleted")]
         public bool? Deleted { get; set; }
 

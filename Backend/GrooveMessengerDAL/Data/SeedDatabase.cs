@@ -19,8 +19,7 @@ namespace GrooveMessengerDAL.Data
                 {
                     Email = "root123@gmail.com",
                     SecurityStamp = Guid.NewGuid().ToString(),
-                    UserName = "root123@gmail.com",
-                    DisplayName = "Root user",
+                    UserName = "root123@gmail.com",                    
                     EmailConfirmed = true
                 };
                 userManager.CreateAsync(user01, "Root1234"); // admin is password
