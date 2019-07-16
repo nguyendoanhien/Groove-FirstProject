@@ -87,6 +87,7 @@ export class UserProfileService {
     }
 
     public parseJwtToken(token: string) {
+        debugger;
         const jwt = token;
         const jwtHelper = new JwtHelperService();
         const decodedJwt = jwtHelper.decodeToken(jwt);
@@ -105,5 +106,9 @@ export class UserProfileService {
         if (token.length > 0) {
             this.parseJwtToken(token);
         }
+    }
+    public CurrentUserProfileModel() {
+        this.loadStoredUserProfile();
+        return this.userProfile.DisplayName;
     }
 }

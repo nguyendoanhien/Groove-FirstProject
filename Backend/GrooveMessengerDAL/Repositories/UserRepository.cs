@@ -14,18 +14,14 @@ namespace GrooveMessengerDAL.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        protected readonly DbContext DbContext;
-        protected readonly IUserResolverService UserResolverService;
+        private readonly DbContext DbContext;
+        private readonly IUserResolverService UserResolverService;
         private readonly UserManager<ApplicationUser> _userManager;
         public UserRepository(DbContext dbContext, IUserResolverService userResolverService, UserManager<ApplicationUser> userManager)
         {
             DbContext = dbContext;
             UserResolverService = userResolverService;
             _userManager = userManager;
-        }
-        public UserRepository()
-        {
-
         }
         public void Add(ApplicationUser entity)
         {
@@ -59,7 +55,8 @@ namespace GrooveMessengerDAL.Repositories
 
         public async Task<ApplicationUser> GetSingleAsync(string entityId)
         {
-            return await _userManager.FindByEmailAsync(entityId);
+            var result = await _userManager.FindByEmailAsync(entityId);
+            return result;
         }
     }
 }

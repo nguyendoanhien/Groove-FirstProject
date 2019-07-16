@@ -28,9 +28,9 @@ namespace GrooveMessengerDAL.Services
             this._uow = uow;
             this._mapper = mapper;
         }
-        public Task<ApplicationUser> GetUser(string id)
+        public async Task<ApplicationUser> GetUser(string id)
         {
-            return _userRepository.GetSingleAsync(id);
+            return  await _userRepository.GetSingleAsync(id);
 
         }
     }

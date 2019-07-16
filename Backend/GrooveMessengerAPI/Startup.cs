@@ -10,6 +10,8 @@ using AutoMapper;
 using Microsoft.Extensions.Logging;
 using GrooveMessengerAPI.Middlewares;
 using GrooveMessengerAPI.Hubs;
+using Microsoft.EntityFrameworkCore;
+using GrooveMessengerDAL.Data;
 
 namespace GrooveMessengerAPI
 {
@@ -72,6 +74,7 @@ namespace GrooveMessengerAPI
             RegisterAutoMapperProfiles(services);
 
             DiConfiguration.Register(services);
+            services.AddScoped<DbContext, GrooveMessengerDbContext>();
 
             // Register SignalR
             services.AddSignalR();

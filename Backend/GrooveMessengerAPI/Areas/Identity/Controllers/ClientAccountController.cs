@@ -1,25 +1,19 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Net.Http;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using crypto;
-using Google.Apis.Auth;
+﻿using Google.Apis.Auth;
 using GrooveMessengerAPI.Areas.Identity.Models;
 using GrooveMessengerAPI.Areas.Identity.Models.ModelsSocial;
 using GrooveMessengerAPI.Auth;
 using GrooveMessengerDAL.Models;
-using GrooveMessengerDAL.Services;
 using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
 {
@@ -140,9 +134,9 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
 
 
                 }
-                var claims = User.Claims;
-
-
+      
+                var identity = (ClaimsIdentity)User.Identity;
+                IEnumerable<Claim> claimsz = identity.Claims;
                 return new OkObjectResult(tokenString);
 
                 //SimpleLogger.Log(payload.ExpirationTimeSeconds.ToString());
@@ -201,11 +195,12 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             var refreshToken = AuthTokenUtil.GetJwtTokenString(userInfo.Email, _config);
             return new OkObjectResult(refreshToken);
         }
-        [HttpGet]
-        public Task<ApplicationUser> GetUser(string id)
+        [HttpGet("{id}")]
+        public async Task<ApplicationUser> GetUser(string id)
         {
-
-            return _userService.GetUser(id);
+            var identity = (ClaimsIdentity)User.Identity;
+            IEnumerable<Claim> claims = identity.Claims;
+            return await _userService.GetUser(id);
         }
     }
 

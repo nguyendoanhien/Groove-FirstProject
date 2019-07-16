@@ -7,6 +7,7 @@ import { read } from 'fs';
 declare var jquery: any;
 declare var $: any;
 import { User } from 'app/apps/model/user.model';
+import { UserProfileService } from 'app/core/identity/userprofile.service';
 @Component({
     selector: 'chat-user-sidenav',
     templateUrl: './user.component.html',
@@ -18,6 +19,7 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
     beforeUser: any;
     userForm: FormGroup;
     contenteditable = false;
+    displayName: string;
 
 
     // Private
@@ -29,7 +31,8 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
      * @param {ChatService} _chatService
      */
     constructor(
-        private _chatService: ChatService
+        private _chatService: ChatService,
+        private _userProfileService: UserProfileService
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
@@ -44,29 +47,37 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
         debugger;
-        debugger;
+        this.displayName= this._userProfileService.CurrentUserProfileModel();
         this._chatService.getUserById("toilati123vn@gmail.com").subscribe((data) => {
             debugger;
             this.user = data
-        }
-        );
-        this.beforeUser = Object.assign({}, this.user);
-        this.userForm = new FormGroup({
-            mood: new FormControl(this.user.mood),
-            status: new FormControl(this.user.status)
-        });
 
-        this.userForm.valueChanges
-            .pipe(
-                takeUntil(this._unsubscribeAll),
-                debounceTime(500),
-                distinctUntilChanged()
-            )
-            .subscribe(data => {
-                this.user.mood = data.mood;
-                this.user.status = data.status;
-                this._chatService.updateUserData(this.user);
+            this.beforeUser = Object.assign({}, this.user);
+            this.userForm = new FormGroup({
+                mood: new FormControl(this.user.mood),
+                status: new FormControl(this.user.status)
             });
+
+            this.userForm.valueChanges
+                .pipe(
+                    takeUntil(this._unsubscribeAll),
+                    debounceTime(500),
+                    distinctUntilChanged()
+                )
+                .subscribe(data => {
+                    this.user.mood = data.mood;
+                    this.user.status = data.status;
+                    this._chatService.updateUserData(this.user);
+                });
+        }
+
+
+        );
+        this._userProfileService.displayNameSub$.subscribe((data: string) => {
+
+            debugger;
+            this.displayName = data;
+        });
     }
 
     /**
