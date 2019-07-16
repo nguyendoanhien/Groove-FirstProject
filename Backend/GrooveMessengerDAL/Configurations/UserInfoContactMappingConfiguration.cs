@@ -15,14 +15,21 @@ namespace GrooveMessengerDAL.Configurations
             builder.Property(x => x.UserId).IsRequired();
             builder.Property(x => x.ContactId).IsRequired();
             builder.Property(x => x.NickName).HasMaxLength(120);
-            builder.HasKey(x => x.Id);
+
+            //builder.HasKey(bc => new { bc.ContactId, bc.UserId });
 
             builder.HasOne(uc => uc.UserInfo)
                 .WithMany(u => u.Users)
-                .HasForeignKey(uc => uc.Id);
+                .HasForeignKey(uc => uc.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(uc => uc.ContactInfo)
                 .WithMany(u => u.Contacts)
-                .HasForeignKey(uc => uc.Id);
+                .HasForeignKey(uc => uc.ContactId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            //builder.HasOne(u => u.ContactInfo).WithMany(z => z.Users).HasForeignKey(u => u.Id);
+            //builder.HasOne(u => u.ContactInfo).WithMany(z => z.Contacts).HasForeignKey(u => u.ContactId);
+
         }
     }
 }

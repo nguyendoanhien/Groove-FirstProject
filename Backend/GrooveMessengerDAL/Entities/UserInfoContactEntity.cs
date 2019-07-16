@@ -5,16 +5,17 @@ using System.Text;
 
 namespace GrooveMessengerDAL.Entities
 {
-    public class UserInfoContactEntity: AuditBaseEntity<Guid>
+    public class UserInfoContactEntity:AuditBaseEntity<Guid>
     {
-        public string UserId { get; set; }
 
-        public string ContactId { get; set; }
+        public  Guid UserId { get; set; }
+
+        public  Guid ContactId { get; set; }
 
         public string NickName { get; set; }
 
-        public UserInfoEntity UserInfo { get; set; }
+        public virtual UserInfoEntity UserInfo { get; set; }
 
-        public UserInfoEntity ContactInfo { get; set; }
+        public virtual UserInfoEntity ContactInfo { get; set; }
     }
 }
