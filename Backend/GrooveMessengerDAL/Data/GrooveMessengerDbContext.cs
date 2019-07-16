@@ -34,7 +34,8 @@ namespace GrooveMessengerDAL.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
 
-            // builder.ApplyConfiguration(new NoteMappingConfiguration());
+            //builder.ApplyConfiguration(new NoteMappingConfiguration());
+
             builder.ApplyConfiguration(new ApplicationUserMappingConfiguration());
       
            
@@ -45,7 +46,12 @@ namespace GrooveMessengerDAL.Data
 
             builder.ApplyConfiguration(new ConversationMappingConfiguration());
             builder.ApplyConfiguration(new UserInfoMappingConfiguration());
+<<<<<<< HEAD
 
+=======
+            builder.ApplyConfiguration(new UserInfoContactMappingConfiguration());
+            
+>>>>>>> d992bfafd606271b09f5faa53b152f13f4e1b90a
         }
 
         private void SaveChangeOverride()

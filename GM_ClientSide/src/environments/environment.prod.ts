@@ -12,6 +12,8 @@ export const environment = {
     authConfirmEmailUrl: authBaseUrl + '/confirmemail',
     authGoogleUrl: authBaseUrl + '/logingoogle',
     authFacebookUrl: authBaseUrl + '/loginfacebook',
+    authResetPasswordUrl: authBaseUrl + '/resetpassword',
+    authForgotPasswordUrl: authBaseUrl + '/forgotpassword',
     apiUrl: backendUrl + '/api/notes',
     applicationGoogle: {
         clientId: '790976332784-alnl6bf2ofphpi9t6elcuhbkebifo787.apps.googleusercontent.com',

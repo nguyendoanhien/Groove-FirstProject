@@ -9,7 +9,8 @@ using Microsoft.Extensions.Logging;
 
 namespace GrooveMessengerAPI.Areas.DataAPI.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [AllowAnonymous]
     [Route("DataAPI/[controller]")]
     public class NoteController : Controller
     {
@@ -28,9 +29,9 @@ namespace GrooveMessengerAPI.Areas.DataAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public EditModel GetNote(int id)
+        public async Task<EditModel> GetNote(int id)
         {
-            var data = _noteService.GetNoteForEdit(id);
+            var data = await _noteService.GetNoteForEditAsync(id);
             return data;
         }
 

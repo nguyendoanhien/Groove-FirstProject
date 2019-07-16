@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using System.Data.SqlClient;
+using System.Threading.Tasks;
 using AutoMapper;
 using GrooveMessengerDAL.Data;
 using GrooveMessengerDAL.Entities;
+using GrooveMessengerDAL.Models;
 using GrooveMessengerDAL.Models.Note;
 using GrooveMessengerDAL.Repositories.Interface;
 using GrooveMessengerDAL.Services.Interface;
@@ -34,9 +36,34 @@ namespace GrooveMessengerDAL.Services
             return result;
         }
 
+        //public IEnumerable<FullModel> GetNoteListFullModel()
+        //{
+        //    var storedData = _noteRepository.GetAll();
+        //    var result = _mapper.Map<IEnumerable<NoteEntity>, IEnumerable<FullModel>>(storedData);
+        //    return result;
+        //}
+
         public IEnumerable<FullModel> GetNoteListFullModel()
         {
-            var storedData = _noteRepository.GetAll();
+            var parameters = new List<SqlParameter>();
+            parameters.Add(
+                new SqlParameter
+                {
+                    ParameterName = "title",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    SqlValue = "This is a test ';--"
+                });
+            parameters.Add(
+                new SqlParameter
+                {
+                    ParameterName = "createdOn",
+                    SqlDbType = System.Data.SqlDbType.DateTime2,
+                    SqlValue = "2019-02-03 00:00:00"
+                });
+            //var storedData = _noteRepository.ExecuteReturedStoredProcedure("usp_Notes_GetData", parameters.ToArray());
+            //var result = _mapper.Map<IEnumerable<NoteEntity>, IEnumerable<FullModel>>(storedData);
+
+            var storedData = _noteRepository.ExecuteReturedStoredProcedure<NoteEntity>("usp_Notes_GetData", parameters.ToArray());
             var result = _mapper.Map<IEnumerable<NoteEntity>, IEnumerable<FullModel>>(storedData);
             return result;
         }
@@ -51,6 +78,13 @@ namespace GrooveMessengerDAL.Services
         public EditModel GetNoteForEdit(int id)
         {
             var storedData = _noteRepository.GetSingle(id);
+            var result = _mapper.Map<NoteEntity, EditModel>(storedData);
+            return result;
+        }
+
+        public async Task<EditModel> GetNoteForEditAsync(int id)
+        {
+            var storedData = await _noteRepository.GetSingleAsync(id);
             var result = _mapper.Map<NoteEntity, EditModel>(storedData);
             return result;
         }
