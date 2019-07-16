@@ -5,7 +5,7 @@ import { takeUntil } from 'rxjs/internal/operators';
 
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
-import { ResetPasswordService } from 'app/services/reset-password.service';
+import { ResetPasswordService } from 'app/core/account/reset-password.service';
 import { ResetPassword } from '../../models/ResetPassword';
 import { ActivatedRoute, Router } from '@angular/router';
 @Component({
