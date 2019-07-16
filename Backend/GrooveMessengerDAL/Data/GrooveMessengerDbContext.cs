@@ -36,7 +36,16 @@ namespace GrooveMessengerDAL.Data
 
             // builder.ApplyConfiguration(new NoteMappingConfiguration());
             builder.ApplyConfiguration(new ApplicationUserMappingConfiguration());
+      
+           
+
+
+            builder.ApplyConfiguration(new MessageMappingConfiguration());
+            builder.ApplyConfiguration(new ParticipantMappingConfiguration());
+
+            builder.ApplyConfiguration(new ConversationMappingConfiguration());
             builder.ApplyConfiguration(new UserInfoMappingConfiguration());
+
         }
 
         private void SaveChangeOverride()
