@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
-import { ResetPasswordService } from 'app/services/reset-password.service';
+import { ResetPasswordService } from 'app/core/account/reset-password.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -16,6 +16,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class ForgotPasswordComponent implements OnInit {
     forgotPasswordForm: FormGroup;
     isLoading:boolean= false;
+    isEmailAlreadyExist:boolean = true;
     /**
      * Constructor
      *
@@ -65,10 +66,12 @@ export class ForgotPasswordComponent implements OnInit {
         this.isLoading = true;
         const email = this.forgotPasswordForm.get('email').value;
         this._resetPasswordService.forgotPassword(email).subscribe(val => {
-            this._route.navigate(['/account/login']);
+            this.isLoading = false;
+            this._resetPasswordService.isForgot.next(true);
+            this._route.navigate(['/account/mail-confirmation']);
         }, err => {
-            console.log(err);
-            window.alert("Email does not exist");
+            this.isLoading = false;
+            this.isEmailAlreadyExist = false;
         });
     }
 }

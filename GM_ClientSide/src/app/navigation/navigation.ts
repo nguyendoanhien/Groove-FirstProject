@@ -12,7 +12,7 @@ export const navigation: FuseNavigation[] = [
                 title    : 'Chat',               
                 type     : 'item',
                 icon     : 'chat',
-                url      : 'apps/chat',
+                url      : 'chat',
                 badge    : {
                     title: '13',
                     bg   : '#09d261',

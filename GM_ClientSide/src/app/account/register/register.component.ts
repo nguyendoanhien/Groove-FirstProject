@@ -6,7 +6,7 @@ import { Router } from "@angular/router"
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
 import { RegisterModel } from './register.model';
-import { RegisterService } from 'app/core/identity/register.service';
+import { RegisterService } from 'app/core/account/register.service';
 
 @Component({
     selector: 'register',
