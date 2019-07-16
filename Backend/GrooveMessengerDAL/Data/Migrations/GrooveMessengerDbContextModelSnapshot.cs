@@ -30,7 +30,6 @@ namespace GrooveMessengerDAL.Migrations
                         .HasMaxLength(50);
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnName("CreatedBy");
 
                     b.Property<DateTime?>("CreatedOn")
@@ -69,7 +68,6 @@ namespace GrooveMessengerDAL.Migrations
                     b.Property<Guid>("ConversationId");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnName("CreatedBy");
 
                     b.Property<DateTime?>("CreatedOn")
@@ -111,7 +109,6 @@ namespace GrooveMessengerDAL.Migrations
                     b.Property<Guid>("ConversationId");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnName("CreatedBy");
 
                     b.Property<DateTime?>("CreatedOn")
@@ -142,6 +139,43 @@ namespace GrooveMessengerDAL.Migrations
                     b.ToTable("Participant");
                 });
 
+            modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoContactEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("ContactId");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("CreatedBy");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .IsRequired()
+                        .HasColumnName("CreatedOn");
+
+                    b.Property<bool?>("Deleted")
+                        .HasColumnName("Deleted");
+
+                    b.Property<string>("NickName")
+                        .HasMaxLength(120);
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("UpdatedBy");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("UpdatedOn");
+
+                    b.Property<Guid>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserInfoContact");
+                });
+
             modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -150,7 +184,6 @@ namespace GrooveMessengerDAL.Migrations
                     b.Property<string>("Avatar");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnName("CreatedBy");
 
                     b.Property<DateTime?>("CreatedOn")
@@ -373,6 +406,19 @@ namespace GrooveMessengerDAL.Migrations
                     b.HasOne("GrooveMessengerDAL.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("ParticipantEntity")
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoContactEntity", b =>
+                {
+                    b.HasOne("GrooveMessengerDAL.Entities.UserInfoEntity", "ContactInfo")
+                        .WithMany("Contacts")
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("GrooveMessengerDAL.Entities.UserInfoEntity", "UserInfo")
+                        .WithMany("Users")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoEntity", b =>

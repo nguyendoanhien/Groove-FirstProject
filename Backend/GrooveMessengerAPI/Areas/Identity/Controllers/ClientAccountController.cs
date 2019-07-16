@@ -95,7 +95,8 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             var res = await _userManager.ConfirmEmailAsync(user, model.Ctoken);
             if (res.Succeeded)
             {
-                return Ok();
+                var tokenString = AuthTokenUtil.GetJwtTokenString(user.UserName, _config);
+                return new ObjectResult(tokenString);               
             }
             else
             {
@@ -121,9 +122,9 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             var clientAppUrl = _config.GetSection("Client").Value;
 
             string url = _config["ForgotEmailRoute:Url"] + "?token=" + HttpUtility.UrlEncode(token) + "&&userid=" + user.Id;
-            var body = "<h1>Confirm Your Email</h1>" +
+            var body = "<h1>RESET PASSWORD</h1>" +
                         "<h3>Hello " + user.DisplayName + " ! </h3>" +
-                        "<h3>Tap the button below to confirm your email address.</h3>" +
+                        "<h3>Tap the button below to go reset your password</h3>" +
                         "<h3>If you didn't create an account with <a href='" + clientAppUrl + "'>Groove Messenger</a>, you can safely delete this email.</h3>" +
                         "<table border='0' cellpadding='0' cellspacing='0' width='40% ' style='background-color:#324FEA; border:1px solid #324FEA; border-radius:5px;'>" +
                         "<tr><td align = 'center' valign = 'middle' style = 'color:#ffffff; font-family:Helvetica, Arial, sans-serif; font-size:20px; font-weight:bold; line-height:150%; padding-top:15px; padding-right:30px; padding-bottom:15px; padding-left:30px;'>" +
