@@ -4,16 +4,17 @@ import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
 import { RegisterService } from 'app/core/account/register.service';
 import { Router } from "@angular/router"
+import { ResetPasswordService } from 'app/core/account/reset-password.service';
 @Component({
-    selector     : 'mail-confirm',
-    templateUrl  : './mail-confirm.component.html',
-    styleUrls    : ['./mail-confirm.component.scss'],
+    selector: 'mail-confirm',
+    templateUrl: './mail-confirm.component.html',
+    styleUrls: ['./mail-confirm.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations: fuseAnimations
 })
-export class MailConfirmComponent
-{
-    emailAddress: string;
+export class MailConfirmComponent {
+    mailToSendForgot: string;
+    mailToSendRegister: boolean;
     /**
      * Constructor
      *
@@ -25,20 +26,24 @@ export class MailConfirmComponent
     constructor(
         private _fuseConfigService: FuseConfigService,
         private _registerService: RegisterService,
-        private _router: Router
-    )
-    {
-        this._registerService.email.subscribe(emailAddress=>emailAddress?this.emailAddress = emailAddress:this._router.navigate(['/account/register']))
+        private _router: Router,
+        private _resetPassService: ResetPasswordService
+    ) {
+        this._registerService.mailToSendRegister.subscribe(emailAddress => {
+            emailAddress ? this.mailToSendRegister = emailAddress : this._resetPassService.mailToSendForgot.subscribe(
+                emailAddress => emailAddress ? this.mailToSendForgot = emailAddress : this._router.navigate(['account', 'login'])
+            )
+        });
         // Configure the layout
         this._fuseConfigService.config = {
             layout: {
-                navbar   : {
+                navbar: {
                     hidden: true
                 },
-                toolbar  : {
+                toolbar: {
                     hidden: true
                 },
-                footer   : {
+                footer: {
                     hidden: true
                 },
                 sidepanel: {

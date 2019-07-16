@@ -54,7 +54,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         this.registerService.register(this.registerModel).subscribe(res => {
             this.isLoading = false;
             this._router.navigate(['/account/mail-confirmation']);
-            this.registerService.email.next(this.registerModel.email);
+            this.registerService.mailToSendRegister.next(this.registerModel.email);
         }, err => {
             this.isLoading = false
             console.log(err.error.errors['Email']);
