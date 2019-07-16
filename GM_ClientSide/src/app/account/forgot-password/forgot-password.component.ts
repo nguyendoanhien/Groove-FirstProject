@@ -67,7 +67,7 @@ export class ForgotPasswordComponent implements OnInit {
         const email = this.forgotPasswordForm.get('email').value;
         this._resetPasswordService.forgotPassword(email).subscribe(val => {
             this.isLoading = false;
-            this._resetPasswordService.isForgot.next(true);
+            this._resetPasswordService.mailToSendForgot.next(email);
             this._route.navigate(['/account/mail-confirmation']);
         }, err => {
             this.isLoading = false;

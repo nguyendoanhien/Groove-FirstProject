@@ -8,21 +8,25 @@
                 <mat-icon class="mat-accent s-96">email</mat-icon>
             </div>
 
-            <div class="title">Confirm your email address!</div>
-
+            <div *ngIf="!mailToSendForgot" class="title">Confirm your email address!</div>
+            <div *ngIf="!mailToSendRegister" class="title">Please, check your email address!</div>
             <div class="subtitle">
                 <p>
-                    A confirmation e-mail has been sent to <b>{{emailAddress}}</b>.
+                    A <span *ngIf="!mailToSendForgot">confirmation </span>e-mail has been sent to
+                    <b>{{mailToSendForgot?mailToSendForgot:mailToSendRegister}}</b>.
                 </p>
                 <p>
-                    Check your inbox and click on the "Confirm my email" link to confirm your email address.
+                    <span *ngIf="!mailToSendForgot">Check your inbox and click on the <b> "Confirm my email" </b> link
+                        to confirm your email address.
+                    </span>
+                    <span *ngIf="!mailToSendRegister">Check your inbox and click the <b> "Reset my password" </b>button
+                        to reset your password
+                    </span>
                 </p>
             </div>
-
-            <!-- <div class="message">
+            <div class="message">
                 <a class="link" [routerLink]="'/account/login'">Go back to login page</a>
-            </div> -->
-
+            </div>
         </div>
 
     </div>

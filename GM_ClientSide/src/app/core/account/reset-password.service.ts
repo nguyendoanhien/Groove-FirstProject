@@ -12,9 +12,9 @@ const forgotPasswordUrl = environment.authForgotPasswordUrl;
     providedIn: 'root'
 })
 export class ResetPasswordService {
-    isForgot: BehaviorSubject<boolean>;
+    mailToSendForgot: BehaviorSubject<string>;
     constructor(private _http: HttpClient) {
-
+        this.mailToSendForgot = new BehaviorSubject(null);
     }
 
     resetPassword(resetPassword: ResetPassword): Observable<any> {

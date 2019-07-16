@@ -12,10 +12,10 @@ const confirmEmailUrl = environment.authConfirmEmailUrl;
 
 @Injectable()
 export class RegisterService {
-    email: BehaviorSubject<any>;
+    mailToSendRegister: BehaviorSubject<any>;
     
     constructor(private router: Router, private authService: AuthService, private http: HttpClient) {
-        this.email = new BehaviorSubject(null);
+        this.mailToSendRegister = new BehaviorSubject(null);
     }
 
     register(model: RegisterModel): Observable<any> {
