@@ -5,7 +5,6 @@ import { fuseAnimations } from '@fuse/animations';
 import { RegisterService } from 'app/core/account/register.service';
 import { Router, ActivatedRoute } from "@angular/router"
 import { MailConfirmModel } from './mail-confirmer.model';
-import { Route } from '@angular/compiler/src/core';
 @Component({
     selector: 'mail-confirmer',
     templateUrl: './mail-confirmer.component.html',

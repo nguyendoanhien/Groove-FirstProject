@@ -6,9 +6,7 @@ import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
 import { UserProfileService } from 'app/core/identity/userprofile.service';
 import { Router } from '@angular/router';
-import { stringify } from 'querystring';
 import { AuthService, GoogleLoginProvider, FacebookLoginProvider } from 'angularx-social-login';
-import * as jwt_decode from "jwt-decode";
 @Component({
     selector: 'login',
     templateUrl: './login.component.html',

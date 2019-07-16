@@ -1,9 +1,8 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { ChatService } from '../../../chat.service';
-import { read } from 'fs';
 declare var jquery: any;
 declare var $: any;
 import { User } from 'app/apps/model/user.model';

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ResetPassword } from 'app/models/ResetPassword';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'environments/environment';
 
 const resetPasswordUrl = environment.authResetPasswordUrl;

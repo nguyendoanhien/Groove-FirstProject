@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-import { FuseConfigService } from '@fuse/services/config.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
+import { FuseConfigService } from '@fuse/services/config.service';
 import { ResetPasswordService } from 'app/core/account/reset-password.service';
-import { Router, ActivatedRoute } from '@angular/router';
+
 
 @Component({
     selector: 'forgot-password',
@@ -15,8 +15,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class ForgotPasswordComponent implements OnInit {
     forgotPasswordForm: FormGroup;
-    isLoading:boolean= false;
-    isEmailAlreadyExist:boolean = true;
+    isLoading: boolean = false;
+    isEmailAlreadyExist: boolean = true;
     /**
      * Constructor
      *

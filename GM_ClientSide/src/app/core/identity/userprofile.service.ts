@@ -1,12 +1,12 @@
 import { Router } from '@angular/router';
-import { Injectable, ErrorHandler } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoginModel } from '../../account/login/login.model';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Subject, Observable, Subscription } from 'rxjs';
-import { catchError, retry, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { UserProfileModel } from 'app/account/user-profile/user-profile.model';
 
 const loginUrl = environment.authLoginUrl;
