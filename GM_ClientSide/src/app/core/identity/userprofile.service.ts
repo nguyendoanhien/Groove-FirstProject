@@ -25,8 +25,8 @@ export class UserProfileService {
 
     private userProfile: UserProfileModel;
     constructor(private router: Router,
-                private authService: AuthService,
-                private http: HttpClient) {
+        private authService: AuthService,
+        private http: HttpClient) {
         this.userProfile = new UserProfileModel();
     }
 
@@ -64,12 +64,12 @@ export class UserProfileService {
 
     logInFacebook(facebookAccessToken: string): Subscription {
         return this.http.post<string>(authFBUrl + `?token=${facebookAccessToken}`, null, httpOptions)
-        .pipe(
-            map((token: string) => {
-                this.parseJwtToken(token);
-                this.router.navigate(['chat']);
-            })
-        ).subscribe();
+            .pipe(
+                map((token: string) => {
+                    this.parseJwtToken(token);
+                    this.router.navigate(['chat']);
+                })
+            ).subscribe();
     }
 
     logOut(): Promise<boolean> {
@@ -87,6 +87,7 @@ export class UserProfileService {
         userProfileModel.UserName = decodedJwt.UserName;
         userProfileModel.DisplayName = decodedJwt.DisplayName;
         userProfileModel.SecurityAccessToken = jwt;
+        userProfileModel.Email = decodedJwt.email;
         this.userProfile = userProfileModel;
         this.displayNameSub$.next(this.userProfile.DisplayName);
         console.log(this.userProfile.DisplayName);
@@ -99,7 +100,9 @@ export class UserProfileService {
         }
     }
     public CurrentUserProfileModel() {
+        debugger;
         this.loadStoredUserProfile();
-        return this.userProfile.DisplayName;
+        return this.userProfile;
     }
+
 }

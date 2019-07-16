@@ -53,9 +53,9 @@ namespace GrooveMessengerDAL.Repositories
                 x.Id.Equals(entityId) && (x.Deleted == null || !x.Deleted.Value));
         }
 
-        public Task<TEntity> GetSingleAsync(TKey entityId)
+        public async Task<TEntity> GetSingleAsync(TKey entityId)
         {
-            var result = Task.Run(() =>
+            var result = await Task.Run(() =>
             {
                 return GetSingle(entityId);
             });

@@ -10,8 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-
-
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace GrooveMessengerDAL.Services
 {
@@ -34,16 +34,35 @@ namespace GrooveMessengerDAL.Services
 
         public void AddUserInfo(CreateUserInfoModel userInfo)
         {
-            var entity = _mapper.Map<CreateUserInfoModel, UserInfoEntity>(userInfo);
-            entity.CreatedOn = DateTime.Now;
-            entity.CreatedBy = "Root";
-            entity.Status = 0;
-            _userRepository.Add(entity);
-            _uow.SaveChanges();
+            try
+            {
+
+
+                var entity = _mapper.Map<CreateUserInfoModel, UserInfoEntity>(userInfo);
+                entity.CreatedOn = DateTime.Now;
+                entity.CreatedBy = "Root";
+                entity.Status = 0;
+                entity.Id = new Guid();
+                entity.DisplayName = entity.DisplayName ?? "Test";
+                _userRepository.Add(entity);
+                _uow.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
+
+        public IQueryable<UserInfoEntity> GetBy(Expression<Func<UserInfoEntity, bool>> predicate)
+        {
+            IQueryable<UserInfoEntity> result = _userRepository.GetBy(predicate);
+            return result;
+        }
+
         public async Task<UserInfoEntity> GetUser(Guid id)
         {
             return await _userRepository.GetSingleAsync(id);
+
 
         }
     }

@@ -46,8 +46,8 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
         debugger;
-        this.displayName= this._userProfileService.CurrentUserProfileModel();
-        this._chatService.getUserById("toilati123vn@gmail.com").subscribe((data) => {
+        ;
+        this._chatService.getUserById(this._userProfileService.CurrentUserProfileModel().Email).subscribe((data) => {
             debugger;
             this.user = data
 

@@ -5,6 +5,7 @@ using GrooveMessengerAPI.Areas.Identity.Models.ModelsSocial;
 using GrooveMessengerAPI.Auth;
 using GrooveMessengerDAL.Entities;
 using GrooveMessengerDAL.Models;
+using GrooveMessengerDAL.Models.User;
 using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
+using System.Linq;
 
 namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
 {
@@ -214,16 +216,11 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
         {
             try
             {
-                //SimpleLogger.Log("userView = " + userView.tokenId);
-                var responseString = await client.GetStringAsync($"https://www.googleapis.com/oauth2/v3/tokeninfo?id_token={accessToken}");
-
-
-
                 var payload = GoogleJsonWebSignature.ValidateAsync(accessToken, new GoogleJsonWebSignature.ValidationSettings()).Result;
                 ExternalLoginInfo info = new ExternalLoginInfo(null, "Google", payload.Subject, "Google");
                 var resultFindByMail = await _userManager.FindByEmailAsync(payload.Email);
-                var resultFindByLoginExternal = await _userManager.FindByLoginAsync("Google", payload.Subject);
-                var tokenString = AuthTokenUtil.GetJwtTokenString(payload.Email, _config);
+
+
 
                 var user = new ApplicationUser { UserName = payload.Email, Email = payload.Email, DisplayName = payload.Name };
                 if (resultFindByMail == null)
@@ -233,25 +230,23 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                     {
                         var resultLogin = await _userManager.AddLoginAsync(user, info);
 
-                        return new OkObjectResult(tokenString);
                     }
                 }
                 else
                 {
+                    var resultFindByLoginExternal = await _userManager.FindByLoginAsync("Google", payload.Subject);
                     if (resultFindByLoginExternal == null)
                     {
                         var resultLogin = await _userManager.AddLoginAsync(resultFindByMail, info);
                         await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
 
                     }
+                    resultFindByMail = await _userManager.FindByEmailAsync(payload.Email);
                     await _signInManager.SignInAsync(resultFindByMail, isPersistent: false);
 
 
                 }
-
-                var identity = (ClaimsIdentity)User.Identity;
-                IEnumerable<Claim> claimsz = identity.Claims;
-
+                var tokenString = AuthTokenUtil.GetJwtTokenString(payload.Email, _config);
                 return new OkObjectResult(tokenString);
 
             }
@@ -306,12 +301,22 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             var refreshToken = AuthTokenUtil.GetJwtTokenString(userInfo.Email, _config);
             return new OkObjectResult(refreshToken);
         }
-        [HttpGet("{id}")]
-        public async Task<UserInfoEntity> GetUser(Guid id)
+        [HttpGet("{username}")]
+        public async Task<UserInfoEntity> GetUser(string username)
         {
-            var identity = (ClaimsIdentity)User.Identity;
-            IEnumerable<Claim> claims = identity.Claims;
-            return await _userService.GetUser(id);
+            var user = await _userManager.FindByEmailAsync(username);
+            var userInfo = _userService.GetBy((data) => data.UserId == user.Id).FirstOrDefault();
+            if (user != null && userInfo == null)
+            {
+                _userService.AddUserInfo(new CreateUserInfoModel() { UserId = user.Id });
+            }
+            else
+            {
+                //userInfo = await _userService.GetUser(new Guid(user.Id));
+                userInfo = _userService.GetBy((data) =>data.UserId == user.Id).FirstOrDefault();
+            }
+            return userInfo;
+
         }
     }
 
