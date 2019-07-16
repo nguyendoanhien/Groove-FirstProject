@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GrooveMessengerDAL.Migrations
 {
-    public partial class updatedGMDB : Migration
+    public partial class UpdatedGMDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -105,7 +105,7 @@ namespace GrooveMessengerDAL.Migrations
                     UpdatedOn = table.Column<DateTime>(nullable: true),
                     ConversationId = table.Column<Guid>(nullable: false),
                     UserId = table.Column<string>(nullable: true),
-                    Status = table.Column<string>(nullable: false)
+                    Status = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

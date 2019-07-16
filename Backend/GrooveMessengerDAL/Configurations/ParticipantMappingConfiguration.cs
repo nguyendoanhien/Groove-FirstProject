@@ -14,8 +14,6 @@ namespace GrooveMessengerDAL.Configurations
             builder.ToTable("Participant");
 
             builder.Property(x => x.Status).HasColumnName("Status").IsRequired();
-            //builder.HasOne(x => x.UserId).WithMany(x => x.ParticipantEntity).HasForeignKey(x => x.UserId);
-
         }
 
 

@@ -13,7 +13,7 @@ namespace GrooveMessengerDAL.Entities
 
         public string UserId { get; set; }
 
-        public string Status { get; set; }
+        public int Status { get; set; }
 
         public ConversationEntity ConversationEntity { get; set; }
         public ApplicationUser ApplicationUser { get; set; }

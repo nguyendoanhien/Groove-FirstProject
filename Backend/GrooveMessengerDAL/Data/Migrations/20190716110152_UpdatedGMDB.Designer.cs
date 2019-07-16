@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GrooveMessengerDAL.Migrations
 {
     [DbContext(typeof(GrooveMessengerDbContext))]
-    [Migration("20190716083904_updatedGMDB")]
-    partial class updatedGMDB
+    [Migration("20190716110152_UpdatedGMDB")]
+    partial class UpdatedGMDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -120,8 +120,7 @@ namespace GrooveMessengerDAL.Migrations
                     b.Property<bool?>("Deleted")
                         .HasColumnName("Deleted");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
+                    b.Property<int>("Status")
                         .HasColumnName("Status");
 
                     b.Property<string>("UpdatedBy")
