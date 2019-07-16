@@ -1,0 +1,25 @@
+<!-- The content below is only a placeholder and can be replaced.
+<div class="container col-md-8 col-md-offset-2">
+  
+  <div class="main-container">
+    <router-outlet></router-outlet>
+  </div>
+</div> -->
+
+<div>
+    <app-top-menu></app-top-menu>  
+
+  <mat-card class="main-container">
+    <!-- <button mat-button>All</button>
+    <button mat-raised-button>Of</button>
+    <button mat-raised-button color="primary">The</button>
+    <button mat-raised-button color="accent">Buttons</button> -->
+    <router-outlet></router-outlet>
+  </mat-card>
+
+  <span class="done">
+    <button mat-fab>
+      <mat-icon>check circle</mat-icon>
+    </button>
+  </span>
+</div>
