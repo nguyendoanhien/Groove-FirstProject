@@ -105,13 +105,15 @@ login {
                         margin-top: 8px;
 
                         .remember-me {
-                            margin-bottom: 16px
+                            margin-bottom: 16px;
+                            float: left;
                         }
 
                         .forgot-password {
                             font-size: 13px;
                             font-weight: 600;
-                            margin-bottom: 16px
+                            margin-bottom: 16px;
+                            float: right;
                         }
                     }
 

@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit {
         private _userProfileService: UserProfileService,
         private _cookieService: CookieService,
         private _authService: AuthService,
+        private _router:Router
     ) {
         // Configure the layout
         this._fuseConfigService.config = {
@@ -47,7 +48,9 @@ export class LoginComponent implements OnInit {
                     hidden: true
                 }
             }
+            
         };
+
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -61,21 +64,25 @@ export class LoginComponent implements OnInit {
         if (this._cookieService.get('userName')) {
             this.checkRemember = true;
             this.loginForm = this._formBuilder.group({
-                userName: [this._cookieService.get('userName'), [Validators.required, Validators.email]],
+                userName: [this._cookieService.get('userName'), [Validators.required, Validators.pattern("[a-zA-Z0-9.-]{1,}@[a-z0-9.-]+\.[a-z]{2,4}$"),Validators.minLength(6)]],
                 password: [this._cookieService.get('password'), [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)]]
             });
         } else {
             this.loginForm = this._formBuilder.group({
-                userName: ['', [Validators.required, Validators.email]],
+                userName: ['', [Validators.required, Validators.pattern("[a-zA-Z0-9.-]{1,}@[a-z0-9.-]+\.[a-z]{2,4}$"),Validators.minLength(6)]],
                 password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)]]
             });
         }
 
-        // if(localStorage.getItem('token')!=null)
-        // {
-        //     this.router.navigate(['apps','chat']);
-        // }
+        if(localStorage.getItem('token')!=null)
+        {
+            this._router.navigate(['apps','chat']);
+        }
     }
+
+    onPaste(event: ClipboardEvent) {
+        event.preventDefault()
+     }
 
     onLogin() {
 

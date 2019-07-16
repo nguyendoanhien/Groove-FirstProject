@@ -20,7 +20,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     isAcceptTerms: boolean = false;
     isLoading: boolean = false;
     registerModel: RegisterModel;
-    emailErr : boolean = false;
+    emailErr: boolean = false;
     // Private
     private _unsubscribeAll: Subject<any>;
 
@@ -58,7 +58,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         }, err => {
             this.isLoading = false
             console.log(err.error.errors['Email']);
-            this.emailErr =  !err.error.errors['Email'] ? false : true;
+            this.emailErr = !err.error.errors['Email'] ? false : true;
         });
     }
     // -----------------------------------------------------------------------------------------------------
@@ -71,8 +71,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.registerModel = new RegisterModel();
         this.registerForm = this._formBuilder.group({
-            name: [this.registerModel.displayName, [Validators.required, Validators.minLength(6),]],
-            email: [this.registerModel.email, [Validators.required, Validators.email]],
+            name: [this.registerModel.displayName, [Validators.required, Validators.minLength(6), Validators.maxLength(120), Validators.pattern(/^((?!\s{2,}).)*$/)]],
+            email: [this.registerModel.email, [Validators.required, Validators.pattern("[a-zA-Z0-9.-]{1,}@[a-z0-9.-]+\.[a-z]{2,4}$")]],
             password: [this.registerModel.password, [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)]],
             passwordConfirm: ['', [Validators.required, confirmPasswordValidator]]
         });
@@ -84,6 +84,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
                 this.registerForm.get('passwordConfirm').updateValueAndValidity();
             });
     }
+
+    onPaste(event: ClipboardEvent) {
+        event.preventDefault()
+     }
 
     /**
      * On destroy

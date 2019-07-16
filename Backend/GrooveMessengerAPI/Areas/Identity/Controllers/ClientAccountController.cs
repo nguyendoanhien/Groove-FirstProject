@@ -174,11 +174,16 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             var result = await _signInManager.PasswordSignInAsync(data.Username, data.Password, false, lockoutOnFailure: true);
             if (result.Succeeded)
             {
+                var checkConfirmEmail = await _userManager.IsEmailConfirmedAsync(checkUser);
+                if (!checkConfirmEmail)
+                {
+                    return Unauthorized("Please Comfirm Email");
+                }
                 _logger.LogInformation("User logged in.");
                 var tokenString = AuthTokenUtil.GetJwtTokenString(data.Username, _config);
                 return new ObjectResult(tokenString);
             }
-            return Unauthorized("Password is incorrect");
+            return Unauthorized("Email or Password is incorrect");
         }
 
         [HttpPost]
