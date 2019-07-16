@@ -19,16 +19,11 @@ namespace GrooveMessengerDAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-<<<<<<< HEAD
             modelBuilder.Entity("GrooveMessengerDAL.Entities.ConversationEntity", b =>
-=======
-            modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoContactEntity", b =>
->>>>>>> d992bfafd606271b09f5faa53b152f13f4e1b90a
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-<<<<<<< HEAD
                     b.Property<string>("Avatar")
                         .IsRequired()
                         .HasColumnName("Avatar")
@@ -114,9 +109,6 @@ namespace GrooveMessengerDAL.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<Guid>("ConversationId");
-=======
-                    b.Property<Guid>("ContactId");
->>>>>>> d992bfafd606271b09f5faa53b152f13f4e1b90a
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -129,14 +121,9 @@ namespace GrooveMessengerDAL.Migrations
                     b.Property<bool?>("Deleted")
                         .HasColumnName("Deleted");
 
-<<<<<<< HEAD
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnName("Status");
-=======
-                    b.Property<string>("NickName")
-                        .HasMaxLength(120);
->>>>>>> d992bfafd606271b09f5faa53b152f13f4e1b90a
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnName("UpdatedBy");
@@ -144,7 +131,6 @@ namespace GrooveMessengerDAL.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnName("UpdatedOn");
 
-<<<<<<< HEAD
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
@@ -154,17 +140,6 @@ namespace GrooveMessengerDAL.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Participant");
-=======
-                    b.Property<Guid>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContactId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserInfoContact");
->>>>>>> d992bfafd606271b09f5faa53b152f13f4e1b90a
                 });
 
             modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoEntity", b =>
@@ -375,7 +350,6 @@ namespace GrooveMessengerDAL.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-<<<<<<< HEAD
             modelBuilder.Entity("GrooveMessengerDAL.Entities.MessageEntity", b =>
                 {
                     b.HasOne("GrooveMessengerDAL.Entities.ConversationEntity", "ConversationEntity")
@@ -399,19 +373,6 @@ namespace GrooveMessengerDAL.Migrations
                     b.HasOne("GrooveMessengerDAL.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("ParticipantEntity")
                         .HasForeignKey("UserId");
-=======
-            modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoContactEntity", b =>
-                {
-                    b.HasOne("GrooveMessengerDAL.Entities.UserInfoEntity", "ContactInfo")
-                        .WithMany("Contacts")
-                        .HasForeignKey("ContactId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("GrooveMessengerDAL.Entities.UserInfoEntity", "UserInfo")
-                        .WithMany("Users")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
->>>>>>> d992bfafd606271b09f5faa53b152f13f4e1b90a
                 });
 
             modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoEntity", b =>
