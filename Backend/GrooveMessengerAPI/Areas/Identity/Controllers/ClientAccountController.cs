@@ -3,6 +3,7 @@ using Google.Apis.Auth;
 using GrooveMessengerAPI.Areas.Identity.Models;
 using GrooveMessengerAPI.Areas.Identity.Models.ModelsSocial;
 using GrooveMessengerAPI.Auth;
+using GrooveMessengerDAL.Entities;
 using GrooveMessengerDAL.Models;
 using GrooveMessengerDAL.Models.User;
 using GrooveMessengerDAL.Services.Interface;
@@ -12,9 +13,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
+using System.Linq;
 
 namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
 {
@@ -22,26 +26,33 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
     [ApiController]
     public class ClientAccountController : ControllerBase
     {
+        private static readonly HttpClient client = new HttpClient();
+
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<ClientAccountController> _logger;
         private readonly IConfiguration _config;
+        private readonly IUserResolverService _userResolverService;
+        private readonly IUserService _userService;
         private static readonly HttpClient Client = new HttpClient();
         private readonly IAuthEmailSenderUtil _authEmailSender;
-        private readonly IUserService _userService;
+
+
 
         public ClientAccountController(
             SignInManager<ApplicationUser> signInManager,
             ILogger<ClientAccountController> logger,
             UserManager<ApplicationUser> userManager,
             IConfiguration config,
-            IAuthEmailSenderUtil authEmailSender,
-            IUserService userService)
+            IAuthEmailSenderUtil authEmailSender, IUserService userService
+            , IUserResolverService userResolverService)
+
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
             _config = config;
+            _userResolverService = userResolverService;
             _authEmailSender = authEmailSender;
             _userService = userService;
         }
@@ -143,6 +154,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             return Ok();
         }
 
+
         [HttpPost("resetpassword")]
         public async Task<IActionResult> Resetpassword([FromBody]ForgotPasswordModel model)
         {
@@ -208,8 +220,8 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                 var payload = GoogleJsonWebSignature.ValidateAsync(accessToken, new GoogleJsonWebSignature.ValidationSettings()).Result;
                 ExternalLoginInfo info = new ExternalLoginInfo(null, "Google", payload.Subject, "Google");
                 var resultFindByMail = await _userManager.FindByEmailAsync(payload.Email);
-                var resultFindByLoginExternal = await _userManager.FindByLoginAsync("Google", payload.Subject);
-                var tokenString = AuthTokenUtil.GetJwtTokenString(payload.Email, _config);
+
+
 
                 var user = new ApplicationUser { UserName = payload.Email, Email = payload.Email };
                 if (resultFindByMail == null)
@@ -223,18 +235,23 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                     {
                         var resultLogin = await _userManager.AddLoginAsync(user, info);
 
-                        return new OkObjectResult(tokenString);
                     }
                 }
                 else
                 {
+                    var resultFindByLoginExternal = await _userManager.FindByLoginAsync("Google", payload.Subject);
                     if (resultFindByLoginExternal == null)
                     {
                         var resultLogin = await _userManager.AddLoginAsync(resultFindByMail, info);
-                    }
-                    await _signInManager.SignInAsync(resultFindByMail, isPersistent: false);
-                }
+                        await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
 
+                    }
+                    resultFindByMail = await _userManager.FindByEmailAsync(payload.Email);
+                    await _signInManager.SignInAsync(resultFindByMail, isPersistent: false);
+
+
+                }
+                var tokenString = AuthTokenUtil.GetJwtTokenString(payload.Email, _config);
                 return new OkObjectResult(tokenString);
 
             }
@@ -244,7 +261,6 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             }
             return BadRequest("Error !");
         }
-
         [HttpPost]
         [Route("loginfacebook")]
         public async Task<ObjectResult> Fblogin(string token)
@@ -284,7 +300,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                 userInform.DisplayName = userInfo.Name;
                 _userService.AddUserInfo(userInform);
                 var resultLogin = await _userManager.AddLoginAsync(appUser, info);
-       
+
             }
             else
             {
@@ -293,5 +309,30 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             var refreshToken = AuthTokenUtil.GetJwtTokenString(userInfo.Email, _config);
             return new OkObjectResult(refreshToken);
         }
+        [HttpGet("{username}")]
+        public async Task<UserInfoEntity> GetUser(string username)
+        {
+            var userInfo = await _userService.GetByUsername(username);
+            return userInfo;
+        }
+        [HttpPut("{username}")]
+        public async Task<IActionResult> EditUser(string username, [FromBody] EditUserInfoModel editUserInfo)
+        {
+            try
+            {
+                
+                await _userService.EditAsync(editUserInfo);
+            }
+            catch (Exception ex)
+            {
+                return Ok("Error");
+            }
+
+            return Ok(editUserInfo);
+
+
+
+        }
     }
+
 }

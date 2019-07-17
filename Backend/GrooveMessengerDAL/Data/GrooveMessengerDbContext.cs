@@ -71,7 +71,8 @@ namespace GrooveMessengerDAL.Data
                 {
                     if (entry.State == EntityState.Added)
                     {
-                        entry.Property("CreatedBy").CurrentValue = _userResolverService.CurrentUserName();
+                        //entry.Property("CreatedBy").CurrentValue = _userResolverService.CurrentUserName();
+                        entry.Property("CreatedBy").CurrentValue = "Root";
                     }
 
                     if (entry.State == EntityState.Added)
