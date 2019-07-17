@@ -1,21 +1,28 @@
-﻿using System;
-using GrooveMessengerAPI.Areas.Chat.Models;
-using GrooveMessengerAPI.Hubs;
+﻿using GrooveMessengerAPI.Areas.Chat.Models;
+using GrooveMessengerAPI.Models;
+using GrooveMessengerDAL.Models.Message;
+using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
+using System;
 
 namespace GrooveMessengerAPI.Areas.Chat.Controllers
 {
     [Route("api/[controller]")]
     public class MessageController : Controller
     {
+        private readonly IMessageService _mesService;
+        private readonly IConversationService _conService;
         //private IHubContext<MessageHub, ITypedHubClient> _hubContext;
 
         public MessageController(
             //IHubContext<MessageHub, ITypedHubClient> hubContext
+            IMessageService mesService,
+            IConversationService conService
             )
         {
             //_hubContext = hubContext;
+            this._mesService = mesService;
+            _conService = conService;
         }
 
         [HttpPost]
@@ -34,6 +41,58 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             }
 
             return retMessage;
+        }
+
+        [HttpGet]
+        public IActionResult Get([FromQuery]PagingParameterModel pagingparametermodel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                int CurrentPage = pagingparametermodel.pageNumber;
+                int PageSize = pagingparametermodel.pageSize;
+                var result = _mesService.loadMoreMessages(CurrentPage, PageSize);
+                return Ok(result);
+            }
+        }
+
+
+        [HttpPost("addmessage")]
+        public IActionResult Post([FromBody] CreateMessageModel createMessageModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                _mesService.AddMessage(createMessageModel);
+                return Ok();
+            }
+        }
+
+        [HttpPut("updatestatusmessage")]
+        public IActionResult Put(Guid id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                _mesService.UpdateStatusMessage(id);
+                return Ok();
+            }
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetById(Guid id)
+        {
+            if (_mesService.GetMessageById(id) != null) return Ok(_mesService.GetMessageById(id));
+            else return BadRequest();
         }
     }
 
