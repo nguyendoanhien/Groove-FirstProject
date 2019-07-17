@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -89,14 +90,14 @@ namespace GrooveMessengerDAL.Services
             return result;
         }
 
-        public void EditNote(EditModel data)
-        {
-            var storedData = _noteRepository.GetSingle(data.Id);
-            storedData.Title = data.Title;
-            storedData.Description = data.Description;
-            _noteRepository.Edit(storedData);
-            _uow.SaveChanges();
-        }
+        //public void EditNote(EditModel data)
+        //{
+        //    var storedData = _noteRepository.GetSingle(data.Id);
+        //    storedData.Title = data.Title;
+        //    storedData.Description = data.Description;
+        //    _noteRepository.Edit(storedData);
+        //    _uow.SaveChanges();
+        //}
 
         public bool CheckExisting(int id)
         {
@@ -110,6 +111,11 @@ namespace GrooveMessengerDAL.Services
             storedData.Deleted = true;
             _noteRepository.Edit(storedData);
             _uow.SaveChanges();
+        }
+
+        public void EditNote(EditModel data)
+        {
+            throw new NotImplementedException();
         }
     }
 }
