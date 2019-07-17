@@ -43,6 +43,7 @@ namespace GrooveMessengerDAL.Services
         {
             var storedData = _userRepository.GetSingle(userInfo.Id);
             storedData.DisplayName = userInfo.DisplayName;
+            storedData.Avatar = userInfo.Avatar;
             _userRepository.Edit(storedData);
             _uow.SaveChanges();
         }
