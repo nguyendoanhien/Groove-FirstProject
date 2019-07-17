@@ -1,11 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
-
 import { ChatService } from '../../../chat.service';
-import { UserProfileService } from 'app/core/identity/userprofile.service';
 import { userInfo } from './userInfo.model';
+import { UserInfoService } from 'app/core/account/userInfo.service';
 
 @Component({
     selector: 'chat-user-sidenav',
@@ -16,6 +13,7 @@ import { userInfo } from './userInfo.model';
 export class ChatUserSidenavComponent implements OnInit, OnDestroy {
 
     userInfo: userInfo
+    selectedFile:File = null;
     // Private
     private _unsubscribeAll: Subject<any>;
 
@@ -26,7 +24,7 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
      */
     constructor(
         private _chatService: ChatService,
-        private _userProfileService: UserProfileService
+        private _userInfoService: UserInfoService,
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
@@ -41,9 +39,7 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit() {
-
-
-        this._userProfileService.getUserInfo().subscribe(res => {
+        this._userInfoService.getUserInfo().subscribe(res => {
             this.userInfo = res as userInfo;
         });
 
@@ -58,8 +54,16 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
         this._unsubscribeAll.complete();
     }
 
-    changeName() {
-        console.log(this.userInfo)
+    changeDisplayName() {
+        this._userInfoService.changeDisplayName(this.userInfo).subscribe(res => this.userInfo = res as userInfo)
+    }
+
+    onUpload(event) {
+        this.selectedFile = <File>event.target.files[0];
+        const fd = new FormData();
+        fd.append('file',this.selectedFile);
+        this._userInfoService.onUpload(fd).subscribe(res => console.log(res));
+        
     }
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods

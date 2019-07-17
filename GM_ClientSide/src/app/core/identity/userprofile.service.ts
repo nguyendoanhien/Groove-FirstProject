@@ -97,7 +97,5 @@ export class UserProfileService {
         }
     }
 
-    getUserInfo() {
-        return this.http.get('https://localhost:44383/Identity/user').pipe()
-    }
+
 }

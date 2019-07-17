@@ -1,5 +1,6 @@
 ﻿using GrooveMessengerDAL.Entities;
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace GrooveMessengerDAL.Models
@@ -8,6 +9,10 @@ namespace GrooveMessengerDAL.Models
     public class ApplicationUser : IdentityUser
     {
         public UserInfoEntity UserInfoEntity { get; set; }
+
+        public ICollection<MessageEntity> MessageEntity { get; set; }
+
+        public virtual ICollection<ParticipantEntity> ParticipantEntity { get; set; }
     }
 
 }

@@ -29,5 +29,8 @@ namespace GrooveMessengerDAL.Entities
         public string UserId { get; set; }
 
         public ApplicationUser ApplicationUser { get; set; }
+
+        public virtual ICollection<UserInfoContactEntity> Users { get; set; }
+        public virtual ICollection<UserInfoContactEntity> Contacts { get; set; }
     }
 }

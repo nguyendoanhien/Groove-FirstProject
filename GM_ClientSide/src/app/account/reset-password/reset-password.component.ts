@@ -19,6 +19,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     resetPasswordForm: FormGroup;
     token: string;
     userid: string;
+    isResetFailture:boolean = false;
     // Private
     private _unsubscribeAll: Subject<any>;
 
@@ -101,11 +102,10 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
             userid: this.userid,
             ctoken: this.token,
             newpassword: this.resetPasswordForm.get('password').value,
-        };
-        console.log(resetPassword);
+        };        
         this._resetPasswordService.resetPassword(resetPassword).subscribe(val => {
             this._route.navigate(['/account/login']);
-        }, err => console.log(err));
+        }, err =>this.isResetFailture=true);
 
     }
 }

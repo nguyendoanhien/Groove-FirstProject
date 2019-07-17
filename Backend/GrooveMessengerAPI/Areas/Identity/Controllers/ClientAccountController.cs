@@ -104,7 +104,8 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             var res = await _userManager.ConfirmEmailAsync(user, model.Ctoken);
             if (res.Succeeded)
             {
-                return Ok();
+                var tokenString = AuthTokenUtil.GetJwtTokenString(user.UserName, _config);
+                return new ObjectResult(tokenString);               
             }
             else
             {

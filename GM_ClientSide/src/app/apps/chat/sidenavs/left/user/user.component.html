@@ -18,7 +18,8 @@
         <mat-toolbar-row class="toolbar-bottom" fxLayout="column" fxLayoutAlign="center center">
 
             <img [src]="userInfo.avatar" class="avatar user-avatar huge" alt="" />
-            <input class="user-name my-8" (input)="userInfo.displayName = $event.target.value" [value]="userInfo.displayName"  (focusout)="changeName()"/>
+            <input type="file" (change)="onUpload($event)"/>
+            <input class="user-name my-8" (input)="userInfo.displayName = $event.target.value" [value]="userInfo.displayName"  (focusout)="changeDisplayName()"/>
         </mat-toolbar-row>
         <!-- / TOOLBAR BOTTOM -->
 

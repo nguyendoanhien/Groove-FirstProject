@@ -31,7 +31,7 @@ namespace GrooveMessengerDAL.Services
 
         public void AddUserInfo(CreateUserInfoModel userInfo)
         {
-            userInfo.Status = 0;
+            userInfo.Status = "online";
             userInfo.Mood = "";
             userInfo.Avatar = "https://localhost:44383/images/avatar.png";
             var entity = _mapper.Map<CreateUserInfoModel, UserInfoEntity>(userInfo);

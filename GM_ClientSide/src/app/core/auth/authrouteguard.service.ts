@@ -11,6 +11,7 @@ export class AuthRouteGuardService implements CanActivate, CanActivateChild {
             return true;
         }
         else {
+            localStorage.removeItem('token');
             this.router.navigate(['account','login']);
             return false;
         }

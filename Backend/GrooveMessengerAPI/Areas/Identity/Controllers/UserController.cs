@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GrooveMessengerAPI.Areas.Identity.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("Identity/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
