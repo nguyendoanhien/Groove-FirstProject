@@ -7,6 +7,7 @@ using GrooveMessengerDAL.Services.Interface;
 using GrooveMessengerDAL.Uow.Interface;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace GrooveMessengerDAL.Services
@@ -30,12 +31,27 @@ namespace GrooveMessengerDAL.Services
 
         public void AddUserInfo(CreateUserInfoModel userInfo)
         {
+            userInfo.Status = 0;
+            userInfo.Mood = "";
+            userInfo.Avatar = "https://localhost:44383/images/avatar.png";
             var entity = _mapper.Map<CreateUserInfoModel, UserInfoEntity>(userInfo);
-            entity.CreatedOn = DateTime.Now;
-            entity.CreatedBy = "Root";
-            entity.Status = 0;
             _userRepository.Add(entity);
             _uow.SaveChanges();
+        }
+
+        public void EditUserInfo(EditUserInfoModel userInfo)
+        {
+            var storedData = _userRepository.GetSingle(userInfo.Id);
+            storedData.DisplayName = userInfo.DisplayName;
+            _userRepository.Edit(storedData);
+            _uow.SaveChanges();
+        }
+
+        public IndexUserInfoModel GetUserInfo(string id)
+        {
+            var storedData = _userRepository.FindBy(x=>x.UserId == id).FirstOrDefault();
+            var result = _mapper.Map<UserInfoEntity, IndexUserInfoModel>(storedData);
+            return result;
         }
     }
 }

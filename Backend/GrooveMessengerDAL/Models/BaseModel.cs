@@ -1,13 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace GrooveMessengerDAL.Models
 {
-    public abstract class BaseModel
+    public abstract class BaseModel<TKey>
     {
         [Required]
-        public int Id { get; set; }
+        public TKey Id { get; set; }
 
         [Required]
         public byte[] Timestamp { get; set; }
+
     }
 }

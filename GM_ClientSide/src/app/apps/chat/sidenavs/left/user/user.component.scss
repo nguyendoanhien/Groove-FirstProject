@@ -10,5 +10,11 @@ chat-user-sidenav {
         .toolbar-bottom {
             height: 180px;
         }
+        .user-name {
+            border: none;
+            background-color: transparent;
+            text-align: center;
+            color: #fff;
+        }
     }
 }

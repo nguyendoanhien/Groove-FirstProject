@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GrooveMessengerDAL.Migrations
 {
     [DbContext(typeof(GrooveMessengerDbContext))]
-    [Migration("20190716040838_addUserInfo")]
+    [Migration("20190716103647_addUserInfo")]
     partial class addUserInfo
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,7 +29,6 @@ namespace GrooveMessengerDAL.Migrations
                     b.Property<string>("Avatar");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnName("CreatedBy");
 
                     b.Property<DateTime?>("CreatedOn")
@@ -77,11 +76,6 @@ namespace GrooveMessengerDAL.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
-
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasColumnName("DisplayName")
-                        .HasMaxLength(120);
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);

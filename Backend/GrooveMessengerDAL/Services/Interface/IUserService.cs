@@ -8,5 +8,7 @@ namespace GrooveMessengerDAL.Services.Interface
     public interface IUserService
     {
         void AddUserInfo(CreateUserInfoModel userInfo);
+        void EditUserInfo(EditUserInfoModel userInfo);
+        IndexUserInfoModel GetUserInfo(string id);
     }
 }

@@ -14,7 +14,6 @@ namespace GrooveMessengerDAL.Entities
         public bool? Deleted { get; set; }
 
         [Column("CreatedBy")]
-        [Required]
         public string CreatedBy { get; set; }
         
         [Column("CreatedOn")]

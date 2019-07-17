@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GrooveMessengerDAL.Models.Note
 {
-    public class FullModel : AuditBaseModel
+    public class FullModel : AuditBaseModel<int>
     {
         [Required(ErrorMessage = "Please input this field")]
         [StringLength(50, ErrorMessage = "50 characters maximum")]

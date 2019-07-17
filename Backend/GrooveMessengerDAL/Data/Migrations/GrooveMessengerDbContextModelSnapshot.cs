@@ -27,7 +27,6 @@ namespace GrooveMessengerDAL.Migrations
                     b.Property<string>("Avatar");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnName("CreatedBy");
 
                     b.Property<DateTime?>("CreatedOn")
@@ -75,11 +74,6 @@ namespace GrooveMessengerDAL.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
-
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasColumnName("DisplayName")
-                        .HasMaxLength(120);
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);

@@ -7,14 +7,9 @@ namespace GrooveMessengerDAL.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
+            migrationBuilder.DropColumn(
                 name: "DisplayName",
-                table: "AspNetUsers",
-                maxLength: 120,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldMaxLength: 50,
-                oldNullable: true);
+                table: "AspNetUsers");
 
             migrationBuilder.CreateTable(
                 name: "UserInfo",
@@ -22,7 +17,7 @@ namespace GrooveMessengerDAL.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     Deleted = table.Column<bool>(nullable: true),
-                    CreatedBy = table.Column<string>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     UpdatedBy = table.Column<string>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(nullable: true),
@@ -56,13 +51,11 @@ namespace GrooveMessengerDAL.Migrations
             migrationBuilder.DropTable(
                 name: "UserInfo");
 
-            migrationBuilder.AlterColumn<string>(
+            migrationBuilder.AddColumn<string>(
                 name: "DisplayName",
                 table: "AspNetUsers",
                 maxLength: 50,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 120);
+                nullable: true);
         }
     }
 }

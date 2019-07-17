@@ -63,12 +63,12 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             }
             else
             {
-                var new_user = new ApplicationUser() { DisplayName = model.DisplayName, Email = model.Email, UserName = model.Email };
+                var new_user = new ApplicationUser() {  Email = model.Email, UserName = model.Email };
                 var result = await _userManager.CreateAsync(new_user, model.Password);
-                //CreateUserInfoModel userInfo = new CreateUserInfoModel();
-                //userInfo.UserId = new_user.Id;
-                //userInfo.DisplayName = model.DisplayName;
-                //_userService.AddUserInfo(userInfo);
+                CreateUserInfoModel userInfo = new CreateUserInfoModel();
+                userInfo.UserId = new_user.Id;
+                userInfo.DisplayName = model.DisplayName;
+                _userService.AddUserInfo(userInfo);
                 if (result.Succeeded)
                 {
                     var clientAppUrl = _config.GetSection("Client").Value;
@@ -131,7 +131,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
 
             string url = _config["ForgotEmailRoute:Url"] + "?token=" + HttpUtility.UrlEncode(token) + "&&userid=" + user.Id;
             var body = "<h1>Confirm Your Email</h1>" +
-                        "<h3>Hello " + user.DisplayName + " ! </h3>" +
+                        "<h3>Hello! </h3>" +
                         "<h3>Tap the button below to confirm your email address.</h3>" +
                         "<h3>If you didn't create an account with <a href='" + clientAppUrl + "'>Groove Messenger</a>, you can safely delete this email.</h3>" +
                         "<table border='0' cellpadding='0' cellspacing='0' width='40% ' style='background-color:#324FEA; border:1px solid #324FEA; border-radius:5px;'>" +
@@ -210,10 +210,14 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                 var resultFindByLoginExternal = await _userManager.FindByLoginAsync("Google", payload.Subject);
                 var tokenString = AuthTokenUtil.GetJwtTokenString(payload.Email, _config);
 
-                var user = new ApplicationUser { UserName = payload.Email, Email = payload.Email, DisplayName = payload.Name };
+                var user = new ApplicationUser { UserName = payload.Email, Email = payload.Email };
                 if (resultFindByMail == null)
                 {
                     var resultCreate = await _userManager.CreateAsync(user);
+                    CreateUserInfoModel userInfo = new CreateUserInfoModel();
+                    userInfo.UserId = user.Id;
+                    userInfo.DisplayName = payload.Name;
+                    _userService.AddUserInfo(userInfo);
                     if (resultCreate.Succeeded)
                     {
                         var resultLogin = await _userManager.AddLoginAsync(user, info);
@@ -270,11 +274,14 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                 var appUser = new ApplicationUser
                 {
                     Email = userInfo.Email,
-                    DisplayName = userInfo.Name,
                     UserName = userInfo.Email
                 };
 
                 var result = await _userManager.CreateAsync(appUser);
+                CreateUserInfoModel userInform = new CreateUserInfoModel();
+                userInform.UserId = appUser.Id;
+                userInform.DisplayName = userInfo.Name;
+                _userService.AddUserInfo(userInform);
                 var resultLogin = await _userManager.AddLoginAsync(appUser, info);
        
             }

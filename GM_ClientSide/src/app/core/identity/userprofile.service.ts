@@ -8,11 +8,11 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { catchError, retry, map } from 'rxjs/operators';
 import { UserProfileModel } from 'app/account/user-profile/user-profile.model';
+import { userInfo } from 'app/apps/chat/sidenavs/left/user/userInfo.model';
 
 const loginUrl = environment.authLoginUrl;
 const authGoogleUrl = environment.authGoogleUrl;
 const authFBUrl = environment.authFacebookUrl;
-
 const httpOptions = {
     headers: new HttpHeaders({
         'Accept': 'text/html, application/xhtml+xml, */*',
@@ -95,5 +95,9 @@ export class UserProfileService {
         if (token.length > 0) {
             this.parseJwtToken(token);
         }
+    }
+
+    getUserInfo() {
+        return this.http.get('https://localhost:44383/Identity/user').pipe()
     }
 }

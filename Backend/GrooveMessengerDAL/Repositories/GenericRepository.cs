@@ -123,6 +123,7 @@ namespace GrooveMessengerDAL.Repositories
 
         public void Add(TEntity entity)
         {
+            entity.CreatedOn = DateTime.Now;
             Entity.Add(entity);
         }
 

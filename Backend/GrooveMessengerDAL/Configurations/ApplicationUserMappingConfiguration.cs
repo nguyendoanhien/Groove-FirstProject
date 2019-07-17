@@ -9,7 +9,7 @@ namespace GrooveMessengerDAL.Configurations
     {
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
-            builder.Property(x => x.DisplayName).HasColumnName("DisplayName").IsRequired().HasMaxLength(120);
+           
         }
     }
 }

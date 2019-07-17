@@ -17,9 +17,8 @@
         <!-- TOOLBAR BOTTOM -->
         <mat-toolbar-row class="toolbar-bottom" fxLayout="column" fxLayoutAlign="center center">
 
-            <img [src]="user.avatar" class="avatar user-avatar huge" alt="{{user.name}}"/>
-            <div class="user-name my-8">{{user.name}}</div>
-
+            <img [src]="userInfo.avatar" class="avatar user-avatar huge" alt="" />
+            <input class="user-name my-8" (input)="userInfo.displayName = $event.target.value" [value]="userInfo.displayName"  (focusout)="changeName()"/>
         </mat-toolbar-row>
         <!-- / TOOLBAR BOTTOM -->
 
@@ -31,14 +30,14 @@
 <div class="sidenav-content py-32 px-24" fxFlex>
 
     <!-- USER MOOD -->
-    <form [formGroup]="userForm" fxLayout="column">
+    <form fxLayout="column">
 
         <mat-form-field appearance="outline" fxFlex="0 1 auto">
             <mat-label>Mood</mat-label>
-            <textarea matInput name="mood" formControlName="mood" rows="3"></textarea>
+            <textarea matInput name="mood" [(ngModel)]="userInfo.mood" rows="3"></textarea>
         </mat-form-field>
 
-        <mat-radio-group formControlName="status" fxLayout="column">
+        <mat-radio-group [(ngModel)]="userInfo.status" [ngModelOptions]="{standalone: true}" fxLayout="column">
 
             <mat-radio-button value="online" class="py-8">
                 <div fxLayout="row" fxLayoutAlign="start center">
@@ -71,5 +70,6 @@
 
     </form>
     <!-- / USER MOOD -->
+    {{userInfo.status}}
 
 </div>
