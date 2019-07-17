@@ -3,17 +3,21 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GrooveMessengerDAL.Migrations
 {
-    public partial class createdb : Migration
+    public partial class UpdatedGMDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "DisplayName",
+                table: "AspNetUsers");
+
             migrationBuilder.CreateTable(
                 name: "Conversation",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
                     Deleted = table.Column<bool>(nullable: true),
-                    CreatedBy = table.Column<string>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     UpdatedBy = table.Column<string>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(nullable: true),
@@ -26,12 +30,39 @@ namespace GrooveMessengerDAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserInfo",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Deleted = table.Column<bool>(nullable: true),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    UpdatedBy = table.Column<string>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(nullable: true),
+                    DisplayName = table.Column<string>(maxLength: 120, nullable: false),
+                    Mood = table.Column<string>(maxLength: 150, nullable: true),
+                    Status = table.Column<int>(nullable: false),
+                    Avatar = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserInfo", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserInfo_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Message",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
                     Deleted = table.Column<bool>(nullable: true),
-                    CreatedBy = table.Column<string>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     UpdatedBy = table.Column<string>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(nullable: true),
@@ -64,13 +95,13 @@ namespace GrooveMessengerDAL.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     Deleted = table.Column<bool>(nullable: true),
-                    CreatedBy = table.Column<string>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     UpdatedBy = table.Column<string>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(nullable: true),
                     ConversationId = table.Column<Guid>(nullable: false),
                     UserId = table.Column<string>(nullable: true),
-                    Status = table.Column<string>(nullable: false)
+                    Status = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -85,6 +116,37 @@ namespace GrooveMessengerDAL.Migrations
                         name: "FK_Participant_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserInfoContact",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Deleted = table.Column<bool>(nullable: true),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    UpdatedBy = table.Column<string>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(nullable: true),
+                    UserId = table.Column<Guid>(nullable: false),
+                    ContactId = table.Column<Guid>(nullable: false),
+                    NickName = table.Column<string>(maxLength: 120, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserInfoContact", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserInfoContact_UserInfo_ContactId",
+                        column: x => x.ContactId,
+                        principalTable: "UserInfo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserInfoContact_UserInfo_UserId",
+                        column: x => x.UserId,
+                        principalTable: "UserInfo",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -108,6 +170,23 @@ namespace GrooveMessengerDAL.Migrations
                 name: "IX_Participant_UserId",
                 table: "Participant",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserInfo_UserId",
+                table: "UserInfo",
+                column: "UserId",
+                unique: true,
+                filter: "[UserId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserInfoContact_ContactId",
+                table: "UserInfoContact",
+                column: "ContactId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserInfoContact_UserId",
+                table: "UserInfoContact",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -119,7 +198,19 @@ namespace GrooveMessengerDAL.Migrations
                 name: "Participant");
 
             migrationBuilder.DropTable(
+                name: "UserInfoContact");
+
+            migrationBuilder.DropTable(
                 name: "Conversation");
+
+            migrationBuilder.DropTable(
+                name: "UserInfo");
+
+            migrationBuilder.AddColumn<string>(
+                name: "DisplayName",
+                table: "AspNetUsers",
+                maxLength: 50,
+                nullable: true);
         }
     }
 }

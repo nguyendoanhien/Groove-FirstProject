@@ -7,7 +7,6 @@ namespace GrooveMessengerDAL.Models
         [Required]
         public int Id { get; set; }
 
-        [Required]
         public byte[] Timestamp { get; set; }
     }
 }

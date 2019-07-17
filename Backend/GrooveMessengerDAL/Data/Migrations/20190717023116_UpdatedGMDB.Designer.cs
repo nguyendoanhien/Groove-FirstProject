@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GrooveMessengerDAL.Migrations
 {
     [DbContext(typeof(GrooveMessengerDbContext))]
-    [Migration("20190715110428_addUserInfo")]
-    partial class addUserInfo
+    [Migration("20190717023116_UpdatedGMDB")]
+    partial class UpdatedGMDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,15 +21,17 @@ namespace GrooveMessengerDAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoEntity", b =>
+            modelBuilder.Entity("GrooveMessengerDAL.Entities.ConversationEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Avatar");
+                    b.Property<string>("Avatar")
+                        .IsRequired()
+                        .HasColumnName("Avatar")
+                        .HasMaxLength(50);
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnName("CreatedBy");
 
                     b.Property<DateTime?>("CreatedOn")
@@ -38,6 +40,164 @@ namespace GrooveMessengerDAL.Migrations
 
                     b.Property<bool?>("Deleted")
                         .HasColumnName("Deleted");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnName("Name")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("UpdatedBy");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("UpdatedOn");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Conversation");
+                });
+
+            modelBuilder.Entity("GrooveMessengerDAL.Entities.MessageEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnName("Content")
+                        .HasMaxLength(1000);
+
+                    b.Property<Guid>("ConversationId");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("CreatedBy");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .IsRequired()
+                        .HasColumnName("CreatedOn");
+
+                    b.Property<bool?>("Deleted")
+                        .HasColumnName("Deleted");
+
+                    b.Property<string>("SeenBy");
+
+                    b.Property<string>("SenderId")
+                        .IsRequired();
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnName("Type");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("UpdatedBy");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("UpdatedOn");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConversationId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Message");
+                });
+
+            modelBuilder.Entity("GrooveMessengerDAL.Entities.ParticipantEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("ConversationId");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("CreatedBy");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .IsRequired()
+                        .HasColumnName("CreatedOn");
+
+                    b.Property<bool?>("Deleted")
+                        .HasColumnName("Deleted");
+
+                    b.Property<int>("Status")
+                        .HasColumnName("Status");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("UpdatedBy");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("UpdatedOn");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConversationId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Participant");
+                });
+
+            modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoContactEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("ContactId");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("CreatedBy");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .IsRequired()
+                        .HasColumnName("CreatedOn");
+
+                    b.Property<bool?>("Deleted")
+                        .HasColumnName("Deleted");
+
+                    b.Property<string>("NickName")
+                        .HasMaxLength(120);
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("UpdatedBy");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("UpdatedOn");
+
+                    b.Property<Guid>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserInfoContact");
+                });
+
+            modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Avatar");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("CreatedBy");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .IsRequired()
+                        .HasColumnName("CreatedOn");
+
+                    b.Property<bool?>("Deleted")
+                        .HasColumnName("Deleted");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnName("DisplayName")
+                        .HasMaxLength(120);
 
                     b.Property<string>("Mood")
                         .HasColumnName("Mood")
@@ -72,11 +232,6 @@ namespace GrooveMessengerDAL.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
-
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasColumnName("DisplayName")
-                        .HasMaxLength(120);
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
@@ -227,6 +382,44 @@ namespace GrooveMessengerDAL.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("GrooveMessengerDAL.Entities.MessageEntity", b =>
+                {
+                    b.HasOne("GrooveMessengerDAL.Entities.ConversationEntity", "ConversationEntity")
+                        .WithMany("MessageEntity")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("GrooveMessengerDAL.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("MessageEntity")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("GrooveMessengerDAL.Entities.ParticipantEntity", b =>
+                {
+                    b.HasOne("GrooveMessengerDAL.Entities.ConversationEntity", "ConversationEntity")
+                        .WithMany("ParticipantEntity")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("GrooveMessengerDAL.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("ParticipantEntity")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoContactEntity", b =>
+                {
+                    b.HasOne("GrooveMessengerDAL.Entities.UserInfoEntity", "ContactInfo")
+                        .WithMany("Contacts")
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("GrooveMessengerDAL.Entities.UserInfoEntity", "UserInfo")
+                        .WithMany("Users")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoEntity", b =>
