@@ -1,6 +1,5 @@
 
 using System;
-using System.Threading.Tasks;
 using GrooveMessengerAPI.Areas.Chat.Models;
 using GrooveMessengerAPI.Models;
 using GrooveMessengerDAL.Models.Message;
@@ -45,15 +44,6 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
 
             return retMessage;
         }
-
-        //<<<<<<< HEAD
-
-        //[HttpGet("{id}")]
-        //public async Task<EditMessageModel> GetMessage(Guid id)
-        //{
-        //    var data = await _mesService.GetMessageForEditAsync(id);
-        //    return data;
-        //}
 
         [HttpPut("{id}")]
         public EditMessageModel EditMessage(Guid id, [FromBody] EditMessageModel message)
