@@ -2,19 +2,12 @@ export class User {
     id: string;
     userId: number;
     displayName: string;
-    mood: Mood;
+    mood: string;
     status: Status;
     chatList: any[];
 }
-enum Mood {
-    Up = 1,
-    Down,
-    Left,
-    Right,
-}
-enum Status {
-    Up = 1,
-    Down,
-    Left,
-    Right,
+export enum Status {
+    NotSet,
+    Online,
+    Offline
 }

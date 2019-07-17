@@ -304,18 +304,25 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
         [HttpGet("{username}")]
         public async Task<UserInfoEntity> GetUser(string username)
         {
-            var user = await _userManager.FindByEmailAsync(username);
-            var userInfo = _userService.GetBy((data) => data.UserId == user.Id).FirstOrDefault();
-            if (user != null && userInfo == null)
-            {
-                _userService.AddUserInfo(new CreateUserInfoModel() { UserId = user.Id });
-            }
-            else
-            {
-                //userInfo = await _userService.GetUser(new Guid(user.Id));
-                userInfo = _userService.GetBy((data) =>data.UserId == user.Id).FirstOrDefault();
-            }
+            var userInfo = await _userService.GetByUsername(username);
             return userInfo;
+        }
+        [HttpPut("{username}")]
+        public async Task<IActionResult> EditUser(string username, [FromBody] EditUserInfoModel editUserInfo)
+        {
+            try
+            {
+                
+                await _userService.EditAsync(editUserInfo);
+            }
+            catch (Exception ex)
+            {
+                return Ok("Error");
+            }
+
+            return Ok(editUserInfo);
+
+
 
         }
     }

@@ -2,12 +2,12 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
-
 import { ChatService } from '../../../chat.service';
-import { User, Status } from 'app/apps/model/user.model';
-import { UserProfileModel } from 'app/account/user-profile/user-profile.model';
+declare var jquery: any;
+declare var $: any;
+import { User } from 'app/apps/model/user.model';
 import { UserProfileService } from 'app/core/identity/userprofile.service';
-
+import { UserProfileModel } from 'app/account/user-profile/user-profile.model';
 @Component({
     selector: 'chat-user-sidenav',
     templateUrl: './user.component.html',
@@ -47,16 +47,15 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this._userProfileModel = this._userProfileService.CurrentUserProfileModel();
         this._userProfileService.getUserById(this._userProfileModel.UserName).subscribe((data) => {
-
+            console.log(this.user);
             this.user = data
-            // this.user.mood = 1;
-            // this.user.status = 1;
+            console.log(this.user);
             this.beforeUser = Object.assign({}, this.user);
-
-            // this.user = this._chatService.user;
             this.userForm = new FormGroup({
-                mood: new FormControl(this.user.mood),
-                status: new FormControl(Status[this.user.status])
+                // mood: new FormControl(this.user.mood),
+                // status: new FormControl(this.user.status)
+                mood: new FormControl(this.user.displayName),
+                status: new FormControl(this.user.displayName)
             });
 
             this.userForm.valueChanges
@@ -66,13 +65,17 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
                     distinctUntilChanged()
                 )
                 .subscribe(data => {
+                    // this.user.mood = data.mood;
+                    // this.user.status = data.status;
+                    console.log(data);
                     this.user.mood = data.mood;
                     this.user.status = data.status;
                     this._chatService.updateUserData(this.user);
                 });
+        }
 
-        });
 
+        );
 
     }
 
@@ -94,9 +97,11 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
      *
      * @param view
      */
+
     changeLeftSidenavView(view): void {
         this._chatService.onLeftSidenavViewChanged.next(view);
     }
+
     focusFunction() {
         this.contenteditable = true;
     }

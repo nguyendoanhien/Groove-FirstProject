@@ -15,5 +15,8 @@ namespace GrooveMessengerDAL.Services.Interface
         Task<UserInfoEntity> GetUser(System.Guid id);
         void AddUserInfo(CreateUserInfoModel userInfo);
         IQueryable<UserInfoEntity> GetBy(Expression<Func<UserInfoEntity, bool>> predicate);
+        Task<UserInfoEntity> GetByUsername(string username);
+        void Edit(UserInfoEntity entity);
+        Task EditAsync(EditUserInfoModel editUserInfoModel);
     }
 }

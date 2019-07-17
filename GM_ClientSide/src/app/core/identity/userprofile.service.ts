@@ -8,6 +8,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UserProfileModel } from 'app/account/user-profile/user-profile.model';
+import { User } from 'app/apps/model/user.model';
 
 const loginUrl = environment.authLoginUrl;
 const authGoogleUrl = environment.authGoogleUrl;
@@ -26,7 +27,7 @@ export class UserProfileService {
     private userProfile: UserProfileModel;
     constructor(private router: Router,
         private authService: AuthService,
-        private http: HttpClient) {
+        private _httpClient: HttpClient) {
         this.userProfile = new UserProfileModel();
     }
 
@@ -41,7 +42,7 @@ export class UserProfileService {
                 Password: password
             };
 
-            return this.http.post<any>(loginUrl, body, httpOptions)
+            return this._httpClient.post<any>(loginUrl, body, httpOptions)
                 .pipe(
                     map((token: string) => {
                         this.parseJwtToken(token);
@@ -53,7 +54,7 @@ export class UserProfileService {
 
     logInGoogle(googleAccessToken: string): Subscription {
 
-        return this.http.post<string>(authGoogleUrl + `?accessToken=${googleAccessToken}`, null, httpOptions).pipe(
+        return this._httpClient.post<string>(authGoogleUrl + `?accessToken=${googleAccessToken}`, null, httpOptions).pipe(
             map((token: string) => {
                 this.parseJwtToken(token);
                 this.router.navigate(['chat']);
@@ -63,7 +64,7 @@ export class UserProfileService {
 
 
     logInFacebook(facebookAccessToken: string): Subscription {
-        return this.http.post<string>(authFBUrl + `?token=${facebookAccessToken}`, null, httpOptions)
+        return this._httpClient.post<string>(authFBUrl + `?token=${facebookAccessToken}`, null, httpOptions)
             .pipe(
                 map((token: string) => {
                     this.parseJwtToken(token);
@@ -100,9 +101,18 @@ export class UserProfileService {
         }
     }
     public CurrentUserProfileModel() {
-        debugger;
+
         this.loadStoredUserProfile();
         return this.userProfile;
     }
+    getUserById(id: string): Observable<User> {
 
+        return this._httpClient.get<User>(`${environment.authBaseUrl}/${id}`);
+
+
+    }
+    editUser(id: string, user: any): Observable<any> {
+        // user = this.getUserById(id);
+        return this._httpClient.put<any>(`${environment.authBaseUrl}/${id}`, user);
+    }
 }

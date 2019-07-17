@@ -246,11 +246,7 @@ export class ChatService implements Resolve<any>
         });
     }
 
-    getUserById(id: string): Observable<User> {
-        debugger;
-        return this._httpClient.get<User>(`${environment.authBaseUrl}/${id}`);
-
-    }
+  
 
     // getUserById(id: string): Observable<User> {
     //     debugger;
