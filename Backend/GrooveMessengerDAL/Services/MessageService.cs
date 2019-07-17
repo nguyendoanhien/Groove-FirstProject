@@ -7,8 +7,8 @@ using GrooveMessengerDAL.Services.Interface;
 using GrooveMessengerDAL.Uow.Interface;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Linq;
-using System.Text;
 
 namespace GrooveMessengerDAL.Services
 {
@@ -17,12 +17,53 @@ namespace GrooveMessengerDAL.Services
         private IGenericRepository<MessageEntity, Guid, GrooveMessengerDbContext> _mesRepository;
         private IMapper _mapper;
         private IUowBase<GrooveMessengerDbContext> _uow;
-
+       
         public MessageService(IGenericRepository<MessageEntity, Guid, GrooveMessengerDbContext> mesRepository, IMapper mapper, IUowBase<GrooveMessengerDbContext> uow)
         {
             _mesRepository = mesRepository;
             _mapper = mapper;
             _uow = uow;
+        }
+
+        public bool CheckExisting(Guid id)
+        {
+            var result = _mesRepository.CheckExistingById(id);
+            return result;
+        }
+
+        public void DeleteMessage(Guid id)
+        {
+
+            var storedData = _mesRepository.GetSingle(id);
+            storedData.Deleted = true;
+            _mesRepository.Edit(storedData);
+            _uow.SaveChanges();
+        }
+
+
+
+        public void EditMessageModel(EditMessageModel data)
+        {
+            var storedData = _mesRepository.GetSingle(data.Id);
+            storedData.Content = data.Content;
+
+            _mesRepository.Edit(storedData);
+            _uow.SaveChanges();
+        }
+
+        public EditMessageModel GetMessageForEdit(Guid id)
+        {
+            var storedData = _mesRepository.GetSingle(id);
+            var result = _mapper.Map<MessageEntity, EditMessageModel>(storedData);
+            return result;
+        }
+
+        public async Task<EditMessageModel> GetMessageForEditAsync(Guid id)
+        {
+            
+            var storedData = await _mesRepository.GetSingleAsync(id);
+            var result = _mapper.Map<MessageEntity, EditMessageModel>(storedData);
+            return result;
         }
 
         public IEnumerable<MessageEntity> loadMoreMessages(int pageNumber, int pageSize)

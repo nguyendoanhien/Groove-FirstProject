@@ -1,9 +1,12 @@
-﻿using GrooveMessengerAPI.Areas.Chat.Models;
+
+using System;
+using System.Threading.Tasks;
+using GrooveMessengerAPI.Areas.Chat.Models;
 using GrooveMessengerAPI.Models;
 using GrooveMessengerDAL.Models.Message;
 using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
-using System;
+
 
 namespace GrooveMessengerAPI.Areas.Chat.Controllers
 {
@@ -13,9 +16,9 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         private readonly IMessageService _mesService;
         private readonly IConversationService _conService;
         //private IHubContext<MessageHub, ITypedHubClient> _hubContext;
+        //private IMessageService _messageService;
 
         public MessageController(
-            //IHubContext<MessageHub, ITypedHubClient> hubContext
             IMessageService mesService,
             IConversationService conService
             )
@@ -43,6 +46,51 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             return retMessage;
         }
 
+        //<<<<<<< HEAD
+
+        //[HttpGet("{id}")]
+        //public async Task<EditMessageModel> GetMessage(Guid id)
+        //{
+        //    var data = await _mesService.GetMessageForEditAsync(id);
+        //    return data;
+        //}
+
+        [HttpPut("{id}")]
+        public EditMessageModel EditMessage(Guid id, [FromBody] EditMessageModel message)
+        {
+            if (id != message.Id)
+            {
+                return null;
+            }
+
+            if (ModelState.IsValid)
+            {
+                var isExisting = _mesService.CheckExisting(id);
+                if (!isExisting)
+                {
+                    return null;
+                }
+
+                _mesService.EditMessageModel(message);
+                return message;
+            }
+
+            return null;
+        }
+
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteMessage(Guid id)
+        {
+            var isExisting = _mesService.CheckExisting(id);
+            if (!isExisting)
+            {
+                return new NotFoundResult();
+            }
+
+            _mesService.DeleteMessage(id);
+            return Ok();
+        }
         [HttpGet]
         public IActionResult Get([FromQuery]PagingParameterModel pagingparametermodel)
         {

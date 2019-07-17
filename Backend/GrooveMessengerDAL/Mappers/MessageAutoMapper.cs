@@ -15,6 +15,7 @@ namespace GrooveMessengerDAL.Mappers
             CreateMap<FullMessageModel, MessageEntity>();
             CreateMap<MessageEntity, FullMessageModel>();
             CreateMap<CreateMessageModel, MessageEntity>();
+            CreateMap<MessageEntity, EditMessageModel>();
         }
     }
 }
