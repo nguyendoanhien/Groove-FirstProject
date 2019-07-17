@@ -44,8 +44,8 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             ILogger<ClientAccountController> logger,
             UserManager<ApplicationUser> userManager,
             IConfiguration config,
-            IAuthEmailSenderUtil authEmailSender, IUserService userService
-            , IUserResolverService userResolverService)
+            IAuthEmailSenderUtil authEmailSender, IUserService userService,
+            IUserResolverService userResolverService)
 
         {
             _signInManager = signInManager;
@@ -74,7 +74,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             }
             else
             {
-                var new_user = new ApplicationUser() {  Email = model.Email, UserName = model.Email };
+                var new_user = new ApplicationUser() { Email = model.Email, UserName = model.Email };
                 var result = await _userManager.CreateAsync(new_user, model.Password);
                 CreateUserInfoModel userInfo = new CreateUserInfoModel();
                 userInfo.UserId = new_user.Id;
@@ -122,7 +122,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             if (res.Succeeded)
             {
                 var tokenString = AuthTokenUtil.GetJwtTokenString(user.UserName, _config);
-                return Content(tokenString);               
+                return Content(tokenString);
             }
             else
             {
@@ -267,6 +267,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             }
             return BadRequest("Error !");
         }
+
         [HttpPost]
         [Route("loginfacebook")]
         public async Task<ObjectResult> Fblogin(string token)
@@ -315,18 +316,19 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             var refreshToken = AuthTokenUtil.GetJwtTokenString(userInfo.Email, _config);
             return new OkObjectResult(refreshToken);
         }
+
         [HttpGet("{username}")]
         public async Task<UserInfoEntity> GetUser(string username)
         {
             var userInfo = await _userService.GetByUsername(username);
             return userInfo;
         }
+
         [HttpPut("{username}")]
         public async Task<IActionResult> EditUser(string username, [FromBody] EditUserInfoModel editUserInfo)
         {
             try
             {
-                
                 await _userService.EditAsync(editUserInfo);
             }
             catch (Exception ex)
@@ -335,8 +337,6 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             }
 
             return Ok(editUserInfo);
-
-
 
         }
     }
