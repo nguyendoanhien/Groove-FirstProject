@@ -20,6 +20,7 @@ namespace GrooveMessengerDAL.Entities
         
         public string DisplayName { get; set; }
 
+       
         public string Mood { get; set; }
 
         public StatusName Status { get; set; }
