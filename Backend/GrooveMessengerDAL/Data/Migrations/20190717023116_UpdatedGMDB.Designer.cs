@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GrooveMessengerDAL.Migrations
 {
     [DbContext(typeof(GrooveMessengerDbContext))]
-    [Migration("20190716110152_UpdatedGMDB")]
+    [Migration("20190717023116_UpdatedGMDB")]
     partial class UpdatedGMDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -194,6 +194,11 @@ namespace GrooveMessengerDAL.Migrations
                     b.Property<bool?>("Deleted")
                         .HasColumnName("Deleted");
 
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnName("DisplayName")
+                        .HasMaxLength(120);
+
                     b.Property<string>("Mood")
                         .HasColumnName("Mood")
                         .HasMaxLength(150);
@@ -227,11 +232,6 @@ namespace GrooveMessengerDAL.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
-
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasColumnName("DisplayName")
-                        .HasMaxLength(120);
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);

@@ -7,14 +7,9 @@ namespace GrooveMessengerDAL.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
+            migrationBuilder.DropColumn(
                 name: "DisplayName",
-                table: "AspNetUsers",
-                maxLength: 120,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldMaxLength: 50,
-                oldNullable: true);
+                table: "AspNetUsers");
 
             migrationBuilder.CreateTable(
                 name: "Conversation",
@@ -44,6 +39,7 @@ namespace GrooveMessengerDAL.Migrations
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     UpdatedBy = table.Column<string>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(nullable: true),
+                    DisplayName = table.Column<string>(maxLength: 120, nullable: false),
                     Mood = table.Column<string>(maxLength: 150, nullable: true),
                     Status = table.Column<int>(nullable: false),
                     Avatar = table.Column<string>(nullable: true),
@@ -210,13 +206,11 @@ namespace GrooveMessengerDAL.Migrations
             migrationBuilder.DropTable(
                 name: "UserInfo");
 
-            migrationBuilder.AlterColumn<string>(
+            migrationBuilder.AddColumn<string>(
                 name: "DisplayName",
                 table: "AspNetUsers",
                 maxLength: 50,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 120);
+                nullable: true);
         }
     }
 }

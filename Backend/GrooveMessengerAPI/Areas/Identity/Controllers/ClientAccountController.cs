@@ -58,7 +58,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             }
             else
             {
-                var new_user = new ApplicationUser() { DisplayName = model.DisplayName, Email = model.Email, UserName = model.Email };
+                var new_user = new ApplicationUser() {Email = model.Email, UserName = model.Email };
                 var result = await _userManager.CreateAsync(new_user, model.Password);
                 if (result.Succeeded)
                 {
@@ -66,7 +66,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                     string token = _userManager.GenerateEmailConfirmationTokenAsync(new_user).Result;
                     var url = _config["EmailConfirmationRoute:Url"] + "?ctoken=" + HttpUtility.UrlEncode(token) + "&userid=" + new_user.Id;
                     var body = "<h1>Confirm Your Email</h1>" +
-                        "<h3>Hello " + new_user.DisplayName + " ! </h3>" +
+                        "<h3>Hello ! </h3>" +
                         "<h3>Tap the button below to confirm your email address.</h3>" +
                         "<h3>If you didn't create an account with <a href='" + clientAppUrl + "'>Groove Messenger</a>, you can safely delete this email.</h3>" +
                         "<table border='0' cellpadding='0' cellspacing='0' width='40% ' style='background-color:#324FEA; border:1px solid #324FEA; border-radius:5px;'>" +
@@ -123,7 +123,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
 
             string url = _config["ForgotEmailRoute:Url"] + "?token=" + HttpUtility.UrlEncode(token) + "&&userid=" + user.Id;
             var body = "<h1>RESET PASSWORD</h1>" +
-                        "<h3>Hello " + user.DisplayName + " ! </h3>" +
+                        "<h3>Hello ! </h3>" +
                         "<h3>Tap the button below to go reset your password</h3>" +
                         "<h3>If you didn't create an account with <a href='" + clientAppUrl + "'>Groove Messenger</a>, you can safely delete this email.</h3>" +
                         "<table border='0' cellpadding='0' cellspacing='0' width='40% ' style='background-color:#324FEA; border:1px solid #324FEA; border-radius:5px;'>" +
@@ -197,7 +197,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                 var resultFindByLoginExternal = await _userManager.FindByLoginAsync("Google", payload.Subject);
                 var tokenString = AuthTokenUtil.GetJwtTokenString(payload.Email, _config);
 
-                var user = new ApplicationUser { UserName = payload.Email, Email = payload.Email, DisplayName = payload.Name };
+                var user = new ApplicationUser { UserName = payload.Email, Email = payload.Email };
                 if (resultFindByMail == null)
                 {
                     var resultCreate = await _userManager.CreateAsync(user);
@@ -256,8 +256,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             {
                 var appUser = new ApplicationUser
                 {
-                    Email = userInfo.Email,
-                    DisplayName = userInfo.Name,
+                    Email = userInfo.Email,         
                     UserName = userInfo.Email
                 };
 

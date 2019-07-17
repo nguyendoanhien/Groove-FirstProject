@@ -192,6 +192,11 @@ namespace GrooveMessengerDAL.Migrations
                     b.Property<bool?>("Deleted")
                         .HasColumnName("Deleted");
 
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnName("DisplayName")
+                        .HasMaxLength(120);
+
                     b.Property<string>("Mood")
                         .HasColumnName("Mood")
                         .HasMaxLength(150);
@@ -225,11 +230,6 @@ namespace GrooveMessengerDAL.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
-
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasColumnName("DisplayName")
-                        .HasMaxLength(120);
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
