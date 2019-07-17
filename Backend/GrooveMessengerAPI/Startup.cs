@@ -79,6 +79,7 @@ namespace GrooveMessengerAPI
             // Register SignalR
             services.AddSignalR();
             services.AddScoped<IAuthEmailSenderUtil, AuthEmailSenderUtil>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
