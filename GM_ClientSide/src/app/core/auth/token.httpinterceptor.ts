@@ -22,7 +22,10 @@ export class TokenHttpInterceptor implements HttpInterceptor {
     if (request.url === loginUrl) {
       request.headers.set('Content-Type', 'application/json; charset=UTF-8');
       return next.handle(request);
-    } else if (securityToken.length > 0) {
+    } else if(request.url === 'https://api.cloudinary.com/v1_1/groovemessenger/upload'){
+      return next.handle(request);
+    }
+     else if (securityToken.length > 0) {
       request = request.clone({
         setHeaders: {
           'Content-Type': 'application/json; charset=UTF-8',

@@ -11,14 +11,15 @@ namespace GrooveMessengerDAL.Entities
     {
         public enum StatusName
         {
-            Online,
-            Away,
-            [Description("Do not disturb")]
-            DoNotDisturb,
-            Offline
+            online,
+            away,
+            [Description("do-not-disturb")]
+            doNotDisturb,
+            offline
         }
+        
+        public string DisplayName { get; set; }
 
-       
         public string Mood { get; set; }
 
         public StatusName Status { get; set; }

@@ -10,7 +10,11 @@ using AutoMapper;
 using Microsoft.Extensions.Logging;
 using GrooveMessengerAPI.Middlewares;
 using GrooveMessengerAPI.Hubs;
+using Microsoft.EntityFrameworkCore;
+using GrooveMessengerDAL.Data;
 using GrooveMessengerAPI.Auth;
+using GrooveMessengerDAL.Services.Interface;
+using GrooveMessengerDAL.Services;
 
 namespace GrooveMessengerAPI
 {
@@ -62,12 +66,7 @@ namespace GrooveMessengerAPI
                               .AllowCredentials();
                    });
             });
-            services.AddAuthentication()
-            .AddGoogle(options =>
-            {
-                options.ClientId = Configuration.GetSection("ApplicationGoogle:ClientId").Value;
-                options.ClientSecret = Configuration.GetSection("ApplicationGoogle:ClientSecret").Value; ;
-            });
+          
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             RegisterAuth(services);
@@ -75,10 +74,13 @@ namespace GrooveMessengerAPI
             RegisterAutoMapperProfiles(services);
 
             DiConfiguration.Register(services);
+            services.AddScoped<DbContext, GrooveMessengerDbContext>();
 
             // Register SignalR
             services.AddSignalR();
             services.AddScoped<IAuthEmailSenderUtil, AuthEmailSenderUtil>();
+            services.AddScoped<IUserService, UserService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -19,15 +19,17 @@ export const environment = {
     authFacebookUrl: authBaseUrl + '/loginfacebook',
     authResetPasswordUrl: authBaseUrl + '/resetpassword',
     authForgotPasswordUrl: authBaseUrl + '/forgotpassword',
+    apigetUserInfo: authBaseUrl + '/user',
     apiUrl: backendUrl + '/api/notes',
+    apiUserContactUrl: backendUrl + '/api/usercontact',
     applicationGoogle: {
         clientId: '687824117544-nvc2uojbm14hc330gl8qh3lsrtl3tc4a.apps.googleusercontent.com',
         clientSecret: 'ugBBsDjYS-Rz20RVlx9r7Blo'
-      },
-      applicationFacebook: {
+    },
+    applicationFacebook: {
         appId: '354060818601401',
         appSecreta: 'db1a4f4128e269fa6ca6d47e72cdd0a6'
-      }
+    }
 };
 
 /*

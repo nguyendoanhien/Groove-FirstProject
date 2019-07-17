@@ -17,12 +17,12 @@ namespace GrooveMessengerDAL.Data
             {
                 ApplicationUser user01 = new ApplicationUser()
                 {
-                    Email = "root123@gmail.com",
+                    Email = ".",
                     SecurityStamp = Guid.NewGuid().ToString(),
                     UserName = "root123@gmail.com",                    
                     EmailConfirmed = true
                 };
-                userManager.CreateAsync(user01, "Root1234"); // admin is password
+                userManager.CreateAsync(user01, "Root@123"); // admin is password
             }
         }
     }

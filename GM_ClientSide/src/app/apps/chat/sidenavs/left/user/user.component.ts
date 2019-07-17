@@ -1,21 +1,19 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
-
 import { ChatService } from '../../../chat.service';
+import { userInfo } from './userInfo.model';
+import { UserInfoService } from 'app/core/account/userInfo.service';
 
 @Component({
-    selector     : 'chat-user-sidenav',
-    templateUrl  : './user.component.html',
-    styleUrls    : ['./user.component.scss'],
+    selector: 'chat-user-sidenav',
+    templateUrl: './user.component.html',
+    styleUrls: ['./user.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class ChatUserSidenavComponent implements OnInit, OnDestroy
-{
-    user: any;
-    userForm: FormGroup;
+export class ChatUserSidenavComponent implements OnInit, OnDestroy {
 
+    userInfo: userInfo
+    selectedFile:File = null;
     // Private
     private _unsubscribeAll: Subject<any>;
 
@@ -25,11 +23,12 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy
      * @param {ChatService} _chatService
      */
     constructor(
-        private _chatService: ChatService
-    )
-    {
+        private _chatService: ChatService,
+        private _userInfoService: UserInfoService,
+    ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
+        this.userInfo = new userInfo();
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -39,38 +38,36 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
-        this.user = this._chatService.user;
-
-        this.userForm = new FormGroup({
-            mood  : new FormControl(this.user.mood),
-            status: new FormControl(this.user.status)
+    ngOnInit() {
+        this._userInfoService.getUserInfo().subscribe(res => {
+            this.userInfo = res as userInfo;
         });
 
-        this.userForm.valueChanges
-            .pipe(
-                takeUntil(this._unsubscribeAll),
-                debounceTime(500),
-                distinctUntilChanged()
-            )
-            .subscribe(data => {
-                this.user.mood = data.mood;
-                this.user.status = data.status;
-                this._chatService.updateUserData(this.user);
-            });
     }
 
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
     }
 
+    changeDisplayName() {
+        this._userInfoService.changeDisplayName(this.userInfo).subscribe(res => this.userInfo = res as userInfo)
+    }
+
+    onUpload(event) {
+        this.selectedFile = <File>event.target.files[0];
+        var fd = new FormData();
+        fd.append('file',this.selectedFile);
+        this._userInfoService.onUpload(fd).subscribe((res: any) => {
+            this.userInfo.avatar = res.url;
+            this.changeDisplayName();
+        });
+        
+    }
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
@@ -80,8 +77,7 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy
      *
      * @param view
      */
-    changeLeftSidenavView(view): void
-    {
+    changeLeftSidenavView(view): void {
         this._chatService.onLeftSidenavViewChanged.next(view);
     }
 

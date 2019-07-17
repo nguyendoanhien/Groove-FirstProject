@@ -4,7 +4,7 @@ import { AuthService } from '../auth/auth.service';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { RegisterModel } from 'app/account/register/register.model';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { MailConfirmModel } from 'app/account/mail-confirmer/mail-confirmer.model';
 const registerUrl = environment.authRegisterUrl;
 const confirmEmailUrl = environment.authConfirmEmailUrl;

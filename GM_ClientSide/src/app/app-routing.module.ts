@@ -19,9 +19,16 @@ const routes: Routes = [
     loadChildren: () => import('./account/account.module').then(mod => mod.AccountModule),
   },
   {
-    path: '**',
-    component: PageNotFoundComponent
-  }
+
+    path: 'apps', canActivate: [AuthRouteGuardService],
+    loadChildren: './apps/apps.module#AppsModule'
+  },
+  // {
+  //     path      : '**',
+  //     redirectTo: './apps/apps.module#AppsModule'
+  // },
+  { path: '**', component: PageNotFoundComponent }
+
 ];
 
 @NgModule({

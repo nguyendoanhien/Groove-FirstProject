@@ -11,7 +11,10 @@ namespace GrooveMessengerDAL.Mappers
     {
         public UserAutoMapperProfile()
         {
+            CreateMap<UserInfoEntity, IndexUserInfoModel>();
             CreateMap<EditUserInfoModel, UserInfoEntity>();
+            CreateMap<CreateUserInfoModel, UserInfoEntity>();
+
         }
     }
 }
