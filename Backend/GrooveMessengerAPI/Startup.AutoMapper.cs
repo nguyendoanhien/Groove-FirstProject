@@ -12,6 +12,8 @@ namespace GrooveMessengerAPI
             var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new NoteAutoMapperProfile());
+                mc.AddProfile(new MessageAutoMapperProfile());
+                mc.AddProfile(new ConversationAutoMapperProfile());
             });
 
             IMapper mapper = mappingConfig.CreateMapper();
