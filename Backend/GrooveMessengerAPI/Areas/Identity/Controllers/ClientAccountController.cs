@@ -64,6 +64,8 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                 {
                     var clientAppUrl = _config.GetSection("Client").Value;
                     string token = _userManager.GenerateEmailConfirmationTokenAsync(new_user).Result;
+                    // TODO: add temp log to diagnose issue on email confirmation, remove if all fine
+                    _logger.LogError("Email confirm token: " + token);
                     var url = _config["EmailConfirmationRoute:Url"] + "?ctoken=" + HttpUtility.UrlEncode(token) + "&userid=" + new_user.Id;
                     var body = "<h1>Confirm Your Email</h1>" +
                         "<h3>Hello " + new_user.DisplayName + " ! </h3>" +
@@ -86,17 +88,21 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
         [HttpPost("confirmemail")]
         public async Task<IActionResult> ConfirmEmail([FromBody]EmailConfirmationModel model)
         {
+            //TODO: add temp log to diagnose issue on email confirmation, remove if all fine
+            _logger.LogError("UserId to confirm email: " + model.UserId);
             if (model.UserId == null || model.Ctoken == null)
             {
                 return BadRequest();
             }
             var user = await _userManager.FindByIdAsync(model.UserId);
             model.Ctoken = HttpUtility.UrlDecode(model.Ctoken);
+            // TODO: add temp log to diagnose issue on email confirmation, remove if all fine
+            _logger.LogError("Email confirm token: " + model.Ctoken);
             var res = await _userManager.ConfirmEmailAsync(user, model.Ctoken);
             if (res.Succeeded)
             {
                 var tokenString = AuthTokenUtil.GetJwtTokenString(user.UserName, _config);
-                return new ObjectResult(tokenString);               
+                return Content(tokenString);               
             }
             else
             {
@@ -121,7 +127,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
 
             var clientAppUrl = _config.GetSection("Client").Value;
 
-            string url = _config["ForgotEmailRoute:Url"] + "?token=" + HttpUtility.UrlEncode(token) + "&&userid=" + user.Id;
+            string url = _config["ForgotEmailRoute:Url"] + "?token=" + HttpUtility.UrlEncode(token) + "&userid=" + user.Id;
             var body = "<h1>RESET PASSWORD</h1>" +
                         "<h3>Hello " + user.DisplayName + " ! </h3>" +
                         "<h3>Tap the button below to go reset your password</h3>" +
