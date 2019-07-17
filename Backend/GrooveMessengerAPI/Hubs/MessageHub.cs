@@ -1,46 +1,84 @@
 ﻿using GrooveMessengerAPI.Areas.Chat.Models;
+using GrooveMessengerAPI.Hubs.Utils;
+using GrooveMessengerDAL.Services.Interface;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace GrooveMessengerAPI.Hubs
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class MessageHub : Hub<ITypedHubClient>
     {
-        public static Dictionary<string, string> connections = new Dictionary<string, string>();
-
-        public void Join(string userName)
+        private readonly static ConnectionMapping<string> _connections =
+           new ConnectionMapping<string>();
+        private IContactService _contactService;
+        
+        public MessageHub(IContactService contactService)
         {
-            connections.Add(userName, Context.ConnectionId);
+            _contactService = contactService;
         }
-
-        public async Task BroadcastMessage(Message message)
+        public override Task OnConnectedAsync()
         {
-            await Clients.All.BroadcastMessage(message);
+            string name = Context.User.Identity.Name;
+
+            if (!_connections.GetConnections(name).Contains(Context.ConnectionId))
+            {
+                var conn = Context.ConnectionId;
+                _connections.Add(name, conn);
+            }
+            return base.OnConnectedAsync();
         }
 
         public async Task SendMessageToUser(Message message, string toUser)
         {
-            var connectionId = connections[toUser];
-            await Clients.Client(connectionId).ReceiveMessage(message);
-
+            string username = Context.User.Identity.Name;
+            message.From = username;
+            foreach (var connectionId in _connections.GetConnections(toUser))
+            {
+                await Clients.Client(connectionId).SendMessage(message);
+            }
         }
 
-        public async Task SendMessageToGroup(Message message, string groupName)
+        public async Task SendRemovedMessageToUser(Message message, string toUser)
         {
-            await Clients.OthersInGroup(groupName).BroadcastMessage(message);
+            string username = Context.User.Identity.Name;
+            message.From = username;
+            foreach (var connectionId in _connections.GetConnections(toUser))
+            {
+                await Clients.Client(connectionId).SendRemovedMessage(message);
+            }
         }
 
-        public async Task JoinGroup(string groupName)
+        public async Task SendEditedMessageToUser(Message message, string toUser)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+            string username = Context.User.Identity.Name;
+            message.From = username;
+            foreach (var connectionId in _connections.GetConnections(toUser))
+            {
+                await Clients.Client(connectionId).SendEditedMessage(message);
+            }
         }
 
-        public async Task LeaveGroup(string roomName)
+        public async Task SendMessageViewingStatus(string toUser)
         {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomName);
+            string username = Context.User.Identity.Name;
+
+            foreach (var connectionId in _connections.GetConnections(toUser))
+            {
+                await Clients.Client(connectionId).SendMessageViewingStatus(username);
+            }
+        }
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            string name = Context.User.Identity.Name;
+
+            _connections.Remove(name, Context.ConnectionId);
+
+            return base.OnDisconnectedAsync(exception);
         }
     }
 }

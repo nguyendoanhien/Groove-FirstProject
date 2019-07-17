@@ -1,17 +1,14 @@
 ﻿using GrooveMessengerAPI.Areas.Chat.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace GrooveMessengerAPI.Hubs
+namespace GrooveMessengerAPI.Hubs.Utils
 {
     public interface ITypedHubClient
     {
-        Task BroadcastMessage(Message message);
         Task SendMessage(Message message);
-        Task ReceiveMessage(Message message);
-
+        Task SendRemovedMessage(Message message);
+        Task SendEditedMessage(Message message);
+        Task SendMessageViewingStatus(string fromUser);
     }
 
     public enum MessageEventTypes
