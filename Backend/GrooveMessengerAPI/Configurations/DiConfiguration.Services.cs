@@ -1,7 +1,7 @@
 ﻿using GrooveMessengerAPI.Services;
-using Microsoft.Extensions.DependencyInjection;
 using GrooveMessengerDAL.Services;
 using GrooveMessengerDAL.Services.Interface;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GrooveMessengerAPI.Configurations
 {
@@ -14,6 +14,10 @@ namespace GrooveMessengerAPI.Configurations
             services.AddSingleton<IEmailSender, EmailSender>();
             services.AddScoped<IUserResolverService, UserResolverService>();
             services.AddScoped<INoteService, NoteService>();
+            services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<IContactService, ContactService>();
+            services.AddScoped<IConversationService, ConversationService>();
+            services.AddScoped<IParticipantService, ParticipantService>();
         }
     }
 }

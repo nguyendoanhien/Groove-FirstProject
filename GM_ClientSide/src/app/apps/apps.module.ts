@@ -6,6 +6,7 @@ import {AppsComponent} from './apps.component'
 import { ChatComponent } from './chat/chat.component';
 import { ChatService } from './chat/chat.service';
 import {ChatModule} from './chat/chat.module';
+import { AuthRouteGuardService } from 'app/core/auth/authrouteguard.service';
 const routes = [
     {
         path        : 'chat',
