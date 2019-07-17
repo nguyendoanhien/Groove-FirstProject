@@ -33,13 +33,13 @@ namespace GrooveMessengerAPI.Hubs
             return base.OnConnectedAsync();
         }
 
-        public async Task SendMessageToUser(Message message, string toUser)
+        public async Task SendMessageToUser(string message, string toUser)
         {
             string username = Context.User.Identity.Name;
-            message.From = username;
+            Message chatMessage = new Message(username, "aa-aa-aa-aa" , message);
             foreach (var connectionId in _connections.GetConnections(toUser))
             {
-                await Clients.Client(connectionId).SendMessage(message);
+                await Clients.Client(connectionId).SendMessage(chatMessage);
             }
         }
 
