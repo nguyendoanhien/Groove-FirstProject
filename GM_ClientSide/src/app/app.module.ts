@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterModule, Routes } from '@angular/router';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -30,6 +29,7 @@ import { AuthRouteGuardService } from './core/auth/authrouteguard.service';
 import { ResetPasswordService } from './core/account/reset-password.service';
 import { RegisterService } from './core/account/register.service';
 import { UserInfoService } from './core/account/userInfo.service';
+import { UserContactService } from './core/account/user-contact.service';
 
 @NgModule({
     declarations: [
@@ -80,7 +80,8 @@ import { UserInfoService } from './core/account/userInfo.service';
         AuthRouteGuardService,
         RegisterService,
         UserInfoService,
-        ResetPasswordService
+        ResetPasswordService,
+        UserContactService
     ]
 
 })

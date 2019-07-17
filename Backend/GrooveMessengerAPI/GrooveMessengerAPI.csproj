@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="Google.Apis.Auth" Version="1.40.2" />
+    <PackageReference Include="Google.Apis.Core" Version="1.40.2" />
     <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="MailKit" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />

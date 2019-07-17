@@ -17,17 +17,7 @@ namespace GrooveMessengerAPI
     {
         public void RegisterAuth(IServiceCollection services)
         {
-            //if (int.TryParse(Configuration["SecurityConfigs:CookieTimeSpan"], out var cookieTimeSpan))
-            //{
-            //    cookieTimeSpan = cookieTimeSpan == 0 ? 20 : cookieTimeSpan;
-            //}
 
-            //services.AddAuthorization(auth =>
-            //{
-            //    auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
-            //        .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme‌​)
-            //        .RequireAuthenticatedUser().Build());
-            //});
 
             services.AddAuthentication(x =>
                  {
@@ -61,15 +51,19 @@ namespace GrooveMessengerAPI
                             context.Response.WriteAsync("Token is not valid.").Wait();
                             return Task.CompletedTask;
                         },
-                        OnChallenge = context =>
-                        {
-                            context.Response.StatusCode = 401;
-                            context.Response.ContentType = "text/plain";
-                            context.Response.WriteAsync("Please provide token.").Wait();
-                            return Task.CompletedTask;
-                        }
+                        //OnChallenge = context =>
+                        //{
+                        //    context.Response.StatusCode = 401;
+                        //    context.Response.ContentType = "text/plain";
+                        //    context.Response.WriteAsync("Please provide token.").Wait();
+                        //    return Task.CompletedTask;
+                        //}
                     };
-                });
+                }).AddGoogle(options =>
+            {
+                options.ClientId = Configuration.GetSection("ApplicationGoogle:ClientId").Value;
+                options.ClientSecret = Configuration.GetSection("ApplicationGoogle:ClientSecret").Value; ;
+            });
         }
 
         public void RegisterIdentity(IServiceCollection services)

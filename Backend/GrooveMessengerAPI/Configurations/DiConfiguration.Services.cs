@@ -14,6 +14,8 @@ namespace GrooveMessengerAPI.Configurations
             services.AddSingleton<IEmailSender, EmailSender>();
             services.AddScoped<IUserResolverService, UserResolverService>();
             services.AddScoped<INoteService, NoteService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IContactService, ContactService>();
         }
     }
 }

@@ -38,5 +38,13 @@ namespace GrooveMessengerAPI.Auth
             var result = new JwtSecurityTokenHandler().WriteToken(token);
             return result;
         }
+        public static JwtSecurityToken DecodeJwt(string encodedJwt)
+        {
+            var stream = "[encoded jwt]";
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(stream);
+            var tokenS = handler.ReadToken(encodedJwt) as JwtSecurityToken;
+            return tokenS;
+        }
     }
 }
