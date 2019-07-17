@@ -12,13 +12,12 @@ const forgotPasswordUrl = environment.authForgotPasswordUrl;
     providedIn: 'root'
 })
 export class ResetPasswordService {
-    isForgot: BehaviorSubject<boolean>;
+    mailToSendForgot: BehaviorSubject<string>;
     constructor(private _http: HttpClient) {
-
+        this.mailToSendForgot = new BehaviorSubject(null);
     }
 
     resetPassword(resetPassword: ResetPassword): Observable<any> {
-        console.log(resetPassword);
         const httpOptions = {
             headers: new HttpHeaders({
                 'Accept': 'text/html, application/xhtml+xml, */*',
@@ -30,7 +29,6 @@ export class ResetPasswordService {
     }
 
     forgotPassword(email: string): Observable<any> {
-        console.log(email);
         return this._http.post<any>(`${forgotPasswordUrl}?email=${email}`, email);
     }
 

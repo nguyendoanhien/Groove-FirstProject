@@ -1,9 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
-
 import { ChatService } from '../../../chat.service';
+import { userInfo } from './userInfo.model';
+import { UserInfoService } from 'app/core/account/userInfo.service';
 
 @Component({
     selector: 'chat-user-sidenav',
@@ -12,9 +11,9 @@ import { ChatService } from '../../../chat.service';
     encapsulation: ViewEncapsulation.None
 })
 export class ChatUserSidenavComponent implements OnInit, OnDestroy {
-    user: any;
-    userForm: FormGroup;
 
+    userInfo: userInfo
+    selectedFile:File = null;
     // Private
     private _unsubscribeAll: Subject<any>;
 
@@ -24,10 +23,12 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
      * @param {ChatService} _chatService
      */
     constructor(
-        private _chatService: ChatService
+        private _chatService: ChatService,
+        private _userInfoService: UserInfoService,
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
+        this.userInfo = new userInfo();
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -37,25 +38,11 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
     /**
      * On init
      */
-    ngOnInit(): void {
-        this.user = this._chatService.user;
-
-        this.userForm = new FormGroup({
-            mood: new FormControl(this.user.mood),
-            status: new FormControl(this.user.status)
+    ngOnInit() {
+        this._userInfoService.getUserInfo().subscribe(res => {
+            this.userInfo = res as userInfo;
         });
 
-        this.userForm.valueChanges
-            .pipe(
-                takeUntil(this._unsubscribeAll),
-                debounceTime(500),
-                distinctUntilChanged()
-            )
-            .subscribe(data => {
-                this.user.mood = data.mood;
-                this.user.status = data.status;
-                this._chatService.updateUserData(this.user);
-            });
     }
 
     /**
@@ -67,6 +54,17 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
         this._unsubscribeAll.complete();
     }
 
+    changeDisplayName() {
+        this._userInfoService.changeDisplayName(this.userInfo).subscribe(res => this.userInfo = res as userInfo)
+    }
+
+    onUpload(event) {
+        this.selectedFile = <File>event.target.files[0];
+        const fd = new FormData();
+        fd.append('file',this.selectedFile);
+        this._userInfoService.onUpload(fd).subscribe(res => console.log(res));
+        
+    }
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------

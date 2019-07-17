@@ -1,21 +1,18 @@
-﻿using GrooveMessengerDAL.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿//using GrooveMessengerDAL.Data;
+//using GrooveMessengerDAL.Entities;
+//using System;
+//using System.Collections.Generic;
+//using System.Text;
 
-namespace GrooveMessengerDAL.Repositories.Interface
-{
-    public interface IUserRepository
-   {
-        IQueryable<ApplicationUser> GetAll();
-        Task<ApplicationUser> GetSingleAsync(string entityId);
-        IQueryable<ApplicationUser> FindBy(Expression<Func<ApplicationUser, bool>> predicate);
-        void Add(ApplicationUser entity);
-        void Delete(string entityId);
-        void Edit(ApplicationUser entity);
-        bool CheckExistingById(string id);
-    }
-}
+//namespace GrooveMessengerDAL.Repositories.Interface
+//{
+//    public interface IUserRepository: IGenericRepository<UserInfoEntity,Guid, GrooveMessengerDbContext>
+//    {
+//    }
+
+//    public class UserRepository : GenericRepository<UserInfoEntity, Guid, GrooveMessengerDbContext>, IUserRepository
+//    {
+
+//    }
+
+//}

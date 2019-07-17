@@ -4,24 +4,14 @@
 
         <div id="mail-confirm-form" [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}">
 
-            <div class="logo">
-                <mat-icon class="mat-accent s-96">email</mat-icon>
+            <div class="logo" *ngIf="isFailure">
+                <mat-icon class="red s-48">clear</mat-icon>
             </div>
-
-            <div class="title">Confirm your email address!</div>
-
+            <div class="title" *ngIf="isFailure">Account confirmation failed.</div>
             <div class="subtitle">
-                <p>
-                    A confirmation e-mail has been sent to <b></b>.
-                </p>
-                <p>
-                    Check your inbox and click on the "Confirm my email" link to confirm your email address.
-                </p>
+                <p *ngIf="isFailure">Your link has expired or not provided by us!</p>
             </div>
 
-            <!-- <div class="message">
-                <a class="link" [routerLink]="'/account/login'">Go back to login page</a>
-            </div> -->
             <p *ngIf="isLoading" class="spinner" fxLayout="column" fxLayoutAlign="center center">
                 <mat-spinner color="accent" [diameter]="70"></mat-spinner>
             </p>

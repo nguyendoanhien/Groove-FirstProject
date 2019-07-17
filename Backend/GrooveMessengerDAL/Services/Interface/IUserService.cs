@@ -18,5 +18,7 @@ namespace GrooveMessengerDAL.Services.Interface
         Task<UserInfoEntity> GetByUsername(string username);
         void Edit(UserInfoEntity entity);
         Task EditAsync(EditUserInfoModel editUserInfoModel);
+        void EditUserInfo(EditUserInfoModel userInfo);
+        IndexUserInfoModel GetUserInfo(string id);
     }
 }

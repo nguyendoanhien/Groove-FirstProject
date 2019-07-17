@@ -19,7 +19,6 @@ export const environment = {
     authFacebookUrl: authBaseUrl + '/loginfacebook',
     authResetPasswordUrl: authBaseUrl + '/resetpassword',
     authForgotPasswordUrl: authBaseUrl + '/forgotpassword',
-    apigetUserInfo: authBaseUrl + '/user',
     apiUrl: backendUrl + '/api/notes',
     applicationGoogle: {
         clientId: '687824117544-nvc2uojbm14hc330gl8qh3lsrtl3tc4a.apps.googleusercontent.com',

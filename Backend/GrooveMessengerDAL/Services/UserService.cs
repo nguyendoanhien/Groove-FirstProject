@@ -8,9 +8,10 @@ using GrooveMessengerDAL.Services.Interface;
 using GrooveMessengerDAL.Uow.Interface;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Linq;
+
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Identity;
 
@@ -37,23 +38,29 @@ namespace GrooveMessengerDAL.Services
 
         public void AddUserInfo(CreateUserInfoModel userInfo)
         {
-            try
-            {
+            // try
+            // {
 
 
-                var entity = _mapper.Map<CreateUserInfoModel, UserInfoEntity>(userInfo);
-                entity.CreatedOn = DateTime.Now;
-                entity.CreatedBy = "Root";
-                entity.Status = 0;
-                entity.Id = new Guid();
-                entity.DisplayName = entity.DisplayName ?? "Test";
-                _userRepository.Add(entity);
-                _uow.SaveChanges();
-            }
-            catch (Exception ex)
-            {
+            //     var entity = _mapper.Map<CreateUserInfoModel, UserInfoEntity>(userInfo);
+            //     entity.CreatedOn = DateTime.Now;
+            //     entity.CreatedBy = "Root";
+            //     entity.Status = 0;
+            //     entity.Id = new Guid();
+            //     entity.DisplayName = entity.DisplayName ?? "Test";
+            //     _userRepository.Add(entity);
+            //     _uow.SaveChanges();
+            // }
+            // catch (Exception ex)
+            // {
 
-            }
+            // }
+                 userInfo.Status = "online";
+            userInfo.Mood = "";
+            userInfo.Avatar = "https://localhost:44383/images/avatar.png";
+            var entity = _mapper.Map<CreateUserInfoModel, UserInfoEntity>(userInfo);
+            _userRepository.Add(entity);
+            _uow.SaveChanges();
         }
 
         public async Task EditAsync(EditUserInfoModel entity)
@@ -81,7 +88,7 @@ namespace GrooveMessengerDAL.Services
         {
             var user = await _userManager.FindByNameAsync(username);
             var userInfo = this.GetBy(FuncGetByUsername(username)).FirstOrDefault();
-            #region if user doesnot exist in userinfo but in user. Insert with code block here 
+            #region if user doesnot exist in userinfo but in user. Insert with code block here
             if (user != null && userInfo == null)
             {
                 AddUserInfo(new CreateUserInfoModel() { UserId = user.Id });
@@ -112,6 +119,21 @@ namespace GrooveMessengerDAL.Services
         public void Edit(UserInfoEntity entity)
         {
             throw new NotImplementedException();
+        }
+
+        public void EditUserInfo(EditUserInfoModel userInfo)
+        {
+            var storedData = _userRepository.GetSingle(userInfo.Id);
+            storedData.DisplayName = userInfo.DisplayName;
+            _userRepository.Edit(storedData);
+            _uow.SaveChanges();
+        }
+
+        public IndexUserInfoModel GetUserInfo(string id)
+        {
+            var storedData = _userRepository.FindBy(x=>x.UserId == id).FirstOrDefault();
+            var result = _mapper.Map<UserInfoEntity, IndexUserInfoModel>(storedData);
+            return result;
         }
     }
 }

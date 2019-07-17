@@ -7,6 +7,30 @@ const authBaseUrl = backendUrl + '/Identity/ClientAccount';
 
 
 export const environment = {
+<<<<<<< HEAD
+  production: false,
+  hmr: false,
+  appName: 'Groove Messenger Client',
+
+  backendUrl: backendUrl,
+  authBaseUrl: authBaseUrl,
+  authLoginUrl: authBaseUrl + '/login',
+  authRegisterUrl: authBaseUrl + '/register',
+  authConfirmEmailUrl: authBaseUrl + '/confirmemail',
+  authGoogleUrl: authBaseUrl + '/logingoogle',
+  authFacebookUrl: authBaseUrl + '/loginfacebook',
+  authResetPasswordUrl: authBaseUrl + '/resetpassword',
+  authForgotPasswordUrl: authBaseUrl + '/forgotpassword',
+  apiUrl: backendUrl + '/api/notes',
+  applicationGoogle: {
+    clientId: '687824117544-nvc2uojbm14hc330gl8qh3lsrtl3tc4a.apps.googleusercontent.com',
+    clientSecret: 'ugBBsDjYS-Rz20RVlx9r7Blo'
+  },
+  applicationFacebook: {
+    appId: '354060818601401',
+    appSecreta: 'db1a4f4128e269fa6ca6d47e72cdd0a6'
+  }
+=======
     production: false,
     hmr: false,
     appName: 'Groove Messenger Client',
@@ -29,6 +53,7 @@ export const environment = {
         appId: '354060818601401',
         appSecreta: 'db1a4f4128e269fa6ca6d47e72cdd0a6'
       }
+>>>>>>> a209213e98575beb9395915125cc975c798489c2
 };
 
 /*

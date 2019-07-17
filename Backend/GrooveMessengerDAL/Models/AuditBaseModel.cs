@@ -2,7 +2,7 @@
 
 namespace GrooveMessengerDAL.Models
 {
-    public abstract class AuditBaseModel : BaseModel
+    public abstract class AuditBaseModel<Tkey> : BaseModel<Tkey>
     {
         public string CreatedBy { get; set; }
 
