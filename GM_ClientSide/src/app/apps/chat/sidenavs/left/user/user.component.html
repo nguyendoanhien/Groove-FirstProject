@@ -15,16 +15,10 @@
         <!-- / TOOLBAR TOP -->
 
         <!-- TOOLBAR BOTTOM -->
-        <mat-toolbar-row class="toolbar-bottom" fxLayout="column" fxLayoutAlign="center center" *ngIf="user">
+        <mat-toolbar-row class="toolbar-bottom" fxLayout="column" fxLayoutAlign="center center">
 
-            <img [src]="user.avatar" class="avatar user-avatar huge" alt="{{user.displayName}}" />
-            <input spellcheck="false" type="text" [(ngModel)]="user.displayName"
-                class="user-name my-8 form-control cool-link" style="text-align: center"
-                (focus)="contenteditable = true;" (focusout)="focusOutFunction()"
-                [class.input--transparent]="!contenteditable" [readonly]="!contenteditable" />
-
-            <div class="line"></div>
-
+            <img [src]="user.avatar" class="avatar user-avatar huge" alt="{{user.name}}" />
+            <div class="user-name my-8">{{user.name}}</div>
 
         </mat-toolbar-row>
         <!-- / TOOLBAR BOTTOM -->
@@ -37,7 +31,7 @@
 <div class="sidenav-content py-32 px-24" fxFlex>
 
     <!-- USER MOOD -->
-    <form [formGroup]="userForm" fxLayout="column" *ngIf="this.user">
+    <form [formGroup]="userForm" fxLayout="column">
 
         <mat-form-field appearance="outline" fxFlex="0 1 auto">
             <mat-label>Mood</mat-label>
