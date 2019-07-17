@@ -29,6 +29,7 @@ import { AuthRouteGuardService } from './core/auth/authrouteguard.service';
 import { ResetPasswordService } from './core/account/reset-password.service';
 import { RegisterService } from './core/account/register.service';
 import { UserInfoService } from './core/account/userInfo.service';
+import { UserContactService } from './core/account/user-contact.service';
 
 @NgModule({
     declarations: [
@@ -79,7 +80,8 @@ import { UserInfoService } from './core/account/userInfo.service';
         AuthRouteGuardService,
         RegisterService,
         UserInfoService,
-        ResetPasswordService
+        ResetPasswordService,
+        UserContactService
     ]
 
 })

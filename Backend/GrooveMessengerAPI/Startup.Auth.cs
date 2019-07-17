@@ -51,13 +51,13 @@ namespace GrooveMessengerAPI
                             context.Response.WriteAsync("Token is not valid.").Wait();
                             return Task.CompletedTask;
                         },
-                        OnChallenge = context =>
-                        {
-                            context.Response.StatusCode = 401;
-                            context.Response.ContentType = "text/plain";
-                            context.Response.WriteAsync("Please provide token.").Wait();
-                            return Task.CompletedTask;
-                        }
+                        //OnChallenge = context =>
+                        //{
+                        //    context.Response.StatusCode = 401;
+                        //    context.Response.ContentType = "text/plain";
+                        //    context.Response.WriteAsync("Please provide token.").Wait();
+                        //    return Task.CompletedTask;
+                        //}
                     };
                 }).AddGoogle(options =>
             {

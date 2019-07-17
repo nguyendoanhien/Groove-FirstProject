@@ -5,11 +5,9 @@ import { fuseAnimations } from '@fuse/animations';
 import { RegisterService } from 'app/core/account/register.service';
 import { Router, ActivatedRoute } from "@angular/router"
 import { MailConfirmModel } from './mail-confirmer.model';
-<<<<<<< HEAD
-=======
+
 import { Route } from '@angular/compiler/src/core';
 import { UserProfileService } from 'app/core/identity/userprofile.service';
->>>>>>> a209213e98575beb9395915125cc975c798489c2
 @Component({
     selector: 'mail-confirmer',
     templateUrl: './mail-confirmer.component.html',
@@ -59,7 +57,7 @@ export class MailConfirmerComponent implements OnInit {
         this.isLoading = true;
         var model = await this.getParams();
         this._registerService.confirmEmail(model).subscribe(async token => {
-            this.isLoading = false;           
+            this.isLoading = false;
             await this._userProfileService.parseJwtToken(token);
             this._router.navigate(['chat']);
         }, fail => {
@@ -77,7 +75,7 @@ export class MailConfirmerComponent implements OnInit {
         while (matches = regexp.exec(urlOrigin)) {
             values.push(matches[0]);
         }
-        
+
         var regexUserId = new RegExp(/(?<=userid=).*$/);
         var regexCtoken = new RegExp(/(?<=ctoken=).*$/);
 

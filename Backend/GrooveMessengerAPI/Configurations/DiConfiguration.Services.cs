@@ -15,6 +15,7 @@ namespace GrooveMessengerAPI.Configurations
             services.AddScoped<IUserResolverService, UserResolverService>();
             services.AddScoped<INoteService, NoteService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IContactService, ContactService>();
         }
     }
 }
