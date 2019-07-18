@@ -49,19 +49,19 @@ namespace GrooveMessengerDAL.Services
             return _mapper.Map<IEnumerable<UserInfoEntity>, IEnumerable<IndexUserInfoModel>>(contactList);
         }
 
-        public IQueryable<FullContactModel> GetFromUsername(string userName)
-        {
+        //public IQueryable<FullContactModel> GetFromUsername(string userName)
+        //{
 
-            var res = _userInfoContactRepository.GetBy((m) => m.UserInfo.ApplicationUser.UserName == userName);
-            var reRes = _mapper.Map<IQueryable<UserInfoContactEntity>, IQueryable<FullContactModel>>(res);
-            return reRes;
-        }
+        //    var res = _userInfoContactRepository.GetBy((m) => m.UserInfo.ApplicationUser.UserName == userName);
+        //    var reRes = _mapper.Map<IQueryable<UserInfoContactEntity>, IQueryable<FullContactModel>>(res);
+        //    return reRes;
+        //}
 
-        public IQueryable<FullContactModel> GetContacts()
-        {
-            var res = _userInfoContactRepository.GetAll();
-            var reRes = _mapper.Map<IQueryable<UserInfoContactEntity>, IQueryable<FullContactModel>>(res);
-            return reRes;
-        }
+        //public IQueryable<FullContactModel> GetContacts()
+        //{
+        //    var res = _userInfoContactRepository.GetAll();
+        //    var reRes = _mapper.Map<IQueryable<UserInfoContactEntity>, IQueryable<FullContactModel>>(res);
+        //    return reRes;
+        //}
     }
 }
