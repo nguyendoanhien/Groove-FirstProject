@@ -61,7 +61,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.user = this._chatService.user;
         this.chats = this._chatService.chats;
-        // this.contacts = this._chatService.contacts;
+        this.contacts = this._chatService.contacts;
 
         this._userContactService.getContacts().subscribe(contacts => {
             this.contacts = contacts;

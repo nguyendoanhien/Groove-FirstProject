@@ -49,18 +49,9 @@ namespace GrooveMessengerDAL.Services
             var currentUserInform = _userInfoRepository.GetBy(x => x.UserId == currentUser.Id.ToString()).FirstOrDefault();
             var contactList = _userInfoContactRepository.GetBy(x => x.UserId == currentUserInform.Id).Include(inc => inc.ContactInfo).Select(x => x.ContactInfo);
             return _mapper.Map<IEnumerable<UserInfoEntity>, IEnumerable<IndexUserInfoModel>>(contactList);
-        } // Hien rem hau
 
-        //IEnumerable<IndexUserInfoModel> IContactService.GetAllContact(string username)
-        //{
-        //    throw new NotImplementedException();
-        //}
-        //public  IEnumerable<IndexUserInfoModel> GetAllContact(string username = null)
-        //{
-        //    if (username == null) username = _userResolverService.CurrentUserName();
-        //    var currentUserInform = _userService.GetUserInfo(username);
-        //    var contactList = _userInfoContactRepository.GetBy(x => x.UserId == currentUserInform.Id).Include(inc => inc.ContactInfo).Select(x => x.ContactInfo);
-        //    return _mapper.Map<IEnumerable<UserInfoEntity>, IEnumerable<IndexUserInfoModel>>(contactList);
-        //}
+        }
+
+
     }
 }

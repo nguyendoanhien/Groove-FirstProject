@@ -317,7 +317,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             return new OkObjectResult(refreshToken);
         }
 
-       
+
     }
 
 }

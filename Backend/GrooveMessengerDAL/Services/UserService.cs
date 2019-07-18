@@ -38,24 +38,7 @@ namespace GrooveMessengerDAL.Services
 
         public void AddUserInfo(CreateUserInfoModel userInfo)
         {
-            // try
-            // {
-
-
-            //     var entity = _mapper.Map<CreateUserInfoModel, UserInfoEntity>(userInfo);
-            //     entity.CreatedOn = DateTime.Now;
-            //     entity.CreatedBy = "Root";
-            //     entity.Status = 0;
-            //     entity.Id = new Guid();
-            //     entity.DisplayName = entity.DisplayName ?? "Test";
-            //     _userRepository.Add(entity);
-            //     _uow.SaveChanges();
-            // }
-            // catch (Exception ex)
-            // {
-
-            // }
-                 userInfo.Status = "online";
+            userInfo.Status = "online";
             userInfo.Mood = "";
             userInfo.Avatar = "https://localhost:44383/images/avatar.png";
             var entity = _mapper.Map<CreateUserInfoModel, UserInfoEntity>(userInfo);
@@ -63,23 +46,6 @@ namespace GrooveMessengerDAL.Services
             _uow.SaveChanges();
         }
 
-//        public async Task EditAsync(EditUserInfoModel entity)
-//        {
-//            try
-//            {
-//                var user = await _userManager.FindByIdAsync(entity.UserId);
-//                var userInfo =await GetByUsername(user.UserName);
-//                userInfo.DisplayName = entity.DisplayName;
-//                _userRepository.Edit(userInfo);
-//                _uow.SaveChanges();
-//            }
-//#pragma warning disable CS0168 // Variable is declared but never used
-//            catch (Exception ex)
-//#pragma warning restore CS0168 // Variable is declared but never used
-//            {
-
-//            }
-//        }
 
         public IQueryable<UserInfoEntity> GetBy(Expression<Func<UserInfoEntity, bool>> predicate)
         {
