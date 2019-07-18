@@ -70,6 +70,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 
         }
         );
+
         this._chatService.onChatsUpdated
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(updatedChats => {
