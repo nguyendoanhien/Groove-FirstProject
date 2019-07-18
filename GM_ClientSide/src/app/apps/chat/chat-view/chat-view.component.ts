@@ -95,7 +95,9 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * @returns {boolean}
      */
     shouldShowContactAvatar(message, i): boolean {
+      
         return (
+
             message.who === this.contact.id &&
             ((this.dialog[i + 1] && this.dialog[i + 1].who !== this.contact.id) || !this.dialog[i + 1])
         );

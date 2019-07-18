@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using GrooveMessengerDAL.Services.Interface;
+using GrooveMessengerDAL.Entities;
 
 namespace GrooveMessengerDAL.Services
 {
@@ -22,5 +23,6 @@ namespace GrooveMessengerDAL.Services
         {
             return _context.HttpContext.User.Claims;
         }
+ 
     }
 }

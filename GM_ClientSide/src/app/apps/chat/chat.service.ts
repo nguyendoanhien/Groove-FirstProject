@@ -98,6 +98,7 @@ export class ChatService implements Resolve<any>
                     const chatContact = this.contacts.concat(this.unknownContacts).find((contact) => {
                         return contact.id === contactId;
                     });
+                    console.log(chatContact);
                     const chatData = {
                         chatId: chat.id,
                         dialog: chat.dialog,

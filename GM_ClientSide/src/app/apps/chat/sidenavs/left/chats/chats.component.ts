@@ -63,7 +63,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         this.chats = this._chatService.chats;
         this.contacts = this._chatService.contacts;
         this.unknownContacts = this._chatService.unknownContacts;
-        
+        console.log(this.unknownContacts);
         this._chatService.onChatsUpdated
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(updatedChats => {
@@ -96,6 +96,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      * @param contact
      */
     getChat(contact): void {
+
         this._chatService.getChat(contact);
         if (!this._mediaObserver.isActive('gt-md')) {
             this._fuseMatSidenavHelperService.getSidenav('chat-left-sidenav').toggle();

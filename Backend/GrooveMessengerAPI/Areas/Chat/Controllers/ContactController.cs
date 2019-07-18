@@ -31,16 +31,16 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         [HttpGet("getallcontactinform")]
         public async Task<IActionResult> Get()
         {
-            return Ok(await _contactService.GetAllContact());
+            return Ok(await _contactService.GetUserContact());
         }
         [HttpGet("getallunknowncontactinform")]
         public async Task<IActionResult> GetUnknown()
         {
-            return Ok(await _contactService.GetAllUnknownContact());
+            return Ok(await _contactService.GetUserUnknownContact());
         }
         [HttpDelete("deleteactactinform")]
-        [HttpDelete("{contactId}")]
-        public async Task<IActionResult> DeleteContact(string contactId)
+       
+        public async Task<IActionResult> DeleteContact([FromBody]string contactId)
         {
             try
             {
@@ -52,6 +52,20 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                 return BadRequest("Failed");
             }
             
+        }
+
+        [HttpPost("addContact")]
+        public async Task<IActionResult> AddContact([FromBody] string contactId)
+        {
+            try
+            {
+                await _contactService.AddContact(contactId);
+                return Ok("Success");
+            }
+            catch
+            {
+                return BadRequest("Failed");
+            }
         }
     }
 }

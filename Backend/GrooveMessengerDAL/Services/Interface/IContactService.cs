@@ -9,8 +9,9 @@ namespace GrooveMessengerDAL.Services.Interface
 {
     public interface IContactService
     {
-        Task<IEnumerable<IndexUserInfoModel>> GetAllContact(string username = null);
-        Task<IEnumerable<IndexUserInfoModel>> GetAllUnknownContact(string username = null);
+        Task<IEnumerable<IndexUserInfoModel>> GetUserContact(string username = null);
+        Task<IEnumerable<IndexUserInfoModel>> GetUserUnknownContact(string username = null);
         Task DeleteContact(string contactId, string username = null);
+        Task AddContact(string contactId, string username = null);
     }
 }

@@ -43,7 +43,7 @@ namespace GrooveMessengerDAL.Services
             _userManager = userManager;
             _userService = userService;
         }
-        public async Task<IEnumerable<IndexUserInfoModel>> GetAllContact(string username = null)
+        public async Task<IEnumerable<IndexUserInfoModel>> GetUserContact(string username = null)
         {
             var currentUser = username == null ? await _userManager.FindByEmailAsync(_userResolverService.CurrentUserName()) : await _userManager.FindByNameAsync(username);
             var currentUserInform = _userInfoRepository.GetBy(x => x.UserId == currentUser.Id.ToString()).FirstOrDefault();
@@ -51,7 +51,7 @@ namespace GrooveMessengerDAL.Services
             return _mapper.Map<IEnumerable<UserInfoEntity>, IEnumerable<IndexUserInfoModel>>(contactList);
         }
 
-        public async Task<IEnumerable<IndexUserInfoModel>> GetAllUnknownContact(string username = null)
+        public async Task<IEnumerable<IndexUserInfoModel>> GetUserUnknownContact(string username = null)
         {
             var currentUser = username == null ? await _userManager.FindByEmailAsync(_userResolverService.CurrentUserName()) : await _userManager.FindByNameAsync(username);
             var currentUserInform = _userInfoRepository.GetBy(x => x.UserId == currentUser.Id.ToString()).FirstOrDefault();
@@ -65,12 +65,34 @@ namespace GrooveMessengerDAL.Services
         {
             var currentUser = username == null ? await _userManager.FindByEmailAsync(_userResolverService.CurrentUserName()) : await _userManager.FindByNameAsync(username);
             var currentUserInform = _userInfoRepository.GetBy(x => x.UserId == currentUser.Id.ToString()).FirstOrDefault();
-            var currentContact = _userInfoContactRepository.GetBy(x => x.UserId == currentUserInform.Id && x.ContactId == new Guid(contactId)).FirstOrDefault();
+            var TableContactId = _userService.GetBy((m) => m.UserId == contactId).FirstOrDefault().Id;
+            var currentContact = _userInfoContactRepository.GetBy(x => x.UserId == currentUserInform.Id && x.ContactId == TableContactId).FirstOrDefault();
             currentContact.Deleted = true;
             _userInfoContactRepository.Edit(currentContact);
-            var allContacts = _userInfoRepository.GetAll().Where(m => m.UserId != currentUser.Id);
+            _uow.SaveChanges();
 
         }
+
+        public async Task AddContact(string contactId, string username = null)
+        {
+
+            if (username == null) username = _userResolverService.CurrentUserName();
+            var currentUser = await _userManager.FindByNameAsync(username);
+            ///////////////////////////////////////////////////////////////
+            var TableCurrentUserId = _userService.GetBy((m) => m.UserId == currentUser.Id).FirstOrDefault().Id;
+            var TableContactId = _userService.GetBy((m) => m.UserId == contactId).FirstOrDefault().Id;
+
+
+
+            UserInfoContactEntity newUC = new UserInfoContactEntity()
+            {
+                UserId = TableCurrentUserId,
+                ContactId = TableContactId
+            };
+            _userInfoContactRepository.Add(newUC);
+            _uow.SaveChanges();
+        }
+
 
     }
 }
