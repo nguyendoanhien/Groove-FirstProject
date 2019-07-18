@@ -56,9 +56,9 @@ namespace GrooveMessengerDAL.Services
             _uow.SaveChanges();
         }
 
-        public IndexUserInfoModel GetUserInfo(string id)
+        public IndexUserInfoModel GetUserInfo(string userId)
         {
-            var storedData = _userRepository.FindBy(x=>x.UserId == id).FirstOrDefault();
+            var storedData = _userRepository.FindBy(x => x.UserId == userId).FirstOrDefault();
             var result = _mapper.Map<UserInfoEntity, IndexUserInfoModel>(storedData);
             return result;
         }
