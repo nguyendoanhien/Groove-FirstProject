@@ -65,7 +65,9 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 
         this._userContactService.getContacts().subscribe(contacts => {
             this.contacts = contacts;
+            debugger;
             console.log(contacts);
+
         }
         );
         this._chatService.onChatsUpdated

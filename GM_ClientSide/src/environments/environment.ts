@@ -4,7 +4,7 @@
 
 const backendUrl = 'https://localhost:44383';
 const authBaseUrl = backendUrl + '/Identity/ClientAccount';
-
+const apiContactUrl = backendUrl + '/api/contact';
 
 export const environment = {
     production: false,
@@ -21,7 +21,7 @@ export const environment = {
     authForgotPasswordUrl: authBaseUrl + '/forgotpassword',
     apigetUserInfo: authBaseUrl + '/user',
     apiUrl: backendUrl + '/api/notes',
-    apiUserContactUrl: backendUrl + '/api/usercontact',
+    apiContactGetAllInformUrl: apiContactUrl + '/getallcontactinform',
     applicationGoogle: {
         clientId: '687824117544-nvc2uojbm14hc330gl8qh3lsrtl3tc4a.apps.googleusercontent.com',
         clientSecret: 'ugBBsDjYS-Rz20RVlx9r7Blo'

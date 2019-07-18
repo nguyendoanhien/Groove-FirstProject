@@ -317,28 +317,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             return new OkObjectResult(refreshToken);
         }
 
-        [HttpGet("{username}")]
-        public async Task<UserInfoEntity> GetUser(string username)
-        {
-            var userInfo = await _userService.GetByUsername(username);
-            return userInfo;
-        }
-
-        [HttpPut("{username}")]
-        public async Task<IActionResult> EditUser(string username, [FromBody] EditUserInfoModel editUserInfo)
-        {
-            try
-            {
-                await _userService.EditAsync(editUserInfo);
-            }
-            catch (Exception ex)
-            {
-                return Ok("Error");
-            }
-
-            return Ok(editUserInfo);
-
-        }
+       
     }
 
 }

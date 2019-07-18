@@ -63,28 +63,30 @@ namespace GrooveMessengerDAL.Services
             _uow.SaveChanges();
         }
 
-        public async Task EditAsync(EditUserInfoModel entity)
-        {
-            try
-            {
-                var user = await _userManager.FindByIdAsync(entity.UserId);
-                var userInfo =await GetByUsername(user.UserName);
-                userInfo.DisplayName = entity.DisplayName;
-                _userRepository.Edit(userInfo);
-                _uow.SaveChanges();
-            }
-            catch(Exception ex)
-            {
+//        public async Task EditAsync(EditUserInfoModel entity)
+//        {
+//            try
+//            {
+//                var user = await _userManager.FindByIdAsync(entity.UserId);
+//                var userInfo =await GetByUsername(user.UserName);
+//                userInfo.DisplayName = entity.DisplayName;
+//                _userRepository.Edit(userInfo);
+//                _uow.SaveChanges();
+//            }
+//#pragma warning disable CS0168 // Variable is declared but never used
+//            catch (Exception ex)
+//#pragma warning restore CS0168 // Variable is declared but never used
+//            {
 
-            }
-        }
+//            }
+//        }
 
         public IQueryable<UserInfoEntity> GetBy(Expression<Func<UserInfoEntity, bool>> predicate)
         {
             IQueryable<UserInfoEntity> result = _userRepository.GetBy(predicate);
             return result;
         }
-        public async Task<UserInfoEntity> GetByUsername(string username)
+        public async Task<UserInfoEntity> GetByUsernameAsync(string username)
         {
             var user = await _userManager.FindByNameAsync(username);
             var userInfo = this.GetBy(FuncGetByUsername(username)).FirstOrDefault();
@@ -98,6 +100,12 @@ namespace GrooveMessengerDAL.Services
                 userInfo = this.GetBy(FuncGetByUsername(username)).FirstOrDefault();
             }
             #endregion
+            return userInfo;
+        }
+        public UserInfoEntity GetByUsername(string username)
+        {
+            var userInfo = this.GetBy(FuncGetByUsername(username)).FirstOrDefault();
+          
             return userInfo;
         }
 
@@ -136,5 +144,7 @@ namespace GrooveMessengerDAL.Services
             var result = _mapper.Map<UserInfoEntity, IndexUserInfoModel>(storedData);
             return result;
         }
+
+     
     }
 }

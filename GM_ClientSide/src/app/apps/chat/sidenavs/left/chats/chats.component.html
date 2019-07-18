@@ -141,7 +141,7 @@
         <!-- / CHATS LIST-->
 
         <!-- CONTACTS LIST-->
-        <div class="contact-list" fxLayout="column">
+        <div class="contact-list" fxLayout="column" *ngIf="contacts">
 
             <div matSubheader *ngIf="(contacts | filter: searchText).length > 0">
                 Contacts
@@ -170,7 +170,7 @@
         <!-- / CONTACTS LIST-->
 
         <!-- NO RESULTS MESSAGE -->
-        <div *ngIf="(contacts | filter: searchText).length === 0" class="no-results-message">
+        <div *ngIf="contacts && (contacts | filter: searchText).length === 0" class="no-results-message">
             No results..
         </div>
         <!-- NO RESULTS MESSAGE-->

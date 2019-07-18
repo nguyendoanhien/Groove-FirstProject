@@ -26,7 +26,7 @@ namespace GrooveMessengerAPI.Auth
                 audience: config["JWTAuthentication:Audience"],
                 claims: claims,
                 notBefore: DateTime.UtcNow,
-                expires: DateTime.Now.AddMinutes(20),
+                expires: DateTime.Now.AddDays(1),
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
             );
             return token;

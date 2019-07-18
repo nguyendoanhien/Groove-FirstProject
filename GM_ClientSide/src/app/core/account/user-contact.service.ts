@@ -11,7 +11,7 @@ export class UserContactService {
 
     getContacts(): Observable<any[]> {
         debugger;
-        return this._httpClient.get<any[]>(environment.apiUserContactUrl);
+        return this._httpClient.get<any[]>(environment.apiContactGetAllInformUrl);
 
     }
 }
