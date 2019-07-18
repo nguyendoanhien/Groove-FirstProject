@@ -29,7 +29,7 @@ export class UserProfileService {
                 private http: HttpClient) {
         this.userProfile = new UserProfileModel();
     }
-    
+
     public displayNameSub$: Subject<string> = new Subject<string>();
 
     logIn(loginModel: LoginModel): Observable<void> {
@@ -54,7 +54,7 @@ export class UserProfileService {
     logInGoogle(googleAccessToken: string): Subscription {
 
         return this.http.post<string>(authGoogleUrl + `?accessToken=${googleAccessToken}`, null, httpOptions).pipe(
-            map((token: string) => { 
+            map((token: string) => {
                 this.parseJwtToken(token);
                 this.router.navigate(['chat']);
             })
@@ -87,7 +87,7 @@ export class UserProfileService {
         userProfileModel.SecurityAccessToken = jwt;
         this.userProfile = userProfileModel;
         this.displayNameSub$.next(this.userProfile.DisplayName);
-        console.log(this.userProfile.DisplayName);
+        
     }
 
     loadStoredUserProfile(): void {

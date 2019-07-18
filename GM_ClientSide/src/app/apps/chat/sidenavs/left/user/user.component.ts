@@ -12,8 +12,8 @@ import { UserInfoService } from 'app/core/account/userInfo.service';
 })
 export class ChatUserSidenavComponent implements OnInit, OnDestroy {
 
-    
-    selectedFile:File = null;
+
+    selectedFile: File = null;
     // Private
     private _unsubscribeAll: Subject<any>;
 
@@ -28,7 +28,7 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
-        
+
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -59,9 +59,9 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
     onUpload(event) {
         this.selectedFile = <File>event.target.files[0];
         var fd = new FormData();
-        fd.append('file',this.selectedFile);
+        fd.append('file', this.selectedFile);
         this._userInfoService.onUpload(fd).subscribe();
-        
+
     }
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods

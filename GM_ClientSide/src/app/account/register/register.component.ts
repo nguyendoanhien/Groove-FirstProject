@@ -57,7 +57,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
             this.registerService.mailToSendRegister.next(this.registerModel.email);
         }, err => {
             this.isLoading = false
-            console.log(err.error.errors['Email']);
+            
             this.emailErr = !err.error.errors['Email'] ? false : true;
         });
     }

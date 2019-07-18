@@ -10,8 +10,9 @@ export class UserContactService {
     constructor(private _httpClient: HttpClient) { }
 
     getContacts(): Observable<any[]> {
-        debugger;
         return this._httpClient.get<any[]>(environment.apiContactGetAllInformUrl);
-
+    }
+    getUnknownContacts(): Observable<any[]> {
+        return this._httpClient.get<any[]>(environment.apiContactGetAllUnknownInformUrl);
     }
 }

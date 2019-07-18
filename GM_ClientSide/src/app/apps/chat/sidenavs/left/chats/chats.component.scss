@@ -6,12 +6,10 @@ chat-chats-sidenav {
     flex-direction: column;
 
     .sidenav-header {
-
         mat-toolbar {
             border-bottom: 1px solid;
-            border-bottom-color: rgba(0,0,0,.12);
+            border-bottom-color: rgba(0, 0, 0, 0.12);
             .avatar-wrapper {
-
                 .avatar,
                 .status {
                     cursor: pointer;
@@ -27,7 +25,7 @@ chat-chats-sidenav {
                 border: 1px solid;
                 overflow: hidden;
                 background: #fafafa;
-                border-color: rgba(0,0,0,.12);
+                border-color: rgba(0, 0, 0, 0.12);
                 .mat-icon {
                     margin: 0;
                 }
@@ -37,7 +35,7 @@ chat-chats-sidenav {
                     height: 36px;
                     border: none;
                     background: #fafafa;
-                    color: rgba(0,0,0,.87);
+                    color: rgba(0, 0, 0, 0.87);
                 }
             }
         }
@@ -46,10 +44,9 @@ chat-chats-sidenav {
     .sidenav-content {
         overflow: auto;
         -webkit-overflow-scrolling: touch;
-
+        .unknown-contact-list,
         .contact-list,
         .chat-list {
-
             .mat-subheader {
                 padding-left: 16px;
                 font-size: 20px;
@@ -62,15 +59,14 @@ chat-chats-sidenav {
             .contact {
                 white-space: normal;
                 text-align: left;
-                letter-spacing: .010em;
+                letter-spacing: 0.01em;
                 min-height: 88px;
                 border-bottom: 1px solid;
                 padding: 16px;
                 font-weight: 400;
                 border-radius: 0;
-                border-bottom-color: rgba(0,0,0,.12);
+                border-bottom-color: rgba(0, 0, 0, 0.12);
                 .avatar-wrapper {
-
                     .avatar {
                         margin-right: 16px;
                     }
@@ -85,7 +81,7 @@ chat-chats-sidenav {
                 .contact-last-message {
                     line-height: normal;
                     margin-top: 0;
-                    color: rgba(0,0,0,.54);
+                    color: rgba(0, 0, 0, 0.54);
                 }
 
                 .contact-last-message-time {
@@ -96,7 +92,7 @@ chat-chats-sidenav {
                 .contact-mood {
                     line-height: normal;
                     margin: 0;
-                    color: rgba(0,0,0,.54);
+                    color: rgba(0, 0, 0, 0.54);
                 }
 
                 .unread-message-count {

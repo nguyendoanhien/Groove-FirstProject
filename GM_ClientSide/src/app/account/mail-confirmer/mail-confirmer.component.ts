@@ -63,7 +63,7 @@ export class MailConfirmerComponent implements OnInit {
         }, fail => {
             this.isLoading = false;
             this.isFailure=true;
-            console.log(fail);
+            
         });
     }
     getParams(): MailConfirmModel {
