@@ -15,7 +15,7 @@ export const environment = {
   authGoogleUrl: authBaseUrl + '/logingoogle',
   authFacebookUrl: authBaseUrl + '/loginfacebook',
   authResetPasswordUrl: authBaseUrl + '/resetpassword',
-  authForgotPasswordUrl: authBaseUrl + '/forgotpassword',  
+  authForgotPasswordUrl: authBaseUrl + '/forgotpassword',
   applicationGoogle: {
     clientId: '790976332784-alnl6bf2ofphpi9t6elcuhbkebifo787.apps.googleusercontent.com',
     clientSecret: 'vIlgfzy_LuUUn6I73QSYp1Cf'
@@ -27,5 +27,9 @@ export const environment = {
   apiUserUrl: apiBaseUrl + '/user',
   apiUserContactUrl: apiBaseUrl + '/usercontact',
   apiUrl: apiBaseUrl + '/notes',
+  cloudinary: {
+    url: 'https://api.cloudinary.com/v1_1/groovemessenger/upload',
+    upload_preset: 'qlbjv3if'
+  }
 };
 

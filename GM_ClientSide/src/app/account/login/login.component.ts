@@ -16,7 +16,7 @@ import { AuthService, GoogleLoginProvider, FacebookLoginProvider } from 'angular
 })
 export class LoginComponent implements OnInit {
     loginForm: FormGroup;
-    checkRemember: Boolean = false;
+    checkRemember = false;
     /**
      * Constructor
      *
@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
         private _userProfileService: UserProfileService,
         private _cookieService: CookieService,
         private _authService: AuthService,
-        private _router:Router
+        private _router: Router
     ) {
         // Configure the layout
         this._fuseConfigService.config = {
@@ -63,29 +63,29 @@ export class LoginComponent implements OnInit {
         if (this._cookieService.get('userName')) {
             this.checkRemember = true;
             this.loginForm = this._formBuilder.group({
-                userName: [this._cookieService.get('userName'), [Validators.required, Validators.pattern("[a-zA-Z0-9.-]{1,}@[a-z0-9.-]+\.[a-z]{2,4}$"),Validators.minLength(6)]],
+                userName: [this._cookieService.get('userName'), [Validators.required, Validators.pattern('[a-zA-Z0-9.-]{1,}@[a-z0-9.-]+\.[a-z]{2,4}$'), Validators.minLength(6)]],
                 password: [this._cookieService.get('password'), [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)]]
             });
         } else {
             this.loginForm = this._formBuilder.group({
-                userName: ['', [Validators.required, Validators.pattern("[a-zA-Z0-9.-]{1,}@[a-z0-9.-]+\.[a-z]{2,4}$"),Validators.minLength(6)]],
+                userName: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9.-]{1,}@[a-z0-9.-]+\.[a-z]{2,4}$'), Validators.minLength(6)]],
                 password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)]]
             });
         }
 
-        if(localStorage.getItem('token')!=null)
+        if (localStorage.getItem('token') != null)
         {
-            this._router.navigate(['apps','chat']);
+            this._router.navigate(['apps', 'chat']);
         }
     }
 
     onPaste(event: ClipboardEvent) {
-        event.preventDefault()
+        event.preventDefault();
      }
 
     onLogin() {
 
-        this._userProfileService.logIn(this.loginForm.value).subscribe(res => { this.rememberLogin() }, err => alert(err.error));
+        this._userProfileService.logIn(this.loginForm.value).subscribe(res => { this.rememberLogin(); }, err => alert(err.error));
     }
 
     rememberLogin() {
@@ -94,7 +94,7 @@ export class LoginComponent implements OnInit {
             this._cookieService.set('password', this.loginForm.value.password);
 
         } else {
-            this._cookieService.deleteAll()
+            this._cookieService.deleteAll();
 
         }
     }

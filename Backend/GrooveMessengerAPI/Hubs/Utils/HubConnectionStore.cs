@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace GrooveMessengerAPI.Hubs.Utils
 {
-    public class ConnectionMapping<T>
+    public class HubConnectionStore<T>
     {
         private readonly Dictionary<T, HashSet<string>> _connections =
             new Dictionary<T, HashSet<string>>();

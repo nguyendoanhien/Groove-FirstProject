@@ -29,7 +29,11 @@ export const environment = {
     },
     apiUserUrl: apiBaseUrl + '/user',
     apiUserContactUrl: apiBaseUrl + '/usercontact',
-    apiUrl: apiBaseUrl + '/notes'
+    apiUrl: apiBaseUrl + '/notes',
+    cloudinary: {
+        url: 'https://api.cloudinary.com/v1_1/groovemessenger/upload',
+        upload_preset: 'qlbjv3if'
+    }
 };
 
 /*
