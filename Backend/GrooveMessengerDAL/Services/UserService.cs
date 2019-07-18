@@ -52,6 +52,8 @@ namespace GrooveMessengerDAL.Services
             var storedData = _userRepository.GetSingle(userInfo.Id);
             storedData.DisplayName = userInfo.DisplayName;
             storedData.Avatar = userInfo.Avatar;
+            storedData.Mood = userInfo.Mood;
+            storedData.Status = (UserInfoEntity.StatusName)Enum.Parse(typeof(UserInfoEntity.StatusName), userInfo.Status, true);
             _userRepository.Edit(storedData);
             _uow.SaveChanges();
         }
