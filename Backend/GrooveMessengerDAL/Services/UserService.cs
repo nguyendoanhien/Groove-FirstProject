@@ -38,24 +38,7 @@ namespace GrooveMessengerDAL.Services
 
         public void AddUserInfo(CreateUserInfoModel userInfo)
         {
-            // try
-            // {
-
-
-            //     var entity = _mapper.Map<CreateUserInfoModel, UserInfoEntity>(userInfo);
-            //     entity.CreatedOn = DateTime.Now;
-            //     entity.CreatedBy = "Root";
-            //     entity.Status = 0;
-            //     entity.Id = new Guid();
-            //     entity.DisplayName = entity.DisplayName ?? "Test";
-            //     _userRepository.Add(entity);
-            //     _uow.SaveChanges();
-            // }
-            // catch (Exception ex)
-            // {
-
-            // }
-                 userInfo.Status = "online";
+            userInfo.Status = "online";
             userInfo.Mood = "";
             userInfo.Avatar = "https://localhost:44383/images/avatar.png";
             var entity = _mapper.Map<CreateUserInfoModel, UserInfoEntity>(userInfo);
@@ -63,63 +46,6 @@ namespace GrooveMessengerDAL.Services
             _uow.SaveChanges();
         }
 
-        public async Task EditAsync(EditUserInfoModel entity)
-        {
-            try
-            {
-                var user = await _userManager.FindByIdAsync(entity.UserId);
-                var userInfo =await GetByUsername(user.UserName);
-                userInfo.DisplayName = entity.DisplayName;
-                _userRepository.Edit(userInfo);
-                _uow.SaveChanges();
-            }
-            catch(Exception ex)
-            {
-
-            }
-        }
-
-        public IQueryable<UserInfoEntity> GetBy(Expression<Func<UserInfoEntity, bool>> predicate)
-        {
-            IQueryable<UserInfoEntity> result = _userRepository.GetBy(predicate);
-            return result;
-        }
-        public async Task<UserInfoEntity> GetByUsername(string username)
-        {
-            var user = await _userManager.FindByNameAsync(username);
-            var userInfo = this.GetBy(FuncGetByUsername(username)).FirstOrDefault();
-            #region if user doesnot exist in userinfo but in user. Insert with code block here
-            if (user != null && userInfo == null)
-            {
-                AddUserInfo(new CreateUserInfoModel() { UserId = user.Id });
-            }
-            else
-            {
-                userInfo = this.GetBy(FuncGetByUsername(username)).FirstOrDefault();
-            }
-            #endregion
-            return userInfo;
-        }
-
-        public async Task<UserInfoEntity> GetUser(Guid id)
-        {
-            return await _userRepository.GetSingleAsync(id);
-
-
-        }
-
-
-        //Delegate Libraries
-
-        Expression<Func<UserInfoEntity,bool>> FuncGetByUsername(string username)
-        {
-            return (data) => data.ApplicationUser.UserName == username;
-        }
-
-        public void Edit(UserInfoEntity entity)
-        {
-            throw new NotImplementedException();
-        }
 
         public void EditUserInfo(EditUserInfoModel userInfo)
         {

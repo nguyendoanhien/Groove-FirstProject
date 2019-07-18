@@ -12,12 +12,7 @@ namespace GrooveMessengerDAL.Services.Interface
 {
     public interface IUserService
     {
-        Task<UserInfoEntity> GetUser(System.Guid id);
         void AddUserInfo(CreateUserInfoModel userInfo);
-        IQueryable<UserInfoEntity> GetBy(Expression<Func<UserInfoEntity, bool>> predicate);
-        Task<UserInfoEntity> GetByUsername(string username);
-        void Edit(UserInfoEntity entity);
-        Task EditAsync(EditUserInfoModel editUserInfoModel);
         void EditUserInfo(EditUserInfoModel userInfo);
         IndexUserInfoModel GetUserInfo(string id);
     }
