@@ -6,6 +6,7 @@ using GrooveMessengerDAL.Models.Note;
 using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace GrooveMessengerAPI.Areas.DataAPI.Controllers
 {
@@ -35,28 +36,28 @@ namespace GrooveMessengerAPI.Areas.DataAPI.Controllers
             return data;
         }
 
-        [HttpPut("{id}")]
-        public EditModel EditNote(int id, [FromBody] EditModel note)
-        {
-            if (id != note.Id)
-            {
-                return null;
-            }
+        //[HttpPut("{id}")]
+        //public EditModel EditNote(Guid id, [FromBody] EditModel note)
+        //{
+        //    if (id != note.Id)
+        //    {
+        //        return null;
+        //    }
 
-            if (ModelState.IsValid)
-            {
-                var isExisting = _noteService.CheckExisting(id);
-                if (!isExisting)
-                {
-                    return null;
-                }
+        //    if (ModelState.IsValid)
+        //    {
+        //        var isExisting = _noteService.CheckExisting(id);
+        //        if (!isExisting)
+        //        {
+        //            return null;
+        //        }
 
-                _noteService.EditNote(note);
-                return note;
-            }
+        //        _noteService.EditNote(note);
+        //        return note;
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
         [HttpPost]
         public IActionResult CreateNote([FromBody] CreateModel note)

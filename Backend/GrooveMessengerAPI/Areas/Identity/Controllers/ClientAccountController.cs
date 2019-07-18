@@ -44,8 +44,8 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             ILogger<ClientAccountController> logger,
             UserManager<ApplicationUser> userManager,
             IConfiguration config,
-            IAuthEmailSenderUtil authEmailSender, IUserService userService
-            , IUserResolverService userResolverService)
+            IAuthEmailSenderUtil authEmailSender, IUserService userService,
+            IUserResolverService userResolverService)
 
         {
             _signInManager = signInManager;
@@ -74,7 +74,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             }
             else
             {
-                var new_user = new ApplicationUser() {  Email = model.Email, UserName = model.Email };
+                var new_user = new ApplicationUser() { Email = model.Email, UserName = model.Email };
                 var result = await _userManager.CreateAsync(new_user, model.Password);
                 CreateUserInfoModel userInfo = new CreateUserInfoModel();
                 userInfo.UserId = new_user.Id;
@@ -84,6 +84,8 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                 {
                     var clientAppUrl = _config.GetSection("Client").Value;
                     string token = _userManager.GenerateEmailConfirmationTokenAsync(new_user).Result;
+                    // TODO: add temp log to diagnose issue on email confirmation, remove if all fine
+                    _logger.LogError("Email confirm token: " + token);
                     var url = _config["EmailConfirmationRoute:Url"] + "?ctoken=" + HttpUtility.UrlEncode(token) + "&userid=" + new_user.Id;
                     var body = "<h1>Confirm Your Email</h1>" +
                         "<h3>Hello " + model.DisplayName + " ! </h3>" +
@@ -106,17 +108,21 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
         [HttpPost("confirmemail")]
         public async Task<IActionResult> ConfirmEmail([FromBody]EmailConfirmationModel model)
         {
+            //TODO: add temp log to diagnose issue on email confirmation, remove if all fine
+            _logger.LogError("UserId to confirm email: " + model.UserId);
             if (model.UserId == null || model.Ctoken == null)
             {
                 return BadRequest();
             }
             var user = await _userManager.FindByIdAsync(model.UserId);
             model.Ctoken = HttpUtility.UrlDecode(model.Ctoken);
+            // TODO: add temp log to diagnose issue on email confirmation, remove if all fine
+            _logger.LogError("Email confirm token: " + model.Ctoken);
             var res = await _userManager.ConfirmEmailAsync(user, model.Ctoken);
             if (res.Succeeded)
             {
                 var tokenString = AuthTokenUtil.GetJwtTokenString(user.UserName, _config);
-                return new ObjectResult(tokenString);               
+                return Content(tokenString);
             }
             else
             {
@@ -142,9 +148,9 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             var clientAppUrl = _config.GetSection("Client").Value;
 
             string url = _config["ForgotEmailRoute:Url"] + "?token=" + HttpUtility.UrlEncode(token) + "&&userid=" + user.Id;
-            var body = "<h1>Confirm Your Email</h1>" +
-                        "<h3>Hello! </h3>" +
-                        "<h3>Tap the button below to confirm your email address.</h3>" +
+            var body = "<h1>Reset Password</h1>" +
+                        "< h3 > Hello! </ h3 > " +
+                        "<h3>Tap the button below to go reset your password</h3>" +
                         "<h3>If you didn't create an account with <a href='" + clientAppUrl + "'>Groove Messenger</a>, you can safely delete this email.</h3>" +
                         "<table border='0' cellpadding='0' cellspacing='0' width='40% ' style='background-color:#324FEA; border:1px solid #324FEA; border-radius:5px;'>" +
                         "<tr><td align = 'center' valign = 'middle' style = 'color:#ffffff; font-family:Helvetica, Arial, sans-serif; font-size:20px; font-weight:bold; line-height:150%; padding-top:15px; padding-right:30px; padding-bottom:15px; padding-left:30px;'>" +
@@ -261,6 +267,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             }
             return BadRequest("Error !");
         }
+
         [HttpPost]
         [Route("loginfacebook")]
         public async Task<ObjectResult> Fblogin(string token)
@@ -309,18 +316,19 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             var refreshToken = AuthTokenUtil.GetJwtTokenString(userInfo.Email, _config);
             return new OkObjectResult(refreshToken);
         }
+
         [HttpGet("{username}")]
         public async Task<UserInfoEntity> GetUser(string username)
         {
             var userInfo = await _userService.GetByUsername(username);
             return userInfo;
         }
+
         [HttpPut("{username}")]
         public async Task<IActionResult> EditUser(string username, [FromBody] EditUserInfoModel editUserInfo)
         {
             try
             {
-                
                 await _userService.EditAsync(editUserInfo);
             }
             catch (Exception ex)
@@ -329,8 +337,6 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             }
 
             return Ok(editUserInfo);
-
-
 
         }
     }

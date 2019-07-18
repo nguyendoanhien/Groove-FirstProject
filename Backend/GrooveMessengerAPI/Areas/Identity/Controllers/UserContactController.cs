@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using AutoMapper.Configuration;
 using GrooveMessengerAPI.Auth;
 using GrooveMessengerDAL.Models;
 using GrooveMessengerDAL.Models.Contact;
@@ -11,6 +10,7 @@ using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace GrooveMessengerAPI.Areas.Identity.Controllers
@@ -28,15 +28,14 @@ namespace GrooveMessengerAPI.Areas.Identity.Controllers
         private static readonly HttpClient Client = new HttpClient();
         private readonly IAuthEmailSenderUtil _authEmailSender;
 
-
-
         public UserContactController(
             SignInManager<ApplicationUser> signInManager,
             ILogger<UserContactController> logger,
             UserManager<ApplicationUser> userManager,
             IConfiguration config,
-            IAuthEmailSenderUtil authEmailSender, IContactService userService
-            , IUserResolverService userResolverService)
+            IAuthEmailSenderUtil authEmailSender,
+            IContactService userService,
+            IUserResolverService userResolverService)
 
         {
             _signInManager = signInManager;

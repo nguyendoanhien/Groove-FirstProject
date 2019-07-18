@@ -74,13 +74,10 @@ namespace GrooveMessengerAPI
             RegisterAutoMapperProfiles(services);
 
             DiConfiguration.Register(services);
-            services.AddScoped<DbContext, GrooveMessengerDbContext>();
 
             // Register SignalR
             services.AddSignalR();
             services.AddScoped<IAuthEmailSenderUtil, AuthEmailSenderUtil>();
-            services.AddScoped<IUserService, UserService>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
