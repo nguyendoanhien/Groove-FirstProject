@@ -84,10 +84,11 @@ export class UserProfileService {
 
         const userProfileModel = new UserProfileModel();
         userProfileModel.UserName = decodedJwt.UserName;
+        userProfileModel.Email = decodedJwt.UserName;
         userProfileModel.DisplayName = decodedJwt.DisplayName;
         userProfileModel.UserId = decodedJwt.UserId;
-        userProfileModel.UserId = decodedJwt.UserInfoId;        
-        userProfileModel.SecurityAccessToken = jwt;
+        userProfileModel.UserInfoId = decodedJwt.UserInfoId;        
+        userProfileModel.SecurityAccessToken = jwt;       
 
         this.userProfile = userProfileModel;
         this.displayNameSub$.next(this.userProfile.DisplayName);
