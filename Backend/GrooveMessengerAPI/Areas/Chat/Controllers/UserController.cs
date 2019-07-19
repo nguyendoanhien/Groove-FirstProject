@@ -2,34 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GrooveMessengerAPI.Controllers;
 using GrooveMessengerDAL.Models;
 using GrooveMessengerDAL.Models.User;
 using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GrooveMessengerAPI.Areas.Identity.Controllers
+namespace GrooveMessengerAPI.Areas.Chat.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : ApiControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserService _userService;
-        private readonly IUserResolverService _userResolver;
         public UserController(
             UserManager<ApplicationUser> userManager,
             IUserService userService,
             IUserResolverService userResolver
-            )
+            ) : base(userResolver)
         {
             _userManager = userManager;
             _userService = userService;
-            _userResolver = userResolver;
         }
 
 
@@ -37,8 +35,7 @@ namespace GrooveMessengerAPI.Areas.Identity.Controllers
         [HttpGet]
         public async Task<IndexUserInfoModel> GetUserInfo()
         {
-            var email = _userResolver.CurrentUserName();
-            var user = await  _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(CurrentUserName);
             var result = _userService.GetUserInfo(user.Id.ToString());
             return result;
         }

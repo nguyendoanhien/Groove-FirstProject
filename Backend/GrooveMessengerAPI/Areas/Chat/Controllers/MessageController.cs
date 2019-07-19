@@ -1,6 +1,7 @@
 
 using System;
 using GrooveMessengerAPI.Areas.Chat.Models;
+using GrooveMessengerAPI.Controllers;
 using GrooveMessengerAPI.Models;
 using GrooveMessengerDAL.Models.Message;
 using GrooveMessengerDAL.Services.Interface;
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GrooveMessengerAPI.Areas.Chat.Controllers
 {
     [Route("api/[controller]")]
-    public class MessageController : Controller
+    public class MessageController : ApiControllerBase
     {
         private readonly IMessageService _mesService;
         private readonly IConversationService _conService;
@@ -19,8 +20,9 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
 
         public MessageController(
             IMessageService mesService,
-            IConversationService conService
-            )
+            IConversationService conService,
+            IUserResolverService userResolver
+            ) : base(userResolver)
         {
             //_hubContext = hubContext;
             this._mesService = mesService;

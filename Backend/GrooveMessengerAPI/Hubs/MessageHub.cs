@@ -3,41 +3,29 @@ using GrooveMessengerAPI.Hubs.Utils;
 using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.SignalR;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace GrooveMessengerAPI.Hubs
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class MessageHub : Hub<ITypedHubClient>
+    public class MessageHub : HubBase<IMessageHubClient>
     {
-        private readonly static ConnectionMapping<string> _connections =
-           new ConnectionMapping<string>();
         private IContactService _contactService;
         
-        public MessageHub(IContactService contactService)
+        public MessageHub(
+            HubConnectionStore<string> connectionStore,
+            IContactService contactService):base(connectionStore)
         {
             _contactService = contactService;
         }
-        public override Task OnConnectedAsync()
-        {
-            string name = Context.User.Identity.Name;
-
-            if (!_connections.GetConnections(name).Contains(Context.ConnectionId))
-            {
-                var conn = Context.ConnectionId;
-                _connections.Add(name, conn);
-            }
-            return base.OnConnectedAsync();
-        }
+        
 
         public async Task SendMessageToUser(string message, string toUser)
         {
             string username = Context.User.Identity.Name;
             Message chatMessage = new Message(username, "aa-aa-aa-aa" , message);
-            foreach (var connectionId in _connections.GetConnections(toUser))
+            foreach (var connectionId in connectionStore.GetConnections(toUser))
             {
                 await Clients.Client(connectionId).SendMessage(chatMessage);
             }
@@ -47,7 +35,7 @@ namespace GrooveMessengerAPI.Hubs
         {
             string username = Context.User.Identity.Name;
             message.From = username;
-            foreach (var connectionId in _connections.GetConnections(toUser))
+            foreach (var connectionId in connectionStore.GetConnections(toUser))
             {
                 await Clients.Client(connectionId).SendRemovedMessage(message);
             }
@@ -57,7 +45,7 @@ namespace GrooveMessengerAPI.Hubs
         {
             string username = Context.User.Identity.Name;
             message.From = username;
-            foreach (var connectionId in _connections.GetConnections(toUser))
+            foreach (var connectionId in connectionStore.GetConnections(toUser))
             {
                 await Clients.Client(connectionId).SendEditedMessage(message);
             }
@@ -67,17 +55,22 @@ namespace GrooveMessengerAPI.Hubs
         {
             string username = Context.User.Identity.Name;
 
-            foreach (var connectionId in _connections.GetConnections(toUser))
+            foreach (var connectionId in connectionStore.GetConnections(toUser))
             {
                 await Clients.Client(connectionId).SendMessageViewingStatus(username);
             }
         }
+
+
+        public override Task OnConnectedAsync()
+        {
+            // Do something just related to message hub
+            return base.OnConnectedAsync();
+        }
+
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            string name = Context.User.Identity.Name;
-
-            _connections.Remove(name, Context.ConnectionId);
-
+            // Do something just related to message hub            
             return base.OnDisconnectedAsync(exception);
         }
     }

@@ -5,11 +5,11 @@ export class AuthService {
         return localStorage.getItem('token') === null ? '' : localStorage.getItem('token');
     }
 
-    public setToken(token: string) {
+    public setToken(token: string): void {
         localStorage.setItem('token', token);
     }
 
-    public clearToken() {
+    public clearToken(): void {
         localStorage.removeItem('token');
     }
 
