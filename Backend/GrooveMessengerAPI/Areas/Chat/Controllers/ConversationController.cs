@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using GrooveMessengerDAL.Services.Interface;
-using Microsoft.AspNetCore.Http;
+﻿using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GrooveMessengerAPI.Areas.Chat.Controllers
@@ -37,7 +32,14 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                 var rs = _conService.GetConversationOfAUser(ConversationId);
                 return Ok(rs);
             }
-            return BadRequest();
+            return BadRequest();          
+        }
+        // POST: api/Conversation
+        [HttpPost]
+        public void Post()
+        {
+
+            _conService.AddConversation();
         }
     }
 }

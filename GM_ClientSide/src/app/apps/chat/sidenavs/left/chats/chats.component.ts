@@ -9,6 +9,7 @@ import { FuseMatSidenavHelperService } from '@fuse/directives/fuse-mat-sidenav/f
 import { ChatService } from '../../../chat.service';
 import { UserProfileService } from 'app/core/identity/userprofile.service';
 import { UserContactService } from 'app/core/account/user-contact.service';
+import { UserInfoService } from 'app/core/account/userInfo.service';
 
 @Component({
     selector: 'chat-chats-sidenav',
@@ -21,9 +22,9 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     chats: any[];
     chatSearch: any;
     contacts: any[];
+    unknownContacts: any[];
     searchText: string;
     user: any;
-
     // Private
     private _unsubscribeAll: Subject<any>;
 
@@ -39,7 +40,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         private _chatService: ChatService,
         private _fuseMatSidenavHelperService: FuseMatSidenavHelperService,
         public _mediaObserver: MediaObserver,
-        private _userContactService: UserContactService
+        private _userInfoService: UserInfoService,
     ) {
         // Set the defaults
         this.chatSearch = {
@@ -59,15 +60,16 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
+
+
+        this.initGetUserInfo();
+
         this.user = this._chatService.user;
         this.chats = this._chatService.chats;
         this.contacts = this._chatService.contacts;
 
-        this._userContactService.getContacts().subscribe(contacts => {
-            this.contacts = contacts;
-            console.log(contacts);
-        }
-        );
+        this.unknownContacts = this._chatService.unknownContacts;
+
         this._chatService.onChatsUpdated
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(updatedChats => {
@@ -79,6 +81,24 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             .subscribe(updatedUser => {
                 this.user = updatedUser;
             });
+    }
+
+    // async ngDoCheck() {
+    //     if(this._userInfoService.userInfo.status == 'offline')
+    //     {   
+    //         console.log(this._userInfoService.userInfo)
+    //         this._userInfoService.userInfo.status = 'online';
+    //         await this._userInfoService.changeDisplayName().subscribe();
+    //     }
+    // }
+
+    initGetUserInfo() {
+        this._userInfoService.getUserInfo().subscribe(res => {
+            if (this._userInfoService.userInfo.status == 'offline') {
+                this._userInfoService.userInfo.status = 'online';
+                this._userInfoService.changeDisplayName().subscribe();
+            }
+        });
     }
 
     /**
@@ -100,8 +120,8 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      * @param contact
      */
     getChat(contact): void {
-        this._chatService.getChat(contact);
 
+        this._chatService.getChat(contact);
         if (!this._mediaObserver.isActive('gt-md')) {
             this._fuseMatSidenavHelperService.getSidenav('chat-left-sidenav').toggle();
         }
@@ -112,8 +132,11 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      *
      * @param status
      */
-    setUserStatus(status): void {
-        this._chatService.setUserStatus(status);
+    async setUserStatus(status) {
+        this._userInfoService.userInfo.status = status;
+        await this._userInfoService.changeDisplayName().subscribe();
+        if (status === 'offline')
+            await this._userProfileService.logOut();
     }
 
     /**
@@ -128,7 +151,10 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     /**
      * Logout
      */
-    logout(): void {
+    async logout() {
+        this._userInfoService.userInfo.status = 'offline';
+        await this._userInfoService.changeDisplayName().subscribe()
         this._userProfileService.logOut();
+
     }
 }

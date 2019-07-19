@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using GrooveMessengerDAL.Data;
 using GrooveMessengerDAL.Entities;
-using GrooveMessengerDAL.Models.Conversation;
 using GrooveMessengerDAL.Models.CustomModel;
 using GrooveMessengerDAL.Repositories.Interface;
 using GrooveMessengerDAL.Services.Interface;
@@ -18,9 +17,13 @@ namespace GrooveMessengerDAL.Services
         private IGenericRepository<ParticipantEntity, Guid, GrooveMessengerDbContext> _parRepository;
         private IMapper _mapper;
         private IUowBase<GrooveMessengerDbContext> _uow;
+        private IParticipantService _participantService;
+
         private readonly IMessageService _messageService;
 
-        public ConversationService(IGenericRepository<ConversationEntity, Guid, GrooveMessengerDbContext> conRepository, IGenericRepository<ParticipantEntity, Guid, GrooveMessengerDbContext> parRepository, IMapper mapper, IUowBase<GrooveMessengerDbContext> uow, IMessageService messageService)
+        public ConversationService(IGenericRepository<ConversationEntity, Guid, GrooveMessengerDbContext> conRepository,
+            IGenericRepository<ParticipantEntity, Guid, GrooveMessengerDbContext> parRepository, IMapper mapper, 
+            IUowBase<GrooveMessengerDbContext> uow, IMessageService messageService)   
         {
             _conRepository = conRepository;
             _parRepository = parRepository;
@@ -29,12 +32,23 @@ namespace GrooveMessengerDAL.Services
             _messageService = messageService;
         }
 
-        public void AddConversation(CreateConversationModel createConversation)
+        public void AddConversation()
         {
-            var mes = _mapper.Map<CreateConversationModel, ConversationEntity>(createConversation);
-            _conRepository.Add(mes);
+            ConversationEntity conv = new ConversationEntity();
+            conv.Avatar = "";
+            conv.Name = "";
+            _conRepository.Add(conv);
             _uow.SaveChanges();
         }
+
+
+        //public IndexConversationModel getGetConversationById(Guid id)
+        //{
+        //    var entity = _conRepository.FindBy(x => x.Id == id).Include(i => i.MessageEntity).FirstOrDefault();
+        //    var result = _mapper.Map<ConversationEntity, IndexConversationModel>(entity);
+        //    return result;
+        //}
+
 
         //public IEnumerable<ConversationEntity> GetConversations(string UserId)
         //{
@@ -42,6 +56,7 @@ namespace GrooveMessengerDAL.Services
         //    var result = _conRepository.GetAll().Where(x => conIdList.Contains(x.Id));
         //    return result;
         //}
+
 
         public IEnumerable<ChatModel> GetAllConversationOfAUser(string UserId)
         {
@@ -68,6 +83,6 @@ namespace GrooveMessengerDAL.Services
                 Dialog = dialogs.ToList()
             };
             return chatModel;
-        }     
+        }
     }
 }
