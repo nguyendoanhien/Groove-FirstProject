@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { FuseUtils } from '@fuse/utils';
 import { User } from '../model/user.model';
 import { environment } from 'environments/environment';
+import { UserInfoService } from 'app/core/account/userInfo.service';
 
 @Injectable()
 export class ChatService implements Resolve<any>
@@ -24,8 +25,9 @@ export class ChatService implements Resolve<any>
      * Constructor
      *
      * @param {HttpClient} _httpClient
+     * @param {UserInfoService} _userInformList 
      */
-    constructor(private _httpClient: HttpClient) {
+    constructor(private _httpClient: HttpClient, private _userInformList: UserInfoService) {
         // Set the defaults
         this.onChatSelected = new BehaviorSubject(null);
         this.onContactSelected = new BehaviorSubject(null);
@@ -33,6 +35,7 @@ export class ChatService implements Resolve<any>
         this.onUserUpdated = new Subject();
         this.onLeftSidenavViewChanged = new Subject();
         this.onRightSidenavViewChanged = new Subject();
+        this._httpClient.get('https://localhost:44383/api/contact/getchatlist').subscribe(res => console.log(res));
     }
 
     /**
@@ -47,12 +50,14 @@ export class ChatService implements Resolve<any>
             Promise.all([
                 this.getContacts(),
                 this.getChats(),
-                this.getUser()
+                this.getUser(),
+                this.getChatList()
             ]).then(
-                ([contacts, chats, user]) => {
+                ([contacts, chats, user, chatList]) => {
                     this.contacts = contacts;
                     this.chats = chats;
                     this.user = user;
+                    this.user.chatList = chatList
                     resolve();
                 },
                 reject
@@ -211,7 +216,7 @@ export class ChatService implements Resolve<any>
      */
     getContacts(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this._httpClient.get('api/chat-contacts')
+            this._httpClient.get('https://localhost:44383/api/user/getalluserinform')
                 .subscribe((response: any) => {
                     resolve(response);
                 }, reject);
@@ -239,15 +244,27 @@ export class ChatService implements Resolve<any>
      */
     getUser(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this._httpClient.get('api/chat-user')
+            this._httpClient.get('https://localhost:44383/api/user')
                 .subscribe((response: any) => {
-                    resolve(response[0]);
+                    console.log(response)
+                    resolve(response);
                 }, reject);
         });
     }
-
-  
-
+    /**
+     * Get chat list
+     *
+     * @returns {Promise<any>}
+     */
+    getChatList(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this._httpClient.get('https://localhost:44383/api/contact/getchatlist')
+                .subscribe((response: any) => {
+                    console.log(response)
+                    resolve(response);
+                }, reject);
+        });
+    }
     // getUserById(id: string): Observable<User> {
     //     debugger;
     //     return this._httpClient.get<User>(`${environment.clientAccountController}/${id}`);

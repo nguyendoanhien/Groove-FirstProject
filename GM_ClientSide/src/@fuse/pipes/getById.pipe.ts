@@ -17,9 +17,9 @@ export class GetByIdPipe implements PipeTransform
     transform(value: any[], id: number, property: string): any
     {
         const foundItem = value.find(item => {
-            if ( item.id !== undefined )
+            if ( item.userId !== undefined )
             {
-                return item.id === id;
+                return item.userId === id;
             }
 
             return false;

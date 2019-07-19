@@ -113,14 +113,14 @@
 
                     <div class="avatar-wrapper" fxFlex="0 1 auto" fxLayoutAlign="center center">
                         <img class="avatar" [src]="contacts | getById:chat.contactId:'avatar'"
-                            alt="{{contacts | getById:chat.contactId:'name'}}" />
+                            alt="{{contacts | getById:chat.contactId:'displayName'}}" />
                         <mat-icon class="s-16 status" [ngClass]="contacts | getById:chat.contactId:'status'"></mat-icon>
                     </div>
 
                     <div fxLayout="row" fxFlex>
 
                         <div class="pr-4" fxFlex fxLayout="column" fxLayoutAlign="center start">
-                            <div class="contact-name">{{contacts | getById:chat.contactId:'name'}}</div>
+                            <div class="contact-name">{{contacts | getById:chat.contactId:'displayName'}}</div>
                             <div class="contact-last-message">{{chat.lastMessage}}</div>
                         </div>
 
@@ -138,7 +138,6 @@
             </button>
 
         </div>
-        <!-- / CHATS LIST-->
 
         <!-- CONTACTS LIST-->
         <div class="contact-list" fxLayout="column">

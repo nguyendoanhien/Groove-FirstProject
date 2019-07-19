@@ -23,17 +23,20 @@ namespace GrooveMessengerDAL.Services
         private IMapper _mapper;
         private IUowBase<GrooveMessengerDbContext> _uow;
         private readonly UserManager<ApplicationUser> _userManager;
+        public IUserResolverService _userResolverService;
         public UserService(
             IGenericRepository<UserInfoEntity, Guid, GrooveMessengerDbContext> userRepository,
             IMapper mapper,
             IUowBase<GrooveMessengerDbContext> uow,
-            UserManager<ApplicationUser> userManager
+            UserManager<ApplicationUser> userManager,
+            IUserResolverService userResolverService
             )
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _uow = uow;
             _userManager = userManager;
+            _userResolverService = userResolverService;
         }
 
         public void AddUserInfo(CreateUserInfoModel userInfo)
@@ -61,6 +64,12 @@ namespace GrooveMessengerDAL.Services
             var storedData = _userRepository.FindBy(x => x.UserId == userId).FirstOrDefault();
             var result = _mapper.Map<UserInfoEntity, IndexUserInfoModel>(storedData);
             return result;
+        }
+        public async Task<IEnumerable<IndexUserInfoModel>> GetAllUserInfo()
+        {
+            var currentUser = await _userManager.FindByNameAsync(_userResolverService.CurrentUserName());
+            var userInformList = _userRepository.GetBy(x => x.UserId != currentUser.Id.ToString());
+            return _mapper.Map<IEnumerable<UserInfoEntity>, IEnumerable<IndexUserInfoModel>>(userInformList);
         }
     }
 }

@@ -54,5 +54,10 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
 
             return null;
         }
+        [HttpGet("getalluserinform")]
+        public async Task<IEnumerable<IndexUserInfoModel>> GetAllUserInform()
+        {
+            return await _userService.GetAllUserInfo();
+        }
     }
 }
