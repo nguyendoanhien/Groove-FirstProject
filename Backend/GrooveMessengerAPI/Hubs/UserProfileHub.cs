@@ -1,4 +1,5 @@
-﻿using GrooveMessengerAPI.Hubs.Utils;
+﻿using GrooveMessengerAPI.Areas.Chat.Models;
+using GrooveMessengerAPI.Hubs.Utils;
 using GrooveMessengerDAL.Services.Interface;
 using System;
 using System.Collections.Generic;
@@ -7,19 +8,20 @@ using System.Threading.Tasks;
 
 namespace GrooveMessengerAPI.Hubs
 {
-    public class UserProfileHub: HubBase<IUserProfileHubClient>
+    public class UserProfileHub : HubBase<IUserProfileHubClient>
     {
-        private IContactService _contactService;
 
-        public UserProfileHub(
-            HubConnectionStore<string> connectionStore,
-            IContactService contactService) : base(connectionStore)
+
+        public UserProfileHub(HubConnectionStore<string> connectionStore) : base(connectionStore)
         {
-            _contactService = contactService;
+  
         }
 
 
-
+        public async Task ChangeUserProfile(UserProfile userProfile)
+        {
+            await Clients.All.ChangeUserProfile(userProfile);
+        }
 
         public override Task OnConnectedAsync()
         {
