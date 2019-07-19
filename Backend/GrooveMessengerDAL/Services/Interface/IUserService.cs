@@ -14,6 +14,6 @@ namespace GrooveMessengerDAL.Services.Interface
     {
         void AddUserInfo(CreateUserInfoModel userInfo);
         void EditUserInfo(EditUserInfoModel userInfo);
-        IndexUserInfoModel GetUserInfo(string id);
+        IndexUserInfoModel GetUserInfo(string userId);
     }
 }

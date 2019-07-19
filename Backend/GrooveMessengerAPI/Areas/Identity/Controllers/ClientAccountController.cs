@@ -19,6 +19,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Linq;
+using GrooveMessengerAPI.Controllers;
 
 namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
 {
@@ -32,11 +33,9 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<ClientAccountController> _logger;
         private readonly IConfiguration _config;
-        private readonly IUserResolverService _userResolverService;
         private readonly IUserService _userService;
         private static readonly HttpClient Client = new HttpClient();
         private readonly IAuthEmailSenderUtil _authEmailSender;
-
 
 
         public ClientAccountController(
@@ -44,15 +43,15 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             ILogger<ClientAccountController> logger,
             UserManager<ApplicationUser> userManager,
             IConfiguration config,
-            IAuthEmailSenderUtil authEmailSender, IUserService userService,
-            IUserResolverService userResolverService)
+            IAuthEmailSenderUtil authEmailSender,
+            IUserService userService
+            )
 
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
             _config = config;
-            _userResolverService = userResolverService;
             _authEmailSender = authEmailSender;
             _userService = userService;
         }
@@ -121,7 +120,8 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             var res = await _userManager.ConfirmEmailAsync(user, model.Ctoken);
             if (res.Succeeded)
             {
-                var tokenString = AuthTokenUtil.GetJwtTokenString(user.UserName, _config);
+                var userInfoModel = _userService.GetUserInfo(user.Id);
+                var tokenString = AuthTokenUtil.GetJwtTokenString(user, userInfoModel, _config);
                 return Content(tokenString);
             }
             else
@@ -211,7 +211,10 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                     return Unauthorized("Please Comfirm Email");
                 }
                 _logger.LogInformation("User logged in.");
-                var tokenString = AuthTokenUtil.GetJwtTokenString(data.Username, _config);
+
+                var user = await _userManager.FindByNameAsync(data.Username);
+                var userInfoModel = _userService.GetUserInfo(user.Id);
+                var tokenString = AuthTokenUtil.GetJwtTokenString(user, userInfoModel, _config);
                 return new ObjectResult(tokenString);
             }
             return Unauthorized("Email or Password is incorrect");
@@ -225,12 +228,10 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             {
                 var payload = GoogleJsonWebSignature.ValidateAsync(accessToken, new GoogleJsonWebSignature.ValidationSettings()).Result;
                 ExternalLoginInfo info = new ExternalLoginInfo(null, "Google", payload.Subject, "Google");
-                var resultFindByMail = await _userManager.FindByEmailAsync(payload.Email);
+                var user = await _userManager.FindByEmailAsync(payload.Email);
 
-
-
-                var user = new ApplicationUser { UserName = payload.Email, Email = payload.Email };
-                if (resultFindByMail == null)
+                user = new ApplicationUser { UserName = payload.Email, Email = payload.Email };
+                if (user == null)
                 {
                     var resultCreate = await _userManager.CreateAsync(user);
                     CreateUserInfoModel userInfo = new CreateUserInfoModel();
@@ -248,16 +249,17 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                     var resultFindByLoginExternal = await _userManager.FindByLoginAsync("Google", payload.Subject);
                     if (resultFindByLoginExternal == null)
                     {
-                        var resultLogin = await _userManager.AddLoginAsync(resultFindByMail, info);
+                        var resultLogin = await _userManager.AddLoginAsync(user, info);
                         await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
 
                     }
-                    resultFindByMail = await _userManager.FindByEmailAsync(payload.Email);
-                    await _signInManager.SignInAsync(resultFindByMail, isPersistent: false);
+                    user = await _userManager.FindByEmailAsync(payload.Email);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
 
 
                 }
-                var tokenString = AuthTokenUtil.GetJwtTokenString(payload.Email, _config);
+                var userInfoModel = _userService.GetUserInfo(user.Id);
+                var tokenString = AuthTokenUtil.GetJwtTokenString(user, userInfoModel, _config);
                 return new OkObjectResult(tokenString);
 
             }
@@ -313,11 +315,11 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             {
                 var resultLogin = await _userManager.AddLoginAsync(user, info);
             }
-            var refreshToken = AuthTokenUtil.GetJwtTokenString(userInfo.Email, _config);
-            return new OkObjectResult(refreshToken);
+            var userInfoModel = _userService.GetUserInfo(user.Id);
+            var tokenString = AuthTokenUtil.GetJwtTokenString(user, userInfoModel, _config);
+            return new OkObjectResult(tokenString);
         }
 
-      
     }
 
 }

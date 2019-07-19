@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ChatService } from '../../../chat.service';
-import { userInfo } from './userInfo.model';
+
 import { UserInfoService } from 'app/core/account/userInfo.service';
 import { UserProfileService } from 'app/core/identity/userprofile.service';
 
@@ -13,7 +13,6 @@ import { UserProfileService } from 'app/core/identity/userprofile.service';
 })
 export class ChatUserSidenavComponent implements OnInit, OnDestroy {
 
-    
     selectedFile:File = null;
     // Private
     private _unsubscribeAll: Subject<any>;
@@ -30,7 +29,7 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
-        
+
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -41,8 +40,6 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit() {
-        
-
     }
 
     /**
@@ -58,6 +55,7 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
         await this._userInfoService.changeDisplayName().subscribe();
         if(this._userInfoService.userInfo.status == 'offline')
             await this._userProfileService.logOut();
+
     }
 
     onUpload(event) {

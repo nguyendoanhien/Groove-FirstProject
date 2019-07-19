@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GrooveMessengerDAL.Models.User
 {
-    public class EditUserInfoModel:AuditBaseModel<Guid>
+    public class EditUserInfoModel : AuditBaseModel<Guid>
     {
         public string UserId { get; set; }
 

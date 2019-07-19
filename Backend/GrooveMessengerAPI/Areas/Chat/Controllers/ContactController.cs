@@ -1,4 +1,5 @@
-﻿using GrooveMessengerDAL.Models.User;
+﻿using GrooveMessengerAPI.Controllers;
+using GrooveMessengerDAL.Models.User;
 using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -12,13 +13,14 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
-    public class ContactController : Controller
+    public class ContactController : ApiControllerBase
     {
         private IContactService _contactService;
 
         public ContactController(
-            IContactService contactService
-            )
+            IContactService contactService,
+            IUserResolverService userResolver) 
+            : base(userResolver)
         {
             _contactService = contactService;
         }
@@ -26,7 +28,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         [HttpGet("getallcontactinform")]
         public async Task<IActionResult> Get()
         {
-            return Ok(await _contactService.GetAllContact());            
+            return Ok(await _contactService.GetAllContact());
         }
     }
 }

@@ -1,36 +1,39 @@
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { userInfo } from '../../apps/chat/sidenavs/left/user/userInfo.model';
 import { catchError, retry, map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
+import { UserInfo } from 'app/apps/chat/sidenavs/left/user/userInfo.model';
+const apiUserUrl = environment.apiUserUrl;
+const cloudinaryUrl = environment.cloudinary.url;
+const cloudinaryPreset = environment.cloudinary.upload_preset;
 @Injectable()
 export class UserInfoService {
 
-    userInfo: userInfo
-    COUNDINARY_URL: string = 'https://api.cloudinary.com/v1_1/groovemessenger/upload'
-    COUNDINARY_UPLOAD_PRESET: string = 'qlbjv3if';
+    userInfo: UserInfo
+
     constructor(private router: Router,
         private http: HttpClient) {
-        this.userInfo = new userInfo();
+        this.userInfo = new UserInfo();
     }
 
     getUserInfo() {
-        return this.http.get('https://localhost:44383/api/user').pipe(
-            map((res: any) => this.userInfo = res as userInfo)
+        return this.http.get(apiUserUrl).pipe(
+            map((res: any) => this.userInfo = res as UserInfo)
         );
     }
 
     changeDisplayName() {
-        return this.http.put('https://localhost:44383/api/user', this.userInfo).pipe(
-            map((res: any) => this.userInfo = res as userInfo)
+        return this.http.put(apiUserUrl, this.userInfo).pipe(
+            map((res: any) => this.userInfo = res as UserInfo)
         );
     }
 
     onUpload(fd: FormData) {
 
 
-        fd.append('upload_preset', this.COUNDINARY_UPLOAD_PRESET)
-        return this.http.post(this.COUNDINARY_URL, fd).pipe(
+        fd.append('upload_preset', cloudinaryPreset)
+        return this.http.post(cloudinaryUrl, fd).pipe(
             map((res: any) => {
                 this.userInfo.avatar = res.url;
                 console.log(res.url)
@@ -40,3 +43,4 @@ export class UserInfoService {
 
 
 }
+

@@ -8,7 +8,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { catchError, retry, map } from 'rxjs/operators';
 import { UserProfileModel } from 'app/account/user-profile/user-profile.model';
-import { userInfo } from 'app/apps/chat/sidenavs/left/user/userInfo.model';
+import { UserInfo } from 'app/apps/chat/sidenavs/left/user/userInfo.model';
 
 const loginUrl = environment.authLoginUrl;
 const authGoogleUrl = environment.authGoogleUrl;
@@ -81,10 +81,15 @@ export class UserProfileService {
         const jwtHelper = new JwtHelperService();
         const decodedJwt = jwtHelper.decodeToken(jwt);
         this.authService.setToken(jwt);
+
         const userProfileModel = new UserProfileModel();
         userProfileModel.UserName = decodedJwt.UserName;
+        userProfileModel.Email = decodedJwt.UserName;
         userProfileModel.DisplayName = decodedJwt.DisplayName;
-        userProfileModel.SecurityAccessToken = jwt;
+        userProfileModel.UserId = decodedJwt.UserId;
+        userProfileModel.UserInfoId = decodedJwt.UserInfoId;        
+        userProfileModel.SecurityAccessToken = jwt;       
+
         this.userProfile = userProfileModel;
         this.displayNameSub$.next(this.userProfile.DisplayName);
         console.log(this.userProfile.DisplayName);

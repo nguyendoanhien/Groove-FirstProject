@@ -1,4 +1,5 @@
-﻿using GrooveMessengerAPI.Services;
+﻿using GrooveMessengerAPI.Hubs.Utils;
+using GrooveMessengerAPI.Services;
 using GrooveMessengerDAL.Services;
 using GrooveMessengerDAL.Services.Interface;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,8 @@ namespace GrooveMessengerAPI.Configurations
             services.AddScoped<IConversationService, ConversationService>();
             services.AddScoped<IParticipantService, ParticipantService>();
             services.AddScoped<IUserService, UserService>();
+
+            services.AddSingleton(typeof(HubConnectionStore<>), typeof(HubConnectionStore<>));
         }
     }
 }

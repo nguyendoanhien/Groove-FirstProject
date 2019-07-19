@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace GrooveMessengerAPI.Hubs.Utils
 {
-    public interface ITypedHubClient
+    public interface IMessageHubClient
     {
         Task SendMessage(Message message);
         Task SendRemovedMessage(Message message);
