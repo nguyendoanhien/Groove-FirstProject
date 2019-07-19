@@ -13,10 +13,11 @@ namespace GrooveMessengerAPI
             {
                 mc.AddProfile(new NoteAutoMapperProfile());
                 mc.AddProfile(new UserAutoMapperProfile());
+                mc.AddProfile(new ContactMapperProfile());
             });
 
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
-        }        
+        }
     }
 }

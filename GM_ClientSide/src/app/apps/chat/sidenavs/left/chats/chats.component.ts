@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation, ViewChildren } from '@angular/core';
 import { MediaObserver } from '@angular/flex-layout';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -9,6 +9,8 @@ import { FuseMatSidenavHelperService } from '@fuse/directives/fuse-mat-sidenav/f
 import { ChatService } from '../../../chat.service';
 import { UserProfileService } from 'app/core/identity/userprofile.service';
 import { UserContactService } from 'app/core/account/user-contact.service';
+import { UnknownContactFilterPipe } from 'app/custom-pipe/unknown-contact-filter.pipe';
+import { FilterPipe } from '@fuse/pipes/filter.pipe';
 
 @Component({
     selector: 'chat-chats-sidenav',
@@ -24,6 +26,10 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     unknownContacts: any[];
     searchText: string;
     user: any;
+    @ViewChildren('someVar') filteredItems;
+
+    currentSumLength: number;
+    currentUnknownContactLength: number;
     // Private
     private _unsubscribeAll: Subject<any>;
 
@@ -63,7 +69,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         this.chats = this._chatService.chats;
         this.contacts = this._chatService.contacts;
         this.unknownContacts = this._chatService.unknownContacts;
-        console.log(this.unknownContacts);
+
         this._chatService.onChatsUpdated
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(updatedChats => {
@@ -126,5 +132,16 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      */
     logout(): void {
         this._userProfileService.logOut();
+    }
+
+    CountData() {
+        const pipe = new FilterPipe();
+        const unknownContactPipe = new UnknownContactFilterPipe();
+        let arrayContact = pipe.transform(this.user.chatList, this.searchText, '') as Array<any>;
+        let arrayChat = pipe.transform(this.contacts, this.searchText, '') as Array<any>;
+        this.currentSumLength = arrayChat.length + arrayContact.length;
+        let arrayUnknownContact = unknownContactPipe.transform(this.unknownContacts, this.searchText, '') as Array<any>;
+        this.currentUnknownContactLength = arrayUnknownContact.length;
+
     }
 }
