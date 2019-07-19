@@ -33,7 +33,8 @@ export class UserInfoService {
         return this.http.post(this.COUNDINARY_URL, fd).pipe(
             map((res: any) => {
                 this.userInfo.avatar = res.url;
-                this.changeDisplayName();
+                console.log(res.url)
+                this.changeDisplayName().subscribe();
             }));
     }
 

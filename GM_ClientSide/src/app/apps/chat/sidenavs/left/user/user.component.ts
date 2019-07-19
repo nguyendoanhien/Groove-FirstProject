@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import { ChatService } from '../../../chat.service';
 import { userInfo } from './userInfo.model';
 import { UserInfoService } from 'app/core/account/userInfo.service';
+import { UserProfileService } from 'app/core/identity/userprofile.service';
 
 @Component({
     selector: 'chat-user-sidenav',
@@ -25,6 +26,7 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
     constructor(
         private _chatService: ChatService,
         private _userInfoService: UserInfoService,
+        private _userProfileService: UserProfileService
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
@@ -39,7 +41,7 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit() {
-        this._userInfoService.getUserInfo().subscribe();
+        
 
     }
 
@@ -52,8 +54,10 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
         this._unsubscribeAll.complete();
     }
 
-    changeDisplayName() {
-        this._userInfoService.changeDisplayName().subscribe();
+    async changeDisplayName() {
+        await this._userInfoService.changeDisplayName().subscribe();
+        if(this._userInfoService.userInfo.status == 'offline')
+            await this._userProfileService.logOut();
     }
 
     onUpload(event) {
