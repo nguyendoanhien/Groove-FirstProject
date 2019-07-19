@@ -9,6 +9,5 @@ namespace GrooveMessengerDAL.Services.Interface
     public interface IConversationService
     {
         void AddConversation();
-        IndexConversationModel getGetConversationById(Guid id);
     }
 }

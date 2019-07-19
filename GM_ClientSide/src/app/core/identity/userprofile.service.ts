@@ -92,7 +92,6 @@ export class UserProfileService {
 
         this.userProfile = userProfileModel;
         this.displayNameSub$.next(this.userProfile.DisplayName);
-        console.log(this.userProfile.DisplayName);
     }
 
     loadStoredUserProfile(): void {

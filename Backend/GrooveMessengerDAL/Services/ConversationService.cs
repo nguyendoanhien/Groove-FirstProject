@@ -36,12 +36,12 @@ namespace GrooveMessengerDAL.Services
             _uow.SaveChanges();
         }
 
-        public IndexConversationModel getGetConversationById(Guid id)
-        {
-            var entity = _conRepository.FindBy(x => x.Id == id).Include(i => i.MessageEntity).FirstOrDefault();
-            var result = _mapper.Map<ConversationEntity, IndexConversationModel>(entity);
-            return result;
-        }
+        //public IndexConversationModel getGetConversationById(Guid id)
+        //{
+        //    var entity = _conRepository.FindBy(x => x.Id == id).Include(i => i.MessageEntity).FirstOrDefault();
+        //    var result = _mapper.Map<ConversationEntity, IndexConversationModel>(entity);
+        //    return result;
+        //}
 
         //public IEnumerable<ConversationEntity> GetConversations(string UserId)
         //{

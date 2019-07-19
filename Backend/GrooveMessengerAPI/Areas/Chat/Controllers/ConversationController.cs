@@ -20,18 +20,18 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             _conService = conService;
         }
 
-        GET: api/Conversation
-       [HttpGet("{username}")]
-        public async Task<IActionResult> Get(string username)
-        {
-            if (ModelState.IsValid)
-            {
-                return Ok(await _conService.GetConversations(username));
-            }
-            return BadRequest();
-        }
+       // GET: api/Conversation
+       //[HttpGet("{username}")]
+       // public async Task<IActionResult> Get(string username)
+       // {
+       //     if (ModelState.IsValid)
+       //     {
+       //         return Ok(await _conService.GetConversations(username));
+       //     }
+       //     return BadRequest();
+       // }
 
-        GET: api/Conversation/5
+        //GET: api/Conversation/5
         [HttpGet("{id}", Name = "Get")]
         public string Get(int id)
         {
