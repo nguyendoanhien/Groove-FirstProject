@@ -1,4 +1,5 @@
 using GrooveMessengerDAL.Entities;
+using GrooveMessengerDAL.Models.CustomModel;
 using GrooveMessengerDAL.Models.Message;
 using System;
 using System.Collections.Generic;
@@ -17,5 +18,6 @@ namespace GrooveMessengerDAL.Services.Interface
         void AddMessage(CreateMessageModel msg);
         MessageEntity GetMessageById(Guid id);
         void UpdateStatusMessage(Guid Id);
+        IEnumerable<DialogModel> GetDialogs(Guid ConversationId);
     }
 }
