@@ -5,6 +5,7 @@ using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GrooveMessengerAPI.Hubs
@@ -24,22 +25,48 @@ namespace GrooveMessengerAPI.Hubs
 
         public async Task SendNewContactToUser(HubContact fromUserContact, string toUser)
         {
-            // Do something if needed
+            string username = Context.User.Identity.Name;
+            fromUserContact.ToUser = toUser;
+            if (!connectionStore.GetConnections(toUser).Contains(Context.ConnectionId))
+            {
+                var conn = Context.ConnectionId;
+                connectionStore.Add(toUser, conn);
+            }
+
+
+            
+                
+            
+
+   
+                
+
+            
             foreach (var connectionId in connectionStore.GetConnections(toUser))
             {
                 await Clients.Client(connectionId).SendNewContactToFriend(fromUserContact);
             }
         }
 
+
+
         public override Task OnConnectedAsync()
         {
-            // Do something just related to message hub
+            string name = Context.User.Identity.Name;
+
+            if (!connectionStore.GetConnections(name).Contains(Context.ConnectionId))
+            {
+                var conn = Context.ConnectionId;
+                connectionStore.Add(name, conn);
+            }
             return base.OnConnectedAsync();
         }
 
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            // Do something just related to message hub            
+            string name = Context.User.Identity.Name;
+
+            connectionStore.Remove(name, Context.ConnectionId);
             return base.OnDisconnectedAsync(exception);
         }
     }

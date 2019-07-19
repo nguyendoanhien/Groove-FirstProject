@@ -49,6 +49,13 @@ namespace GrooveMessengerDAL.Services
             return _mapper.Map<IEnumerable<UserInfoEntity>, IEnumerable<IndexUserInfoModel>>(contactList);
         }
 
+
+        void Add(FullContactModel contact)
+        {
+            var con = _mapper.Map<FullContactModel, UserInfoContactEntity>(contact);
+            _userInfoContactRepository.Add(con);
+            _uow.SaveChanges();
+        }
         //public IQueryable<FullContactModel> GetFromUsername(string userName)
         //{
 
