@@ -21,7 +21,6 @@ export const environment = {
     authResetPasswordUrl: authBaseUrl + '/resetpassword',
     authForgotPasswordUrl: authBaseUrl + '/forgotpassword',
     apigetUserInfo: authBaseUrl + '/user',
-    apiUrl: backendUrl + '/api/notes',
     apiContactGetAllInformUrl: apiContactUrl + '/getallcontactinform',
     apiContactGetAllUnknownInformUrl: apiContactUrl + '/getallunknowncontactinform',
     applicationGoogle: {

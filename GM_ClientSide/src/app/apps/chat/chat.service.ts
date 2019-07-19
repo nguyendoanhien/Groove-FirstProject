@@ -98,7 +98,7 @@ export class ChatService implements Resolve<any>
                     const chatContact = this.contacts.concat(this.unknownContacts).find((contact) => {
                         return contact.id === contactId;
                     });
-                    console.log(chatContact);
+
                     const chatData = {
                         chatId: chat.id,
                         dialog: chat.dialog,
@@ -126,7 +126,7 @@ export class ChatService implements Resolve<any>
             // const contact = this.contacts.find((item) => {
             //     return item.id === contactId;
             // });
-            console.log(this.unknownContacts.concat(this.contacts));
+
             const contact = this.unknownContacts.concat(this.contacts).find((item) => {
                 return item.id === contactId;
             });
@@ -270,11 +270,4 @@ export class ChatService implements Resolve<any>
         });
     }
 
-
-
-    // getUserById(id: string): Observable<User> {
-    //     debugger;
-    //     return this._httpClient.get<User>(`${environment.clientAccountController}/${id}`);
-
-    // }
 }

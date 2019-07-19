@@ -95,7 +95,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * @returns {boolean}
      */
     shouldShowContactAvatar(message, i): boolean {
-      
+
         return (
 
             message.who === this.contact.id &&
@@ -171,7 +171,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * Reply
      */
     reply(event): void {
-        debugger;
+
         event.preventDefault();
 
         if (!this.replyForm.form.value.message) {
