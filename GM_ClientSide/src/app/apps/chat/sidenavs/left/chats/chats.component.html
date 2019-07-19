@@ -11,10 +11,10 @@
 
                 <!-- USER AVATAR -->
                 <img (click)="changeLeftSidenavView('user')" src="{{user.avatar}}" class="mat-avatar avatar"
-                    alt="{{user.name}}" />
+                    alt="{{user.displayName}}" />
                 <!-- / USER AVATAR -->
 
-                <mat-icon class="s-16 status" [ngClass]="user.status" [matMenuTriggerFor]="userStatusMenu"></mat-icon>
+                <mat-icon class="s-16 status" [ngClass]="user?.status" [matMenuTriggerFor]="userStatusMenu"></mat-icon>
 
                 <!-- USER STATUS -->
                 <mat-menu id="user-status-menu" #userStatusMenu="matMenu">
@@ -97,9 +97,39 @@
 
     <!-- CHATS CONTENT -->
     <div *fuseIfOnDom [@animateStagger]="{value:'50'}">
+        <!-- UNKNOWN CONTACTS LIST-->
+        <div class="unknown-contact-list" fxLayout="column">
+
+            <div matSubheader>
+                Unknown Contacts
+            </div>
+            <ng-container *ngIf="this.unknownContacts">
+                <button mat-button class="unknownContacts"
+                    *ngFor="let unknownContacts of unknownContacts| filter: searchText"
+                    (click)="getChat(unknownContacts.id)" [@animate]="{value:'*',params:{y:'100%'}}">
+
+                    <div fxLayout="row" fxLayoutAlign="start center">
+
+                        <div class="avatar-wrapper" fxFlex="0 1 auto">
+                            <img src="{{unknownContacts.avatar}}" class="mat-avatar avatar"
+                                alt="{{unknownContacts.displayName}}" />
+                            <mat-icon class="s-16 status" [ngClass]="unknownContacts?.status"></mat-icon>
+                        </div>
+
+                        <div fxLayout="column" fxLayoutAlign="start start">
+                            <div class="unknownContacts-name">{{unknownContacts.displayName}}</div>
+                            <p class="unknownContacts-mood">{{unknownContacts.mood}}</p>
+                        </div>
+
+                    </div>
+
+                </button>
+            </ng-container>
+        </div>
+        <!-- / UNKNOWN CONTACTS LIST-->
 
         <!-- CHATS LIST-->
-        <div class="chat-list" fxLayout="column" *ngIf="this.contacts">
+        <div class="chat-list" fxLayout="column">
 
             <div matSubheader *ngIf="(user.chatList | filter: searchText).length > 0">
                 Chats
@@ -113,14 +143,15 @@
 
                     <div class="avatar-wrapper" fxFlex="0 1 auto" fxLayoutAlign="center center">
                         <img class="avatar" [src]="contacts | getById:chat.contactId:'avatar'"
-                            alt="{{contacts | getById:chat.contactId:'name'}}" />
-                        <mat-icon class="s-16 status" [ngClass]="contacts | getById:chat.contactId:'status'"></mat-icon>
+                            alt="{{contacts | getById:chat.contactId:'displayName'}}" />
+                        <mat-icon class="s-16 status" [ngClass]="contacts | getById:chat.contactId:'status'">
+                        </mat-icon>
                     </div>
 
                     <div fxLayout="row" fxFlex>
 
                         <div class="pr-4" fxFlex fxLayout="column" fxLayoutAlign="center start">
-                            <div class="contact-name">{{contacts | getById:chat.contactId:'name'}}</div>
+                            <div class="contact-name">{{contacts | getById:chat.contactId:'displayName'}}</div>
                             <div class="contact-last-message">{{chat.lastMessage}}</div>
                         </div>
 
@@ -143,34 +174,35 @@
         <!-- CONTACTS LIST-->
         <div class="contact-list" fxLayout="column">
 
-            <div matSubheader *ngIf="(contacts | filter: searchText).length > 0">
+            <div matSubheader>
                 Contacts
             </div>
 
-            <button mat-button class="contact" *ngFor="let contact of contacts| filter: searchText"
-                (click)="getChat(contact.id)" [@animate]="{value:'*',params:{y:'100%'}}">
+            <ng-container *ngIf="this.contacts">
+                <button mat-button class="contact" *ngFor="let contact of contacts| filter: searchText"
+                    (click)="getChat(contact.id)" [@animate]="{value:'*',params:{y:'100%'}}">
 
-                <div fxLayout="row" fxLayoutAlign="start center">
+                    <div fxLayout="row" fxLayoutAlign="start center">
 
-                    <div class="avatar-wrapper" fxFlex="0 1 auto">
-                        <img src="{{contact.avatar}}" class="mat-avatar avatar" alt="{{contact.name}}" />
-                        <mat-icon class="s-16 status" [ngClass]="contact.status"></mat-icon>
+                        <div class="avatar-wrapper" fxFlex="0 1 auto">
+                            <img src="{{contact.avatar}}" class="mat-avatar avatar" alt="{{contact.displayName}}" />
+                            <mat-icon class="s-16 status" [ngClass]="contact?.status"></mat-icon>
+                        </div>
+
+                        <div fxLayout="column" fxLayoutAlign="start start">
+                            <div class="contact-name">{{contact.displayName}}</div>
+                            <p class="contact-mood">{{contact.mood}}</p>
+                        </div>
+
                     </div>
 
-                    <div fxLayout="column" fxLayoutAlign="start start">
-                        <div class="contact-name">{{contact.name}}</div>
-                        <p class="contact-mood">{{contact.mood}}</p>
-                    </div>
-
-                </div>
-
-            </button>
-
+                </button>
+            </ng-container>
         </div>
         <!-- / CONTACTS LIST-->
 
         <!-- NO RESULTS MESSAGE -->
-        <div *ngIf="(contacts | filter: searchText).length === 0" class="no-results-message">
+        <div *ngIf="contacts && (contacts | filter: searchText).length === 0" class="no-results-message">
             No results..
         </div>
         <!-- NO RESULTS MESSAGE-->

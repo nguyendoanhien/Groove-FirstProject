@@ -21,9 +21,9 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     chats: any[];
     chatSearch: any;
     contacts: any[];
+    unknownContacts: any[];
     searchText: string;
     user: any;
-
     // Private
     private _unsubscribeAll: Subject<any>;
 
@@ -62,12 +62,8 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         this.user = this._chatService.user;
         this.chats = this._chatService.chats;
         this.contacts = this._chatService.contacts;
-
-        this._userContactService.getContacts().subscribe(contacts => {
-            this.contacts = contacts;
-            console.log(contacts);
-        }
-        );
+        this.unknownContacts = this._chatService.unknownContacts;
+        console.log(this.unknownContacts);
         this._chatService.onChatsUpdated
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(updatedChats => {
@@ -100,8 +96,8 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      * @param contact
      */
     getChat(contact): void {
-        this._chatService.getChat(contact);
 
+        this._chatService.getChat(contact);
         if (!this._mediaObserver.isActive('gt-md')) {
             this._fuseMatSidenavHelperService.getSidenav('chat-left-sidenav').toggle();
         }

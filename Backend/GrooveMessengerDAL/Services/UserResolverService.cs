@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using GrooveMessengerDAL.Services.Interface;
+using GrooveMessengerDAL.Entities;
 using System;
 using System.Linq;
 

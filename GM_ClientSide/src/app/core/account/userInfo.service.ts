@@ -1,6 +1,7 @@
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 import { UserInfo } from '../../apps/chat/sidenavs/left/user/userInfo.model';
 import { environment } from 'environments/environment';
 import { Observable } from 'rxjs';
@@ -16,7 +17,7 @@ const apiUserUrl = environment.apiUserUrl;
 export class UserInfoService {
 
     constructor(private router: Router,
-                private http: HttpClient) {
+        private http: HttpClient) {
     }
 
     getUserInfo(): Observable<object> {

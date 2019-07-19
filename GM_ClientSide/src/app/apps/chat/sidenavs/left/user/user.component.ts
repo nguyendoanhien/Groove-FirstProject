@@ -12,8 +12,9 @@ import { UserInfoService } from 'app/core/account/userInfo.service';
 })
 export class ChatUserSidenavComponent implements OnInit, OnDestroy {
 
+
     userInfo: UserInfo
-    selectedFile:File = null;
+    selectedFile: File = null;
     // Private
     private _unsubscribeAll: Subject<any>;
 
@@ -28,6 +29,7 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
+
         this.userInfo = new UserInfo();
     }
 
@@ -55,18 +57,17 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
     }
 
     changeDisplayName() {
+
         this._userInfoService.changeDisplayName(this.userInfo).subscribe(res => this.userInfo = res as UserInfo)
+
     }
 
     onUpload(event) {
         this.selectedFile = <File>event.target.files[0];
         var fd = new FormData();
-        fd.append('file',this.selectedFile);
-        this._userInfoService.onUpload(fd).subscribe((res: any) => {
-            this.userInfo.avatar = res.url;
-            this.changeDisplayName();
-        });
-        
+        fd.append('file', this.selectedFile);
+        this._userInfoService.onUpload(fd).subscribe();
+
     }
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
