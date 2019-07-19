@@ -10,11 +10,11 @@
             <div class="avatar-wrapper">
 
                 <!-- USER AVATAR -->
-                <img (click)="changeLeftSidenavView('user')" src="{{user.avatar}}" class="mat-avatar avatar"
-                    alt="{{user.displayName}}" />
+                <img (click)="changeLeftSidenavView('user')" [src]="this._userInfoService.userInfo.avatar" class="mat-avatar avatar"
+                    alt="" />
                 <!-- / USER AVATAR -->
 
-                <mat-icon class="s-16 status" [ngClass]="user?.status" [matMenuTriggerFor]="userStatusMenu"></mat-icon>
+                <mat-icon class="s-16 status" [ngClass]="this._userInfoService.userInfo.status" [matMenuTriggerFor]="userStatusMenu"></mat-icon>
 
                 <!-- USER STATUS -->
                 <mat-menu id="user-status-menu" #userStatusMenu="matMenu">
@@ -33,9 +33,9 @@
                         </div>
                     </button>
 
-                    <button mat-menu-item (click)="setUserStatus('do-not-disturb')">
+                    <button mat-menu-item (click)="setUserStatus('doNotDisturb')">
                         <div fxLayout="row" fxLayoutAlign="start center">
-                            <mat-icon class="s-16 status do-not-disturb"></mat-icon>
+                            <mat-icon class="s-16 status doNotDisturb"></mat-icon>
                             <span>Do not disturb</span>
                         </div>
                     </button>

@@ -8,7 +8,6 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { catchError, retry, map } from 'rxjs/operators';
 import { UserProfileModel } from 'app/account/user-profile/user-profile.model';
-import { UserInfo } from 'app/apps/chat/sidenavs/left/user/userInfo.model';
 
 const loginUrl = environment.authLoginUrl;
 const authGoogleUrl = environment.authGoogleUrl;
@@ -92,7 +91,7 @@ export class UserProfileService {
 
         this.userProfile = userProfileModel;
         this.displayNameSub$.next(this.userProfile.DisplayName);
-        
+
     }
 
     loadStoredUserProfile(): void {
