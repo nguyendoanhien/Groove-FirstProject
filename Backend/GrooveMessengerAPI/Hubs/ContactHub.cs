@@ -4,6 +4,7 @@ using GrooveMessengerAPI.Hubs.Utils;
 using GrooveMessengerDAL.Models.Conversation;
 using GrooveMessengerDAL.Models.Message;
 using GrooveMessengerDAL.Models.Participant;
+using GrooveMessengerDAL.Models.User;
 using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -21,6 +22,7 @@ namespace GrooveMessengerAPI.Hubs
         private IParticipantService _participantService;
         private IUserResolverService _userResolverservice;
         private IMessageService _messageService;
+        private IUserService _userInfoContact;
 
         public ContactHub(
             HubConnectionStore<string> connectionStore,
@@ -28,7 +30,8 @@ namespace GrooveMessengerAPI.Hubs
             IConversationService conversationService,
             IParticipantService participantService,
             IUserResolverService userResolverservice,
-            IMessageService messageService
+            IMessageService messageService,
+            IUserService userInfoContact
             ) 
             : base(connectionStore)
         {
@@ -37,6 +40,7 @@ namespace GrooveMessengerAPI.Hubs
             _participantService = participantService;
             _userResolverservice = userResolverservice;
             _messageService = messageService;
+            _userInfoContact = userInfoContact;
         }
 
 
@@ -63,7 +67,13 @@ namespace GrooveMessengerAPI.Hubs
 
             HubContact contact = new HubContact(Context.User.Identity.Name,Context.ConnectionId);
             HubContact contactToUser = new HubContact(toUser,hub.connId);
-            
+
+            //Create User Info
+            CreateUserInfoModel userInfo = new CreateUserInfoModel(){ UserId = _userResolverservice.CurrentUserId()};
+            _userInfoContact.AddUserInfo(userInfo);
+            CreateUserInfoModel TouserInfo = new CreateUserInfoModel() { UserId = hub.connId };
+            _userInfoContact.AddUserInfo(TouserInfo);
+
             // Create A Conversation
             CreateConversationModel createConversationModel = new CreateConversationModel() { Id = Guid.NewGuid() };
             _conversationService.AddConversation(createConversationModel);
@@ -73,24 +83,16 @@ namespace GrooveMessengerAPI.Hubs
             _messageService.AddMessage(createMessage);
 
             //Add Participant
-            ParticipantModel newPar = new ParticipantModel() { Id = Guid.NewGuid(), ConvId =createConversationModel.Id ,UserId = _userResolverservice.CurrentUserId()};
+            ParticipantModel newPar = new ParticipantModel() { Id = Guid.NewGuid(), ConvId = createConversationModel.Id ,UserId = _userResolverservice.CurrentUserId()};
+            ParticipantModel UserPar = new ParticipantModel() { Id = Guid.NewGuid(), ConvId = createConversationModel.Id, UserId = _userResolverservice.CurrentUserId() };
             _participantService.NewParticipant(newPar);
 
             await Clients.Client(hub.connId).AddNewContact(hub);
 
         }
 
-        public async Task AcceptContact( string toUser, Guid ConversationID)
-        {
-            HubContact contact = new HubContact(Context.User.Identity.Name, Context.ConnectionId);
-
-            ParticipantModel newPar = new ParticipantModel() { Id = Guid.NewGuid(), ConvId = ConversationID, UserId = _userResolverservice.CurrentUserId() };
-            _participantService.NewParticipant(newPar);
-
-
-            await Clients.Client(Context.ConnectionId).AcceptFriend(contact);
-        }
-
+     
+        
         public override Task OnConnectedAsync()
         {
             string name = Context.User.Identity.Name;

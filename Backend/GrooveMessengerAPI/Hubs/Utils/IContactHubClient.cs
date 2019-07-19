@@ -9,7 +9,6 @@ namespace GrooveMessengerAPI.Hubs.Utils
         Task SendNewContactToFriend(string msg);
         Task SendRemoveContactToFriend(string msg);
         Task AddNewContact(HubContact fromUserContact);
-        Task AcceptFriend(HubContact fromUserContact);
         //HubContact fromUserContact
     }
 }
