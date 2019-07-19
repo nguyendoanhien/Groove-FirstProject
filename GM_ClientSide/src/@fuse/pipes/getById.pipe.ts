@@ -4,8 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
     name: 'getById',
     pure: false
 })
-export class GetByIdPipe implements PipeTransform
-{
+export class GetByIdPipe implements PipeTransform {
     /**
      * Transform
      *
@@ -14,19 +13,17 @@ export class GetByIdPipe implements PipeTransform
      * @param {string} property
      * @returns {any}
      */
-    transform(value: any[], id: number, property: string): any
-    {
+    transform(value: any[], id: number, property: string): any {
+
         const foundItem = value.find(item => {
-            if ( item.id !== undefined )
-            {
+            if (item.id !== undefined) {
                 return item.id === id;
             }
 
             return false;
         });
 
-        if ( foundItem )
-        {
+        if (foundItem) {
             return foundItem[property];
         }
     }

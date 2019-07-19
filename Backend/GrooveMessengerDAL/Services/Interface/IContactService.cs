@@ -1,5 +1,4 @@
-﻿using GrooveMessengerDAL.Models.Contact;
-using GrooveMessengerDAL.Models.User;
+﻿using GrooveMessengerDAL.Models.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +9,9 @@ namespace GrooveMessengerDAL.Services.Interface
 {
     public interface IContactService
     {
-        Task<IEnumerable<IndexUserInfoModel>> GetAllContact(string username = null);
-        //IQueryable<FullContactModel> GetFromUsername(string userName);
-        //IQueryable<FullContactModel> GetContacts();
+        Task<IEnumerable<IndexUserInfoModel>> GetUserContact(string username = null);
+        Task<IEnumerable<IndexUserInfoModel>> GetUserUnknownContact(string username = null);
+        Task DeleteContact(string contactId, string username = null);
+        Task AddContact(string contactId, string username = null);
     }
 }

@@ -47,6 +47,54 @@ namespace GrooveMessengerDAL.Services
         }
 
 
+        public IQueryable<UserInfoEntity> GetBy(Expression<Func<UserInfoEntity, bool>> predicate)
+        {
+            IQueryable<UserInfoEntity> result = _userRepository.GetBy(predicate);
+            return result;
+        }
+        public async Task<UserInfoEntity> GetByUsernameAsync(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            var userInfo = this.GetBy(FuncGetByUsername(username)).FirstOrDefault();
+            #region if user doesnot exist in userinfo but in user. Insert with code block here
+            if (user != null && userInfo == null)
+            {
+                AddUserInfo(new CreateUserInfoModel() { UserId = user.Id });
+            }
+            else
+            {
+                userInfo = this.GetBy(FuncGetByUsername(username)).FirstOrDefault();
+            }
+            #endregion
+            return userInfo;
+        }
+        public UserInfoEntity GetByUsername(string username)
+        {
+            var userInfo = this.GetBy(FuncGetByUsername(username)).FirstOrDefault();
+          
+            return userInfo;
+        }
+
+        public async Task<UserInfoEntity> GetUser(Guid id)
+        {
+            return await _userRepository.GetSingleAsync(id);
+
+
+        }
+
+
+        //Delegate Libraries
+
+        Expression<Func<UserInfoEntity,bool>> FuncGetByUsername(string username)
+        {
+            return (data) => data.ApplicationUser.UserName == username;
+        }
+
+        public void Edit(UserInfoEntity entity)
+        {
+            throw new NotImplementedException();
+        }
+
         public void EditUserInfo(EditUserInfoModel userInfo)
         {
             var storedData = _userRepository.GetSingle(userInfo.Id);
@@ -64,5 +112,7 @@ namespace GrooveMessengerDAL.Services
             var result = _mapper.Map<UserInfoEntity, IndexUserInfoModel>(storedData);
             return result;
         }
+
+     
     }
 }

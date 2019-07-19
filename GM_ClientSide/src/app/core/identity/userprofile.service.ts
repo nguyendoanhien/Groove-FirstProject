@@ -8,7 +8,6 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { catchError, retry, map } from 'rxjs/operators';
 import { UserProfileModel } from 'app/account/user-profile/user-profile.model';
-import { UserInfo } from 'app/apps/chat/sidenavs/left/user/userInfo.model';
 
 const loginUrl = environment.authLoginUrl;
 const authGoogleUrl = environment.authGoogleUrl;
@@ -29,7 +28,7 @@ export class UserProfileService {
                 private http: HttpClient) {
         this.userProfile = new UserProfileModel();
     }
-    
+
     public displayNameSub$: Subject<string> = new Subject<string>();
 
     logIn(loginModel: LoginModel): Observable<void> {
@@ -54,7 +53,7 @@ export class UserProfileService {
     logInGoogle(googleAccessToken: string): Subscription {
 
         return this.http.post<string>(authGoogleUrl + `?accessToken=${googleAccessToken}`, null, httpOptions).pipe(
-            map((token: string) => { 
+            map((token: string) => {
                 this.parseJwtToken(token);
                 this.router.navigate(['chat']);
             })
@@ -92,6 +91,7 @@ export class UserProfileService {
 
         this.userProfile = userProfileModel;
         this.displayNameSub$.next(this.userProfile.DisplayName);
+
     }
 
     loadStoredUserProfile(): void {

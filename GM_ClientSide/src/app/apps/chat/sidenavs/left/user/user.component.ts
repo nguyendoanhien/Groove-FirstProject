@@ -13,7 +13,9 @@ import { UserProfileService } from 'app/core/identity/userprofile.service';
 })
 export class ChatUserSidenavComponent implements OnInit, OnDestroy {
 
+
     selectedFile:File = null;
+
     // Private
     private _unsubscribeAll: Subject<any>;
 
@@ -30,6 +32,7 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
 
+
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -40,6 +43,7 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit() {
+
     }
 
     /**
@@ -51,19 +55,21 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
         this._unsubscribeAll.complete();
     }
 
+
     async changeDisplayName() {
         await this._userInfoService.changeDisplayName().subscribe();
         if(this._userInfoService.userInfo.status == 'offline')
             await this._userProfileService.logOut();
+
 
     }
 
     onUpload(event) {
         this.selectedFile = <File>event.target.files[0];
         var fd = new FormData();
-        fd.append('file',this.selectedFile);
+        fd.append('file', this.selectedFile);
         this._userInfoService.onUpload(fd).subscribe();
-        
+
     }
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
