@@ -6,7 +6,10 @@ namespace GrooveMessengerAPI.Hubs.Utils
 {
     public interface IContactHubClient
     {
-        Task SendNewContactToFriend(HubContact fromUserContact);
-        Task SendRemoveContact(HubContact contact);
+        Task SendNewContactToFriend(string msg);
+        Task SendRemoveContactToFriend(string msg);
+        Task AddNewContact(HubContact fromUserContact);
+        Task AcceptFriend(HubContact fromUserContact);
+        //HubContact fromUserContact
     }
 }
