@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using GrooveMessengerDAL.Models.CustomModel;
 
 namespace GrooveMessengerDAL.Services
 {
@@ -94,6 +95,23 @@ namespace GrooveMessengerDAL.Services
             message.SeenBy = "Seen";
             _mesRepository.Edit(message);
             _uow.SaveChanges();
+        }
+
+        public IEnumerable<DialogModel> GetDialogs(Guid ConversationId)
+        {
+            var messageList = _mesRepository.GetAll().Where(x => x.ConversationId == ConversationId).ToList();
+            List<DialogModel> dialogs = new List<DialogModel>();
+            foreach (MessageEntity item in messageList)
+            {
+                DialogModel dialog = new DialogModel()
+                {
+                    Who = item.SenderId,
+                    Message = item.Content,
+                    Time = item.CreatedOn
+                };
+                dialogs.Add(dialog);
+            }
+            return dialogs;
         }
     }
 }
