@@ -34,8 +34,7 @@ export class ChatService implements Resolve<any>
         this.onChatsUpdated = new Subject();
         this.onUserUpdated = new Subject();
         this.onLeftSidenavViewChanged = new Subject();
-        this.onRightSidenavViewChanged = new Subject();
-        this._httpClient.get('https://localhost:44383/api/contact/getchatlist').subscribe(res => console.log(res));
+        this.onRightSidenavViewChanged = new Subject();      
     }
 
     /**
@@ -75,7 +74,6 @@ export class ChatService implements Resolve<any>
         const chatItem = this.user.chatList.find((item) => {
             return item.contactId === contactId;
         });
-
         // Create new chat, if it's not created yet.
         if (!chatItem) {
             this.createNewChat(contactId).then((newChats) => {
@@ -83,16 +81,14 @@ export class ChatService implements Resolve<any>
             });
             return;
         }
-
         return new Promise((resolve, reject) => {
-            this._httpClient.get('api/chat-chats/' + chatItem.id)
+            this._httpClient.get('https://localhost:44383/api/Conversation/dialog/' + chatItem.convId)
                 .subscribe((response: any) => {
-                    const chat = response;
-
+                    const chat = response;   
+                    console.log(chat);                
                     const chatContact = this.contacts.find((contact) => {
-                        return contact.id === contactId;
+                        return contact.userId === contactId;
                     });
-
                     const chatData = {
                         chatId: chat.id,
                         dialog: chat.dialog,
@@ -230,7 +226,7 @@ export class ChatService implements Resolve<any>
      */
     getChats(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this._httpClient.get('api/chat-chats')
+            this._httpClient.get('https://localhost:44383/api/Conversation/dialogs/4f592118-ed4e-432f-bc7c-6bb3b4ff299a')
                 .subscribe((response: any) => {
                     resolve(response);
                 }, reject);

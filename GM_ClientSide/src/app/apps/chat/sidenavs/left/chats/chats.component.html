@@ -147,17 +147,17 @@
             </div>
 
             <button mat-button class="contact" *ngFor="let contact of contacts| filter: searchText"
-                (click)="getChat(contact.id)" [@animate]="{value:'*',params:{y:'100%'}}">
+                (click)="getChat(contact.userId)" [@animate]="{value:'*',params:{y:'100%'}}">
 
                 <div fxLayout="row" fxLayoutAlign="start center">
 
                     <div class="avatar-wrapper" fxFlex="0 1 auto">
-                        <img src="{{contact.avatar}}" class="mat-avatar avatar" alt="{{contact.name}}" />
+                        <img src="{{contact.avatar}}" class="mat-avatar avatar" alt="{{contact.displayName}}" />
                         <mat-icon class="s-16 status" [ngClass]="contact.status"></mat-icon>
                     </div>
 
                     <div fxLayout="column" fxLayoutAlign="start start">
-                        <div class="contact-name">{{contact.name}}</div>
+                        <div class="contact-name">{{contact.displayName}}</div>
                         <p class="contact-mood">{{contact.mood}}</p>
                     </div>
 

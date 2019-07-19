@@ -59,17 +59,15 @@ namespace GrooveMessengerDAL.Services
             }
             return chats;
         }
-
-        public ChatModel GetConversationOfAUser(string UserId)
+        public ChatModel GetConversationOfAUser(string ConversationId)
         {
-            var conversationList = _parRepository.GetAll().Where(x => x.UserId == UserId).Select(x => x.ConversationEntity).FirstOrDefault();
-            var dialogs = _messageService.GetDialogs(conversationList.Id);
+            var dialogs = _messageService.GetDialogs(Guid.Parse(ConversationId));
             ChatModel chatModel = new ChatModel()
             {
-                Id = conversationList.Id.ToString(),
+                Id = ConversationId,
                 Dialog = dialogs.ToList()
             };
             return chatModel;
-        }
+        }     
     }
 }

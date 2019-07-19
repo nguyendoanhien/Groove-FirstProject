@@ -10,6 +10,6 @@ namespace GrooveMessengerDAL.Services.Interface
     {
         void AddConversation(CreateConversationModel createConversation);
         IEnumerable<ChatModel> GetAllConversationOfAUser(string UserId);
-        ChatModel GetConversationOfAUser(string UserId);
+        ChatModel GetConversationOfAUser(string ConversationId);
     }
 }
