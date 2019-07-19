@@ -19,15 +19,13 @@ namespace GrooveMessengerAPI.Areas.Chat.Models.Contact
 
         //email
         public string ToUser { get; set; }
-        public string From { get; set; }
-        public string userId { get; set; }
+        public string connId { get; set; }
 
 
-        public HubContact(string From,string ToUser, string userId)
+        public HubContact(string ToUser,string id)
         {
             this.ToUser = ToUser;
-            this.From = From;
-            this.userId = userId;
+            this.connId = id;
         }
     }
 }

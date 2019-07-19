@@ -61,8 +61,8 @@ namespace GrooveMessengerAPI.Hubs
         public  async Task AddContact(HubContact hub, string toUser)
         {
 
-            HubContact contact = new HubContact(Context.User.Identity.Name);
-            HubContact contactToUser = new HubContact(toUser);
+            HubContact contact = new HubContact(Context.User.Identity.Name,Context.ConnectionId);
+            HubContact contactToUser = new HubContact(toUser,hub.connId);
             
             // Create A Conversation
             CreateConversationModel createConversationModel = new CreateConversationModel() { Id = Guid.NewGuid() };
@@ -76,26 +76,19 @@ namespace GrooveMessengerAPI.Hubs
             ParticipantModel newPar = new ParticipantModel() { Id = Guid.NewGuid(), ConvId =createConversationModel.Id ,UserId = _userResolverservice.CurrentUserId()};
             _participantService.NewParticipant(newPar);
 
+            await Clients.Client(hub.connId).AddNewContact(hub);
 
-            foreach (var connectionId in connectionStore.GetConnections(toUser))
-            {
-                await Clients.Client(connectionId).AddNewContact(hub);
-
-            }
         }
 
-        public async Task AcceptContact(HubContact hub, string toUser, CreateConversationModel createConversationModel)
+        public async Task AcceptContact( string toUser, Guid ConversationID)
         {
-            ParticipantModel newPar = new ParticipantModel() { Id = Guid.NewGuid(), ConvId = createConversationModel.Id, UserId = _userResolverservice.CurrentUserId() };
+            HubContact contact = new HubContact(Context.User.Identity.Name, Context.ConnectionId);
+
+            ParticipantModel newPar = new ParticipantModel() { Id = Guid.NewGuid(), ConvId = ConversationID, UserId = _userResolverservice.CurrentUserId() };
             _participantService.NewParticipant(newPar);
 
-            _messageService.GetAllMsg();
 
-            foreach (var connectionId in connectionStore.GetConnections(toUser))
-            {
-                await Clients.Client(connectionId).AddNewContact(hub);
-
-            }
+            await Clients.Client(Context.ConnectionId).AcceptFriend(contact);
         }
 
         public override Task OnConnectedAsync()
