@@ -15,6 +15,7 @@ using GrooveMessengerDAL.Data;
 using GrooveMessengerAPI.Auth;
 using GrooveMessengerDAL.Services.Interface;
 using GrooveMessengerDAL.Services;
+using System.Linq;
 
 namespace GrooveMessengerAPI
 {
@@ -66,9 +67,9 @@ namespace GrooveMessengerAPI
                               .AllowCredentials();
                    });
             });
-          
+     
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+           
             RegisterAuth(services);
             RegisterIdentity(services);
             RegisterAutoMapperProfiles(services);

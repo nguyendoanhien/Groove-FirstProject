@@ -1,4 +1,5 @@
 using GrooveMessengerAPI.Controllers;
+using GrooveMessengerDAL.Models.Contact;
 using GrooveMessengerDAL.Models.User;
 using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,6 +16,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
+    [ApiController]
     public class ContactController : ApiControllerBase
     {
         private IContactService _contactService;
@@ -22,7 +24,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         public ContactController(
             IContactService contactService,
 
-            IUserResolverService userResolver) 
+            IUserResolverService userResolver)
             : base(userResolver)
         {
             _contactService = contactService;
@@ -40,27 +42,30 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             return Ok(await _contactService.GetUserUnknownContact());
         }
         [HttpDelete("deleteactactinform")]
-       
-        public async Task<IActionResult> DeleteContact([FromBody]string contactId)
+
+        public IActionResult DeleteContact([FromBody]DeleteContactModel deleteContactModel)
         {
+           
             try
             {
-                await  _contactService.DeleteContact(contactId);
+                 _contactService.DeleteContact(deleteContactModel);
                 return Ok("Success");
             }
             catch
             {
                 return BadRequest("Failed");
             }
-            
+
         }
 
         [HttpPost("addContact")]
-        public async Task<IActionResult> AddContact([FromBody] string contactId)
+        public IActionResult AddContact([FromBody] AddContactModel addContactModel)
         {
+        
             try
             {
-                await _contactService.AddContact(contactId);
+                _contactService.AddContact(addContactModel);
+
                 return Ok("Success");
             }
             catch
@@ -68,5 +73,26 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                 return BadRequest("Failed");
             }
         }
+
+        [HttpPut("editContact")]
+        public IActionResult EditContact(string contactId, [FromBody] EditContactModel editContactModel)
+        {
+          
+
+            if (contactId != editContactModel.ContactId) return BadRequest();
+            
+
+            try
+            {
+
+                _contactService.EditContact(editContactModel);
+                return Ok("Success");
+            }
+            catch
+            {
+                return BadRequest("Failed");
+            }
+        }
+
     }
 }

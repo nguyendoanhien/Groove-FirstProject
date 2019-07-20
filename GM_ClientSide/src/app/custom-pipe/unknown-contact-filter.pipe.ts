@@ -1,8 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { FuseUtils } from '@fuse/utils';
-
-@Pipe({ name: 'filter' })
-export class FilterPipe implements PipeTransform {
+@Pipe({ name: 'unknownContactFilter' })
+export class UnknownContactFilterPipe implements PipeTransform {
     /**
      * Transform
      *
@@ -12,8 +10,8 @@ export class FilterPipe implements PipeTransform {
      * @returns {any}
      */
     transform(mainArr: any[], searchText: string, property: string): any {
-        debugger;
-
-        return FuseUtils.filterArrayByString(mainArr, searchText);
+        return mainArr.filter(itemObj => {
+            return itemObj['displayName'].toLowerCase().includes(searchText.toLowerCase());
+        });
     }
 }
