@@ -245,6 +245,13 @@ namespace GrooveMessengerDAL.Repositories
 
             while (reader.Read())
             {
+                if(typeof(TResult).IsPrimitive || typeof(TResult) == typeof(String) || typeof(TResult) == typeof(int))
+                {
+                    var value = (TResult)reader[0];
+                    results.Add(value);
+                    continue;
+                }               
+
                 var item = Activator.CreateInstance<TResult>();
                 foreach (var property in properties)
                 {

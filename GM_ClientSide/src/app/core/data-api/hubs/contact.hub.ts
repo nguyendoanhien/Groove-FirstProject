@@ -20,7 +20,7 @@ export class ContactHubService implements OnInit {
     public startConnection = () => {
         const securityToken = this.authService.getToken();
         this._hubConnection = new signalR.HubConnectionBuilder()
-            .withUrl('https://localhost:44330/contactub', { accessTokenFactory: () => securityToken })
+            .withUrl('https://localhost:44330/contacthub', { accessTokenFactory: () => securityToken })
             .build();
 
         this._hubConnection

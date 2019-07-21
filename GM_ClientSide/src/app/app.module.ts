@@ -29,7 +29,7 @@ import { AuthService } from './core/auth/auth.service';
 import { AuthRouteGuardService } from './core/auth/authrouteguard.service';
 import { ResetPasswordService } from './core/account/reset-password.service';
 import { RegisterService } from './core/account/register.service';
-import {ChatHubService} from './core/data-api/hubs/chat.hub';
+import { MessageHubService } from './core/data-api/hubs/message.hub';
 import { UserInfoService } from './core/account/userInfo.service';
 import { UserContactService } from './core/account/user-contact.service';
 
@@ -84,7 +84,7 @@ import { UserContactService } from './core/account/user-contact.service';
         UserInfoService,
         ResetPasswordService,
         UserContactService,
-        ChatHubService
+        MessageHubService
     ]
 
 })

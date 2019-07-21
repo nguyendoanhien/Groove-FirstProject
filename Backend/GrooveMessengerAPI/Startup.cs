@@ -78,6 +78,7 @@ namespace GrooveMessengerAPI
 
             // Register SignalR
             services.AddSignalR();
+            services.AddScoped<UserProfileHub, UserProfileHub>();
             services.AddScoped<IAuthEmailSenderUtil, AuthEmailSenderUtil>();
         }
 
@@ -109,17 +110,9 @@ namespace GrooveMessengerAPI
 
             RegisterMiddlewares(app);
             SeedRootUserDatabase(serviceProvider);
-            // Using SignalR
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<MessageHub>("/chatHub");
-                routes.MapHub<UserProfileHub>("/profileHub");
 
-            });
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<MessageHub>("/contactHub");
-            });
+            // Using SignalR
+            RegisterHub(app);
 
             app.UseMvc(routes =>
             {

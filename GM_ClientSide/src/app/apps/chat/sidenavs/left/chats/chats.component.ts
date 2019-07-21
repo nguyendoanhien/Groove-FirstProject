@@ -42,11 +42,11 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      * @param {MediaObserver} _mediaObserver
      */
     constructor(
-        private _userProfileService: UserProfileService,
-        private _chatService: ChatService,
+        public _userProfileService: UserProfileService,
+        public _chatService: ChatService,
         private _fuseMatSidenavHelperService: FuseMatSidenavHelperService,
         public _mediaObserver: MediaObserver,
-        private _userInfoService: UserInfoService,
+        public _userInfoService: UserInfoService,
     ) {
         // Set the defaults
         this.chatSearch = {

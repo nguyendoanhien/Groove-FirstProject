@@ -89,9 +89,7 @@ namespace GrooveMessengerAPI.Hubs
 
             await Clients.Client(hub.connId).AddNewContact(hub);
 
-        }
-
-     
+        }     
         
         public override Task OnConnectedAsync()
         {

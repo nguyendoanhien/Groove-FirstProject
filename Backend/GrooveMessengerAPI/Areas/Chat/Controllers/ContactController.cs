@@ -34,7 +34,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         [HttpGet("getallcontactinform")]
         public async Task<IActionResult> Get()
         {
-            return Ok(await _contactService.GetUserContact());
+            return Ok(await _contactService.GetUserContactList());
         }
         [HttpGet("getallunknowncontactinform")]
         public async Task<IActionResult> GetUnknown()

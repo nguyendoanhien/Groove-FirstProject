@@ -44,7 +44,7 @@ namespace GrooveMessengerDAL.Services
             _userManager = userManager;
             _userService = userService;
         }
-        public async Task<IEnumerable<IndexUserInfoModel>> GetUserContact(string username = null)
+        public async Task<IEnumerable<IndexUserInfoModel>> GetUserContactList(string username = null)
         {
             // Not good as connecting to database to get data three times
             // Replace by calling Stored Procedure
@@ -53,16 +53,31 @@ namespace GrooveMessengerDAL.Services
             //var currentUserInform = _userInfoRepository.GetBy(x => x.UserId == currentUser.Id.ToString()).FirstOrDefault();
             //var contactList = _userInfoContactRepository.GetBy(x => x.UserId == currentUserInform.Id).Include(inc => inc.ContactInfo).Select(x => x.ContactInfo);
 
-            var spName = "[dbo].[usp_GetContactInfoList]";
+            var spName = "[dbo].[usp_GetUserContactList]";
             var parameter =
                 new SqlParameter
                 {
                     ParameterName = "UserInfoId",
                     SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
-                    SqlValue = _userResolverService.CurrentUserInfoId()
+                    SqlValue = string.IsNullOrEmpty(username) ? _userResolverService.CurrentUserInfoId() : username
                 };
 
             var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<IndexUserInfoModel>(spName, parameter);
+            return contactList;
+        }
+
+        public async Task<IEnumerable<string>> GetUserContactEmailList(string username = null)
+        {
+            var spName = "[dbo].[usp_GetUserContactEmailList]";
+            var parameter =
+                new SqlParameter
+                {
+                    ParameterName = "UserInfoId",
+                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                    SqlValue = string.IsNullOrEmpty(username) ? _userResolverService.CurrentUserInfoId() : username
+                };
+
+            var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<string>(spName, parameter);
             return contactList;
         }
 
