@@ -116,6 +116,10 @@ namespace GrooveMessengerAPI
                 routes.MapHub<UserProfileHub>("/profileHub");
 
             });
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<MessageHub>("/contactHub");
+            });
 
             app.UseMvc(routes =>
             {

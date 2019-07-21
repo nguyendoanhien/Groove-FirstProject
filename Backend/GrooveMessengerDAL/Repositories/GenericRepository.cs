@@ -14,6 +14,8 @@ using System.Data;
 using System.Reflection;
 using System.Collections;
 using System.Data.Common;
+using static GrooveMessengerDAL.Entities.UserInfoEntity;
+using GrooveMessengerDAL.Models.User;
 
 namespace GrooveMessengerDAL.Repositories
 {
@@ -217,7 +219,7 @@ namespace GrooveMessengerDAL.Repositories
                 }
             }
         }
-        
+
         private string BuildSqlExecutionStatement(string storedProcedureName, SqlParameter[] parameters)
         {
             var spSignature = new StringBuilder();
@@ -248,8 +250,21 @@ namespace GrooveMessengerDAL.Repositories
                 {
                     if (!reader.IsDBNull(reader.GetOrdinal(property.Name)))
                     {
-                        Type convertTo = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-                        property.SetValue(item, Convert.ChangeType(reader[property.Name], convertTo), null);
+
+                        var attrs = System.Attribute.GetCustomAttributes(property);
+                        if (attrs.Any(x => x is MapBy))
+                        {
+                            var enumType = typeof(StatusName);
+                            var currentValue = reader[property.Name];
+                            var enumValue = Enum.Parse(enumType, currentValue.ToString());
+                            var convertedValue = enumValue.ToString();
+                            property.SetValue(item, convertedValue);
+                        }
+                        else
+                        {
+                            var convertTo = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                            property.SetValue(item, Convert.ChangeType(reader[property.Name], convertTo), null);
+                        }
                     }
                 }
                 results.Add(item);

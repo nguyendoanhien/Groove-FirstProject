@@ -5,6 +5,8 @@ import { takeUntil } from 'rxjs/operators';
 import { fuseAnimations } from '@fuse/animations';
 
 import { ChatService } from './chat.service';
+import * as signalR from '@aspnet/signalr';
+import { HubConnection } from '@aspnet/signalr';
 
 @Component({
     selector     : 'chat',
@@ -19,6 +21,8 @@ export class ChatComponent implements OnInit, OnDestroy
 
     // Private
     private _unsubscribeAll: Subject<any>;
+    private _hubConnection: HubConnection | undefined;
+
 
     /**
      * Constructor
@@ -27,6 +31,7 @@ export class ChatComponent implements OnInit, OnDestroy
      */
     constructor(
         private _chatService: ChatService
+
     )
     {
         // Set the private defaults
@@ -47,6 +52,13 @@ export class ChatComponent implements OnInit, OnDestroy
             .subscribe(chatData => {
                 this.selectedChat = chatData;
             });
+        this._hubConnection = new signalR.HubConnectionBuilder()
+            .withUrl('https://localhost:44383/contactHub')
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        
+          
     }
 
     /**
