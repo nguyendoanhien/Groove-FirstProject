@@ -95,11 +95,5 @@ namespace GrooveMessengerDAL.Services
             _mesRepository.Edit(message);
             _uow.SaveChanges();
         }
-
-        public void GetAllMsg()
-        {
-            var msgs = _mesRepository.GetAll();
-            _uow.SaveChanges();
-        }
     }
 }

@@ -29,7 +29,7 @@ namespace GrooveMessengerDAL.Services
             return _parRepository.GetBy(x => x.UserId == UserId).Select(x=>x.ConversationId).Distinct().ToList();
         }
 
-        public void AddParticipant(ParticipantModel participantModel)
+        public void NewParticipant(ParticipantModel participantModel)
         {
             var par = _mapper.Map<ParticipantModel, ParticipantEntity>(participantModel);
             _parRepository.Add(par);

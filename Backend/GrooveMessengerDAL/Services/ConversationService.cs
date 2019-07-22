@@ -15,6 +15,7 @@ namespace GrooveMessengerDAL.Services
     public class ConversationService: IConversationService
     {
         private IGenericRepository<ConversationEntity, Guid, GrooveMessengerDbContext> _conRepository;
+        private IGenericRepository<MessageEntity, Guid, GrooveMessengerDbContext> _mesRepository;
         private IMapper _mapper;
         private IUowBase<GrooveMessengerDbContext> _uow;
         private ParticipantService _participantService;
@@ -32,6 +33,7 @@ namespace GrooveMessengerDAL.Services
             _conRepository.Add(mes);
             _uow.SaveChanges();
         }
+
 
         public IEnumerable<ConversationEntity> GetConversations(string UserId)
         {
