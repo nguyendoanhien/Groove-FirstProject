@@ -34,11 +34,6 @@ export class ContactHubService implements OnInit {
             return console.error(err.toString());
         });
     }
-    public addAcceptFriend(replyMessage:string, toUser: string) {
-        this._hubConnection.invoke("AcceptFriend", replyMessage, toUser).catch(function (err) {
-            return console.error(err.toString());
-        });
-    }
     
     ngOnInit() {
         this._hubConnection.on('SendNewContactToFriend', (contact: ContactModel) => {
