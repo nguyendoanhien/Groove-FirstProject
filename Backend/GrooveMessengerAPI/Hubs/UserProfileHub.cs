@@ -1,6 +1,8 @@
 ﻿using GrooveMessengerAPI.Areas.Chat.Models;
 using GrooveMessengerAPI.Hubs.Utils;
 using GrooveMessengerDAL.Services.Interface;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace GrooveMessengerAPI.Hubs
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UserProfileHub : HubBase<IUserProfileHubClient>
     {
 
@@ -18,9 +21,10 @@ namespace GrooveMessengerAPI.Hubs
         }
 
 
-        public async Task ChangeUserProfile(UserProfile userProfile)
+        public async  Task ChangeUserProfile(UserProfile userProfile)
         {
-            await Clients.All.ChangeUserProfile(userProfile);
+            await Clients.All.UserProfile(userProfile);
+
         }
 
         public override Task OnConnectedAsync()

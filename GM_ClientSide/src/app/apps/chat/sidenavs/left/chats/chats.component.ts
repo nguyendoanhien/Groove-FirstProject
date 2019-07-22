@@ -8,9 +8,9 @@ import { FuseMatSidenavHelperService } from '@fuse/directives/fuse-mat-sidenav/f
 
 import { ChatService } from '../../../chat.service';
 import { UserProfileService } from 'app/core/identity/userprofile.service';
-import { UserContactService } from 'app/core/account/user-contact.service';
 import { UserInfoService } from 'app/core/account/userInfo.service';
-
+import { HubConnection } from '@aspnet/signalr';
+import { UserInfo } from '../user/userInfo.model';
 @Component({
     selector: 'chat-chats-sidenav',
     templateUrl: './chats.component.html',
@@ -25,9 +25,11 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     unknownContacts: any[];
     searchText: string;
     user: any;
+
+
     // Private
     private _unsubscribeAll: Subject<any>;
-
+    private _hubConnection: HubConnection | undefined;
     /**
      * Constructor
      *
@@ -50,6 +52,15 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 
         // Set the private defaults
         this._unsubscribeAll = new Subject();
+
+
+
+    }
+
+    public changeProfile(user: UserInfo) {
+        this._hubConnection.invoke("ChangeUserProfile", user).catch(function (err) {
+            return console.error(err.toString());
+        });
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -63,6 +74,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 
 
         this.initGetUserInfo();
+
 
         this.user = this._chatService.user;
         this.chats = this._chatService.chats;
@@ -83,14 +95,8 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             });
     }
 
-    // async ngDoCheck() {
-    //     if(this._userInfoService.userInfo.status == 'offline')
-    //     {   
-    //         console.log(this._userInfoService.userInfo)
-    //         this._userInfoService.userInfo.status = 'online';
-    //         await this._userInfoService.changeDisplayName().subscribe();
-    //     }
-    // }
+
+
 
     initGetUserInfo() {
         this._userInfoService.getUserInfo().subscribe(res => {
@@ -134,7 +140,8 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      */
     async setUserStatus(status) {
         this._userInfoService.userInfo.status = status;
-        await this._userInfoService.changeDisplayName().subscribe();
+        await this._userInfoService.changeDisplayName().subscribe(
+        );
         if (status === 'offline')
             await this._userProfileService.logOut();
     }
