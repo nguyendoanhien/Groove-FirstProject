@@ -78,7 +78,8 @@
 
                 <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
                     <mat-icon class="s-16 secondary-text">search</mat-icon>
-                    <input [(ngModel)]="searchText" type="text" placeholder="Search or start new chat" fxFlex>
+                    <input [(ngModel)]="searchText" type="text" placeholder="Search or start new chat" fxFlex
+                        (input)="CountData()">
                 </div>
 
             </div>
@@ -99,15 +100,17 @@
     <!-- CHATS CONTENT -->
     <div *fuseIfOnDom [@animateStagger]="{value:'50'}">
         <!-- UNKNOWN CONTACTS LIST-->
-        <div class="unknown-contact-list" fxLayout="column">
+        <div class="unknown-contact-list" fxLayout="column"
+            *ngIf="currentSumLength<=3 && searchText.length>0&&currentUnknownContactLength>0">
 
             <div matSubheader>
                 Unknown Contacts
+
             </div>
             <ng-container *ngIf="this.unknownContacts">
                 <button mat-button class="unknownContacts"
-                    *ngFor="let unknownContacts of unknownContacts| filter: searchText"
-                    (click)="getChat(unknownContacts.id)" [@animate]="{value:'*',params:{y:'100%'}}">
+                    *ngFor="let unknownContacts of unknownContacts| unknownContactFilter: searchText"
+                    (click)="getChat(unknownContacts.id)" [@animate]="{value:'*',params:{y:'100%'}}" #someVar>
 
                     <div fxLayout="row" fxLayoutAlign="start center">
 
@@ -136,9 +139,10 @@
                 Chats
             </div>
 
-            <button mat-button class="contact" *ngFor="let chat of user.chatList | filter: searchText"
+            <button mat-button class="contact" *ngFor="let chat of user.chatList | filter: searchText as vars"
                 (click)="getChat(chat.contactId)" ngClass="{'unread':contact.unread}"
                 [@animate]="{value:'*',params:{y:'100%'}}">
+
 
                 <div fxLayout="row" fxLayoutAlign="start center">
 
@@ -159,6 +163,7 @@
                         <div fxLayout="column" fxLayoutAlign="start end">
                             <div class="contact-last-message-time">
                                 {{chat.lastMessageTime | date}}
+
                             </div>
                             <div *ngIf="chat.unread" class="mt-4 unread-message-count accent">{{chat.unread}}</div>
                         </div>

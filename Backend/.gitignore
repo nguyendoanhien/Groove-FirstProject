@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/Backend
+/GrooveNoteAPI/bin/Debug/netcoreapp2.2
+/GrooveNoteAPI/obj
+/GrooveNoteDAL/bin/Debug/netcoreapp2.2
+/GrooveNoteDAL/obj

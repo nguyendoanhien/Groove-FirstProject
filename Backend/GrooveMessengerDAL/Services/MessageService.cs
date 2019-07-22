@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using GrooveMessengerDAL.Models.CustomModel;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace GrooveMessengerDAL.Services
 {
@@ -74,12 +75,19 @@ namespace GrooveMessengerDAL.Services
             return result;
         }
 
-
         public void AddMessage(CreateMessageModel msg)
         {
             var mes = _mapper.Map<CreateMessageModel, MessageEntity>(msg);
             _mesRepository.Add(mes);
             _uow.SaveChanges();
+        }
+
+        public async Task<IndexMessageModel> AddMessageAsync(CreateMessageModel msg)
+        {          
+            var mes = _mapper.Map<CreateMessageModel, MessageEntity>(msg);
+            var addedMessage = await _mesRepository.AddAsync(mes);
+            _uow.SaveChangesAsync();
+            return _mapper.Map<MessageEntity,IndexMessageModel>(addedMessage.Entity);
         }
 
         public MessageEntity GetMessageById(Guid Id)
@@ -96,7 +104,6 @@ namespace GrooveMessengerDAL.Services
             _mesRepository.Edit(message);
             _uow.SaveChanges();
         }
-
         public IEnumerable<DialogModel> GetDialogs(Guid ConversationId)
         {
             var messageList = _mesRepository.GetAll().Where(x => x.ConversationId == ConversationId).ToList();
@@ -113,5 +120,11 @@ namespace GrooveMessengerDAL.Services
             }
             return dialogs;
         }
+        public void GetAllMsg()
+        {
+            var msgs = _mesRepository.GetAll();
+            _uow.SaveChanges();
+        }
+
     }
 }

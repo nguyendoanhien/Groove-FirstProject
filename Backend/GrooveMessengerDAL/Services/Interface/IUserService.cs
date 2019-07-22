@@ -20,6 +20,7 @@ namespace GrooveMessengerDAL.Services.Interface
         void Edit(UserInfoEntity entity);
      
         void EditUserInfo(EditUserInfoModel userInfo);
+
         IndexUserInfoModel GetUserInfo(string userId);
         Task<IEnumerable<IndexUserInfoModel>> GetAllUserInfo();
     }

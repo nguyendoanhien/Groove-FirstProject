@@ -1,5 +1,6 @@
 
 using System;
+using System.Threading.Tasks;
 using GrooveMessengerAPI.Areas.Chat.Models;
 using GrooveMessengerAPI.Controllers;
 using GrooveMessengerAPI.Models;
@@ -101,16 +102,15 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
 
 
         [HttpPost("addmessage")]
-        public IActionResult Post([FromBody] CreateMessageModel createMessageModel)
+        public async Task<ActionResult<IndexMessageModel>> Post([FromBody] CreateMessageModel createMessageModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
             else
-            {
-                _mesService.AddMessage(createMessageModel);
-                return Ok();
+            {               
+                return await _mesService.AddMessageAsync(createMessageModel);
             }
         }
 

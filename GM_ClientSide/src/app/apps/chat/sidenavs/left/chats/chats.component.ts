@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation, ViewChildren } from '@angular/core';
 import { MediaObserver } from '@angular/flex-layout';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -9,6 +9,8 @@ import { FuseMatSidenavHelperService } from '@fuse/directives/fuse-mat-sidenav/f
 import { ChatService } from '../../../chat.service';
 import { UserProfileService } from 'app/core/identity/userprofile.service';
 import { UserContactService } from 'app/core/account/user-contact.service';
+import { UnknownContactFilterPipe } from 'app/custom-pipe/unknown-contact-filter.pipe';
+import { FilterPipe } from '@fuse/pipes/filter.pipe';
 import { UserInfoService } from 'app/core/account/userInfo.service';
 
 @Component({
@@ -25,6 +27,10 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     unknownContacts: any[];
     searchText: string;
     user: any;
+    @ViewChildren('someVar') filteredItems;
+
+    currentSumLength: number;
+    currentUnknownContactLength: number;
     // Private
     private _unsubscribeAll: Subject<any>;
 
@@ -36,11 +42,11 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      * @param {MediaObserver} _mediaObserver
      */
     constructor(
-        private _userProfileService: UserProfileService,
-        private _chatService: ChatService,
+        public _userProfileService: UserProfileService,
+        public _chatService: ChatService,
         private _fuseMatSidenavHelperService: FuseMatSidenavHelperService,
         public _mediaObserver: MediaObserver,
-        private _userInfoService: UserInfoService,
+        public _userInfoService: UserInfoService,
     ) {
         // Set the defaults
         this.chatSearch = {
@@ -85,7 +91,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 
     // async ngDoCheck() {
     //     if(this._userInfoService.userInfo.status == 'offline')
-    //     {   
+    //     {
     //         console.log(this._userInfoService.userInfo)
     //         this._userInfoService.userInfo.status = 'online';
     //         await this._userInfoService.changeDisplayName().subscribe();
@@ -155,6 +161,17 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         this._userInfoService.userInfo.status = 'offline';
         await this._userInfoService.changeDisplayName().subscribe()
         this._userProfileService.logOut();
+
+    }
+
+    CountData() {
+        const pipe = new FilterPipe();
+        const unknownContactPipe = new UnknownContactFilterPipe();
+        let arrayContact = pipe.transform(this.user.chatList, this.searchText, '') as Array<any>;
+        let arrayChat = pipe.transform(this.contacts, this.searchText, '') as Array<any>;
+        this.currentSumLength = arrayChat.length + arrayContact.length;
+        let arrayUnknownContact = unknownContactPipe.transform(this.unknownContacts, this.searchText, '') as Array<any>;
+        this.currentUnknownContactLength = arrayUnknownContact.length;
 
     }
 }

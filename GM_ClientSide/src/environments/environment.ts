@@ -5,8 +5,10 @@
 const backendUrl = 'https://localhost:44383';
 const authBaseUrl = backendUrl + '/Identity/ClientAccount';
 const apiContactUrl = backendUrl + '/api/contact';
+const apiConvUrl = backendUrl + '/api/conversation';
+const apiMessageUrl = backendUrl + '/api/message'
 const apiBaseUrl = backendUrl + '/api';
-
+const messageHubUrl = backendUrl + '/messagehub';
 export const environment = {
     production: false,
     hmr: false,
@@ -23,6 +25,9 @@ export const environment = {
     apigetUserInfo: authBaseUrl + '/user',
     apiContactGetAllInformUrl: apiContactUrl + '/getallcontactinform',
     apiContactGetAllUnknownInformUrl: apiContactUrl + '/getallunknowncontactinform',
+    apiGetChatListByConvId: apiConvUrl + '/dialog/',
+    apiAddNewMessage: apiMessageUrl + '/addmessage',
+    messageHubUrl: messageHubUrl,
     applicationGoogle: {
         clientId: '687824117544-nvc2uojbm14hc330gl8qh3lsrtl3tc4a.apps.googleusercontent.com',
         clientSecret: 'ugBBsDjYS-Rz20RVlx9r7Blo'
@@ -37,6 +42,9 @@ export const environment = {
     cloudinary: {
         url: 'https://api.cloudinary.com/v1_1/groovemessenger/upload',
         upload_preset: 'qlbjv3if'
+    },
+    hub: {
+        profileUrl: backendUrl + '/profileHub'
     }
 };
 

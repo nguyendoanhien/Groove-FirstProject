@@ -19,6 +19,7 @@ import { ChatUserSidenavComponent } from './sidenavs/left/user/user.component';
 import { ChatLeftSidenavComponent } from './sidenavs/left/left.component';
 import { ChatRightSidenavComponent } from './sidenavs/right/right.component';
 import { ChatContactSidenavComponent } from './sidenavs/right/contact/contact.component';
+import { ProfileHubService } from 'app/core/data-api/hubs/profile.hub';
 
 @NgModule({
     declarations: [
@@ -45,7 +46,8 @@ import { ChatContactSidenavComponent } from './sidenavs/right/contact/contact.co
         FuseSharedModule
     ],
     providers   : [
-        ChatService
+        ChatService,
+        ProfileHubService
     ]
 })
 export class ChatModule

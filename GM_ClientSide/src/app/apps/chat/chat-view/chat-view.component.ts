@@ -7,6 +7,10 @@ import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scr
 
 import { ChatService } from '../chat.service';
 
+import { MessageModel } from 'app/models/message.model';
+import { MessageService} from 'app/core/data-api/services/message.service';
+import { IndexMessageModel } from 'app/models/indexMessage.model';
+
 @Component({
     selector: 'chat-view',
     templateUrl: './chat-view.component.html',
@@ -17,6 +21,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     user: any;
     chat: any;
     dialog: any;
+    chatId: string; // conversation id
     contact: any;
     replyInput: any;
     selectedChat: any;
@@ -37,9 +42,11 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * Constructor
      *
      * @param {ChatService} _chatService
+     * @param {MessageService} _messageService
      */
     constructor(
-        private _chatService: ChatService
+        private _chatService: ChatService,
+        private _messageService: MessageService
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
@@ -61,6 +68,15 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.selectedChat = chatData;
                     this.contact = chatData.contact;
                     this.dialog = chatData.dialog;
+                    this.chatId = chatData.chatId; // current conversation id
+
+                    this._chatService._messageHub.newChatMessage.subscribe((message: MessageModel) => {
+                        if (message) {
+                            if(this.chatId===message.fromConv){
+                                this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time });
+                            }                         
+                        }
+                    })
                     this.readyToReply();
                 }
             });
@@ -180,11 +196,17 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
         // Message
         const message = {
-            who: this.user.id,
+            who: this.user.userId,
             message: this.replyForm.form.value.message,
             time: new Date().toISOString()
         };
-
+        var newMessage: IndexMessageModel = new IndexMessageModel(this.chatId,this.user.userId,null,message.message,'Text');
+        this._messageService.addMessage(newMessage).subscribe((addedMessage:IndexMessageModel)=>{
+            console.log(addedMessage);
+            var messageToSend: MessageModel = new MessageModel(addedMessage.conversationId,addedMessage.senderId,addedMessage.id,addedMessage.content,addedMessage.createdOn);
+            console.log(MessageModel);
+            this._chatService._messageHub.addSendMessageToUser(messageToSend, this.selectedChat.contact.userId);
+        });
         // Add the message to the chat
         this.dialog.push(message);
 

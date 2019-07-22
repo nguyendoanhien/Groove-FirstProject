@@ -1,6 +1,7 @@
 using GrooveMessengerDAL.Entities;
 using GrooveMessengerDAL.Models.CustomModel;
 using GrooveMessengerDAL.Models.Message;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace GrooveMessengerDAL.Services.Interface
         void DeleteMessage(Guid id);
         IEnumerable<MessageEntity> loadMoreMessages(int pageNumber, int pageSize);
         void AddMessage(CreateMessageModel msg);
+        Task<IndexMessageModel> AddMessageAsync(CreateMessageModel msg);
         MessageEntity GetMessageById(Guid id);
         void UpdateStatusMessage(Guid Id);
         IEnumerable<DialogModel> GetDialogs(Guid ConversationId);
