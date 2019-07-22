@@ -45,14 +45,7 @@ namespace GrooveMessengerDAL.Services
             _userService = userService;
         }
         public async Task<IEnumerable<IndexUserInfoModel>> GetUserContactList(string username = null)
-        {
-            // Not good as connecting to database to get data three times
-            // Replace by calling Stored Procedure
-
-            //var currentUser = username == null ? await _userManager.FindByEmailAsync(_userResolverService.CurrentUserName()) : await _userManager.FindByNameAsync(username);
-            //var currentUserInform = _userInfoRepository.GetBy(x => x.UserId == currentUser.Id.ToString()).FirstOrDefault();
-            //var contactList = _userInfoContactRepository.GetBy(x => x.UserId == currentUserInform.Id).Include(inc => inc.ContactInfo).Select(x => x.ContactInfo);
-
+        {      
             var spName = "[dbo].[usp_GetUserContactList]";
             var parameter =
                 new SqlParameter
@@ -94,8 +87,6 @@ namespace GrooveMessengerDAL.Services
 
         public void DeleteContact(Guid Id)
         {
-            //Guid PkUserId = new Guid(_userService.GetPkByUserId(deleteContactModel.UserId));
-            //Guid PkContactId = new Guid(_userService.GetPkByUserId(deleteContactModel.ContactId));
             var getContact = _userInfoContactRepository.GetSingle(Id);
             getContact.Deleted = true;
             _userInfoContactRepository.Edit(getContact);

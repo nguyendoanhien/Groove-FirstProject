@@ -35,6 +35,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         [HttpGet("getallcontactinform")]
         public async Task<IActionResult> Get()
         {
+            
             return Ok(await _contactService.GetUserContactList());
         }
         [HttpGet("getallunknowncontactinform")]
@@ -45,10 +46,10 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteContact(Guid Id)
         {
-           
+
             try
             {
-                 _contactService.DeleteContact(Id);
+                _contactService.DeleteContact(Id);
                 return Ok("Success");
             }
             catch
@@ -61,7 +62,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         [HttpPost]
         public IActionResult AddContact([FromBody] AddContactModel addContactModel)
         {
-        
+
             try
             {
                 _contactService.AddContact(addContactModel);
@@ -89,7 +90,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                 _contactService.EditContact(editContactModel);
                 return Ok("Success");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest("Failed");
             }
