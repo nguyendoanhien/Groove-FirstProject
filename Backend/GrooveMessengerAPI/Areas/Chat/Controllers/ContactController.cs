@@ -5,6 +5,7 @@ using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -41,14 +42,13 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         {
             return Ok(await _contactService.GetUserUnknownContact());
         }
-        [HttpDelete("deleteactactinform")]
-
-        public IActionResult DeleteContact([FromBody]DeleteContactModel deleteContactModel)
+        [HttpDelete("{id}")]
+        public IActionResult DeleteContact(Guid Id)
         {
            
             try
             {
-                 _contactService.DeleteContact(deleteContactModel);
+                 _contactService.DeleteContact(Id);
                 return Ok("Success");
             }
             catch
@@ -58,7 +58,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
 
         }
 
-        [HttpPost("addContact")]
+        [HttpPost]
         public IActionResult AddContact([FromBody] AddContactModel addContactModel)
         {
         
@@ -74,13 +74,14 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             }
         }
 
-        [HttpPut("editContact")]
-        public IActionResult EditContact(string contactId, [FromBody] EditContactModel editContactModel)
+        [HttpPut("{id}")]
+        public IActionResult EditContact(Guid id, [FromBody] EditContactModel editContactModel)
         {
-          
 
-            if (contactId != editContactModel.ContactId) return BadRequest();
-            
+
+            if (_contactService.GetSingle(id) == null) return BadRequest("Failed");
+
+
 
             try
             {
@@ -88,7 +89,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                 _contactService.EditContact(editContactModel);
                 return Ok("Success");
             }
-            catch
+            catch(Exception ex)
             {
                 return BadRequest("Failed");
             }

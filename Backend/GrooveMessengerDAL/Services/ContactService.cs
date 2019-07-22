@@ -66,6 +66,7 @@ namespace GrooveMessengerDAL.Services
             return contactList;
         }
 
+
         public async Task<IEnumerable<string>> GetUserContactEmailList(string username = null)
         {
             var spName = "[dbo].[usp_GetUserContactEmailList]";
@@ -91,10 +92,11 @@ namespace GrooveMessengerDAL.Services
             return _mapper.Map<IEnumerable<UserInfoEntity>, IEnumerable<IndexUserInfoModel>>(unknownContactList);
         }
 
-        public void DeleteContact(DeleteContactModel deleteContactModel)
+        public void DeleteContact(Guid Id)
         {
-            var getContact = _userInfoContactRepository.GetBy(m => m.UserId == new Guid(deleteContactModel.UserId) && m.ContactId == new Guid(deleteContactModel.ContactId)).FirstOrDefault();
-            //getContact = _mapper.Map<DeleteContactModel, UserInfoContactEntity>(deleteContactModel);
+            //Guid PkUserId = new Guid(_userService.GetPkByUserId(deleteContactModel.UserId));
+            //Guid PkContactId = new Guid(_userService.GetPkByUserId(deleteContactModel.ContactId));
+            var getContact = _userInfoContactRepository.GetSingle(Id);
             getContact.Deleted = true;
             _userInfoContactRepository.Edit(getContact);
             _uow.SaveChanges();
@@ -103,43 +105,27 @@ namespace GrooveMessengerDAL.Services
 
         public void AddContact(AddContactModel addContactModel)
         {
-
-            //if (username == null) username = _userResolverService.CurrentUserName();
-            //var currentUser = await _userManager.FindByNameAsync(username);
-            /////////////////////////////////////////////////////////////////
-            //var TableCurrentUserId = _userService.GetBy((m) => m.UserId == currentUser.Id).FirstOrDefault().Id;
-            //var TableContactId = _userService.GetBy((m) => m.UserId == contactId).FirstOrDefault().Id;
-
+            
             var newUC = _mapper.Map<AddContactModel, UserInfoContactEntity>(addContactModel);
-
-            //UserInfoContactEntity newUC = new UserInfoContactEntity()
-            //{
-            //    UserId = TableCurrentUserId,
-            //    ContactId = TableContactId
-            //};
+            Guid PkUserId = new Guid(_userService.GetPkByUserId(newUC.UserId));
+            Guid PkContactId = new Guid(_userService.GetPkByUserId(newUC.ContactId));
+            newUC.UserId = PkUserId;
+            newUC.ContactId = PkContactId;
             _userInfoContactRepository.Add(newUC);
             _uow.SaveChanges();
         }
         public void EditContact(EditContactModel editContactModel)
         {
-
-            //if (username == null) username = _userResolverService.CurrentUserName();
-            //var currentUser = await _userManager.FindByNameAsync(username);
-            /////////////////////////////////////////////////////////////////
-            //var TableCurrentUserId = _userService.GetBy((m) => m.UserId == currentUser.Id).FirstOrDefault().Id;
-            //var TableContactId = _userService.GetBy((m) => m.UserId == contactId).FirstOrDefault().Id;
-
-            var getContact = _userInfoContactRepository.GetBy(m => m.UserId == new Guid(editContactModel.UserId) && m.ContactId == new Guid(editContactModel.ContactId)).FirstOrDefault();
+            var getContact = _userInfoContactRepository.GetSingle(new Guid(editContactModel.Id));
             getContact.NickName = editContactModel.NickName;
-            //UserInfoContactEntity newUC = new UserInfoContactEntity()
-            //{
-            //    UserId = TableCurrentUserId,
-            //    ContactId = TableContactId
-            //};
-            _userInfoContactRepository.Add(getContact);
+            _userInfoContactRepository.Edit(getContact);
             _uow.SaveChanges();
         }
 
+        public UserInfoContactEntity GetSingle(Guid Id)
+        {
+            return _userInfoContactRepository.GetSingle(Id);
+        }
 
     }
 }
