@@ -55,4 +55,8 @@ export class ChatContactSidenavComponent implements OnInit, OnDestroy
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
     }
+
+    changeNickNameContact() {
+        console.log(this.contact);
+    }
 }

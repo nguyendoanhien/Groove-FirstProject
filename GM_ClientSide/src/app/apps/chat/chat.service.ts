@@ -7,6 +7,7 @@ import { FuseUtils } from '@fuse/utils';
 import { User } from '../model/user.model';
 import { environment } from 'environments/environment';
 import { UserContactService } from 'app/core/account/user-contact.service';
+import { ProfileHubService } from 'app/core/data-api/hubs/profile.hub';
 
 @Injectable()
 export class ChatService implements Resolve<any>
@@ -236,6 +237,8 @@ export class ChatService implements Resolve<any>
     // }
     getContacts(): Promise<any> {
         return this._userContactService.getContacts().toPromise();
+       
+
     }
     getUnknownContacts(): Promise<any> {
         return this._userContactService.getUnknownContacts().toPromise();

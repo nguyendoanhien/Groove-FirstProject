@@ -6,7 +6,7 @@ import { BehaviorSubject} from 'rxjs';
 @Injectable({
     providedIn: 'root'
 })
-export class ChatHubService implements OnInit {
+export class MessageHubService implements OnInit {
 
     public newChatMessage: BehaviorSubject<MessageModel>
     public removedChatMessage: BehaviorSubject<MessageModel>
@@ -19,7 +19,7 @@ export class ChatHubService implements OnInit {
     public startConnection = () => {
         const securityToken = this.authService.getToken();
         this._hubConnection = new signalR.HubConnectionBuilder()
-            .withUrl('https://localhost:44330/chathub', { accessTokenFactory: () => securityToken })
+            .withUrl('https://localhost:44330/messagehub', { accessTokenFactory: () => securityToken })
             .build();
 
         this._hubConnection

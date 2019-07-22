@@ -1,16 +1,17 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation, ViewChildren } from '@angular/core';
 import { MediaObserver } from '@angular/flex-layout';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
 import { fuseAnimations } from '@fuse/animations';
 import { FuseMatSidenavHelperService } from '@fuse/directives/fuse-mat-sidenav/fuse-mat-sidenav.service';
-
 import { ChatService } from '../../../chat.service';
 import { UserProfileService } from 'app/core/identity/userprofile.service';
+import { UnknownContactFilterPipe } from 'app/custom-pipe/unknown-contact-filter.pipe';
+import { FilterPipe } from '@fuse/pipes/filter.pipe';
 import { UserInfoService } from 'app/core/account/userInfo.service';
 import { HubConnection } from '@aspnet/signalr';
 import { UserInfo } from '../user/userInfo.model';
+import { ProfileHubService } from 'app/core/data-api/hubs/profile.hub';
 @Component({
     selector: 'chat-chats-sidenav',
     templateUrl: './chats.component.html',
@@ -26,6 +27,10 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     searchText: string;
     user: any;
 
+    @ViewChildren('someVar') filteredItems;
+
+    currentSumLength: number;
+    currentUnknownContactLength: number;
 
     // Private
     private _unsubscribeAll: Subject<any>;
@@ -38,11 +43,12 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      * @param {MediaObserver} _mediaObserver
      */
     constructor(
-        private _userProfileService: UserProfileService,
-        private _chatService: ChatService,
+        public _userProfileService: UserProfileService,
+        public _chatService: ChatService,
         private _fuseMatSidenavHelperService: FuseMatSidenavHelperService,
         public _mediaObserver: MediaObserver,
-        private _userInfoService: UserInfoService,
+        public _userInfoService: UserInfoService,
+        private profileHubService: ProfileHubService
     ) {
         // Set the defaults
         this.chatSearch = {
@@ -74,7 +80,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 
 
         this.initGetUserInfo();
-
+        this.updateChangeProfileHub();
 
         this.user = this._chatService.user;
         this.chats = this._chatService.chats;
@@ -94,7 +100,6 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                 this.user = updatedUser;
             });
     }
-
 
 
 
@@ -163,5 +168,31 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         await this._userInfoService.changeDisplayName().subscribe()
         this._userProfileService.logOut();
 
+    }
+
+    CountData() {
+        const pipe = new FilterPipe();
+        const unknownContactPipe = new UnknownContactFilterPipe();
+        let arrayContact = pipe.transform(this.user.chatList, this.searchText, '') as Array<any>;
+        let arrayChat = pipe.transform(this.contacts, this.searchText, '') as Array<any>;
+        this.currentSumLength = arrayChat.length + arrayContact.length;
+        let arrayUnknownContact = unknownContactPipe.transform(this.unknownContacts, this.searchText, '') as Array<any>;
+        this.currentUnknownContactLength = arrayUnknownContact.length;
+
+    }
+
+    updateChangeProfileHub() {      
+        this.profileHubService.UserProfileChanged.subscribe(res => {
+            if(res != null) {
+                this.contacts.forEach(contact => {
+                    if(contact.userId === res.userId)
+                    {
+                        contact.mood = res.mood;
+                        contact.avatar = res.avatar;
+                        contact.status = res.status;
+                    }
+                })
+            }
+        }) 
     }
 }

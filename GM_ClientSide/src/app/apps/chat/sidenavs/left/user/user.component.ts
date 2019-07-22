@@ -25,9 +25,9 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
      * @param {ChatService} _chatService
      */
     constructor(
-        private _chatService: ChatService,
-        private _userInfoService: UserInfoService,
-        private _userProfileService: UserProfileService
+        public _chatService: ChatService,
+        public _userInfoService: UserInfoService,
+        public _userProfileService: UserProfileService
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();

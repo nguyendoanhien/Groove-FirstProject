@@ -15,7 +15,7 @@ export class UserInfoService {
 
     constructor(private router: Router,
         private http: HttpClient,
-        private profileHubService: ProfileHubService) {
+        ) {
         this.userInfo = new UserInfo();
     }
 
@@ -29,7 +29,6 @@ export class UserInfoService {
         return this.http.put(apiUserUrl, this.userInfo).pipe(
             map((res: any) => {
                 this.userInfo = res as UserInfo;
-                this.profileHubService.addChangeUserProfile(this.userInfo);
             })
         );
     }

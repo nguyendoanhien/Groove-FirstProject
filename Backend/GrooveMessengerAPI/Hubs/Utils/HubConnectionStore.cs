@@ -34,6 +34,19 @@ namespace GrooveMessengerAPI.Hubs.Utils
             }
         }
 
+        public IEnumerable<string> GetConnections(IEnumerable<T> keys)
+        {
+            List<string> result = new List<string>();
+            foreach (var key in keys)
+            {
+                if (_connections.TryGetValue(key, out var connections))
+                {
+                    result.AddRange(connections);
+                }
+            }          
+            return result;
+        }
+
         public IEnumerable<string> GetConnections(T key)
         {
             HashSet<string> connections;

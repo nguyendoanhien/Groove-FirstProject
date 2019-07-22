@@ -14,6 +14,8 @@ using System.Data;
 using System.Reflection;
 using System.Collections;
 using System.Data.Common;
+using static GrooveMessengerDAL.Entities.UserInfoEntity;
+using GrooveMessengerDAL.Models.User;
 
 namespace GrooveMessengerDAL.Repositories
 {
@@ -123,7 +125,6 @@ namespace GrooveMessengerDAL.Repositories
 
         public void Add(TEntity entity)
         {
-            entity.CreatedOn = DateTime.Now;
             Entity.Add(entity);
         }
 
@@ -217,7 +218,7 @@ namespace GrooveMessengerDAL.Repositories
                 }
             }
         }
-        
+
         private string BuildSqlExecutionStatement(string storedProcedureName, SqlParameter[] parameters)
         {
             var spSignature = new StringBuilder();
@@ -243,13 +244,33 @@ namespace GrooveMessengerDAL.Repositories
 
             while (reader.Read())
             {
+                if(typeof(TResult).IsPrimitive || typeof(TResult) == typeof(String) || typeof(TResult) == typeof(int))
+                {
+                    var value = (TResult)reader[0];
+                    results.Add(value);
+                    continue;
+                }               
+
                 var item = Activator.CreateInstance<TResult>();
                 foreach (var property in properties)
                 {
                     if (!reader.IsDBNull(reader.GetOrdinal(property.Name)))
                     {
-                        Type convertTo = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-                        property.SetValue(item, Convert.ChangeType(reader[property.Name], convertTo), null);
+
+                        var attrs = System.Attribute.GetCustomAttributes(property);
+                        if (attrs.Any(x => x is MapBy))
+                        {
+                            var enumType = typeof(StatusName);
+                            var currentValue = reader[property.Name];
+                            var enumValue = Enum.Parse(enumType, currentValue.ToString());
+                            var convertedValue = enumValue.ToString();
+                            property.SetValue(item, convertedValue);
+                        }
+                        else
+                        {
+                            var convertTo = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                            property.SetValue(item, Convert.ChangeType(reader[property.Name], convertTo), null);
+                        }
                     }
                 }
                 results.Add(item);

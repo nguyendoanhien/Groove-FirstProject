@@ -29,6 +29,7 @@ namespace GrooveMessengerDAL.Services
 
         public void AddConversation()
         {
+            //TODO: do business here
             ConversationEntity conv = new ConversationEntity();
             conv.Avatar = "";
             conv.Name = "";

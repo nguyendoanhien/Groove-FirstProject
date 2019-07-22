@@ -8,6 +8,8 @@ namespace GrooveMessengerAPI.Hubs.Utils
 {
     public interface IUserProfileHubClient
     {
-        Task UserProfile(UserProfile userProfile);
+
+        Task ClientChangeUserProfile(UserProfile userProfile);
+
     }
 }

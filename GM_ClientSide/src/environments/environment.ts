@@ -37,6 +37,9 @@ export const environment = {
     cloudinary: {
         url: 'https://api.cloudinary.com/v1_1/groovemessenger/upload',
         upload_preset: 'qlbjv3if'
+    },
+    hub: {
+        profileUrl: backendUrl + '/profileHub'
     }
 };
 
