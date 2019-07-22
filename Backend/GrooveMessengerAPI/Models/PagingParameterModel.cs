@@ -22,5 +22,7 @@ namespace GrooveMessengerAPI.Models
                 _pageSize = (value > maxPageSize) ? maxPageSize : value;
             }
         }
+
+        public string SearchKey { get; set; } = null;
     }
 }
