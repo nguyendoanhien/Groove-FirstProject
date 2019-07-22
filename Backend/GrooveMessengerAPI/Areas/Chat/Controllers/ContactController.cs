@@ -1,4 +1,5 @@
 using GrooveMessengerAPI.Controllers;
+using GrooveMessengerAPI.Models;
 using GrooveMessengerDAL.Models.Contact;
 using GrooveMessengerDAL.Models.User;
 using GrooveMessengerDAL.Services.Interface;
@@ -35,13 +36,13 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         [HttpGet("getallcontactinform")]
         public async Task<IActionResult> Get()
         {
-            
+
             return Ok(await _contactService.GetUserContactList());
         }
         [HttpGet("getallunknowncontactinform")]
-        public async Task<IActionResult> GetUnknown()
+        public async Task<IActionResult> GetUnknown([FromQuery]PagingParameterModel pagingparametermodel)
         {
-            return Ok(await _contactService.GetUserUnknownContact());
+            return Ok(await _contactService.GetUserUnknownContact(displayNameSearch: pagingparametermodel.SearchKey));
         }
         [HttpDelete("{id}")]
         public IActionResult DeleteContact(Guid Id)
@@ -95,6 +96,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                 return BadRequest("Failed");
             }
         }
+
 
     }
 }

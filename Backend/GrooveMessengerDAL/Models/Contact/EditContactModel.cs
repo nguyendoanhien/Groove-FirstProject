@@ -8,9 +8,7 @@ namespace GrooveMessengerDAL.Models.Contact
     public class EditContactModel
     {
         public string Id { get; set; }
-        //public string UserId { get; set; }
-        //public string ContactId { get; set; }
-        public string NickName { get; set; }
+        public string DisplayName { get; set; }
 
     }
 }
