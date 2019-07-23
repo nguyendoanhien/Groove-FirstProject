@@ -24,16 +24,16 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             return BadRequest();
         }
 
-        //[HttpGet("dialog/{ConversationId}")]
-        //public IActionResult Get(string ConversationId)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var rs = _conService.GetConversationOfAUser(ConversationId);
-        //        return Ok(rs);
-        //    }
-        //    return BadRequest();          
-        //}
+        [HttpGet("dialog/{ConversationId}")]
+        public IActionResult Get(string ConversationId)
+        {
+            if (ModelState.IsValid)
+            {
+                var rs = _conService.GetConversationById(ConversationId);
+                return Ok(rs);
+            }
+            return BadRequest();
+        }
         // POST: api/Conversation
         [HttpPost]
         public void Post()

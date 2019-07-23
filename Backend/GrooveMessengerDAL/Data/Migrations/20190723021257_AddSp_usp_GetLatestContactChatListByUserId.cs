@@ -15,7 +15,7 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 	--SELECT 
-	SELECT C.Id AS ConvId, UI.Id AS ContactId, UI.DisplayName, M.Content AS LastMessage, M.CreatedOn AS LastMessageTime
+	SELECT C.Id AS ConvId, UI.Id AS ContactId, UI.DisplayName, M.Content AS LastMessage, M.CreatedOn AS LastMessageTime, M.SeenBy AS Unread
 	FROM UserInfo UI
 	INNER JOIN AspNetUsers U on U.Id = UI.UserId
 	INNER JOIN Participant P on U.Id = P.UserId

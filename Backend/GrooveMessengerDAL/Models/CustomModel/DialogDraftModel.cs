@@ -9,13 +9,4 @@ namespace GrooveMessengerDAL.Models.CustomModel
         public string Message { get; set; }
         public DateTime? Time { get; set; }
     }
-
-    //[AttributeUsage(AttributeTargets.Property, Inherited = false)]
-    //public class MapBy : Attribute
-    //{
-    //    public MapBy(Type enumType)
-    //    {
-
-    //    }
-    //}
 }

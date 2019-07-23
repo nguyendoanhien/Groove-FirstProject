@@ -101,5 +101,28 @@ namespace GrooveMessengerDAL.Services
             var contactList = _conRepository.ExecuteReturedStoredProcedure<DialogDraftModel>(spName, parameter);
             return contactList;
         }
+
+        public ChatModel GetConversationById(string ConversationId)
+        {
+            var spName = "[dbo].[csp_GetConversationById]";
+            var parameter =
+                new SqlParameter
+                {
+                    ParameterName = "ConversationId",
+                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                    SqlValue = string.IsNullOrEmpty(ConversationId) ? _userResolverService.CurrentUserInfoId() : ConversationId
+                };
+
+            var contactList = _conRepository.ExecuteReturedStoredProcedure<DialogDraftModel>(spName, parameter);
+
+            List<DialogModel> dialogModels = new List<DialogModel>();
+            foreach(var item in contactList)
+            {
+                DialogModel dialogModel = new DialogModel() { Who = item.Who, Message = item.Message, Time = item.Time };
+                dialogModels.Add(dialogModel);
+            }
+            ChatModel chatModel = new ChatModel() { Id = Guid.Parse(ConversationId), Dialog = dialogModels };
+            return chatModel;
+        }
     }
 }

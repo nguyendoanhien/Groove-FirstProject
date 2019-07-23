@@ -8,7 +8,7 @@ import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scr
 import { ChatService } from '../chat.service';
 
 import { MessageModel } from 'app/models/message.model';
-import { MessageService} from 'app/core/data-api/services/message.service';
+import { MessageService } from 'app/core/data-api/services/message.service';
 import { IndexMessageModel } from 'app/models/indexMessage.model';
 
 @Component({
@@ -72,10 +72,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this._chatService._messageHub.newChatMessage.next(null);
                     this._chatService._messageHub.newChatMessage.subscribe((message: MessageModel) => {
                         if (message) {
-                            if(this.chatId===message.fromConv){
+                            if (this.chatId === message.fromConv) {
                                 this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time });
                                 this._chatService._messageHub.newChatMessage.next(null);
-                            }                         
+                            }
                         }
                     })
                     this.readyToReply();
@@ -201,10 +201,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             message: this.replyForm.form.value.message,
             time: new Date().toISOString()
         };
-        var newMessage: IndexMessageModel = new IndexMessageModel(this.chatId,this.user.userId,null,message.message,'Text');
-        this._messageService.addMessage(newMessage).subscribe((addedMessage:IndexMessageModel)=>{
+        var newMessage: IndexMessageModel = new IndexMessageModel(this.chatId, this.user.userId, null, message.message, 'Text');
+        this._messageService.addMessage(newMessage).subscribe((addedMessage: IndexMessageModel) => {
             console.log(addedMessage);
-            var messageToSend: MessageModel = new MessageModel(addedMessage.conversationId,addedMessage.senderId,addedMessage.id,addedMessage.content,addedMessage.createdOn);
+            var messageToSend: MessageModel = new MessageModel(addedMessage.conversationId, addedMessage.senderId, addedMessage.id, addedMessage.content, addedMessage.createdOn);
             this._chatService._messageHub.addSendMessageToUser(messageToSend, this.selectedChat.contact.userId);
         });
         // Add the message to the chat

@@ -35,11 +35,11 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
 
             return Ok(await _contactService.GetUserContactList());
         }
-        [HttpGet("getallunknowncontactinform")]
-        public async Task<IActionResult> GetUnknown([FromQuery]PagingParameterModel pagingparametermodel)
-        {
-            return Ok(await _contactService.GetUserUnknownContact(displayNameSearch: pagingparametermodel.SearchKey));
-        }
+        ////[HttpGet("getallunknowncontactinform")]
+        ////public async Task<IActionResult> GetUnknown([FromQuery]PagingParameterModel pagingparametermodel)
+        ////{
+        ////    return Ok(await _contactService.GetUserUnknownContact(displayNameSearch: pagingparametermodel.SearchKey));
+        ////}
         [HttpDelete("{id}")]
         public IActionResult DeleteContact(Guid Id)
         {
@@ -92,11 +92,11 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                 return BadRequest("Failed");
             }
         }
-        //[HttpGet("getchatlist")]
-        //public async Task<IActionResult> GetChatList()
-        //{
-        //    return Ok(await _contactService.GetLatestContactChatListByUserId());
-        //}
+        [HttpGet("getchatlist")]
+        public async Task<IActionResult> GetChatList()
+        {
+            return Ok(await _contactService.GetLatestContactChatListByUserId());
+        }
 
         [HttpGet("getchatlistsp")]
         public IActionResult GetChatListSP()
