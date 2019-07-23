@@ -125,7 +125,6 @@ namespace GrooveMessengerDAL.Repositories
 
         public void Add(TEntity entity)
         {
-            entity.CreatedOn = DateTime.Now;
             Entity.Add(entity);
         }
 
@@ -196,7 +195,7 @@ namespace GrooveMessengerDAL.Repositories
             {
                 parameterNames += $"@{parameters[i].ParameterName}";
                 parameterDeclaration += $"@{parameters[i].ParameterName} {parameters[i].SqlDbType.ToString()}";
-                parameterInput += $"@{parameters[i].ParameterName} = N'{parameters[i].Value.ToString().Replace("'", "''")}'";
+                parameterInput += $"@{parameters[i].ParameterName} = N'{parameters[i].Value?.ToString().Replace("'", "''")}'";
                 if (i < parameterCount)
                 {
                     parameterNames += ", ";

@@ -9,7 +9,6 @@ using GrooveMessengerDAL.Uow.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using System.Linq.Expressions;
@@ -49,7 +48,6 @@ namespace GrooveMessengerDAL.Services
             _uow.SaveChanges();
         }
 
-
         public IQueryable<UserInfoEntity> GetBy(Expression<Func<UserInfoEntity, bool>> predicate)
         {
             IQueryable<UserInfoEntity> result = _userRepository.GetBy(predicate);
@@ -74,7 +72,7 @@ namespace GrooveMessengerDAL.Services
         public UserInfoEntity GetByUsername(string username)
         {
             var userInfo = this.GetBy(FuncGetByUsername(username)).FirstOrDefault();
-          
+
             return userInfo;
         }
 
@@ -88,7 +86,7 @@ namespace GrooveMessengerDAL.Services
 
         //Delegate Libraries
 
-        Expression<Func<UserInfoEntity,bool>> FuncGetByUsername(string username)
+        Expression<Func<UserInfoEntity, bool>> FuncGetByUsername(string username)
         {
             return (data) => data.ApplicationUser.UserName == username;
         }
@@ -122,5 +120,14 @@ namespace GrooveMessengerDAL.Services
             return _mapper.Map<IEnumerable<UserInfoEntity>, IEnumerable<IndexUserInfoModel>>(userInformList);
         }
 
+        public string GetPkByUserId(string userId)
+        {
+            return _userRepository.GetBy(x => x.UserId == userId).FirstOrDefault().Id.ToString();
+        }
+
+        public string GetPkByUserId(Guid userId)
+        {
+            return GetPkByUserId(userId.ToString());
+        }
     }
 }

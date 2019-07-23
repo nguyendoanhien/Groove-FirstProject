@@ -57,14 +57,14 @@ export class ChatService implements Resolve<any>
         return new Promise((resolve, reject) => {
             Promise.all([
                 this.getContacts(),
-                this.getUnknownContacts(),
+                //this.getUnknownContacts(),
                 this.getChats(),
                 this.getUser(),
                 this.getChatList()
             ]).then(
-                ([contacts, unknownContacts, chats, user, chatList]) => {
+                ([contacts, chats, user, chatList]) => {
                     this.contacts = contacts;
-                    this.unknownContacts = unknownContacts;
+                    //this.unknownContacts = unknownContacts;
                     this.chats = chats;
                     this.user = user;
                     this.user.chatList = chatList                   
@@ -232,9 +232,9 @@ export class ChatService implements Resolve<any>
         });     
     }
 
-    getUnknownContacts(): Promise<any> {
-        return this._userContactService.getUnknownContacts().toPromise();
-    }
+    // getUnknownContacts(displayNameSearch?: string): Promise<any> {
+    //     //return this._userContactService.getUnknownContacts(displayNameSearch).toPromise();
+    // }
 
 
     /**
