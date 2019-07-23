@@ -18,19 +18,9 @@ namespace GrooveMessengerDAL.Migrations
 	            @Username nvarchar(256) -- This is email address
                 AS
                 BEGIN
-	                -- SET NOCOUNT ON added to prevent extra result sets from
-	                -- interfering with SELECT statements.
+
 	                SET NOCOUNT ON;
 
-                    -- Insert statements for procedure here
-
-	                -- Data returned must be match to a model (from ContactService)
-		                --public Guid Id { get; set; }
-                  --      public string UserId { get; set; }
-                  --      public string DisplayName { get; set; }
-                  --      public string Mood { get; set; }
-                  --      public string Status { get; set; }
-                  --      public string Avatar { get; set; }
 				   SELECT	ui.*
 	                FROM AspNetUsers UIC
 	                INNER JOIN UserInfo UI ON UI.UserId = UIC.Id
