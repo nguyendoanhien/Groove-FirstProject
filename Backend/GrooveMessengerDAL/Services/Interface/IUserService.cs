@@ -1,8 +1,6 @@
 
 using GrooveMessengerDAL.Entities;
-using GrooveMessengerDAL.Models;
 using GrooveMessengerDAL.Models.User;
-using GrooveMessengerDAL.Repositories.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +20,11 @@ namespace GrooveMessengerDAL.Services.Interface
         void EditUserInfo(EditUserInfoModel userInfo);
 
         IndexUserInfoModel GetUserInfo(string userId);
+
         Task<IEnumerable<IndexUserInfoModel>> GetAllUserInfo();
+
+        string GetPkByUserId(string userId);
+
+        string GetPkByUserId(Guid userId);
     }
 }
