@@ -14,6 +14,8 @@ export class UserContactService {
     }
     getUnknownContacts(displayNameSearch?: string): Observable<any[]> {
 
-        return this._httpClient.get<any[]>(environment.apiContactGetAllUnknownInformUrl + displayNameSearch === undefined ? "`?SearchKey{displayNameSearch}`" : "");
+        let queryPath = displayNameSearch === undefined ? "" : `?SearchKey=${displayNameSearch}`;
+
+        return this._httpClient.get<any[]>(environment.apiContactGetAllUnknownInformUrl + queryPath);
     }
 }

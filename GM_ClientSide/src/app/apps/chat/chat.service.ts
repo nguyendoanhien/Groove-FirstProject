@@ -238,6 +238,7 @@ export class ChatService implements Resolve<any>
         return this._userContactService.getContacts().toPromise();
     }
     getUnknownContacts(displayNameSearch?: string): Promise<any> {
+
         return this._userContactService.getUnknownContacts(displayNameSearch).toPromise();
     }
 

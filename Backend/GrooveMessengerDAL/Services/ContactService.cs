@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
-
+using System.Data;
 namespace GrooveMessengerDAL.Services
 {
     public class ContactService : IContactService
@@ -77,7 +77,7 @@ namespace GrooveMessengerDAL.Services
 
         public async Task<IEnumerable<IndexUserInfoModel>> GetUserUnknownContact(string username = null, string displayNameSearch = null)
         {
-            var spName = "[dbo].[usp_GetUserUnknownContactList]";
+            var spName = "[dbo].[usp_Contact_GetUnknownContact]";
             var parameter = new SqlParameter[]
                 {
                 new SqlParameter
@@ -90,7 +90,8 @@ namespace GrooveMessengerDAL.Services
                 {
                     ParameterName = "DisplayNameSearch",
                     SqlDbType = System.Data.SqlDbType.NVarChar,
-                    SqlValue = displayNameSearch
+                    SqlValue = displayNameSearch,
+                    Size=255
                 }
                 };
 
@@ -118,13 +119,23 @@ namespace GrooveMessengerDAL.Services
         public void AddContact(AddContactModel addContactModel)
         {
 
-            var newUC = _mapper.Map<AddContactModel, UserInfoContactEntity>(addContactModel);
-            Guid PkUserId = new Guid(_userService.GetPkByUserId(newUC.UserId));
-            Guid PkContactId = new Guid(_userService.GetPkByUserId(newUC.ContactId));
-            newUC.UserId = PkUserId;
-            newUC.ContactId = PkContactId;
-            _userInfoContactRepository.Add(newUC);
-            _uow.SaveChanges();
+            //var newUC = _mapper.Map<AddContactModel, UserInfoContactEntity>(addContactModel);
+            //Guid PkUserId = new Guid(_userService.GetPkByUserId(newUC.UserId));
+            //Guid PkContactId = new Guid(_userService.GetPkByUserId(newUC.ContactId));
+            //newUC.UserId = PkUserId;
+            //newUC.ContactId = PkContactId;
+            var spName = "[dbo].[usp_Contact_Add]";
+            var parameter = new SqlParameter[]
+            {
+                  new SqlParameter("UserId",SqlDbType.UniqueIdentifier){Value=string.IsNullOrEmpty(addContactModel.UserId) ? _userResolverService.CurrentUserInfoId() : addContactModel.UserId},
+                  new SqlParameter("ContactId",SqlDbType.UniqueIdentifier) {Value=addContactModel.ContactId},
+                  new SqlParameter("CreatedBy",SqlDbType.NVarChar,-1) {Value=string.IsNullOrEmpty(_userResolverService.CurrentUserName()) ? "Root" : _userResolverService.CurrentUserName()},
+                  new SqlParameter("NickName",SqlDbType.NVarChar,12) {Value=addContactModel.DisplayName},
+            };
+
+
+            var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<int>(spName, parameter);
+            //return contactList;
         }
         public void EditContact(EditContactModel editContactModel)
         {

@@ -195,6 +195,10 @@ namespace GrooveMessengerDAL.Repositories
             {
                 parameterNames += $"@{parameters[i].ParameterName}";
                 parameterDeclaration += $"@{parameters[i].ParameterName} {parameters[i].SqlDbType.ToString()}";
+                if (parameters[i].SqlDbType.ToString().ToLower().Contains("char"))
+                {
+                    parameterDeclaration += $"({(parameters[i].Size <= 0 ? "MAX" : parameters[i].Size.ToString())})";
+                }
                 parameterInput += $"@{parameters[i].ParameterName} = N'{parameters[i].Value?.ToString().Replace("'", "''")}'";
                 if (i < parameterCount)
                 {
@@ -244,12 +248,12 @@ namespace GrooveMessengerDAL.Repositories
 
             while (reader.Read())
             {
-                if(typeof(TResult).IsPrimitive || typeof(TResult) == typeof(String) || typeof(TResult) == typeof(int))
+                if (typeof(TResult).IsPrimitive || typeof(TResult) == typeof(String) || typeof(TResult) == typeof(int))
                 {
                     var value = (TResult)reader[0];
                     results.Add(value);
                     continue;
-                }               
+                }
 
                 var item = Activator.CreateInstance<TResult>();
                 foreach (var property in properties)

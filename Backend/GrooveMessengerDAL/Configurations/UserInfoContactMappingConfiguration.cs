@@ -16,6 +16,7 @@ namespace GrooveMessengerDAL.Configurations
             builder.Property(x => x.ContactId).IsRequired();
             builder.Property(x => x.NickName).HasMaxLength(120);
             builder.Property(b => b.Deleted).HasDefaultValueSql("0");
+            builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
             //builder.HasKey(bc => new { bc.ContactId, bc.UserId });
 
             builder.HasOne(uc => uc.UserInfo)
