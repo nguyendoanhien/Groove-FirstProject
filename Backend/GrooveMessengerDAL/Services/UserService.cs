@@ -51,6 +51,7 @@ namespace GrooveMessengerDAL.Services
             IQueryable<UserInfoEntity> result = _userRepository.GetBy(predicate);
             return result;
         }
+
         public async Task<UserInfoEntity> GetByUsernameAsync(string username)
         {
             var user = await _userManager.FindByNameAsync(username);
@@ -67,6 +68,7 @@ namespace GrooveMessengerDAL.Services
             #endregion
             return userInfo;
         }
+
         public UserInfoEntity GetByUsername(string username)
         {
             var userInfo = this.GetBy(FuncGetByUsername(username)).FirstOrDefault();

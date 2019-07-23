@@ -46,6 +46,7 @@ namespace GrooveMessengerDAL.Services
         }
         public async Task<IEnumerable<IndexUserInfoModel>> GetUserContactList(string username = null)
         {
+
             var spName = "[dbo].[usp_GetUserContactList]";
             var parameter =
                 new SqlParameter
@@ -62,7 +63,7 @@ namespace GrooveMessengerDAL.Services
 
         public async Task<IEnumerable<string>> GetUserContactEmailList(string username = null)
         {
-            var spName = "[dbo].[usp_GetUserContactEmailList]";
+            var spName = "[dbo].[usp_GetUserContactEmailList]";;
             var parameter =
                 new SqlParameter
                 {
@@ -98,13 +99,6 @@ namespace GrooveMessengerDAL.Services
             var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<IndexUserInfoModel>(spName, parameter);
             return contactList;
 
-
-            //var currentUser = username == null ? await _userManager.FindByEmailAsync(_userResolverService.CurrentUserName()) : await _userManager.FindByNameAsync(username);
-            //var currentUserInform = _userInfoRepository.GetBy(x => x.UserId == currentUser.Id.ToString()).FirstOrDefault();
-            //var currentContactList = _userInfoContactRepository.GetBy(x => x.UserId == currentUserInform.Id).Include(inc => inc.ContactInfo).Select(x => x.ContactInfo);
-            //var allContacts = _userInfoRepository.GetAll().Where(m => m.UserId != currentUser.Id);
-            //var unknownContactList = allContacts.Except(currentContactList);// (x => x.UserId == currentUserInform.Id).Include(inc => inc.ContactInfo).Select(x => x.ContactInfo);
-            //return _mapper.Map<IEnumerable<UserInfoEntity>, IEnumerable<IndexUserInfoModel>>(unknownContactList);
         }
 
         public void DeleteContact(Guid Id)
@@ -118,12 +112,6 @@ namespace GrooveMessengerDAL.Services
 
         public void AddContact(AddContactModel addContactModel)
         {
-
-            //var newUC = _mapper.Map<AddContactModel, UserInfoContactEntity>(addContactModel);
-            //Guid PkUserId = new Guid(_userService.GetPkByUserId(newUC.UserId));
-            //Guid PkContactId = new Guid(_userService.GetPkByUserId(newUC.ContactId));
-            //newUC.UserId = PkUserId;
-            //newUC.ContactId = PkContactId;
             var spName = "[dbo].[usp_Contact_Add]";
             var parameter = new SqlParameter[]
             {
@@ -135,10 +123,11 @@ namespace GrooveMessengerDAL.Services
 
 
             var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<int>(spName, parameter);
-            //return contactList;
+
         }
         public void EditContact(EditContactModel editContactModel)
         {
+
             var getContact = _userInfoContactRepository.GetSingle(new Guid(editContactModel.Id));
             getContact.NickName = editContactModel.DisplayName;
             _userInfoContactRepository.Edit(getContact);

@@ -32,6 +32,7 @@ import { RegisterService } from './core/account/register.service';
 import { MessageHubService } from './core/data-api/hubs/message.hub';
 import { UserInfoService } from './core/account/userInfo.service';
 import { UserContactService } from './core/account/user-contact.service';
+import { ProfileHubService } from './core/data-api/hubs/profile.hub';
 
 @NgModule({
     declarations: [
@@ -84,7 +85,9 @@ import { UserContactService } from './core/account/user-contact.service';
         UserInfoService,
         ResetPasswordService,
         UserContactService,
+        ProfileHubService,
         MessageHubService
+
     ]
 
 })

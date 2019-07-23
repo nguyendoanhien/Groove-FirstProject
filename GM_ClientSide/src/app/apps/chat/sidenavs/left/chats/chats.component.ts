@@ -2,17 +2,16 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation, ViewChildren } from '@
 import { MediaObserver } from '@angular/flex-layout';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
 import { fuseAnimations } from '@fuse/animations';
 import { FuseMatSidenavHelperService } from '@fuse/directives/fuse-mat-sidenav/fuse-mat-sidenav.service';
-
 import { ChatService } from '../../../chat.service';
 import { UserProfileService } from 'app/core/identity/userprofile.service';
-import { UserContactService } from 'app/core/account/user-contact.service';
 import { UnknownContactFilterPipe } from 'app/custom-pipe/unknown-contact-filter.pipe';
 import { FilterPipe } from '@fuse/pipes/filter.pipe';
 import { UserInfoService } from 'app/core/account/userInfo.service';
-
+import { HubConnection } from '@aspnet/signalr';
+import { UserInfo } from '../user/userInfo.model';
+import { ProfileHubService } from 'app/core/data-api/hubs/profile.hub';
 @Component({
     selector: 'chat-chats-sidenav',
     templateUrl: './chats.component.html',
@@ -27,13 +26,15 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     unknownContacts: any[];
     searchText: string;
     user: any;
+
     @ViewChildren('someVar') filteredItems;
 
     currentSumLength: number;
     currentUnknownContactLength: number;
+
     // Private
     private _unsubscribeAll: Subject<any>;
-
+    private _hubConnection: HubConnection | undefined;
     /**
      * Constructor
      *
@@ -47,6 +48,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         private _fuseMatSidenavHelperService: FuseMatSidenavHelperService,
         public _mediaObserver: MediaObserver,
         public _userInfoService: UserInfoService,
+        private profileHubService: ProfileHubService
     ) {
         // Set the defaults
         this.chatSearch = {
@@ -56,6 +58,15 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 
         // Set the private defaults
         this._unsubscribeAll = new Subject();
+
+
+
+    }
+
+    public changeProfile(user: UserInfo) {
+        this._hubConnection.invoke("ChangeUserProfile", user).catch(function (err) {
+            return console.error(err.toString());
+        });
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -69,6 +80,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 
 
         this.initGetUserInfo();
+        this.updateChangeProfileHub();
 
         this.user = this._chatService.user;
         this.chats = this._chatService.chats;
@@ -89,14 +101,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             });
     }
 
-    // async ngDoCheck() {
-    //     if(this._userInfoService.userInfo.status == 'offline')
-    //     {
-    //         console.log(this._userInfoService.userInfo)
-    //         this._userInfoService.userInfo.status = 'online';
-    //         await this._userInfoService.changeDisplayName().subscribe();
-    //     }
-    // }
+
 
     initGetUserInfo() {
         this._userInfoService.getUserInfo().subscribe(res => {
@@ -140,7 +145,8 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      */
     async setUserStatus(status) {
         this._userInfoService.userInfo.status = status;
-        await this._userInfoService.changeDisplayName().subscribe();
+        await this._userInfoService.changeDisplayName().subscribe(
+        );
         if (status === 'offline')
             await this._userProfileService.logOut();
     }
@@ -180,9 +186,22 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         // this.currentUnknownContactLength = arrayUnknownContact.length;
 
     }
-
+    updateChangeProfileHub() {
+        this.profileHubService.UserProfileChanged.subscribe(res => {
+            if (res != null) {
+                this.contacts.forEach(contact => {
+                    if (contact.userId === res.userId) {
+                        contact.mood = res.mood;
+                        contact.avatar = res.avatar;
+                        contact.status = res.status;
+                    }
+                })
+            }
+        })
+    }
 
 }
+//Global----------------------------------
 Array.prototype.equals = function (array) {
     debugger;
     // if the other array is a falsy value, return
@@ -213,5 +232,6 @@ Object.defineProperty(Array.prototype, "equals", { enumerable: false });
 declare global {
     interface Array<T> {
         equals: any;
+
     }
 }
