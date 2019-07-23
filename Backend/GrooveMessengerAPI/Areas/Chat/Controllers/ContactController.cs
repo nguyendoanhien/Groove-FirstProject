@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace GrooveMessengerAPI.Areas.Chat.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class ContactController : ApiControllerBase
@@ -91,9 +91,9 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         }
 
         [HttpGet("getchatlist")]
-        public async Task<IActionResult> GetChatList()
+        public IActionResult GetChatList()
         {
-            return Ok(await _contactService.GetLatestContactChatListByUserId());
+            return Ok(_contactService.GetLatestContactChatListByUserId());
         }
     }
 }
