@@ -86,28 +86,28 @@ namespace GrooveMessengerDAL.Services
             var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<string>(spName, parameter);
             return contactList;
         }
-        //public async Task<List<ContactLatestChatListModel>> GetLatestContactChatListByUserId()
-        //{
-        //    List<ContactLatestChatListModel> contactList = new List<ContactLatestChatListModel> { };
+        public async Task<List<ContactLatestChatListModel>> GetLatestContactChatListByUserId()
+        {
+            List<ContactLatestChatListModel> contactList = new List<ContactLatestChatListModel> { };
 
-        //    var currentUser = await _userManager.FindByEmailAsync(_userResolverService.CurrentUserName());
-        //    var convOfCurrentUser = _parRepository.GetBy(x => x.UserId == currentUser.Id.ToString()).Include(inc => inc.ConversationEntity).Select(x => x.ConversationEntity).ToList();
-        //    foreach (var item in convOfCurrentUser)
-        //    {
-        //        var contactOfCurrentUser = _parRepository.GetBy(x => x.UserId != currentUser.Id.ToString() && x.ConversationId == item.Id).FirstOrDefault();
-        //        var convLastestMessage = _mesgRepository.GetBy(x => x.ConversationId == item.Id).OrderByDescending(x => x.Id).FirstOrDefault();
-        //        var userContactInfo = _userInfoRepository.GetBy(x => x.UserId == contactOfCurrentUser.UserId).SingleOrDefault();
-        //        contactList.Add(new ContactLatestChatListModel()
-        //        {
-        //            ConvId = item.Id.ToString(),
-        //            ContactId = contactOfCurrentUser.UserId,
-        //            DisplayName = userContactInfo.DisplayName,
-        //            LastMessage = convLastestMessage.Content,
-        //            LastMessageTime = convLastestMessage.CreatedOn
-        //        });
-        //    }
-        //    return contactList;
-        //}
+            var currentUser = await _userManager.FindByEmailAsync(_userResolverService.CurrentUserName());
+            var convOfCurrentUser = _parRepository.GetBy(x => x.UserId == currentUser.Id.ToString()).Include(inc => inc.ConversationEntity).Select(x => x.ConversationEntity).ToList();
+            foreach (var item in convOfCurrentUser)
+            {
+                var contactOfCurrentUser = _parRepository.GetBy(x => x.UserId != currentUser.Id.ToString() && x.ConversationId == item.Id).FirstOrDefault();
+                var convLastestMessage = _mesgRepository.GetBy(x => x.ConversationId == item.Id).OrderByDescending(x => x.Id).FirstOrDefault();
+                var userContactInfo = _userInfoRepository.GetBy(x => x.UserId == contactOfCurrentUser.UserId).SingleOrDefault();
+                contactList.Add(new ContactLatestChatListModel()
+                {
+                    ConvId = item.Id.ToString(),
+                    ContactId = contactOfCurrentUser.UserId,
+                    DisplayName = userContactInfo.DisplayName,
+                    LastMessage = convLastestMessage.Content,
+                    LastMessageTime = convLastestMessage.CreatedOn
+                });
+            }
+            return contactList;
+        }
 
         public async Task<IEnumerable<IndexUserInfoModel>> GetUserUnknownContact(string username = null, string displayNameSearch = null)
         {
@@ -173,7 +173,7 @@ namespace GrooveMessengerDAL.Services
             return _userInfoContactRepository.GetSingle(Id);
         }
 
-        public List<ContactLatestChatListModel> GetLatestContactChatListByUserId()
+        public List<ContactLatestChatListModel> GetLatestContactChatListByUserId_SP()
         {
             var spName = "[dbo].[usp_GetLatestContactChatListByUserId]";
             var parameter =
@@ -181,7 +181,7 @@ namespace GrooveMessengerDAL.Services
                 {
                     ParameterName = "UserId",
                     SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
-                    SqlValue = "143ee0d6-0443-4132-a3fc-19af34728daa"
+                    SqlValue = "d8874445-19c0-4578-ab28-ada607ca65c3"
                     //_userResolverService.CurrentUserInfoId()
                 };
 

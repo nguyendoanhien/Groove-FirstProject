@@ -7,6 +7,7 @@ using GrooveMessengerDAL.Services.Interface;
 using GrooveMessengerDAL.Uow.Interface;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace GrooveMessengerDAL.Services
@@ -18,18 +19,20 @@ namespace GrooveMessengerDAL.Services
         private IMapper _mapper;
         private IUowBase<GrooveMessengerDbContext> _uow;
         private IParticipantService _participantService;
-
+        private readonly IUserResolverService _userResolverService;
         private readonly IMessageService _messageService;
 
         public ConversationService(IGenericRepository<ConversationEntity, Guid, GrooveMessengerDbContext> conRepository,
             IGenericRepository<ParticipantEntity, Guid, GrooveMessengerDbContext> parRepository, IMapper mapper, 
-            IUowBase<GrooveMessengerDbContext> uow, IMessageService messageService)   
+            IUowBase<GrooveMessengerDbContext> uow, IMessageService messageService,
+            IUserResolverService userResolverService)   
         {
             _conRepository = conRepository;
             _parRepository = parRepository;
             _mapper = mapper;
             _uow = uow;
             _messageService = messageService;
+            _userResolverService = userResolverService;
         }
 
         public void AddConversation()
@@ -57,33 +60,46 @@ namespace GrooveMessengerDAL.Services
         //    var result = _conRepository.GetAll().Where(x => conIdList.Contains(x.Id));
         //    return result;
         //}
-
-
-        public IEnumerable<ChatModel> GetAllConversationOfAUser(string UserId)
+                
+        public IEnumerable<ChatModel> GetAllConversationOfAUser(string UserId = null)
         {
-            var conversationList = _parRepository.GetAll().Where(x => x.UserId == UserId).Select(x => x.ConversationEntity).ToList();
-            List<ChatModel> chats = new List<ChatModel>();
-            foreach (ConversationEntity item in conversationList)
+            List<ChatModel> chatModels = new List<ChatModel>();
+            IEnumerable<DialogDraftModel> dialogDraftModels = GetAllConversationOfAUserDraft(UserId);
+
+            var chatBoxes = from chat in dialogDraftModels
+                            group chat by chat.Id into chatGroup
+                            select new
+                            {
+                                Key = chatGroup.Key,
+                                Dialogs = chatGroup
+                            };
+            foreach (var chatbox in chatBoxes)
             {
-                var dialogs = _messageService.GetDialogs(item.Id);
-                ChatModel chatModel = new ChatModel()
+                List<DialogModel> dialogModels = new List<DialogModel>();
+                ChatModel chatModel = new ChatModel() { Id = chatbox.Key, Dialog = dialogModels };
+                chatModels.Add(chatModel);
+                foreach (var message in chatbox.Dialogs)
                 {
-                    Id = item.Id.ToString(),
-                    Dialog = dialogs.ToList()
-                };
-                chats.Add(chatModel);
+                    DialogModel dialogModel = new DialogModel() { Message = message.Message, Who = message.Who, Time = message.Time };
+                    dialogModels.Add(dialogModel);
+                }
             }
-            return chats;
+            return chatModels;
         }
-        public ChatModel GetConversationOfAUser(string ConversationId)
+
+        public IEnumerable<DialogDraftModel> GetAllConversationOfAUserDraft(string UserId = null)
         {
-            var dialogs = _messageService.GetDialogs(Guid.Parse(ConversationId));
-            ChatModel chatModel = new ChatModel()
-            {
-                Id = ConversationId,
-                Dialog = dialogs.ToList()
-            };
-            return chatModel;
+            var spName = "[dbo].[msp_GetAllConversationsWithMessages]";
+            var parameter =
+                new SqlParameter
+                {
+                    ParameterName = "UserId",
+                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                    SqlValue = string.IsNullOrEmpty(UserId) ? _userResolverService.CurrentUserInfoId() : UserId
+                };
+
+            var contactList = _conRepository.ExecuteReturedStoredProcedure<DialogDraftModel>(spName, parameter);
+            return contactList;
         }
     }
 }

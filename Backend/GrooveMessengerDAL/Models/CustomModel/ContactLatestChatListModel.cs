@@ -12,7 +12,15 @@ namespace GrooveMessengerDAL.Models.CustomModel
 
         public string LastMessage { get; set; }
 
-        public DateTime LastMessageTime { get; set; }
+        public DateTime? LastMessageTime { get; set; }
 
+    }
+    [AttributeUsage(AttributeTargets.Property, Inherited = false)]
+    public class MapBy : Attribute
+    {
+        public MapBy(Type enumType)
+        {
+
+        }
     }
 }

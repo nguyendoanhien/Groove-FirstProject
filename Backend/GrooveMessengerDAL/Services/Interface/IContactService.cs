@@ -11,8 +11,8 @@ namespace GrooveMessengerDAL.Services.Interface
 {
     public interface IContactService
     {        
-        //Task<List<ContactLatestChatListModel>> GetLatestContactChatListByUserId();
-        List<ContactLatestChatListModel> GetLatestContactChatListByUserId();
+        Task<List<ContactLatestChatListModel>> GetLatestContactChatListByUserId();
+        List<ContactLatestChatListModel> GetLatestContactChatListByUserId_SP();
         Task<IEnumerable<IndexUserInfoModel>> GetUserContactList(string username = null);
         Task<IEnumerable<string>> GetUserContactEmailList(string username = null);
         Task<IEnumerable<IndexUserInfoModel>> GetUserUnknownContact(string username = null, string displayNameSearch = null);
