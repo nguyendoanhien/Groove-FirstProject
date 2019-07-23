@@ -10,11 +10,12 @@
             <div class="avatar-wrapper">
 
                 <!-- USER AVATAR -->
-                <img (click)="changeLeftSidenavView('user')" [src]="this._userInfoService.userInfo.avatar" class="mat-avatar avatar"
-                    alt="" />
+                <img (click)="changeLeftSidenavView('user')" [src]="this._userInfoService.userInfo.avatar"
+                    class="mat-avatar avatar" alt="" />
                 <!-- / USER AVATAR -->
 
-                <mat-icon class="s-16 status" [ngClass]="this._userInfoService.userInfo.status" [matMenuTriggerFor]="userStatusMenu"></mat-icon>
+                <mat-icon class="s-16 status" [ngClass]="this._userInfoService.userInfo.status"
+                    [matMenuTriggerFor]="userStatusMenu"></mat-icon>
 
                 <!-- USER STATUS -->
                 <mat-menu id="user-status-menu" #userStatusMenu="matMenu">
@@ -107,8 +108,7 @@
 
             </div>
             <ng-container *ngIf="this.unknownContacts">
-                <button mat-button class="unknownContacts"
-                    *ngFor="let unknownContacts of unknownContacts| unknownContactFilter: searchText"
+                <button mat-button class="unknownContacts" *ngFor="let unknownContacts of unknownContacts"
                     (click)="getChat(unknownContacts.id)" [@animate]="{value:'*',params:{y:'100%'}}" #someVar>
 
                     <div fxLayout="row" fxLayoutAlign="start center">

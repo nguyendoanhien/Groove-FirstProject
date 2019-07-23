@@ -50,13 +50,13 @@ export class ChatService implements Resolve<any>
         return new Promise((resolve, reject) => {
             Promise.all([
                 this.getContacts(),
-                this.getUnknownContacts(),
+                //this.getUnknownContacts(),
                 this.getChats(),
                 this.getUser()
             ]).then(
-                ([contacts, unknownContacts, chats, user]) => {
+                ([contacts, chats, user]) => {
                     this.contacts = contacts;
-                    this.unknownContacts = unknownContacts;
+                    //this.unknownContacts = unknownContacts;
                     this.chats = chats;
                     this.user = user;
                     resolve();
@@ -128,9 +128,9 @@ export class ChatService implements Resolve<any>
             //     return item.id === contactId;
             // });
 
-            const contact = this.unknownContacts.concat(this.contacts).find((item) => {
-                return item.id === contactId;
-            });
+            // const contact = this.unknownContacts.concat(this.contacts).find((item) => {
+            //     return item.userId === contactId;
+            // });
 
             const chatId = FuseUtils.generateGUID();
 
@@ -143,7 +143,7 @@ export class ChatService implements Resolve<any>
                 contactId: contactId,
                 id: chatId,
                 lastMessageTime: '2017-02-18T10:30:18.931Z',
-                name: contact.displayName,
+                //name: contact.displayName,
                 unread: null
             };
 
@@ -240,9 +240,9 @@ export class ChatService implements Resolve<any>
        
 
     }
-    getUnknownContacts(): Promise<any> {
-        return this._userContactService.getUnknownContacts().toPromise();
-    }
+    // getUnknownContacts(displayNameSearch?: string): Promise<any> {
+    //     return this._userContactService.getUnknownContacts(displayNameSearch).toPromise();
+    // }
 
 
     /**

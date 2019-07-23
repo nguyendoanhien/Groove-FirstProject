@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { ChatService } from '../../../chat.service';
+import { UserContactService } from 'app/core/account/user-contact.service';
 
 @Component({
     selector     : 'chat-contact-sidenav',
@@ -23,7 +24,8 @@ export class ChatContactSidenavComponent implements OnInit, OnDestroy
      * @param {ChatService} _chatService
      */
     constructor(
-        private _chatService: ChatService
+        private _chatService: ChatService,
+        private _userContactService: UserContactService
     )
     {
         // Set the private defaults
@@ -57,6 +59,6 @@ export class ChatContactSidenavComponent implements OnInit, OnDestroy
     }
 
     changeNickNameContact() {
-        console.log(this.contact);
+        this._userContactService.changeNickNameContact(this.contact).subscribe();
     }
 }

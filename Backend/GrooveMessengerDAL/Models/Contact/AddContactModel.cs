@@ -12,6 +12,6 @@ namespace GrooveMessengerDAL.Models.Contact
         [Required]
         public string ContactId { get; set; }
         [Required]
-        public string NickName { get; set; }
+        public string DisplayName { get; set; }
     }
 }

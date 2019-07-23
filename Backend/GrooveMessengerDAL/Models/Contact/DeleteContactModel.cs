@@ -7,10 +7,6 @@ namespace GrooveMessengerDAL.Models.Contact
 {
     public class DeleteContactModel
     {
-        [Required]
-        public string UserId { get; set; }
-        [Required]
-        public string ContactId { get; set; }
-        //public string NickName { get; set; }
+        public string Id { get; set; }
     }
 }
