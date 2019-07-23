@@ -8,7 +8,7 @@ import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scr
 import { ChatService } from '../chat.service';
 
 import { MessageModel } from 'app/models/message.model';
-import { MessageService} from 'app/core/data-api/services/message.service';
+import { MessageService } from 'app/core/data-api/services/message.service';
 import { IndexMessageModel } from 'app/models/indexMessage.model';
 
 @Component({
@@ -69,13 +69,14 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.contact = chatData.contact;
                     this.dialog = chatData.dialog;
                     this.chatId = chatData.chatId; // current conversation id
-                    this._chatService._messageHub.newChatMessage.next(null);
+                    // this._chatService._messageHub.newChatMessage.next(null);
+                    console.log(this.selectedChat);
+                    console.log(chatData);
                     this._chatService._messageHub.newChatMessage.subscribe((message: MessageModel) => {
                         if (message) {
-                            if(this.chatId===message.fromConv){
-                                this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time });
-                                this._chatService._messageHub.newChatMessage.next(null);
-                            }                         
+                            if (this.chatId === message.fromConv) {
+                                this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time });                                
+                            }
                         }
                     })
                     this.readyToReply();
@@ -201,12 +202,11 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             message: this.replyForm.form.value.message,
             time: new Date().toISOString()
         };
-        var newMessage: IndexMessageModel = new IndexMessageModel(this.chatId,this.user.userId,null,message.message,'Text');
-        this._messageService.addMessage(newMessage).subscribe((addedMessage:IndexMessageModel)=>{
-            console.log(addedMessage);
-            var messageToSend: MessageModel = new MessageModel(addedMessage.conversationId,addedMessage.senderId,addedMessage.id,addedMessage.content,addedMessage.createdOn);
-            this._chatService._messageHub.addSendMessageToUser(messageToSend, this.selectedChat.contact.userId);
-        });
+        var newMessage: IndexMessageModel = new IndexMessageModel(this.chatId, this.user.userId, null, message.message, 'Text',this.contact.userId);
+        console.log(newMessage);
+        this._messageService.addMessage(newMessage).subscribe(success => {
+            console.log("send successfull");
+        }, err => console.log("send fail"));
         // Add the message to the chat
         this.dialog.push(message);
 

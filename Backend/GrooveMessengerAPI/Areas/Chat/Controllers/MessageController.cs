@@ -1,13 +1,15 @@
 
-using System;
-using System.Threading.Tasks;
 using GrooveMessengerAPI.Areas.Chat.Models;
 using GrooveMessengerAPI.Controllers;
+using GrooveMessengerAPI.Hubs;
+using GrooveMessengerAPI.Hubs.Utils;
 using GrooveMessengerAPI.Models;
 using GrooveMessengerDAL.Models.Message;
 using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.SignalR;
+using System;
+using System.Threading.Tasks;
 
 namespace GrooveMessengerAPI.Areas.Chat.Controllers
 {
@@ -15,37 +17,45 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
     public class MessageController : ApiControllerBase
     {
         private readonly IMessageService _mesService;
-        private readonly IConversationService _conService;
-        //private IHubContext<MessageHub, ITypedHubClient> _hubContext;
-        //private IMessageService _messageService;
+        private readonly IContactService _contactService;
+        private IHubContext<MessageHub, IMessageHubClient> _hubContext;
+        private HubConnectionStore<string> _connectionStore;      
 
         public MessageController(
-            IMessageService mesService,
-            IConversationService conService,
-            IUserResolverService userResolver
+            IMessageService mesService,          
+            IContactService contactService,
+            IUserResolverService userResolver,
+            IHubContext<MessageHub, IMessageHubClient> hubContext,
+            HubConnectionStore<string> connectionStore
             ) : base(userResolver)
         {
-            //_hubContext = hubContext;
-            this._mesService = mesService;
-            _conService = conService;
+            _mesService = mesService;         
+            _contactService = contactService;
+            _hubContext = hubContext;
+            _connectionStore = connectionStore;
         }
 
-        [HttpPost]
-        public string Post([FromBody]Message msg)
+        [HttpGet]
+        public IActionResult Get([FromQuery]PagingParameterModel pagingparametermodel)
         {
-            string retMessage = string.Empty;
-
-            try
+            if (!ModelState.IsValid)
             {
-                //_hubContext.Clients.All.BroadcastMessage(msg.Type, msg.Payload);
-                retMessage = "Success";
+                return BadRequest();
             }
-            catch (Exception e)
+            else
             {
-                retMessage = e.ToString();
+                int CurrentPage = pagingparametermodel.pageNumber;
+                int PageSize = pagingparametermodel.pageSize;
+                var result = _mesService.loadMoreMessages(CurrentPage, PageSize);
+                return Ok(result);
             }
+        }
 
-            return retMessage;
+        [HttpGet("{id}")]
+        public IActionResult GetById(Guid id)
+        {
+            if (_mesService.GetMessageById(id) != null) return Ok(_mesService.GetMessageById(id));
+            else return BadRequest();
         }
 
         [HttpPut("{id}")]
@@ -71,6 +81,31 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             return null;
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] CreateMessageModel createMessageModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                var createdMessage = await _mesService.AddMessageAsync(createMessageModel); // add message to db
+                if (createdMessage != null) // broadcast message to user
+                {
+                    Message message = new Message(createdMessage.ConversationId, createdMessage.SenderId, createdMessage.Id, createdMessage.Content, createdMessage.CreatedOn);
+
+                    var receiverEmail = await _contactService.GetUserContactEmail(createMessageModel.Receiver);
+                    foreach (var connectionId in _connectionStore.GetConnections(receiverEmail))
+                    {
+                        var conn = connectionId;
+                        await _hubContext.Clients.Client(connectionId).SendMessage(message);
+                    }
+                    return Ok();
+                }
+                return NotFound();
+            }
+        }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteMessage(Guid id)
@@ -84,35 +119,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             _mesService.DeleteMessage(id);
             return Ok();
         }
-        [HttpGet]
-        public IActionResult Get([FromQuery]PagingParameterModel pagingparametermodel)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-            else
-            {
-                int CurrentPage = pagingparametermodel.pageNumber;
-                int PageSize = pagingparametermodel.pageSize;
-                var result = _mesService.loadMoreMessages(CurrentPage, PageSize);
-                return Ok(result);
-            }
-        }
 
-
-        [HttpPost("addmessage")]
-        public async Task<ActionResult<IndexMessageModel>> Post([FromBody] CreateMessageModel createMessageModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-            else
-            {               
-                return await _mesService.AddMessageAsync(createMessageModel);
-            }
-        }
 
         [HttpPut("updatestatusmessage")]
         public IActionResult Put(Guid id)
@@ -128,12 +135,6 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetById(Guid id)
-        {
-            if (_mesService.GetMessageById(id) != null) return Ok(_mesService.GetMessageById(id));
-            else return BadRequest();
-        }
     }
 
 }

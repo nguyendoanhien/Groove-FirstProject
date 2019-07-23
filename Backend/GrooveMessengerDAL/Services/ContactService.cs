@@ -86,6 +86,11 @@ namespace GrooveMessengerDAL.Services
             var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<string>(spName, parameter);
             return contactList;
         }
+        public async Task<string> GetUserContactEmail(string userId)
+        {
+            var email = await _userInfoRepository.FindBy(x => x.UserId == userId).Include(x => x.ApplicationUser).Select(x => x.ApplicationUser.Email).FirstAsync();
+            return email;
+        }
         public async Task<List<ContactLatestChatListModel>> GetLatestContactChatListByUserId()
         {
             List<ContactLatestChatListModel> contactList = new List<ContactLatestChatListModel> { };

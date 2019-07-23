@@ -26,7 +26,7 @@ export const environment = {
     apiContactGetAllInformUrl: apiContactUrl + '/getallcontactinform',
     apiContactGetAllUnknownInformUrl: apiContactUrl + '/getallunknowncontactinform',
     apiGetChatListByConvId: apiConvUrl + '/dialog/',
-    apiAddNewMessage: apiMessageUrl + '/addmessage',
+    apiMessageUrl: apiMessageUrl,
     messageHubUrl: messageHubUrl,
     applicationGoogle: {
         clientId: '687824117544-nvc2uojbm14hc330gl8qh3lsrtl3tc4a.apps.googleusercontent.com',

@@ -11,8 +11,8 @@ export class MessageService {
     constructor(private http: HttpClient) {
 
     }
-    addMessage(model: IndexMessageModel): Observable<IndexMessageModel> {
-        return this.http.post<IndexMessageModel>(environment.apiAddNewMessage, model);
+    addMessage(model: IndexMessageModel): Observable<any> {
+        return this.http.post(environment.apiMessageUrl, model);
     }
 }
 
