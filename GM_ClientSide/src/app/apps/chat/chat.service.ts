@@ -10,7 +10,7 @@ import { UserInfoService } from 'app/core/account/userInfo.service';
 import { UserContactService } from 'app/core/account/user-contact.service';
 import {MessageHubService} from '../../core/data-api/hubs/message.hub';
 import { MessageModel } from 'app/models/message.model';
-
+import { UserProfileService } from 'app/core/identity/userprofile.service';
 @Injectable()
 export class ChatService implements Resolve<any>
 {
@@ -32,8 +32,12 @@ export class ChatService implements Resolve<any>
      * @param {HttpClient} _httpClient
      * @param {UserInfoService} _userInformList 
      * @param {MessageHubService} _messageHubService
+     * @param {UserProfileService} _userProfileService
      */
-    constructor(private _httpClient: HttpClient, userContactService: UserContactService, private _userInformList: UserInfoService,private _messageHubService: MessageHubService) {
+    constructor(private _httpClient: HttpClient, userContactService: UserContactService, 
+        private _userInformList: UserInfoService,private _messageHubService: MessageHubService,
+        private _userProfileService : UserProfileService
+        ) {
         // Set the defaults
         this.onChatSelected = new BehaviorSubject(null);
         this.onContactSelected = new BehaviorSubject(null);       
@@ -244,7 +248,7 @@ export class ChatService implements Resolve<any>
      */
     getChats(): Promise<any> {        
         return new Promise((resolve, reject) => {
-            this._httpClient.get('https://localhost:44383/api/Conversation/dialogs/4f592118-ed4e-432f-bc7c-6bb3b4ff299a')
+            this._httpClient.get(environment.apiGetChatListByUserId+ this._userProfileService.userProfile.UserId) // using static user id to test
                 .subscribe((response: any) => {
                     resolve(response);
                 }, reject);
@@ -258,7 +262,7 @@ export class ChatService implements Resolve<any>
      */
     getUser(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this._httpClient.get('https://localhost:44383/api/user')
+            this._httpClient.get(environment.apiUserUrl)
                 .subscribe((response: any) => {
                     resolve(response);
                 }, reject);
@@ -271,7 +275,7 @@ export class ChatService implements Resolve<any>
      */
     getChatList(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this._httpClient.get('https://localhost:44383/api/contact/getchatlist')
+            this._httpClient.get(environment.apiGetContactChatList)
                 .subscribe((response: any) => {
                     resolve(response);
                 }, reject);

@@ -69,13 +69,14 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.contact = chatData.contact;
                     this.dialog = chatData.dialog;
                     this.chatId = chatData.chatId; // current conversation id
-                    // this._chatService._messageHub.newChatMessage.next(null);
+                    this._chatService._messageHub.newChatMessage.next(null);
                     console.log(this.selectedChat);
                     console.log(chatData);
                     this._chatService._messageHub.newChatMessage.subscribe((message: MessageModel) => {
                         if (message) {
                             if (this.chatId === message.fromConv) {
-                                this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time });                                
+                                this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time });    
+                                this._chatService._messageHub.newChatMessage.next(null);                            
                             }
                         }
                     })
