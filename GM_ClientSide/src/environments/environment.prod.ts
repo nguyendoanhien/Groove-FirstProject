@@ -3,6 +3,7 @@ const authBaseUrl = backendUrl + '/Identity/ClientAccount';
 const apiContactUrl = backendUrl + '/api/contact';
 const apiConvUrl = backendUrl + '/api/conversation';
 const apiBaseUrl = backendUrl + '/api';
+const apiMessageUrl = backendUrl + '/api/message';
 const messageHubUrl = backendUrl + '/messagehub';
 export const environment = {
   production: true,
@@ -10,6 +11,7 @@ export const environment = {
   appName: 'Groove Messenger Client',
   backendUrl: backendUrl,
   authBaseUrl: authBaseUrl,
+  apiContactUrl:apiContactUrl,
   authLoginUrl: authBaseUrl + '/login',
   authRegisterUrl: authBaseUrl + '/register',
   authConfirmEmailUrl: authBaseUrl + '/confirmemail',
@@ -20,7 +22,10 @@ export const environment = {
   apigetUserInfo: authBaseUrl + '/user',
   apiContactGetAllInformUrl: apiContactUrl + '/getallcontactinform',
   apiContactGetAllUnknownInformUrl: apiContactUrl + '/getallunknowncontactinform',
+  apiGetContactChatList: apiContactUrl+'/getchatlist',
   apiGetChatListByConvId: apiConvUrl +'/dialog/',
+  apiGetChatListByUserId:apiConvUrl+'/dialogs/',
+  apiMessageUrl: apiMessageUrl,
   messageHubUrl : messageHubUrl,
   applicationGoogle: {
     clientId: '790976332784-alnl6bf2ofphpi9t6elcuhbkebifo787.apps.googleusercontent.com',

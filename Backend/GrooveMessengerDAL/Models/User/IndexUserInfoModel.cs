@@ -15,14 +15,5 @@ namespace GrooveMessengerDAL.Models.User
         [MapBy(typeof(StatusName))]
         public string Status { get; set; }
         public string Avatar { get; set; }
-    }
-
-    [AttributeUsage(AttributeTargets.Property, Inherited = false)]
-    public class MapBy : Attribute
-    {
-        public MapBy(Type enumType)
-        {
-
-        }
-    }
+    }    
 }

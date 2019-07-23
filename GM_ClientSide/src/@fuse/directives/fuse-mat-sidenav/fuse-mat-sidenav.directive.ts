@@ -10,8 +10,7 @@ import { FuseMatSidenavHelperService } from '@fuse/directives/fuse-mat-sidenav/f
 @Directive({
     selector: '[fuseMatSidenavHelper]'
 })
-export class FuseMatSidenavHelperDirective implements OnInit, OnDestroy
-{
+export class FuseMatSidenavHelperDirective implements OnInit, OnDestroy {
     @HostBinding('class.mat-is-locked-open')
     isLockedOpen: boolean;
 
@@ -37,8 +36,7 @@ export class FuseMatSidenavHelperDirective implements OnInit, OnDestroy
         private _fuseMatSidenavHelperService: FuseMatSidenavHelperService,
         private _matSidenav: MatSidenav,
         private _mediaObserver: MediaObserver
-    )
-    {
+    ) {
         // Set the defaults
         this.isLockedOpen = true;
 
@@ -53,19 +51,16 @@ export class FuseMatSidenavHelperDirective implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Register the sidenav to the service
         this._fuseMatSidenavHelperService.setSidenav(this.fuseMatSidenavHelper, this._matSidenav);
 
-        if ( this.matIsLockedOpen && this._mediaObserver.isActive(this.matIsLockedOpen) )
-        {
+        if (this.matIsLockedOpen && this._mediaObserver.isActive(this.matIsLockedOpen)) {
             this.isLockedOpen = true;
             this._matSidenav.mode = 'side';
             this._matSidenav.toggle(true);
         }
-        else
-        {
+        else {
             this.isLockedOpen = false;
             this._matSidenav.mode = 'over';
             this._matSidenav.toggle(false);
@@ -74,14 +69,12 @@ export class FuseMatSidenavHelperDirective implements OnInit, OnDestroy
         this._fuseMatchMediaService.onMediaChange
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(() => {
-                if ( this.matIsLockedOpen && this._mediaObserver.isActive(this.matIsLockedOpen) )
-                {
+                if (this.matIsLockedOpen && this._mediaObserver.isActive(this.matIsLockedOpen)) {
                     this.isLockedOpen = true;
                     this._matSidenav.mode = 'side';
                     this._matSidenav.toggle(true);
                 }
-                else
-                {
+                else {
                     this.isLockedOpen = false;
                     this._matSidenav.mode = 'over';
                     this._matSidenav.toggle(false);
@@ -92,8 +85,7 @@ export class FuseMatSidenavHelperDirective implements OnInit, OnDestroy
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
@@ -103,8 +95,7 @@ export class FuseMatSidenavHelperDirective implements OnInit, OnDestroy
 @Directive({
     selector: '[fuseMatSidenavToggler]'
 })
-export class FuseMatSidenavTogglerDirective
-{
+export class FuseMatSidenavTogglerDirective {
     @Input()
     fuseMatSidenavToggler: string;
 
@@ -114,8 +105,7 @@ export class FuseMatSidenavTogglerDirective
      * @param {FuseMatSidenavHelperService} _fuseMatSidenavHelperService
      */
     constructor(
-        private _fuseMatSidenavHelperService: FuseMatSidenavHelperService)
-    {
+        private _fuseMatSidenavHelperService: FuseMatSidenavHelperService) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -126,8 +116,7 @@ export class FuseMatSidenavTogglerDirective
      * On click
      */
     @HostListener('click')
-    onClick(): void
-    {
+    onClick(): void {
         this._fuseMatSidenavHelperService.getSidenav(this.fuseMatSidenavToggler).toggle();
     }
 }

@@ -11,6 +11,8 @@ import { UserContactService } from 'app/core/account/user-contact.service';
 import {MessageHubService} from '../../core/data-api/hubs/message.hub';
 import { MessageModel } from 'app/models/message.model';
 import { UserProfileService } from 'app/core/identity/userprofile.service';
+import { ProfileHubService } from 'app/core/data-api/hubs/profile.hub';
+
 @Injectable()
 export class ChatService implements Resolve<any>
 {
@@ -129,9 +131,9 @@ export class ChatService implements Resolve<any>
 
         return new Promise((resolve, reject) => {
 
-            const contact = this.unknownContacts.concat(this.contacts).find((item) => {
-                return item.userId === contactId;
-            });
+            // const contact = this.unknownContacts.concat(this.contacts).find((item) => {
+            //     return item.userId === contactId;
+            // });
 
             const chatId = FuseUtils.generateGUID();
 
@@ -144,7 +146,7 @@ export class ChatService implements Resolve<any>
                 contactId: contactId,
                 id: chatId,
                 lastMessageTime: '2017-02-18T10:30:18.931Z',
-                name: contact.displayName,
+                //name: contact.displayName,
                 unread: null
             };
 
@@ -228,17 +230,19 @@ export class ChatService implements Resolve<any>
      * @returns {Promise<any>}
      */
     getContacts(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this._userContactService.getContacts()
-                .subscribe((response: any) => {
-                    resolve(response);
-                }, reject);
-        });     
+        return this._userContactService.getContacts().toPromise();
+
+
+    }
+    getUnknownContacts(displayNameSearch?: string): Promise<any> {
+
+        return this._userContactService.getUnknownContacts(displayNameSearch).toPromise();
     }
 
     // getUnknownContacts(displayNameSearch?: string): Promise<any> {
     //     //return this._userContactService.getUnknownContacts(displayNameSearch).toPromise();
     // }
+
 
 
     /**

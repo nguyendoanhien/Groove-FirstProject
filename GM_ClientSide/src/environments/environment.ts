@@ -16,6 +16,7 @@ export const environment = {
     appName: 'Groove Messenger Client',
     backendUrl: backendUrl,
     authBaseUrl: authBaseUrl,
+    apiContactUrl:apiContactUrl,
     authLoginUrl: authBaseUrl + '/login',
     authRegisterUrl: authBaseUrl + '/register',
     authConfirmEmailUrl: authBaseUrl + '/confirmemail',
