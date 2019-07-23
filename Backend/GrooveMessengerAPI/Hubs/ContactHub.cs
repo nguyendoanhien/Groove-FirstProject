@@ -49,12 +49,6 @@ namespace GrooveMessengerAPI.Hubs
         
         public async Task SendNewContactToUser(AddContactModel Contact, CreateConversationModel createConversationModel)
         {
-            AddContactModel contact = new AddContactModel() { UserId = Contact.UserId, ContactId = Contact.ContactId, NickName = Contact .NickName  };
-            _contactService.AddContact(Contact);
-            CreateMessageModel createMessage = new CreateMessageModel() { ConversationId = createConversationModel.Id };
-            ParticipantModel UserPar = new ParticipantModel() { Id = Guid.NewGuid(), ConvId = createConversationModel.Id, UserId = _userResolverservice.CurrentUserId() };
-            _participantService.AddParticipant(UserPar);
-
             foreach (var connectionId in connectionStore.GetConnections(Contact.ContactId))
             {
                 await Clients.Client(connectionId).SendNewContactToFriend(Contact.ContactId);
@@ -69,11 +63,18 @@ namespace GrooveMessengerAPI.Hubs
             }
         }
 
+        public void UpdateContactList()
+        {
+            _contactService.GetUserContactList();
+        }
+
         public async Task AddContact(AddContactModel addContact)
         {
             //Add Contact
             AddContactModel contactToUser = new AddContactModel() { UserId = addContact.UserId, NickName = addContact.NickName,ContactId = addContact.ContactId };
             _contactService.AddContact(contactToUser);
+            AddContactModel contact = new AddContactModel() { UserId = _userResolverservice.CurrentUserId(), NickName = Context.User.Identity.Name, ContactId = _userResolverservice.CurrentUserInfoId() };
+            _contactService.AddContact(contact);
             //Create UserInfo
             CreateUserInfoModel userInfo = new CreateUserInfoModel(){ UserId = _userResolverservice.CurrentUserId()};
             _userInfoContact.AddUserInfo(userInfo);
@@ -84,14 +85,18 @@ namespace GrooveMessengerAPI.Hubs
             CreateConversationModel createConversationModel = new CreateConversationModel() { Id = Guid.NewGuid() };
             _conversationService.AddConversation();
 
+
             // Create Msg
             CreateMessageModel createMessage = new CreateMessageModel() { ConversationId = createConversationModel.Id };
             _messageService.AddMessage(createMessage);
 
+
             //Add Participant
             ParticipantModel newPar = new ParticipantModel() { Id = Guid.NewGuid(), ConvId = createConversationModel.Id ,UserId = _userResolverservice.CurrentUserId()};
             _participantService.AddParticipant(newPar);
-            
+            ParticipantModel UserPar = new ParticipantModel() { Id = Guid.NewGuid(), ConvId = createConversationModel.Id, UserId = _userResolverservice.CurrentUserId() };
+            _participantService.AddParticipant(UserPar);
+
 
             await Clients.Client(addContact.ContactId).AddNewContact(addContact);
 

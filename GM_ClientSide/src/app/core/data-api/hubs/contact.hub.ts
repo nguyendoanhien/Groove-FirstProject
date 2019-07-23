@@ -38,6 +38,7 @@ export class ContactHubService implements OnInit {
     ngOnInit() {
         this._hubConnection.on('AddNewContact', (contact: ContactModel)=> {
             this.newContact.next(contact);
+            this.addUpdateContactList();
         });
         this._hubConnection.on('SendNewContactToFriend', (contact: ContactModel) => {
             this.newContact.next(contact);
