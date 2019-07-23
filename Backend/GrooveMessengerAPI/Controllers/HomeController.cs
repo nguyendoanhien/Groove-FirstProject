@@ -14,6 +14,8 @@ namespace GrooveMessengerAPI.Controllers
         }
         public IActionResult Index()
         {
+
+            throw new IndexOutOfRangeException();
             return View();
         }
 

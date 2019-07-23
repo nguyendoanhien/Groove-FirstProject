@@ -73,15 +73,14 @@ export class LoginComponent implements OnInit {
             });
         }
 
-        if (localStorage.getItem('token') != null)
-        {
+        if (localStorage.getItem('token') != null) {
             this._router.navigate(['apps', 'chat']);
         }
     }
 
     onPaste(event: ClipboardEvent) {
         event.preventDefault();
-     }
+    }
 
     onLogin() {
 
@@ -106,7 +105,8 @@ export class LoginComponent implements OnInit {
         this._authService.signIn(socialPlatformProvider)
             .then((userData) => {
 
-                
+                debugger;
+                console.log(userData);
                 this._userProfileService.logInGoogle(userData.idToken);
 
             });

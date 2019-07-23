@@ -165,6 +165,9 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     }
 
     CountData() {
+        this._chatService.getUnknownContacts(this.searchText).then(
+            data => this.unknownContacts = data
+        );
         const pipe = new FilterPipe();
         const unknownContactPipe = new UnknownContactFilterPipe();
         let arrayContact = pipe.transform(this.user.chatList, this.searchText, '') as Array<any>;

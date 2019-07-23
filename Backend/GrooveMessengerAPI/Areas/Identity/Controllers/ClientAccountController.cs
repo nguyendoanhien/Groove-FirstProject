@@ -226,13 +226,14 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
         {
             try
             {
-                var payload = GoogleJsonWebSignature.ValidateAsync(accessToken, new GoogleJsonWebSignature.ValidationSettings()).Result;
+                var payload = await GoogleJsonWebSignature.ValidateAsync(accessToken, new GoogleJsonWebSignature.ValidationSettings());
                 ExternalLoginInfo info = new ExternalLoginInfo(null, "Google", payload.Subject, "Google");
                 var user = await _userManager.FindByEmailAsync(payload.Email);
 
-                user = new ApplicationUser { UserName = payload.Email, Email = payload.Email };
+                
                 if (user == null)
                 {
+                    user = new ApplicationUser { UserName = payload.Email, Email = payload.Email };
                     var resultCreate = await _userManager.CreateAsync(user);
                     CreateUserInfoModel userInfo = new CreateUserInfoModel();
                     userInfo.UserId = user.Id;
