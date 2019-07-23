@@ -79,7 +79,7 @@ namespace GrooveMessengerAPI.Hubs
             _conversationService.AddConversation();
 
             // Create Msg
-            CreateMessageModel createMessage = new CreateMessageModel() { ConversationId = createConversationModel.Id };
+            CreateMessageModel createMessage = new CreateMessageModel() { ConversationId =  createConversationModel.Id };
             _messageService.AddMessage(createMessage);
 
             //Add Participant

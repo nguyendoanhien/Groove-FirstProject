@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using GrooveMessengerDAL.Uow.Interface;
+using System.Threading.Tasks;
 
 namespace GrooveMessengerDAL.Uow
 {
@@ -15,9 +16,9 @@ namespace GrooveMessengerDAL.Uow
             DbContext.SaveChanges();
         }
 
-        public void SaveChangesAsync()
+        public Task SaveChangesAsync()
         {
-            DbContext.SaveChangesAsync();
+            return DbContext.SaveChangesAsync();
         }
     }
 }

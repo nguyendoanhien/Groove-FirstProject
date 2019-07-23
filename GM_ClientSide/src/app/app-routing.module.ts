@@ -6,6 +6,7 @@ import { AuthRouteGuardService } from './core/auth/authrouteguard.service';
 const routes: Routes = [
   {
     path: '',
+    canActivate: [AuthRouteGuardService],
     redirectTo: 'chat',
     pathMatch: 'full'
   },

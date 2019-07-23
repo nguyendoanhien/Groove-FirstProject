@@ -1,15 +1,11 @@
 using GrooveMessengerAPI.Controllers;
 using GrooveMessengerAPI.Models;
 using GrooveMessengerDAL.Models.Contact;
-using GrooveMessengerDAL.Models.User;
 using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -96,7 +92,10 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                 return BadRequest("Failed");
             }
         }
-
-
+        [HttpGet("getchatlist")]
+        public async Task<IActionResult> GetChatList()
+        {
+            return Ok(await _contactService.GetLatestContactChatListByUserId());
+        }
     }
 }

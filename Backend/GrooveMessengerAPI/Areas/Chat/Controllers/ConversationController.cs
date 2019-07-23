@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using GrooveMessengerDAL.Entities;
-using GrooveMessengerDAL.Models.Conversation;
-using GrooveMessengerDAL.Services.Interface;
-using Microsoft.AspNetCore.Http;
+﻿using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GrooveMessengerAPI.Areas.Chat.Controllers
@@ -17,47 +10,36 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         private readonly IConversationService _conService;
         public ConversationController(IConversationService conService)
         {
-            _conService = conService;
+            this._conService = conService;
         }
 
-       // GET: api/Conversation
-       //[HttpGet("{username}")]
-       // public async Task<IActionResult> Get(string username)
-       // {
-       //     if (ModelState.IsValid)
-       //     {
-       //         return Ok(await _conService.GetConversations(username));
-       //     }
-       //     return BadRequest();
-       // }
-
-        //GET: api/Conversation/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        [HttpGet("dialogs/{UserId}")]
+        public IActionResult GetAll(string UserId)
         {
-            return "value";
+            if (ModelState.IsValid)
+            {
+                var rs = _conService.GetAllConversationOfAUser(UserId);
+                return Ok(rs);
+            }
+            return BadRequest();
         }
 
-
-
+        [HttpGet("dialog/{ConversationId}")]
+        public IActionResult Get(string ConversationId)
+        {
+            if (ModelState.IsValid)
+            {
+                var rs = _conService.GetConversationOfAUser(ConversationId);
+                return Ok(rs);
+            }
+            return BadRequest();          
+        }
         // POST: api/Conversation
         [HttpPost]
         public void Post()
         {
 
             _conService.AddConversation();
-        }
-
-        // PUT: api/Conversation/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

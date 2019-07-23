@@ -2,6 +2,7 @@
 using GrooveMessengerDAL.Data;
 using GrooveMessengerDAL.Entities;
 using GrooveMessengerDAL.Models;
+using GrooveMessengerDAL.Models.CustomModel;
 using GrooveMessengerDAL.Models.Contact;
 using GrooveMessengerDAL.Models.User;
 using GrooveMessengerDAL.Repositories.Interface;
@@ -25,7 +26,12 @@ namespace GrooveMessengerDAL.Services
         private IMapper _mapper;
         private IGenericRepository<UserInfoContactEntity, Guid, GrooveMessengerDbContext> _userInfoContactRepository;
         private IGenericRepository<UserInfoEntity, Guid, GrooveMessengerDbContext> _userInfoRepository;
+
+        private IGenericRepository<ParticipantEntity, Guid, GrooveMessengerDbContext> _parRepository;
+        private IGenericRepository<MessageEntity, Guid, GrooveMessengerDbContext> _mesgRepository;
+
         private readonly IUserService _userService;
+
         public ContactService(
             UserManager<ApplicationUser> userManager,
             IUserResolverService userResolverService,
@@ -33,6 +39,8 @@ namespace GrooveMessengerDAL.Services
             IMapper mapper,
             IGenericRepository<UserInfoContactEntity, Guid, GrooveMessengerDbContext> userInformContactRepository,
             IGenericRepository<UserInfoEntity, Guid, GrooveMessengerDbContext> userInformRepository,
+            IGenericRepository<ParticipantEntity, Guid, GrooveMessengerDbContext> parRepository,
+            IGenericRepository<MessageEntity, Guid, GrooveMessengerDbContext> mesgRepository,
             IUserService userService
             )
         {
@@ -42,6 +50,10 @@ namespace GrooveMessengerDAL.Services
             _mapper = mapper;
             _userInfoContactRepository = userInformContactRepository;
             _userManager = userManager;
+
+            _parRepository = parRepository;
+            _mesgRepository = mesgRepository;
+
             _userService = userService;
         }
         public async Task<IEnumerable<IndexUserInfoModel>> GetUserContactList(string username = null)
@@ -74,6 +86,33 @@ namespace GrooveMessengerDAL.Services
             var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<string>(spName, parameter);
             return contactList;
         }
+        public async Task<string> GetUserContactEmail(string userId)
+        {
+            var email = await _userInfoRepository.FindBy(x => x.UserId == userId).Include(x => x.ApplicationUser).Select(x => x.ApplicationUser.Email).FirstAsync();
+            return email;
+        }
+        public async Task<List<ContactLatestChatListModel>> GetLatestContactChatListByUserId()
+        {
+            List<ContactLatestChatListModel> contactList = new List<ContactLatestChatListModel> { };
+
+            var currentUser = await _userManager.FindByEmailAsync(_userResolverService.CurrentUserName());
+            var convOfCurrentUser = _parRepository.GetBy(x => x.UserId == currentUser.Id.ToString()).Include(inc => inc.ConversationEntity).Select(x => x.ConversationEntity).ToList();
+            foreach (var item in convOfCurrentUser)
+            {
+                var contactOfCurrentUser = _parRepository.GetBy(x => x.UserId != currentUser.Id.ToString() && x.ConversationId == item.Id).FirstOrDefault();
+                var convLastestMessage = _mesgRepository.GetBy(x => x.ConversationId == item.Id).OrderByDescending(x => x.Id).FirstOrDefault();
+                var userContactInfo = _userInfoRepository.GetBy(x => x.UserId == contactOfCurrentUser.UserId).SingleOrDefault();
+                contactList.Add(new ContactLatestChatListModel()
+                {
+                    ConvId = item.Id.ToString(),
+                    ContactId = contactOfCurrentUser.UserId,
+                    DisplayName = userContactInfo.DisplayName,
+                    LastMessage = convLastestMessage.Content,
+                    LastMessageTime = convLastestMessage.CreatedOn
+                });
+            }
+            return contactList;
+        }    
 
         public async Task<IEnumerable<IndexUserInfoModel>> GetUserUnknownContact(string username = null, string displayNameSearch = null)
         {
@@ -117,7 +156,6 @@ namespace GrooveMessengerDAL.Services
 
         public void AddContact(AddContactModel addContactModel)
         {
-
             var newUC = _mapper.Map<AddContactModel, UserInfoContactEntity>(addContactModel);
             Guid PkUserId = new Guid(_userService.GetPkByUserId(newUC.UserId));
             Guid PkContactId = new Guid(_userService.GetPkByUserId(newUC.ContactId));
@@ -128,6 +166,7 @@ namespace GrooveMessengerDAL.Services
         }
         public void EditContact(EditContactModel editContactModel)
         {
+
             var getContact = _userInfoContactRepository.GetSingle(new Guid(editContactModel.Id));
             getContact.NickName = editContactModel.DisplayName;
             _userInfoContactRepository.Edit(getContact);
@@ -138,6 +177,5 @@ namespace GrooveMessengerDAL.Services
         {
             return _userInfoContactRepository.GetSingle(Id);
         }
-
     }
 }

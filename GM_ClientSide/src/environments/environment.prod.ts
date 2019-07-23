@@ -1,9 +1,9 @@
 const backendUrl = 'https://groovemessengerapi.azurewebsites.net';
 const authBaseUrl = backendUrl + '/Identity/ClientAccount';
 const apiContactUrl = backendUrl + '/api/contact';
+const apiConvUrl = backendUrl + '/api/conversation';
 const apiBaseUrl = backendUrl + '/api';
-
-
+const messageHubUrl = backendUrl + '/messagehub';
 export const environment = {
   production: true,
   hmr: false,
@@ -20,6 +20,8 @@ export const environment = {
   apigetUserInfo: authBaseUrl + '/user',
   apiContactGetAllInformUrl: apiContactUrl + '/getallcontactinform',
   apiContactGetAllUnknownInformUrl: apiContactUrl + '/getallunknowncontactinform',
+  apiGetChatListByConvId: apiConvUrl +'/dialog/',
+  messageHubUrl : messageHubUrl,
   applicationGoogle: {
     clientId: '790976332784-alnl6bf2ofphpi9t6elcuhbkebifo787.apps.googleusercontent.com',
     clientSecret: 'vIlgfzy_LuUUn6I73QSYp1Cf'

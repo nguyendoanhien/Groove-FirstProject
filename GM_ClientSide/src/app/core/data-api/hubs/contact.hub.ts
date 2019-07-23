@@ -1,7 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import * as signalR from "@aspnet/signalr";
 import { AuthService } from 'app/core/auth/auth.service';
-import { MessageModel } from './../../../models/message.model';
 import { BehaviorSubject} from 'rxjs';
 import { ContactModel } from 'app/models/contact.model';
 @Injectable({

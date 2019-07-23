@@ -164,17 +164,17 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 
     }
 
-    CountData() {
-        this._chatService.getUnknownContacts(this.searchText).then(
-            data => this.unknownContacts = data
-        );
-        const pipe = new FilterPipe();
-        const unknownContactPipe = new UnknownContactFilterPipe();
-        let arrayContact = pipe.transform(this.user.chatList, this.searchText, '') as Array<any>;
-        let arrayChat = pipe.transform(this.contacts, this.searchText, '') as Array<any>;
-        this.currentSumLength = arrayChat.length + arrayContact.length;
-        let arrayUnknownContact = unknownContactPipe.transform(this.unknownContacts, this.searchText, '') as Array<any>;
-        this.currentUnknownContactLength = arrayUnknownContact.length;
+    // CountData() {
+    //     this._chatService.getUnknownContacts(this.searchText).then(
+    //         data => this.unknownContacts = data
+    //     );
+    //     const pipe = new FilterPipe();
+    //     const unknownContactPipe = new UnknownContactFilterPipe();
+    //     let arrayContact = pipe.transform(this.user.chatList, this.searchText, '') as Array<any>;
+    //     let arrayChat = pipe.transform(this.contacts, this.searchText, '') as Array<any>;
+    //     this.currentSumLength = arrayChat.length + arrayContact.length;
+    //     let arrayUnknownContact = unknownContactPipe.transform(this.unknownContacts, this.searchText, '') as Array<any>;
+    //     this.currentUnknownContactLength = arrayUnknownContact.length;
 
-    }
+    // }
 }
