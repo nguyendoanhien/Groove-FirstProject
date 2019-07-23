@@ -9,7 +9,6 @@ using GrooveMessengerDAL.Repositories.Interface;
 using GrooveMessengerDAL.Services.Interface;
 using GrooveMessengerDAL.Uow.Interface;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -86,28 +85,28 @@ namespace GrooveMessengerDAL.Services
             var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<string>(spName, parameter);
             return contactList;
         }
-        public async Task<List<ContactLatestChatListModel>> GetLatestContactChatListByUserId()
-        {
-            List<ContactLatestChatListModel> contactList = new List<ContactLatestChatListModel> { };
+        //public async Task<List<ContactLatestChatListModel>> GetLatestContactChatListByUserId()
+        //{
+        //    List<ContactLatestChatListModel> contactList = new List<ContactLatestChatListModel> { };
 
-            var currentUser = await _userManager.FindByEmailAsync(_userResolverService.CurrentUserName());
-            var convOfCurrentUser = _parRepository.GetBy(x => x.UserId == currentUser.Id.ToString()).Include(inc => inc.ConversationEntity).Select(x => x.ConversationEntity).ToList();
-            foreach (var item in convOfCurrentUser)
-            {
-                var contactOfCurrentUser = _parRepository.GetBy(x => x.UserId != currentUser.Id.ToString() && x.ConversationId == item.Id).FirstOrDefault();
-                var convLastestMessage = _mesgRepository.GetBy(x => x.ConversationId == item.Id).OrderByDescending(x => x.Id).FirstOrDefault();
-                var userContactInfo = _userInfoRepository.GetBy(x => x.UserId == contactOfCurrentUser.UserId).SingleOrDefault();
-                contactList.Add(new ContactLatestChatListModel()
-                {
-                    ConvId = item.Id.ToString(),
-                    ContactId = contactOfCurrentUser.UserId,
-                    DisplayName = userContactInfo.DisplayName,
-                    LastMessage = convLastestMessage.Content,
-                    LastMessageTime = convLastestMessage.CreatedOn
-                });
-            }
-            return contactList;
-        }
+        //    var currentUser = await _userManager.FindByEmailAsync(_userResolverService.CurrentUserName());
+        //    var convOfCurrentUser = _parRepository.GetBy(x => x.UserId == currentUser.Id.ToString()).Include(inc => inc.ConversationEntity).Select(x => x.ConversationEntity).ToList();
+        //    foreach (var item in convOfCurrentUser)
+        //    {
+        //        var contactOfCurrentUser = _parRepository.GetBy(x => x.UserId != currentUser.Id.ToString() && x.ConversationId == item.Id).FirstOrDefault();
+        //        var convLastestMessage = _mesgRepository.GetBy(x => x.ConversationId == item.Id).OrderByDescending(x => x.Id).FirstOrDefault();
+        //        var userContactInfo = _userInfoRepository.GetBy(x => x.UserId == contactOfCurrentUser.UserId).SingleOrDefault();
+        //        contactList.Add(new ContactLatestChatListModel()
+        //        {
+        //            ConvId = item.Id.ToString(),
+        //            ContactId = contactOfCurrentUser.UserId,
+        //            DisplayName = userContactInfo.DisplayName,
+        //            LastMessage = convLastestMessage.Content,
+        //            LastMessageTime = convLastestMessage.CreatedOn
+        //        });
+        //    }
+        //    return contactList;
+        //}
 
         public async Task<IEnumerable<IndexUserInfoModel>> GetUserUnknownContact(string username = null, string displayNameSearch = null)
         {
@@ -181,7 +180,7 @@ namespace GrooveMessengerDAL.Services
                 {
                     ParameterName = "UserId",
                     SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
-                    SqlValue = "d8874445-19c0-4578-ab28-ada607ca65c3"
+                    SqlValue = "4f592118-ed4e-432f-bc7c-6bb3b4ff299a"
                     //_userResolverService.CurrentUserInfoId()
                 };
 
@@ -196,14 +195,12 @@ namespace GrooveMessengerDAL.Services
                                      ConvId = ContactChat.Key.ConvId,
                                      ContactId = ContactChat.Key.ContactId,
                                      DisplayName = ContactChat.Key.DisplayName,
-                                     LastMessage = ContactChat.OrderByDescending(x => x.LastMessage).FirstOrDefault().LastMessage,
+                                     LastMessage = ContactChat.OrderByDescending(x => x.LastMessageTime).FirstOrDefault().LastMessage,
                                      LastMessageTime = ContactChat.OrderByDescending(x => x.LastMessageTime).FirstOrDefault().LastMessageTime
                                  };
             foreach (var item in contactChatBox)
             {
-                if (item.ContactId != _userResolverService.CurrentUserInfoId())
-                {
-                    ContactLatestChatListModel contactLatestChatListModel = new ContactLatestChatListModel()
+                ContactLatestChatListModel contactLatestChatListModel = new ContactLatestChatListModel()
                     {
                         ConvId = item.ConvId,
                         ContactId = item.ContactId,
@@ -212,7 +209,6 @@ namespace GrooveMessengerDAL.Services
                         LastMessageTime = item.LastMessageTime
                     };
                     latestChatListModels.Add(contactLatestChatListModel);
-                }
             }
             return latestChatListModels;
         }

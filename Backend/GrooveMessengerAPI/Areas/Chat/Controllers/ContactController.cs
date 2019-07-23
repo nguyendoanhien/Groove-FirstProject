@@ -92,10 +92,17 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                 return BadRequest("Failed");
             }
         }
-        [HttpGet("getchatlist")]
-        public async Task<IActionResult> GetChatList()
+        //[HttpGet("getchatlist")]
+        //public async Task<IActionResult> GetChatList()
+        //{
+        //    return Ok(await _contactService.GetLatestContactChatListByUserId());
+        //}
+
+        [HttpGet("getchatlistsp")]
+        public IActionResult GetChatListSP()
         {
-            return Ok(await _contactService.GetLatestContactChatListByUserId());
+            return Ok(_contactService.GetLatestContactChatListByUserId_SP());
         }
+
     }
 }

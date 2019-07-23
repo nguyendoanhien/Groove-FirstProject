@@ -14,20 +14,14 @@ BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
-	--ConvId = item.Id.ToString(),
- --                   ContactId = contactOfCurrentUser.UserId,
- --                   DisplayName = userContactInfo.DisplayName,
- --                   LastMessage = convLastestMessage.Content,
- --                   LastMessageTime = convLastestMessage.CreatedOn
-    -- Insert statements for procedure here
 	--SELECT 
 	SELECT C.Id AS ConvId, UI.Id AS ContactId, UI.DisplayName, M.Content AS LastMessage, M.CreatedOn AS LastMessageTime
-	FROM AspNetUsers U
-	INNER JOIN UserInfo UI on U.Id = UI.UserId
+	FROM UserInfo UI
+	INNER JOIN AspNetUsers U on U.Id = UI.UserId
 	INNER JOIN Participant P on U.Id = P.UserId
 	INNER JOIN [Conversation] C on P.ConversationId = C.Id
 	INNER JOIN [Message] M on M.ConversationId = C.Id
-	WHERE U.Id = @UserId
+	WHERE U.Id = @UserId 
 END";
 
             migrationBuilder.Sql(sp);
