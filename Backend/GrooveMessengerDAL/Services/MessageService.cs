@@ -106,7 +106,8 @@ namespace GrooveMessengerDAL.Services
         }
         public IEnumerable<DialogModel> GetDialogs(Guid ConversationId)
         {
-            var messageList = _mesRepository.GetAll().Where(x => x.ConversationId == ConversationId).ToList();
+            var messageList = _mesRepository.GetAll().Where(x => x.ConversationId == ConversationId)
+                .OrderBy(x=>x.CreatedOn).ToList();
             List<DialogModel> dialogs = new List<DialogModel>();
             foreach (MessageEntity item in messageList)
             {
