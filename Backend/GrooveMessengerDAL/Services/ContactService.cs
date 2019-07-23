@@ -172,50 +172,20 @@ namespace GrooveMessengerDAL.Services
         {
             return _userInfoContactRepository.GetSingle(Id);
         }
-
+                
         public List<ContactLatestChatListModel> GetLatestContactChatListByUserId_SP()
         {
-            var spName = "[dbo].[usp_GetLatestContactChatListByUserId]";
+            var spName = "[dbo].[msp_GetLastestMessageOfAConversation]";
             var parameter =
                 new SqlParameter
                 {
                     ParameterName = "UserId",
                     SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
-                    SqlValue = "a717eca9-1b12-4fb3-80dc-b64d9a295452"
-                    //_userResolverService.CurrentUserId()
+                    SqlValue = _userResolverService.CurrentUserId()
                 };
 
-            var contactListDraft = _userInfoRepository.ExecuteReturedStoredProcedure<ContactLatestChatListModel>(spName, parameter);
-
-            List<ContactLatestChatListModel> latestChatListModels = new List<ContactLatestChatListModel>();
-            var contactChatBox = from contact in contactListDraft
-                                 group contact by new { contact.ContactId, contact.ConvId, contact.DisplayName } into ContactChat
-                                 orderby ContactChat.Key.ContactId, ContactChat.Key.DisplayName, ContactChat.Key.ConvId
-                                 select new
-                                 {
-                                     ConvId = ContactChat.Key.ConvId,
-                                     ContactId = ContactChat.Key.ContactId,
-                                     DisplayName = ContactChat.Key.DisplayName,
-                                     LastMessage = ContactChat.OrderByDescending(x => x.LastMessageTime).FirstOrDefault().LastMessage,
-                                     LastMessageTime = ContactChat.OrderByDescending(x => x.LastMessageTime).FirstOrDefault().LastMessageTime,
-                                     Unread = ContactChat.Where(x => x.Unread == null).Count(),
-                                 };
-            foreach (var item in contactChatBox)
-            {
-                ContactLatestChatListModel contactLatestChatListModel = new ContactLatestChatListModel()
-                    {
-                        ConvId = item.ConvId,
-                        ContactId = item.ContactId,
-                        DisplayName = item.DisplayName,
-                        LastMessage = item.LastMessage,
-                        LastMessageTime = item.LastMessageTime,
-                        Unread = item.Unread.ToString(),
-                    };
-                    latestChatListModels.Add(contactLatestChatListModel);
-                
-                
-            }
-            return latestChatListModels;
+            var contactList = _userInfoRepository.ExecuteReturedStoredProcedure<ContactLatestChatListModel>(spName, parameter);
+            return contactList;
         }
     }
 }

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GrooveMessengerDAL.Migrations
 {
     [DbContext(typeof(GrooveMessengerDbContext))]
-    [Migration("20190723021257_AddSp_usp_GetLatestContactChatListByUserId")]
-    partial class AddSp_usp_GetLatestContactChatListByUserId
+    [Migration("20190723182043_Add_csp_GetConversationById")]
+    partial class Add_csp_GetConversationById
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -155,7 +155,9 @@ namespace GrooveMessengerDAL.Migrations
                         .HasColumnName("CreatedOn");
 
                     b.Property<bool?>("Deleted")
-                        .HasColumnName("Deleted");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("Deleted")
+                        .HasDefaultValueSql("0");
 
                     b.Property<string>("NickName")
                         .HasMaxLength(120);

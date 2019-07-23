@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GrooveMessengerDAL.Migrations
 {
     [DbContext(typeof(GrooveMessengerDbContext))]
-    [Migration("20190723071457_Add_csp_GetConversationById")]
-    partial class Add_csp_GetConversationById
+    [Migration("20190723180236_Add_msp_GetLastestMessageOfAConversation")]
+    partial class Add_msp_GetLastestMessageOfAConversation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
