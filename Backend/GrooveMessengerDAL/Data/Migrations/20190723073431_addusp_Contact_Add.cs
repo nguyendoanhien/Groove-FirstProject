@@ -39,7 +39,7 @@ namespace GrooveMessengerDAL.Migrations
 						   ,@ContactId
 						   ,@NickName
 						   ,GETDATE())
-
+					SELECT @@ROWCOUNT
 	
 				END
 				GO"

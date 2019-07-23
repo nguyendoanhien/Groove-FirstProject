@@ -165,7 +165,7 @@ debugger;
     }
 
     CountData() {
-debugger;
+
         this._chatService.getUnknownContacts(this.searchText).then(
             data => {
                 if (!this.unknownContacts.equals(data))
