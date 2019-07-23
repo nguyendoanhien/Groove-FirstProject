@@ -165,7 +165,6 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     }
 
     CountData() {
-
         this._chatService.getUnknownContacts(this.searchText).then(
             data => {
                 if (!this.unknownContacts.equals(data))
