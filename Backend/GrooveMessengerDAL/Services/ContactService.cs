@@ -157,7 +157,7 @@ namespace GrooveMessengerDAL.Services
                   new SqlParameter("UserId",SqlDbType.UniqueIdentifier){Value=string.IsNullOrEmpty(addContactModel.UserId) ? _userResolverService.CurrentUserInfoId() : addContactModel.UserId},
                   new SqlParameter("ContactId",SqlDbType.UniqueIdentifier) {Value=addContactModel.ContactId},
                   new SqlParameter("CreatedBy",SqlDbType.NVarChar,-1) {Value=string.IsNullOrEmpty(_userResolverService.CurrentUserName()) ? "Root" : _userResolverService.CurrentUserName()},
-                  new SqlParameter("NickName",SqlDbType.NVarChar,12) {Value=addContactModel.DisplayName},
+                  new SqlParameter("NickName",SqlDbType.NVarChar,120) {Value=addContactModel.DisplayName},
             };
 
 
@@ -166,11 +166,14 @@ namespace GrooveMessengerDAL.Services
         }
         public void EditContact(EditContactModel editContactModel)
         {
-
-            var getContact = _userInfoContactRepository.GetSingle(new Guid(editContactModel.Id));
-            getContact.NickName = editContactModel.DisplayName;
-            _userInfoContactRepository.Edit(getContact);
-            _uow.SaveChanges();
+            var spName = "[dbo].[usp_UserInfoContact_EditContact]";
+            var parameter =
+                new SqlParameter[]
+                {
+                   new SqlParameter("Nickname",SqlDbType.NVarChar,120){Value = editContactModel.DisplayName},
+                   new SqlParameter("Id",SqlDbType.UniqueIdentifier){Value = editContactModel.Id}
+                };
+            var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<int>(spName, parameter);
         }
 
         public UserInfoContactEntity GetSingle(Guid Id)

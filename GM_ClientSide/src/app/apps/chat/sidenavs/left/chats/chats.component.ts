@@ -77,7 +77,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-
+debugger;
 
         this.initGetUserInfo();
         this.updateChangeProfileHub();
@@ -85,7 +85,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         this.user = this._chatService.user;
         this.chats = this._chatService.chats;
         this.contacts = this._chatService.contacts;
-
+        
         this.unknownContacts = this._chatService.unknownContacts;
 
         this._chatService.onChatsUpdated
@@ -171,6 +171,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     }
 
     CountData() {
+
         this._chatService.getUnknownContacts(this.searchText).then(
             data => {
 

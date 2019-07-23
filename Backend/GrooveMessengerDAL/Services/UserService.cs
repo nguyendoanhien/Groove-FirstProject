@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Identity;
+using System.Data.SqlClient;
 
 namespace GrooveMessengerDAL.Services
 {
@@ -23,12 +24,14 @@ namespace GrooveMessengerDAL.Services
         private IUowBase<GrooveMessengerDbContext> _uow;
         private readonly UserManager<ApplicationUser> _userManager;
         public IUserResolverService _userResolverService;
+        private IGenericRepository<UserInfoContactEntity, Guid, GrooveMessengerDbContext> _userInfoContactRepository;
         public UserService(
             IGenericRepository<UserInfoEntity, Guid, GrooveMessengerDbContext> userRepository,
             IMapper mapper,
             IUowBase<GrooveMessengerDbContext> uow,
             UserManager<ApplicationUser> userManager,
-            IUserResolverService userResolverService
+            IUserResolverService userResolverService,
+            IGenericRepository<UserInfoContactEntity, Guid, GrooveMessengerDbContext> userInformContactRepository
             )
         {
             _userRepository = userRepository;
@@ -36,6 +39,7 @@ namespace GrooveMessengerDAL.Services
             _uow = uow;
             _userManager = userManager;
             _userResolverService = userResolverService;
+            _userInfoContactRepository = userInformContactRepository;
         }
 
         public void AddUserInfo(CreateUserInfoModel userInfo)
@@ -53,22 +57,20 @@ namespace GrooveMessengerDAL.Services
             IQueryable<UserInfoEntity> result = _userRepository.GetBy(predicate);
             return result;
         }
-
-        public async Task<UserInfoEntity> GetByUsernameAsync(string username)
+        public async Task<IEnumerable<UserInfoEntity>> GetByUsernameAsync(string username)
         {
-            var user = await _userManager.FindByNameAsync(username);
-            var userInfo = this.GetBy(FuncGetByUsername(username)).FirstOrDefault();
-            #region if user doesnot exist in userinfo but in user. Insert with code block here
-            if (user != null && userInfo == null)
-            {
-                AddUserInfo(new CreateUserInfoModel() { UserId = user.Id });
-            }
-            else
-            {
-                userInfo = this.GetBy(FuncGetByUsername(username)).FirstOrDefault();
-            }
-            #endregion
-            return userInfo;
+            var spName = "[dbo].[usp_UserInfo_GetByUsername]";
+            var parameter =
+                new SqlParameter
+                {
+                    ParameterName = "Username",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size=256,
+                    SqlValue = username,
+                };
+
+            var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<UserInfoEntity>(spName, parameter);
+            return contactList;
         }
 
         public UserInfoEntity GetByUsername(string username)
@@ -82,10 +84,7 @@ namespace GrooveMessengerDAL.Services
         {
             return await _userRepository.GetSingleAsync(id);
 
-
         }
-
-
         //Delegate Libraries
 
         Expression<Func<UserInfoEntity, bool>> FuncGetByUsername(string username)
