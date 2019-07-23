@@ -20,7 +20,7 @@ export class ContactHubService implements OnInit {
     public startConnection = () => {
         const securityToken = this.authService.getToken();
         this._hubConnection = new signalR.HubConnectionBuilder()
-            .withUrl('https://localhost:44330/contactub', { accessTokenFactory: () => securityToken })
+            .withUrl('https://localhost:44330/contacthub', { accessTokenFactory: () => securityToken })
             .build();
 
         this._hubConnection
@@ -29,13 +29,16 @@ export class ContactHubService implements OnInit {
             .catch(err => console.log('Error while starting connection: ' + err))
     }
 
-    public addAddNewContact(chatMessage: string, toUser: string) {
-        this._hubConnection.invoke("AddNewContact", chatMessage, toUser).catch(function (err) {
+    public addUpdateContactList() {
+        this._hubConnection.invoke("UpdateContactList").catch(function (err) {
             return console.error(err.toString());
         });
     }
     
     ngOnInit() {
+        this._hubConnection.on('AddNewContact', (contact: ContactModel)=> {
+            this.newContact.next(contact);
+        });
         this._hubConnection.on('SendNewContactToFriend', (contact: ContactModel) => {
             this.newContact.next(contact);
         });

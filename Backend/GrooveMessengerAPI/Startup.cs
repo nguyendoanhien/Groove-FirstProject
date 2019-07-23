@@ -15,6 +15,7 @@ using GrooveMessengerDAL.Data;
 using GrooveMessengerAPI.Auth;
 using GrooveMessengerDAL.Services.Interface;
 using GrooveMessengerDAL.Services;
+using System.Linq;
 
 namespace GrooveMessengerAPI
 {
@@ -66,9 +67,9 @@ namespace GrooveMessengerAPI
                               .AllowCredentials();
                    });
             });
-          
+     
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+           
             RegisterAuth(services);
             RegisterIdentity(services);
             RegisterAutoMapperProfiles(services);
@@ -77,6 +78,7 @@ namespace GrooveMessengerAPI
 
             // Register SignalR
             services.AddSignalR();
+            services.AddScoped<UserProfileHub, UserProfileHub>();
             services.AddScoped<IAuthEmailSenderUtil, AuthEmailSenderUtil>();
         }
 
@@ -108,15 +110,9 @@ namespace GrooveMessengerAPI
 
             RegisterMiddlewares(app);
             SeedRootUserDatabase(serviceProvider);
+
             // Using SignalR
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<MessageHub>("/chatHub");
-            });
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<MessageHub>("/contactHub");
-            });
+            RegisterHub(app);
 
             app.UseMvc(routes =>
             {

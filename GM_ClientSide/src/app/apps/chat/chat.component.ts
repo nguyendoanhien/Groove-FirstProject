@@ -7,6 +7,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { ChatService } from './chat.service';
 import * as signalR from '@aspnet/signalr';
 import { HubConnection } from '@aspnet/signalr';
+import { ProfileHubService } from 'app/core/data-api/hubs/profile.hub';
 
 @Component({
     selector     : 'chat',
@@ -30,7 +31,8 @@ export class ChatComponent implements OnInit, OnDestroy
      * @param {ChatService} _chatService
      */
     constructor(
-        private _chatService: ChatService
+        private _chatService: ChatService,
+        private _profileHub: ProfileHubService
 
     )
     {
@@ -57,8 +59,6 @@ export class ChatComponent implements OnInit, OnDestroy
             .configureLogging(signalR.LogLevel.Information)
             .build();
 
-        
-          
     }
 
     /**

@@ -1,5 +1,6 @@
 const backendUrl = 'https://groovemessengerapi.azurewebsites.net';
 const authBaseUrl = backendUrl + '/Identity/ClientAccount';
+const apiContactUrl = backendUrl + '/api/contact';
 const apiBaseUrl = backendUrl + '/api';
 
 
@@ -16,6 +17,9 @@ export const environment = {
   authFacebookUrl: authBaseUrl + '/loginfacebook',
   authResetPasswordUrl: authBaseUrl + '/resetpassword',
   authForgotPasswordUrl: authBaseUrl + '/forgotpassword',
+  apigetUserInfo: authBaseUrl + '/user',
+  apiContactGetAllInformUrl: apiContactUrl + '/getallcontactinform',
+  apiContactGetAllUnknownInformUrl: apiContactUrl + '/getallunknowncontactinform',
   applicationGoogle: {
     clientId: '790976332784-alnl6bf2ofphpi9t6elcuhbkebifo787.apps.googleusercontent.com',
     clientSecret: 'vIlgfzy_LuUUn6I73QSYp1Cf'
@@ -30,6 +34,9 @@ export const environment = {
   cloudinary: {
     url: 'https://api.cloudinary.com/v1_1/groovemessenger/upload',
     upload_preset: 'qlbjv3if'
+  },
+  hub: {
+    profileUrl: backendUrl + '/profileHub'
   }
 };
 

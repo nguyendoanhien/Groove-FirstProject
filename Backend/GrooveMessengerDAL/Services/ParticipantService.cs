@@ -24,12 +24,14 @@ namespace GrooveMessengerDAL.Services
             _uow = uow;
         }
 
+        
+
         public IEnumerable<Guid> GetAllConversationIdOfAUser(string UserId)
         {
             return _parRepository.GetBy(x => x.UserId == UserId).Select(x=>x.ConversationId).Distinct().ToList();
         }
 
-        public void NewParticipant(ParticipantModel participantModel)
+        public void AddParticipant(ParticipantModel participantModel)
         {
             var par = _mapper.Map<ParticipantModel, ParticipantEntity>(participantModel);
             _parRepository.Add(par);

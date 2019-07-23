@@ -1,5 +1,6 @@
 ﻿using GrooveMessengerAPI.Areas.Chat.Models;
 using GrooveMessengerAPI.Areas.Chat.Models.Contact;
+using GrooveMessengerDAL.Models.Contact;
 using System.Threading.Tasks;
 
 namespace GrooveMessengerAPI.Hubs.Utils
@@ -8,7 +9,7 @@ namespace GrooveMessengerAPI.Hubs.Utils
     {
         Task SendNewContactToFriend(string msg);
         Task SendRemoveContactToFriend(string msg);
-        Task AddNewContact(HubContact fromUserContact);
+        Task AddNewContact(AddContactModel fromUserContact);
         //HubContact fromUserContact
     }
 }

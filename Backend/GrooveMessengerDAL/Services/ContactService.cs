@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,14 +25,15 @@ namespace GrooveMessengerDAL.Services
         private IMapper _mapper;
         private IGenericRepository<UserInfoContactEntity, Guid, GrooveMessengerDbContext> _userInfoContactRepository;
         private IGenericRepository<UserInfoEntity, Guid, GrooveMessengerDbContext> _userInfoRepository;
-
+        private readonly IUserService _userService;
         public ContactService(
             UserManager<ApplicationUser> userManager,
             IUserResolverService userResolverService,
             IUowBase<GrooveMessengerDbContext> uow,
             IMapper mapper,
             IGenericRepository<UserInfoContactEntity, Guid, GrooveMessengerDbContext> userInformContactRepository,
-            IGenericRepository<UserInfoEntity, Guid, GrooveMessengerDbContext> userInformRepository
+            IGenericRepository<UserInfoEntity, Guid, GrooveMessengerDbContext> userInformRepository,
+            IUserService userService
             )
         {
             _userResolverService = userResolverService;
@@ -40,35 +42,104 @@ namespace GrooveMessengerDAL.Services
             _mapper = mapper;
             _userInfoContactRepository = userInformContactRepository;
             _userManager = userManager;
+            _userService = userService;
         }
-        public async Task<IEnumerable<IndexUserInfoModel>> GetAllContact(string username = null)
+        public async Task<IEnumerable<IndexUserInfoModel>> GetUserContactList(string username = null)
+        {
+            // Not good as connecting to database to get data three times
+            // Replace by calling Stored Procedure
+
+            //var currentUser = username == null ? await _userManager.FindByEmailAsync(_userResolverService.CurrentUserName()) : await _userManager.FindByNameAsync(username);
+            //var currentUserInform = _userInfoRepository.GetBy(x => x.UserId == currentUser.Id.ToString()).FirstOrDefault();
+            //var contactList = _userInfoContactRepository.GetBy(x => x.UserId == currentUserInform.Id).Include(inc => inc.ContactInfo).Select(x => x.ContactInfo);
+
+            var spName = "[dbo].[usp_GetUserContactList]";
+            var parameter =
+                new SqlParameter
+                {
+                    ParameterName = "UserInfoId",
+                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                    SqlValue = string.IsNullOrEmpty(username) ? _userResolverService.CurrentUserInfoId() : username
+                };
+
+            var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<IndexUserInfoModel>(spName, parameter);
+            return contactList;
+        }
+
+        public async Task<IEnumerable<string>> GetUserContactEmailList(string username = null)
+        {
+            var spName = "[dbo].[usp_GetUserContactEmailList]";
+            var parameter =
+                new SqlParameter
+                {
+                    ParameterName = "UserInfoId",
+                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                    SqlValue = string.IsNullOrEmpty(username) ? _userResolverService.CurrentUserInfoId() : username
+                };
+
+            var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<string>(spName, parameter);
+            return contactList;
+        }
+
+        public async Task<IEnumerable<IndexUserInfoModel>> GetUserUnknownContact(string username = null)
         {
             var currentUser = username == null ? await _userManager.FindByEmailAsync(_userResolverService.CurrentUserName()) : await _userManager.FindByNameAsync(username);
             var currentUserInform = _userInfoRepository.GetBy(x => x.UserId == currentUser.Id.ToString()).FirstOrDefault();
-            var contactList = _userInfoContactRepository.GetBy(x => x.UserId == currentUserInform.Id).Include(inc => inc.ContactInfo).Select(x => x.ContactInfo);
-            return _mapper.Map<IEnumerable<UserInfoEntity>, IEnumerable<IndexUserInfoModel>>(contactList);
+            var currentContactList = _userInfoContactRepository.GetBy(x => x.UserId == currentUserInform.Id).Include(inc => inc.ContactInfo).Select(x => x.ContactInfo);
+            var allContacts = _userInfoRepository.GetAll().Where(m => m.UserId != currentUser.Id);
+            var unknownContactList = allContacts.Except(currentContactList);// (x => x.UserId == currentUserInform.Id).Include(inc => inc.ContactInfo).Select(x => x.ContactInfo);
+            return _mapper.Map<IEnumerable<UserInfoEntity>, IEnumerable<IndexUserInfoModel>>(unknownContactList);
         }
 
-
-        void Add(FullContactModel contact)
+        public void DeleteContact(DeleteContactModel deleteContactModel)
         {
-            var con = _mapper.Map<FullContactModel, UserInfoContactEntity>(contact);
-            _userInfoContactRepository.Add(con);
+            var getContact = _userInfoContactRepository.GetBy(m => m.UserId == new Guid(deleteContactModel.UserId) && m.ContactId == new Guid(deleteContactModel.ContactId)).FirstOrDefault();
+            //getContact = _mapper.Map<DeleteContactModel, UserInfoContactEntity>(deleteContactModel);
+            getContact.Deleted = true;
+            _userInfoContactRepository.Edit(getContact);
+            _uow.SaveChanges();
+
+        }
+
+        public void AddContact(AddContactModel addContactModel)
+        {
+
+            //if (username == null) username = _userResolverService.CurrentUserName();
+            //var currentUser = await _userManager.FindByNameAsync(username);
+            /////////////////////////////////////////////////////////////////
+            //var TableCurrentUserId = _userService.GetBy((m) => m.UserId == currentUser.Id).FirstOrDefault().Id;
+            //var TableContactId = _userService.GetBy((m) => m.UserId == contactId).FirstOrDefault().Id;
+
+            var newUC = _mapper.Map<AddContactModel, UserInfoContactEntity>(addContactModel);
+
+            //UserInfoContactEntity newUC = new UserInfoContactEntity()
+            //{
+            //    UserId = TableCurrentUserId,
+            //    ContactId = TableContactId
+            //};
+            _userInfoContactRepository.Add(newUC);
             _uow.SaveChanges();
         }
-        //public IQueryable<FullContactModel> GetFromUsername(string userName)
-        //{
+        public void EditContact(EditContactModel editContactModel)
+        {
 
-        //    var res = _userInfoContactRepository.GetBy((m) => m.UserInfo.ApplicationUser.UserName == userName);
-        //    var reRes = _mapper.Map<IQueryable<UserInfoContactEntity>, IQueryable<FullContactModel>>(res);
-        //    return reRes;
-        //}
+            //if (username == null) username = _userResolverService.CurrentUserName();
+            //var currentUser = await _userManager.FindByNameAsync(username);
+            /////////////////////////////////////////////////////////////////
+            //var TableCurrentUserId = _userService.GetBy((m) => m.UserId == currentUser.Id).FirstOrDefault().Id;
+            //var TableContactId = _userService.GetBy((m) => m.UserId == contactId).FirstOrDefault().Id;
 
-        //public IQueryable<FullContactModel> GetContacts()
-        //{
-        //    var res = _userInfoContactRepository.GetAll();
-        //    var reRes = _mapper.Map<IQueryable<UserInfoContactEntity>, IQueryable<FullContactModel>>(res);
-        //    return reRes;
-        //}
+            var getContact = _userInfoContactRepository.GetBy(m => m.UserId == new Guid(editContactModel.UserId) && m.ContactId == new Guid(editContactModel.ContactId)).FirstOrDefault();
+            getContact.NickName = editContactModel.NickName;
+            //UserInfoContactEntity newUC = new UserInfoContactEntity()
+            //{
+            //    UserId = TableCurrentUserId,
+            //    ContactId = TableContactId
+            //};
+            _userInfoContactRepository.Add(getContact);
+            _uow.SaveChanges();
+        }
+
+
     }
 }

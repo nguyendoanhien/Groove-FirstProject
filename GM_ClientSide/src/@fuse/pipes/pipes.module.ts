@@ -5,6 +5,7 @@ import { GetByIdPipe } from './getById.pipe';
 import { HtmlToPlaintextPipe } from './htmlToPlaintext.pipe';
 import { FilterPipe } from './filter.pipe';
 import { CamelCaseToDashPipe } from './camelCaseToDash.pipe';
+import { UnknownContactFilterPipe } from 'app/custom-pipe/unknown-contact-filter.pipe';
 
 @NgModule({
     declarations: [
@@ -12,17 +13,18 @@ import { CamelCaseToDashPipe } from './camelCaseToDash.pipe';
         GetByIdPipe,
         HtmlToPlaintextPipe,
         FilterPipe,
-        CamelCaseToDashPipe
+        CamelCaseToDashPipe,
+        UnknownContactFilterPipe
     ],
-    imports     : [],
-    exports     : [
+    imports: [],
+    exports: [
         KeysPipe,
         GetByIdPipe,
         HtmlToPlaintextPipe,
         FilterPipe,
-        CamelCaseToDashPipe
+        CamelCaseToDashPipe,
+        UnknownContactFilterPipe
     ]
 })
-export class FusePipesModule
-{
+export class FusePipesModule {
 }
