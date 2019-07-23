@@ -66,15 +66,15 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-
+debugger;
 
         this.initGetUserInfo();
 
         this.user = this._chatService.user;
         this.chats = this._chatService.chats;
         this.contacts = this._chatService.contacts;
-
-        // this.unknownContacts = this._chatService.unknownContacts;
+        
+        this.unknownContacts = this._chatService.unknownContacts;
 
         this._chatService.onChatsUpdated
             .pipe(takeUntil(this._unsubscribeAll))
@@ -165,16 +165,54 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     }
 
     CountData() {
-        // this._chatService.getUnknownContacts(this.searchText).then(
-        //     data => this.unknownContacts = data
-        // );
-        // const pipe = new FilterPipe();
+debugger;
+        this._chatService.getUnknownContacts(this.searchText).then(
+            data => {
+                if (!this.unknownContacts.equals(data))
+                    this.unknownContacts = data
+            }
+        );
+        const pipe = new FilterPipe();
         // const unknownContactPipe = new UnknownContactFilterPipe();
-        // let arrayContact = pipe.transform(this.user.chatList, this.searchText, '') as Array<any>;
-        // let arrayChat = pipe.transform(this.contacts, this.searchText, '') as Array<any>;
-        // this.currentSumLength = arrayChat.length + arrayContact.length;
+        let arrayContact = pipe.transform(this.user.chatList, this.searchText, '') as Array<any>;
+        let arrayChat = pipe.transform(this.contacts, this.searchText, '') as Array<any>;
+        this.currentSumLength = arrayChat.length + arrayContact.length;
         // let arrayUnknownContact = unknownContactPipe.transform(this.unknownContacts, this.searchText, '') as Array<any>;
         // this.currentUnknownContactLength = arrayUnknownContact.length;
 
+    }
+
+
+}
+Array.prototype.equals = function (array) {
+    debugger;
+    // if the other array is a falsy value, return
+    if (!array)
+        return false;
+
+    // compare lengths - can save a lot of time
+    if (this.length != array.length)
+        return false;
+
+    for (var i = 0, l = this.length; i < l; i++) {
+        // Check if we have nested arrays
+        if (this[i] instanceof Array && array[i] instanceof Array) {
+            // recurse into the nested arrays
+            if (!this[i].equals(array[i]))
+                return false;
+        }
+        else if (JSON.stringify(this[i]) !== JSON.stringify(array[i])) {
+
+            // Warning - two different object instances will never be equal: {x:20} != {x:20}
+            return false;
+        }
+    }
+    return true;
+}
+// Hide method from for-in loops
+Object.defineProperty(Array.prototype, "equals", { enumerable: false });
+declare global {
+    interface Array<T> {
+        equals: any;
     }
 }

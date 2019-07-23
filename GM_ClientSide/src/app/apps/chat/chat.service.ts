@@ -55,7 +55,7 @@ export class ChatService implements Resolve<any>
             ]).then(
                 ([contacts, unknownContacts, chats, user]) => {
                     this.contacts = contacts;
-                    // this.unknownContacts = unknownContacts;
+                     this.unknownContacts = unknownContacts;
                     this.chats = chats;
                     this.user = user;
                     resolve();
