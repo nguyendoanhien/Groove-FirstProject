@@ -29,8 +29,8 @@ export class ContactHubService implements OnInit {
             .catch(err => console.log('Error while starting connection: ' + err))
     }
 
-    public addUpdateContactList() {
-        this._hubConnection.invoke("UpdateContactList").catch(function (err) {
+    public addAddContact() {
+        this._hubConnection.invoke("AddContact").catch(function (err) {
             return console.error(err.toString());
         });
     }
@@ -38,7 +38,6 @@ export class ContactHubService implements OnInit {
     ngOnInit() {
         this._hubConnection.on('AddNewContact', (contact: ContactModel)=> {
             this.newContact.next(contact);
-            this.addUpdateContactList();
         });
         this._hubConnection.on('SendNewContactToFriend', (contact: ContactModel) => {
             this.newContact.next(contact);

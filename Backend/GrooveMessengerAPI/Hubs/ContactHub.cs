@@ -71,9 +71,9 @@ namespace GrooveMessengerAPI.Hubs
         public async Task AddContact(AddContactModel addContact)
         {
             //Add Contact
-            AddContactModel contactToUser = new AddContactModel() { UserId = addContact.UserId, NickName = addContact.NickName,ContactId = addContact.ContactId };
+            AddContactModel contactToUser = new AddContactModel() { UserId = addContact.UserId, DisplayName = addContact.DisplayName,ContactId = addContact.ContactId };
             _contactService.AddContact(contactToUser);
-            AddContactModel contact = new AddContactModel() { UserId = _userResolverservice.CurrentUserId(), NickName = Context.User.Identity.Name, ContactId = _userResolverservice.CurrentUserInfoId() };
+            AddContactModel contact = new AddContactModel() { UserId = _userResolverservice.CurrentUserId(), DisplayName = Context.User.Identity.Name, ContactId = _userResolverservice.CurrentUserInfoId() };
             _contactService.AddContact(contact);
             //Create UserInfo
             CreateUserInfoModel userInfo = new CreateUserInfoModel(){ UserId = _userResolverservice.CurrentUserId()};
@@ -96,8 +96,8 @@ namespace GrooveMessengerAPI.Hubs
             _participantService.AddParticipant(newPar);
             ParticipantModel UserPar = new ParticipantModel() { Id = Guid.NewGuid(), ConvId = createConversationModel.Id, UserId = _userResolverservice.CurrentUserId() };
             _participantService.AddParticipant(UserPar);
-
-
+            await _contactService.GetUserContactList();
+            
             await Clients.Client(addContact.ContactId).AddNewContact(addContact);
 
         }     
