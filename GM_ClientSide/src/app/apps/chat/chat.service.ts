@@ -49,7 +49,7 @@ export class ChatService implements Resolve<any>
         this.onRightSidenavViewChanged = new Subject();
         this.onRightSidenavViewChanged = new Subject();
         this._userContactService = userContactService;
-        this._messageHub = _messageHubService;
+        this._messageHub = _messageHubService;     
     }
 
     /**
