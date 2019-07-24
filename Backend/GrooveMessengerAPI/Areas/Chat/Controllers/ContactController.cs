@@ -48,11 +48,13 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         }
 
 
+
         [HttpGet("getallunknowncontactinform")]
         public async Task<IActionResult> GetUnknown([FromQuery]PagingParameterModel pagingparametermodel)
         {
             return Ok(await _contactService.GetUserUnknownContact(displayNameSearch: pagingparametermodel.SearchKey));
         }
+
 
 
         [HttpDelete("{id}")]
@@ -112,5 +114,12 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         {
             return Ok(await _contactService.GetLatestContactChatListByUserId());
         }
+
+        [HttpGet("getchatlistsp")]
+        public IActionResult GetChatListSP()
+        {
+            return Ok(_contactService.GetLatestContactChatListByUserId_SP());
+        }
+
     }
 }

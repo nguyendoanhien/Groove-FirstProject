@@ -29,10 +29,10 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         {
             if (ModelState.IsValid)
             {
-                var rs = _conService.GetConversationOfAUser(ConversationId);
+                var rs = _conService.GetConversationById(ConversationId);
                 return Ok(rs);
             }
-            return BadRequest();          
+            return BadRequest();
         }
         // POST: api/Conversation
         [HttpPost]

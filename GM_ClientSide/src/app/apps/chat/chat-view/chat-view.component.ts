@@ -75,8 +75,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this._chatService._messageHub.newChatMessage.subscribe((message: MessageModel) => {
                         if (message) {
                             if (this.chatId === message.fromConv) {
-                                this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time });    
-                                this._chatService._messageHub.newChatMessage.next(null);                            
+                                this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time });
+                                this._chatService._messageHub.newChatMessage.next(null);
                             }
                         }
                     })
@@ -203,11 +203,12 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             message: this.replyForm.form.value.message,
             time: new Date().toISOString()
         };
-        var newMessage: IndexMessageModel = new IndexMessageModel(this.chatId, this.user.userId, null, message.message, 'Text',this.contact.userId);
-        console.log(newMessage);
-        this._messageService.addMessage(newMessage).subscribe(success => {
-            console.log("send successfull");
-        }, err => console.log("send fail"));
+        var newMessage: IndexMessageModel = new IndexMessageModel(this.chatId, this.user.userId, null, message.message, 'Text');
+        this._messageService.addMessage(newMessage).subscribe((addedMessage: IndexMessageModel) => {
+            console.log(addedMessage);
+            var messageToSend: MessageModel = new MessageModel(addedMessage.conversationId, addedMessage.senderId, addedMessage.id, addedMessage.content, addedMessage.createdOn);
+            this._chatService._messageHub.addSendMessageToUser(messageToSend, this.selectedChat.contact.userId);
+        });
         // Add the message to the chat
         this.dialog.push(message);
 
