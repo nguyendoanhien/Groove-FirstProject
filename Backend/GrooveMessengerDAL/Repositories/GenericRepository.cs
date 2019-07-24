@@ -16,6 +16,7 @@ using System.Collections;
 using System.Data.Common;
 using static GrooveMessengerDAL.Entities.UserInfoEntity;
 using GrooveMessengerDAL.Models.User;
+using GrooveMessengerDAL.Models;
 
 namespace GrooveMessengerDAL.Repositories
 {
@@ -55,9 +56,9 @@ namespace GrooveMessengerDAL.Repositories
                 x.Id.Equals(entityId) && (x.Deleted == null || !x.Deleted.Value));
         }
 
-        public async Task<TEntity> GetSingleAsync(TKey entityId)
+        public Task<TEntity> GetSingleAsync(TKey entityId)
         {
-            var result = await Task.Run(() =>
+            var result = Task.Run(() =>
             {
                 return GetSingle(entityId);
             });
@@ -123,9 +124,9 @@ namespace GrooveMessengerDAL.Repositories
             return result;
         }
 
-        public void Add(TEntity entity)
+        public EntityEntry<TEntity> Add(TEntity entity)
         {
-            Entity.Add(entity);
+            return Entity.Add(entity);
         }
 
         public Task<EntityEntry<TEntity>> AddAsync(TEntity entity)

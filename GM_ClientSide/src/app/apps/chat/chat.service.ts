@@ -6,7 +6,12 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { FuseUtils } from '@fuse/utils';
 import { User } from '../model/user.model';
 import { environment } from 'environments/environment';
+import { UserInfoService } from 'app/core/account/userInfo.service';
 import { UserContactService } from 'app/core/account/user-contact.service';
+import {MessageHubService} from '../../core/data-api/hubs/message.hub';
+import { MessageModel } from 'app/models/message.model';
+import { UserProfileService } from 'app/core/identity/userprofile.service';
+import { ProfileHubService } from 'app/core/data-api/hubs/profile.hub';
 
 @Injectable()
 export class ChatService implements Resolve<any>
@@ -22,20 +27,29 @@ export class ChatService implements Resolve<any>
     onLeftSidenavViewChanged: Subject<any>;
     onRightSidenavViewChanged: Subject<any>;
     _userContactService: UserContactService;
+    _messageHub : MessageHubService;   
     /**
      * Constructor
      *
      * @param {HttpClient} _httpClient
+     * @param {UserInfoService} _userInformList 
+     * @param {MessageHubService} _messageHubService
+     * @param {UserProfileService} _userProfileService
      */
-    constructor(private _httpClient: HttpClient, userContactService: UserContactService) {
+    constructor(private _httpClient: HttpClient, userContactService: UserContactService, 
+        private _userInformList: UserInfoService,private _messageHubService: MessageHubService,
+        private _userProfileService : UserProfileService
+        ) {
         // Set the defaults
         this.onChatSelected = new BehaviorSubject(null);
-        this.onContactSelected = new BehaviorSubject(null);
+        this.onContactSelected = new BehaviorSubject(null);       
         this.onChatsUpdated = new Subject();
         this.onUserUpdated = new Subject();
         this.onLeftSidenavViewChanged = new Subject();
         this.onRightSidenavViewChanged = new Subject();
-        this._userContactService = userContactService;
+        this.onRightSidenavViewChanged = new Subject();
+        this._userContactService = userContactService; 
+        this._messageHub = _messageHubService;       
     }
 
     /**
@@ -49,15 +63,17 @@ export class ChatService implements Resolve<any>
         return new Promise((resolve, reject) => {
             Promise.all([
                 this.getContacts(),
-                this.getUnknownContacts(),
+                //this.getUnknownContacts(),
                 this.getChats(),
-                this.getUser()
+                this.getUser(),
+                this.getChatList()
             ]).then(
-                ([contacts, unknownContacts, chats, user]) => {
+                ([contacts, chats, user, chatList]) => {
                     this.contacts = contacts;
-                     this.unknownContacts = unknownContacts;
+                    //this.unknownContacts = unknownContacts;
                     this.chats = chats;
                     this.user = user;
+                    this.user.chatList = chatList                   
                     resolve();
                 },
                 reject
@@ -76,7 +92,6 @@ export class ChatService implements Resolve<any>
         const chatItem = this.user.chatList.find((item) => {
             return item.contactId === contactId;
         });
-
         // Create new chat, if it's not created yet.
         if (!chatItem) {
             this.createNewChat(contactId).then((newChats) => {
@@ -85,20 +100,13 @@ export class ChatService implements Resolve<any>
             return;
         }
 
-
-
         return new Promise((resolve, reject) => {
-            this._httpClient.get('api/chat-chats/' + chatItem.id)
-                .subscribe((response: any) => {
+            this._httpClient.get(environment.apiGetChatListByConvId + chatItem.convId)
+                .subscribe((response: any) => {                   
                     const chat = response;
-                    //Hien Edit
-                    // const chatContact = this.contacts.find((contact) => {
-                    //     return contact.id === contactId;
-                    // });
                     const chatContact = this.contacts.concat(this.unknownContacts).find((contact) => {
-                        return contact.id === contactId;
+                        return contact.userId === contactId;
                     });
-
                     const chatData = {
                         chatId: chat.id,
                         dialog: chat.dialog,
@@ -122,14 +130,10 @@ export class ChatService implements Resolve<any>
     createNewChat(contactId): Promise<any> {
 
         return new Promise((resolve, reject) => {
-            //Hien edit
-            // const contact = this.contacts.find((item) => {
-            //     return item.id === contactId;
-            // });
 
-            const contact = this.unknownContacts.concat(this.contacts).find((item) => {
-                return item.id === contactId;
-            });
+            // const contact = this.unknownContacts.concat(this.contacts).find((item) => {
+            //     return item.userId === contactId;
+            // });
 
             const chatId = FuseUtils.generateGUID();
 
@@ -142,7 +146,7 @@ export class ChatService implements Resolve<any>
                 contactId: contactId,
                 id: chatId,
                 lastMessageTime: '2017-02-18T10:30:18.931Z',
-                name: contact.displayName,
+                //name: contact.displayName,
                 unread: null
             };
 
@@ -225,21 +229,19 @@ export class ChatService implements Resolve<any>
      *
      * @returns {Promise<any>}
      */
-    // getContacts(): Promise<any> {
-
-    //     return new Promise((resolve, reject) => {
-    //         this._httpClient.get('api/chat-contacts')
-    //             .subscribe((response: any) => {
-    //                 resolve(response);
-    //             }, reject);
-    //     });
-    // }
     getContacts(): Promise<any> {
         return this._userContactService.getContacts().toPromise();
+
+
     }
     getUnknownContacts(displayNameSearch?: string): Promise<any> {
         return this._userContactService.getUnknownContacts(displayNameSearch).toPromise();
     }
+
+    // getUnknownContacts(displayNameSearch?: string): Promise<any> {
+    //     //return this._userContactService.getUnknownContacts(displayNameSearch).toPromise();
+    // }
+
 
 
     /**
@@ -247,9 +249,9 @@ export class ChatService implements Resolve<any>
      *
      * @returns {Promise<any>}
      */
-    getChats(): Promise<any> {
+    getChats(): Promise<any> {        
         return new Promise((resolve, reject) => {
-            this._httpClient.get('api/chat-chats')
+            this._httpClient.get(environment.apiGetChatListByUserId+ this._userProfileService.userProfile.UserId) // using static user id to test
                 .subscribe((response: any) => {
                     resolve(response);
                 }, reject);
@@ -263,11 +265,23 @@ export class ChatService implements Resolve<any>
      */
     getUser(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this._httpClient.get('api/chat-user')
+            this._httpClient.get(environment.apiUserUrl)
                 .subscribe((response: any) => {
-                    resolve(response[0]);
+                    resolve(response);
                 }, reject);
         });
     }
-
+    /**
+     * Get chat list
+     *
+     * @returns {Promise<any>}
+     */
+    getChatList(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this._httpClient.get(environment.apiGetContactChatList)
+                .subscribe((response: any) => {
+                    resolve(response);
+                }, reject);
+        });
+    }
 }

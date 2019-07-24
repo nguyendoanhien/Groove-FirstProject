@@ -22,10 +22,11 @@ const httpOptions = {
 @Injectable()
 export class UserProfileService {
 
-    private userProfile: UserProfileModel;
+    public userProfile: UserProfileModel;
     constructor(private router: Router,
                 private authService: AuthService,
-                private http: HttpClient) {
+                private http: HttpClient,
+                ) {
         this.userProfile = new UserProfileModel();
     }
 

@@ -37,7 +37,7 @@ namespace GrooveMessengerDAL.Repositories.Interface
 
         Task<IQueryable<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate);
 
-        void Add(TEntity entity);
+        EntityEntry<TEntity> Add(TEntity entity);
 
         Task<EntityEntry<TEntity>> AddAsync(TEntity entity);
 

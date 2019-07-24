@@ -1,18 +1,22 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
-
+'https://localhost:44383/api/Conversation/dialogs/4f592118-ed4e-432f-bc7c-6bb3b4ff299a'
 const backendUrl = 'https://localhost:44383';
 const authBaseUrl = backendUrl + '/Identity/ClientAccount';
 const apiContactUrl = backendUrl + '/api/contact';
+const apiConvUrl = backendUrl + '/api/conversation';
+const apiMessageUrl = backendUrl + '/api/message';
+const apiUserUrl = backendUrl + '/api/user'
 const apiBaseUrl = backendUrl + '/api';
-
+const messageHubUrl = backendUrl + '/messagehub';
 export const environment = {
     production: false,
     hmr: false,
     appName: 'Groove Messenger Client',
     backendUrl: backendUrl,
     authBaseUrl: authBaseUrl,
+    apiContactUrl:apiContactUrl,
     authLoginUrl: authBaseUrl + '/login',
     authRegisterUrl: authBaseUrl + '/register',
     authConfirmEmailUrl: authBaseUrl + '/confirmemail',
@@ -23,6 +27,12 @@ export const environment = {
     apigetUserInfo: authBaseUrl + '/user',
     apiContactGetAllInformUrl: apiContactUrl + '/getallcontactinform',
     apiContactGetAllUnknownInformUrl: apiContactUrl + '/getallunknowncontactinform',
+    apiGetContactChatList: apiContactUrl+'/getchatlist',
+    apiGetChatListByConvId: apiConvUrl + '/dialog/',
+    apiGetChatListByUserId:apiConvUrl+'/dialogs/',
+    apiGetUser: apiUserUrl,
+    apiMessageUrl: apiMessageUrl,
+    messageHubUrl: messageHubUrl,
     applicationGoogle: {
         clientId: '687824117544-nvc2uojbm14hc330gl8qh3lsrtl3tc4a.apps.googleusercontent.com',
         clientSecret: 'ugBBsDjYS-Rz20RVlx9r7Blo'

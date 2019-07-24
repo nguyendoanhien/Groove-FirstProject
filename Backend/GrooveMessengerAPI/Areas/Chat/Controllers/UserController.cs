@@ -77,12 +77,17 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                 var emailList = await _contactService.GetUserContactEmailList();
                 foreach (var connectionId in _hubConnectionStore.GetConnections(emailList))
                 {
-                    _userProfileHubContext.Clients.Client(connectionId).ClientChangeUserProfile(userProfile);
+                    await _userProfileHubContext.Clients.Client(connectionId).ClientChangeUserProfile(userProfile);
                 }
                 return userInfo;
             }
 
             return null;
+        }
+        [HttpGet("getalluserinform")]
+        public async Task<IEnumerable<IndexUserInfoModel>> GetAllUserInform()
+        {
+            return await _userService.GetAllUserInfo();
         }
     }
 }

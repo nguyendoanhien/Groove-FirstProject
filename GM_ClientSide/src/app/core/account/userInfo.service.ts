@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, retry, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { UserInfo } from 'app/apps/chat/sidenavs/left/user/userInfo.model';
+import { ProfileHubService } from '../data-api/hubs/profile.hub';
 const apiUserUrl = environment.apiUserUrl;
 const cloudinaryUrl = environment.cloudinary.url;
 const cloudinaryPreset = environment.cloudinary.upload_preset;
@@ -13,7 +14,8 @@ export class UserInfoService {
     userInfo: UserInfo
 
     constructor(private router: Router,
-        private http: HttpClient) {
+        private http: HttpClient,
+        ) {
         this.userInfo = new UserInfo();
     }
 
@@ -25,7 +27,9 @@ export class UserInfoService {
 
     changeDisplayName() {
         return this.http.put(apiUserUrl, this.userInfo).pipe(
-            map((res: any) => this.userInfo = res as UserInfo)
+            map((res: any) => {
+                this.userInfo = res as UserInfo;
+            })
         );
     }
 

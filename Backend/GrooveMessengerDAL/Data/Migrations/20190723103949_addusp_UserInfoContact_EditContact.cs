@@ -9,12 +9,11 @@ namespace GrooveMessengerDAL.Migrations
             migrationBuilder.Sql(
                 @"
                 -- =============================================
-                -- Author:		<Linh ,Tran>
-                -- Create date: <2019-07-24>
-                -- Description:	<Edit User Nickname by UserId>
+                -- Author:		Linh Tran
+				-- Create date: 2019-07-23
+				-- Description:	Edit contact
                 -- =============================================
-                    -- =============================================
-                    create PROCEDURE [dbo].[usp_UserInfoContact_EditContact]
+                CREATE PROCEDURE [dbo].[usp_UserInfoContact_EditContact]
 	                -- Add the parameters for the stored procedure here
 	                @Nickname nvarchar(120) ,-- This is an string
                 	@Id uniqueidentifier --this is a number
@@ -22,9 +21,9 @@ namespace GrooveMessengerDAL.Migrations
                 BEGIN
 	                SET NOCOUNT ON;
 		
-	                update UserInfoContact
-					set NickName = @Nickname
-					where UserInfoContact.Id = @Id
+	                UPDATE UserInfoContact
+					SET NickName = @Nickname
+					WHERE UserInfoContact.Id = @Id
 
                 END
                 GO"
