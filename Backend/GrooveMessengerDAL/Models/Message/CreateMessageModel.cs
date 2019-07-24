@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GrooveMessengerDAL.Models.Message
 {
@@ -15,5 +13,7 @@ namespace GrooveMessengerDAL.Models.Message
         public string Content { get; set; }
 
         public string Type { get; set; }
+
+        public string Receiver { get; set; } // Not mapping to MessageEntity
     }
 }

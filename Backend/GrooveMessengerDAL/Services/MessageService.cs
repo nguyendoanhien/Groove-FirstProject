@@ -83,11 +83,11 @@ namespace GrooveMessengerDAL.Services
         }
 
         public async Task<IndexMessageModel> AddMessageAsync(CreateMessageModel msg)
-        {          
+        {
             var mes = _mapper.Map<CreateMessageModel, MessageEntity>(msg);
-            var addedMessage = await _mesRepository.AddAsync(mes);
-            _uow.SaveChangesAsync();
-            return _mapper.Map<MessageEntity,IndexMessageModel>(addedMessage.Entity);
+            var addedMessage = _mesRepository.Add(mes);
+            await _uow.SaveChangesAsync();
+            return _mapper.Map<MessageEntity, IndexMessageModel>(addedMessage.Entity);
         }
 
         public MessageEntity GetMessageById(Guid Id)
