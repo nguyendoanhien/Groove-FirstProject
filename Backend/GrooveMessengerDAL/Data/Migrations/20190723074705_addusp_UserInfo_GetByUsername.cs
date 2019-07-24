@@ -9,6 +9,7 @@ namespace GrooveMessengerDAL.Migrations
             migrationBuilder.Sql(
                 @"
                     -- =============================================
+<
                 -- Author:		Linh Tran
 				-- Create date: 2019-07-23
 				-- Description:	Get user information by user name

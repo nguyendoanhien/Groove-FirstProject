@@ -4,8 +4,9 @@ using System.Text;
 
 namespace GrooveMessengerDAL.Models.Message
 {
-    public class EditMessageModel : AuditBaseModel<Guid>
+    public class EditMessageModel 
     {
         public string Content { get; set; }
+        public Guid Id { get; set; }
     }
 }
