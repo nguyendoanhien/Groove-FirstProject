@@ -106,16 +106,11 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             }
         }
         [HttpGet("getchatlist")]
-        public async Task<IActionResult> GetChatList()
-        {
-            return Ok(await _contactService.GetLatestContactChatListByUserId());
-        }
-
-        [HttpGet("getchatlistsp")]
-        public IActionResult GetChatListSP()
+        public  IActionResult GetChatList()
         {
             return Ok(_contactService.GetLatestContactChatListByUserId_SP());
         }
+
 
     }
 }

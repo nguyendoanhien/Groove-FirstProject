@@ -92,28 +92,28 @@ namespace GrooveMessengerDAL.Services
             var email = await _userInfoRepository.FindBy(x => x.UserId == userId).Include(x => x.ApplicationUser).Select(x => x.ApplicationUser.Email).FirstAsync();
             return email;
         }
-        public async Task<List<ContactLatestChatListModel>> GetLatestContactChatListByUserId()
-        {
-            List<ContactLatestChatListModel> contactList = new List<ContactLatestChatListModel> { };
+        //public async Task<List<ContactLatestChatListModel>> GetLatestContactChatListByUserId()
+        //{
+        //    List<ContactLatestChatListModel> contactList = new List<ContactLatestChatListModel> { };
 
-            var currentUser = await _userManager.FindByEmailAsync("anhtrucphanit@gmail.com");
-            var convOfCurrentUser = _parRepository.GetBy(x => x.UserId == currentUser.Id.ToString()).Include(inc => inc.ConversationEntity).Select(x => x.ConversationEntity).ToList();
-            foreach (var item in convOfCurrentUser)
-            {
-                var contactOfCurrentUser = _parRepository.GetBy(x => x.UserId != currentUser.Id.ToString() && x.ConversationId == item.Id).FirstOrDefault();
-                var convLastestMessage = _mesgRepository.GetBy(x => x.ConversationId == item.Id).OrderByDescending(x => x.Id).FirstOrDefault();
-                var userContactInfo = _userInfoRepository.GetBy(x => x.UserId == contactOfCurrentUser.UserId).SingleOrDefault();
-                contactList.Add(new ContactLatestChatListModel()
-                {
-                    ConvId = item.Id,
-                    ContactId = contactOfCurrentUser.UserId,
-                    DisplayName = userContactInfo.DisplayName,
-                    LastMessage = convLastestMessage.Content,
-                    LastMessageTime = convLastestMessage.CreatedOn
-                });
-            }
-            return contactList;
-        }
+        //    var currentUser = await _userManager.FindByEmailAsync("anhtrucphanit@gmail.com");
+        //    var convOfCurrentUser = _parRepository.GetBy(x => x.UserId == currentUser.Id.ToString()).Include(inc => inc.ConversationEntity).Select(x => x.ConversationEntity).ToList();
+        //    foreach (var item in convOfCurrentUser)
+        //    {
+        //        var contactOfCurrentUser = _parRepository.GetBy(x => x.UserId != currentUser.Id.ToString() && x.ConversationId == item.Id).FirstOrDefault();
+        //        var convLastestMessage = _mesgRepository.GetBy(x => x.ConversationId == item.Id).OrderByDescending(x => x.Id).FirstOrDefault();
+        //        var userContactInfo = _userInfoRepository.GetBy(x => x.UserId == contactOfCurrentUser.UserId).SingleOrDefault();
+        //        contactList.Add(new ContactLatestChatListModel()
+        //        {
+        //            ConvId = item.Id,
+        //            ContactId = contactOfCurrentUser.UserId,
+        //            DisplayName = userContactInfo.DisplayName,
+        //            LastMessage = convLastestMessage.Content,
+        //            LastMessageTime = convLastestMessage.CreatedOn
+        //        });
+        //    }
+        //    return contactList;
+        //}
 
         public async Task<IEnumerable<IndexUserInfoModel>> GetUserUnknownContact(string username = null, string displayNameSearch = null)
         {
