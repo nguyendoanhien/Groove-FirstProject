@@ -98,7 +98,6 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                     var receiverEmail = await _contactService.GetUserContactEmail(createMessageModel.Receiver);
                     foreach (var connectionId in _connectionStore.GetConnections(receiverEmail))
                     {
-                        var conn = connectionId;
                         await _hubContext.Clients.Client(connectionId).SendMessage(message);
                     }
                     return Ok();

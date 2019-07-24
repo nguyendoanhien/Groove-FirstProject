@@ -6,7 +6,6 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseMatSidenavHelperService } from '@fuse/directives/fuse-mat-sidenav/fuse-mat-sidenav.service';
 import { ChatService } from '../../../chat.service';
 import { UserProfileService } from 'app/core/identity/userprofile.service';
-import { UnknownContactFilterPipe } from 'app/custom-pipe/unknown-contact-filter.pipe';
 import { FilterPipe } from '@fuse/pipes/filter.pipe';
 import { UserInfoService } from 'app/core/account/userInfo.service';
 import { HubConnection } from '@aspnet/signalr';
@@ -77,7 +76,6 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-debugger;
 
         this.initGetUserInfo();
         this.updateChangeProfileHub();
@@ -131,7 +129,6 @@ debugger;
      * @param contact
      */
     getChat(contact): void {
-
         this._chatService.getChat(contact);
         if (!this._mediaObserver.isActive('gt-md')) {
             this._fuseMatSidenavHelperService.getSidenav('chat-left-sidenav').toggle();
@@ -204,7 +201,6 @@ debugger;
 }
 //Global----------------------------------
 Array.prototype.equals = function (array) {
-    debugger;
     // if the other array is a falsy value, return
     if (!array)
         return false;
