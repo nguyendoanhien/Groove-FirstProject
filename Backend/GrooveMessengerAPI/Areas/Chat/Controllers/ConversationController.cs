@@ -2,6 +2,7 @@
 using GrooveMessengerDAL.Models;
 using GrooveMessengerDAL.Models.Contact;
 using GrooveMessengerDAL.Models.Conversation;
+using GrooveMessengerDAL.Models.CustomModel;
 using GrooveMessengerDAL.Models.Message;
 using GrooveMessengerDAL.Models.Participant;
 using GrooveMessengerDAL.Models.User;
@@ -11,6 +12,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GrooveMessengerAPI.Areas.Chat.Controllers
@@ -149,10 +152,12 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             _participantService.AddParticipant(par);
             ParticipantModel parcurrent = new ParticipantModel() { Id = Guid.NewGuid(), UserId = user.Id, ConversationId = createConversationModel.Id, Status = 1 };
             _participantService.AddParticipant(parcurrent);
+            List<DialogModel> diaglogModel = new List<DialogModel> { };
+            diaglogModel.Add(new DialogModel() { Who = createMessageModel.SenderId, Message = createMessageModel.Content, Time = DateTime.UtcNow });
+            var dialog = new { id = createConversationModel.Id, dialog = diaglogModel };
+            var chatContact = new { convId = createConversationModel.Id, contactId = userIndex.UserId, displayName = userIndex.DisplayName, lastMessage = createMessageModel.Content, lastMessageTime = DateTime.UtcNow };
 
-            var messageRes = new { who = createMessageModel.SenderId, message = createMessageModel.Content, time = DateTime.UtcNow };
-   
-            return new ObjectResult(new { message = messageRes, conversation = createConversationModel, contact = userIndex });
+            return new ObjectResult(new { Contact =userIndex, ChatContact = chatContact, dialog });
         }
     }
 }

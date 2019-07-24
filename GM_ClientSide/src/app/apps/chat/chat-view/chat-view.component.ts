@@ -227,18 +227,18 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
         console.log(contact)
         this._userContactService.SayHi(contact).subscribe(
-            (res: any) => {
-                // {convId: "190f502d-960e-4fc6-b689-bcb9a13f05d2", contactId: "8049ebda-c858-470f-8009-74a25714ba4d", displayName: "Tu Phi", lastMessage: "say hi", lastMessageTime: "2019-07-24T04:51:22.0074283"}
-
-                var obj = { id: res.conversation.id, dialog: [{ who: res.message.who, message: res.message.message, time: res.message.time }] };
-                var chatobj = {
-                    convId: res.conversation.id, contactId: res.contact.userId, displayName: res.contact.displayName, lastMessage: res.message.message, lastMessageTime: res.message.time
-                }
-                console.log(this._chatService.chats);
+            (res: any) => {    
+                console.log(res);
                 this._chatService.contacts.push(res.contact);
-                this._chatService.user.chatList.push(chatobj);
-                console.log(this._chatService.user.chatList);
-                this._chatService.chats.push(obj);
+                this._chatService.user.chatList.push(res.chatContact);              
+                this._chatService.chats.push(res.diaglog);
+                this._chatService.unknownContacts.filter(x=>x.userId !== res.contact.userId);
+                const chatData = {
+                    chatId: res.dialog.id, // This is id of conversation
+                    dialog: res.dialog.dialog,
+                    contact: res.contact
+                };
+                this._chatService.onChatSelected.next({ ...chatData });              
             }
         );
     }
