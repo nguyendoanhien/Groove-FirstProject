@@ -64,12 +64,12 @@ export class LoginComponent implements OnInit {
             this.checkRemember = true;
             this.loginForm = this._formBuilder.group({
                 userName: [this._cookieService.get('userName'), [Validators.required, Validators.pattern('[a-zA-Z0-9.-]{1,}@[a-z0-9.-]+\.[a-z]{2,4}$'), Validators.minLength(6)]],
-                password: [this._cookieService.get('password'), [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}$/)]]
+                password: [this._cookieService.get('password'), [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)]]
             });
         } else {
             this.loginForm = this._formBuilder.group({
                 userName: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9.-]{1,}@[a-z0-9.-]+\.[a-z]{2,4}$'), Validators.minLength(6)]],
-                password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}$/)]]
+                password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)]]
             });
         }
 
@@ -103,7 +103,6 @@ export class LoginComponent implements OnInit {
 
         this._authService.signIn(socialPlatformProvider)
             .then((userData) => {
-                console.log(userData);
                 this._userProfileService.logInGoogle(userData.idToken);
 
             });

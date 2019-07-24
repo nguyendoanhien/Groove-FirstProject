@@ -63,12 +63,12 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
         this.token = this._router.snapshot.queryParamMap.get('token');
         this.userid = this._router.snapshot.queryParamMap.get('userid');
         this.resetPasswordForm = this._formBuilder.group({
-            email: ['', [Validators.required, Validators.pattern("^[a-z][a-z0-9_\.]{5,32}@[a-z0-9]{2,}(\.[a-z0-9]{2,4}){1,2}$")]],
+            email: ['', [Validators.required, Validators.email]],
             password: ['', [
                 Validators.required,
                 Validators.minLength(8),
                 Validators.maxLength(40),
-                Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,40}$/)
+                Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)
             ]],
             passwordConfirm: ['', [Validators.required, confirmPasswordValidator]]
         });
