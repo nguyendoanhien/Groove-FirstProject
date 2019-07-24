@@ -92,7 +92,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                         "<h3>If you didn't create an account with <a href='" + clientAppUrl + "'>Groove Messenger</a>, you can safely delete this email.</h3>" +
                         "<table border='0' cellpadding='0' cellspacing='0' width='40% ' style='background-color:#324FEA; border:1px solid #324FEA; border-radius:5px;'>" +
                         "<tr><td align = 'center' valign = 'middle' style = 'color:#ffffff; font-family:Helvetica, Arial, sans-serif; font-size:20px; font-weight:bold; line-height:150%; padding-top:15px; padding-right:30px; padding-bottom:15px; padding-left:30px;'>" +
-                        "<a href = '" + url + "' target = '_blank' style = 'color:#ffffff; text-decoration:none;display:block' > Click to verify email </a></td></tr></table> ";
+                        "<a href = '" + url + "' target = '_blank' style = 'color:#ffffff; text-decoration:none;display:block' > Confirm my email </a></td></tr></table> ";
                     _authEmailSender.SendEmail(body, "Registration Confirmation Email", model.Email, _config);
                     return Ok();
                 }

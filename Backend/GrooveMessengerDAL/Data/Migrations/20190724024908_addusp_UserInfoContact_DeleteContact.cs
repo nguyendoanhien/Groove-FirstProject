@@ -24,8 +24,9 @@ namespace GrooveMessengerDAL.Migrations
 
 				        -- Insert statements for procedure here
 	
-				        delete from UserInfoContact 
-				        where UserInfoContact.Id = @Id;
+				        update  UserInfoContact 
+						set UserInfoContact.Deleted = 1
+						where UserInfoContact.Id = @Id;
 
 			    END
                 GO"

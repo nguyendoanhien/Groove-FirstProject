@@ -151,7 +151,7 @@ namespace GrooveMessengerDAL.Services
                     SqlValue = Id,
 
                 };
-            var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<int>(spName, parameter);
+            var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<bool>(spName, parameter);
 
 
         }
@@ -180,7 +180,7 @@ namespace GrooveMessengerDAL.Services
                    new SqlParameter("Nickname",SqlDbType.NVarChar,120){Value = editContactModel.DisplayName},
                    new SqlParameter("Id",SqlDbType.UniqueIdentifier){Value = editContactModel.Id}
                 };
-            var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<int>(spName, parameter);
+            var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<bool>(spName, parameter);
         }
 
         public UserInfoContactEntity GetSingle(Guid Id)

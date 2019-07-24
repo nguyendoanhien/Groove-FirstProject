@@ -62,8 +62,9 @@
                         Password is required
                     </mat-error>
                     <mat-error *ngIf="registerForm.get('password').hasError('pattern')">
-                        Password must be at least 8 characters including upper case, lower case and numbers.
+                        Password must be at least 8 characters and no more than 40 characters including upper case, lower case and numbers.
                     </mat-error>
+                    
                 </mat-form-field>
                 <br />
                 <mat-form-field appearance="outline">
