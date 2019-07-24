@@ -22,8 +22,7 @@ namespace GrooveMessengerDAL.Migrations
             modelBuilder.Entity("GrooveMessengerDAL.Entities.ConversationEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("newsequentialid()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Avatar")
                         .IsRequired()
@@ -59,8 +58,7 @@ namespace GrooveMessengerDAL.Migrations
             modelBuilder.Entity("GrooveMessengerDAL.Entities.MessageEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("newsequentialid()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -106,8 +104,7 @@ namespace GrooveMessengerDAL.Migrations
             modelBuilder.Entity("GrooveMessengerDAL.Entities.ParticipantEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("newsequentialid()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<Guid>("ConversationId");
 
@@ -144,8 +141,7 @@ namespace GrooveMessengerDAL.Migrations
             modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoContactEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("newsequentialid()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<Guid>("ContactId");
 
@@ -184,8 +180,7 @@ namespace GrooveMessengerDAL.Migrations
             modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("newsequentialid()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Avatar");
 
