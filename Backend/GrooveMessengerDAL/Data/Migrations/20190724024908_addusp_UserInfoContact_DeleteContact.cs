@@ -2,7 +2,7 @@
 
 namespace GrooveMessengerDAL.Migrations
 {
-    public partial class addusp_UserInfoContact_EditContact : Migration
+    public partial class addusp_UserInfoContact_DeleteContact : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,20 +13,21 @@ namespace GrooveMessengerDAL.Migrations
                 -- Create date: <2019-07-24>
                 -- Description:	<Edit User Nickname by UserId>
                 -- =============================================
-                    -- =============================================
-                    create PROCEDURE [dbo].[usp_UserInfoContact_EditContact]
-	                -- Add the parameters for the stored procedure here
-	                @Nickname nvarchar(120) ,-- This is an string
-                	@Id uniqueidentifier --this is a number
-                AS
-                BEGIN
-	                SET NOCOUNT ON;
-		
-	                update UserInfoContact
-					set NickName = @Nickname
-					where UserInfoContact.Id = @Id
+                        Create PROCEDURE [dbo].[usp_UserInfoContact_DeleteContact]
+		                -- Add the parameters for the stored procedure here
+		                @Id uniqueidentifier 
+			    AS
+			    BEGIN
+				        -- SET NOCOUNT ON added to prevent extra result sets from
+				        -- interfering with SELECT statements.
+				        SET NOCOUNT ON;
 
-                END
+				        -- Insert statements for procedure here
+	
+				        delete from UserInfoContact 
+				        where UserInfoContact.Id = @Id;
+
+			    END
                 GO"
                 );
         }
@@ -35,7 +36,7 @@ namespace GrooveMessengerDAL.Migrations
         {
             migrationBuilder.Sql(
                 @"
-                DROP PROCEDURE [dbo].[usp_UserInfoContact_EditContact]
+                DROP PROCEDURE [dbo].[usp_UserInfoContact_DeleteContact]
                 GO
                 "
                 );

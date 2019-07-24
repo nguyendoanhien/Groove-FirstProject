@@ -9,9 +9,9 @@ namespace GrooveMessengerDAL.Migrations
             migrationBuilder.Sql(
                 @"
                     -- =============================================
-                -- Author:		<Author,,Name>
-                -- Create date: <Create Date,,>
-                -- Description:	<Description,,>
+                -- Author:		<Linh ,Tran>
+                -- Create date: <2019-07-24>
+                -- Description:	<Get User by Username>
                 -- =============================================
                         create PROCEDURE [dbo].[usp_UserInfo_GetByUsername]
 	            -- Add the parameters for the stored procedure here

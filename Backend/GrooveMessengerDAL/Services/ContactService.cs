@@ -109,10 +109,17 @@ namespace GrooveMessengerDAL.Services
 
         public void DeleteContact(Guid Id)
         {
-            var getContact = _userInfoContactRepository.GetSingle(Id);
-            getContact.Deleted = true;
-            _userInfoContactRepository.Edit(getContact);
-            _uow.SaveChanges();
+            var spName = "[dbo].[usp_UserInfoContact_DeleteContact]";
+            var parameter =
+                new SqlParameter
+                {
+                    ParameterName = "Id",
+                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                    SqlValue = Id,
+
+                };
+            var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<int>(spName, parameter);
+
 
         }
 
