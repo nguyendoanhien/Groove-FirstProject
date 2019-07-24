@@ -12,7 +12,6 @@ import { MessageHubService } from '../../core/data-api/hubs/message.hub';
 import { MessageModel } from 'app/models/message.model';
 import { UserProfileService } from 'app/core/identity/userprofile.service';
 import { ProfileHubService } from 'app/core/data-api/hubs/profile.hub';
-import { ContactHubService } from 'app/core/data-api/hubs/contact.hub';
 
 @Injectable()
 export class ChatService implements Resolve<any>
@@ -29,7 +28,6 @@ export class ChatService implements Resolve<any>
     onRightSidenavViewChanged: Subject<any>;
     _userContactService: UserContactService;
     _messageHub: MessageHubService;
-    _contactHub: ContactHubService
     /**
      * Constructor
      *
@@ -40,8 +38,7 @@ export class ChatService implements Resolve<any>
      */
     constructor(private _httpClient: HttpClient, userContactService: UserContactService,
         private _userInformList: UserInfoService, private _messageHubService: MessageHubService,
-        private _userProfileService: UserProfileService,
-        private _contactHubService: ContactHubService
+        private _userProfileService: UserProfileService
     ) {
         // Set the defaults
         this.onChatSelected = new BehaviorSubject(null);
@@ -52,16 +49,7 @@ export class ChatService implements Resolve<any>
         this.onRightSidenavViewChanged = new Subject();
         this.onRightSidenavViewChanged = new Subject();
         this._userContactService = userContactService;
-        this._messageHub = _messageHubService;
-        this._contactHub = _contactHubService;      
-        this._contactHub.newContact.subscribe((res:any) => {
-            if(res){
-                this.chats.push(res.dialog);
-                this.user.chatList.push(res.chatContact);
-                this.contacts.push(res.contact);            
-            }
-        });
-
+        this._messageHub = _messageHubService;     
     }
 
     /**
@@ -83,9 +71,12 @@ export class ChatService implements Resolve<any>
                 ([contacts, unknownContacts, chats, user, chatList]) => {
                     this.contacts = contacts;
                     this.unknownContacts = unknownContacts;
+                    console.log(this.unknownContacts);
+                    console.log(unknownContacts);
                     this.chats = chats;
                     this.user = user;
                     this.user.chatList = chatList
+                    console.log(this.user.chatList);
                     resolve();
                 },
                 reject
@@ -110,6 +101,7 @@ export class ChatService implements Resolve<any>
                 const unknowContact = this.unknownContacts.find((unknowContact) => {
                     return unknowContact.userId === contactId;
                 });
+                console.log(unknowContact);
                 const chatData = {
                     chatId: unknowContact.userId, // this is not id of conversation
                     dialog: null,

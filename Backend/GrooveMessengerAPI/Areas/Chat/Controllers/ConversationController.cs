@@ -1,8 +1,4 @@
-﻿using GrooveMessengerAPI.Areas.Chat.Models;
-using GrooveMessengerAPI.Areas.Chat.Models.Contact;
-using GrooveMessengerAPI.Controllers;
-using GrooveMessengerAPI.Hubs;
-using GrooveMessengerAPI.Hubs.Utils;
+﻿using GrooveMessengerAPI.Controllers;
 using GrooveMessengerDAL.Models;
 using GrooveMessengerDAL.Models.Contact;
 using GrooveMessengerDAL.Models.Conversation;
@@ -15,7 +11,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,7 +18,45 @@ using System.Threading.Tasks;
 
 namespace GrooveMessengerAPI.Areas.Chat.Controllers
 {
-    
+    //[Route("api/[controller]")]
+    //[ApiController]
+    //public class ConversationController : ControllerBase
+    //{
+    //    private readonly IConversationService _conService;
+    //    public ConversationController(IConversationService conService)
+    //    {
+    //        this._conService = conService;
+    //    }
+
+    //    [HttpGet("dialogs/{UserId}")]
+    //    public IActionResult GetAll(string UserId)
+    //    {
+    //        if (ModelState.IsValid)
+    //        {
+    //            var rs = _conService.GetAllConversationOfAUser(UserId);
+    //            return Ok(rs);
+    //        }
+    //        return BadRequest();
+    //    }
+
+    //    [HttpGet("dialog/{ConversationId}")]
+    //    public IActionResult Get(string ConversationId)
+    //    {
+    //        if (ModelState.IsValid)
+    //        {
+    //            var rs = _conService.GetConversationOfAUser(ConversationId);
+    //            return Ok(rs);
+    //        }
+    //        return BadRequest();          
+    //    }
+    //    // POST: api/Conversation
+    //    [HttpPost]
+    //    public void Post()
+    //    {
+
+    //        _conService.AddConversation();
+    //    }
+    //}
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
@@ -35,12 +68,11 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IContactService _contactService;
         private readonly IUserService _userService;
-        private readonly IHubContext<ContactHub, IContactHubClient> _contactHubContext;
-        private HubConnectionStore<string> _hubConnectionStore;
+
 
         public ConversationController(IConversationService conService, IMessageService messageService, IParticipantService participantService,
             UserManager<ApplicationUser> userManager, IContactService contactService, IUserService userService,
-        IUserResolverService userResolver, IHubContext<ContactHub, IContactHubClient> contactHubContext, HubConnectionStore<string> hubConnectionStore
+        IUserResolverService userResolver
             ) : base(userResolver)
         {
             _conService = conService;
@@ -49,8 +81,6 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             _userManager = userManager;
             _contactService = contactService;
             _userService = userService;
-            _contactHubContext = contactHubContext;
-            _hubConnectionStore = hubConnectionStore;
         }
 
         [HttpGet("dialogs/{UserId}")]
@@ -113,7 +143,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             CreateConversationModel createConversationModel = new CreateConversationModel() { Id = Guid.NewGuid(), Avatar = "https://localhost:44383/images/avatar.png", Name = userIndex.DisplayName };
             _conService.AddConversation(createConversationModel);
 
-            CreateMessageModel createMessageModel = new CreateMessageModel() { Content = "Hello "+ userIndex.DisplayName +". Nice to meet you!", SenderId = userIndexcurrent.UserId, Type = "text", ConversationId = createConversationModel.Id };
+            CreateMessageModel createMessageModel = new CreateMessageModel() { Content = "say hi", SenderId = userIndexcurrent.UserId, Type = "text", ConversationId = createConversationModel.Id };
             _messageService.AddMessage(createMessageModel);
 
 
@@ -122,22 +152,10 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             _participantService.AddParticipant(par);
             ParticipantModel parcurrent = new ParticipantModel() { Id = Guid.NewGuid(), UserId = user.Id, ConversationId = createConversationModel.Id, Status = 1 };
             _participantService.AddParticipant(parcurrent);
-
-
             List<DialogModel> diaglogModel = new List<DialogModel> { };
             diaglogModel.Add(new DialogModel() { Who = createMessageModel.SenderId, Message = createMessageModel.Content, Time = DateTime.UtcNow });
             var dialog = new { id = createConversationModel.Id, dialog = diaglogModel };
-            ContactChatList chatContact = new ContactChatList { ConvId = createConversationModel.Id.ToString(), ContactId = userIndex.UserId, DisplayName = userIndex.DisplayName, LastMessage = createMessageModel.Content, LastMessageTime = DateTime.UtcNow };
-
-            ContactChatList chatContactToSend = new ContactChatList { ConvId = createConversationModel.Id.ToString(), ContactId = userIndexcurrent.UserId, DisplayName = userIndexcurrent.DisplayName, LastMessage = createMessageModel.Content, LastMessageTime = DateTime.UtcNow };
-
-            var contactEmail = await _userManager.FindByIdAsync(userIndex.UserId);
-
-            foreach (var connectionId in _hubConnectionStore.GetConnections(contactEmail.Email))
-            {
-                await _contactHubContext.Clients.Client(connectionId).SendNewContactToFriend(userIndexcurrent, chatContactToSend, dialog);
-
-            }
+            var chatContact = new { convId = createConversationModel.Id, contactId = userIndex.UserId, displayName = userIndex.DisplayName, lastMessage = createMessageModel.Content, lastMessageTime = DateTime.UtcNow };
 
             return new ObjectResult(new { Contact =userIndex, ChatContact = chatContact, dialog });
         }

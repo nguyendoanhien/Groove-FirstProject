@@ -34,7 +34,6 @@ import { UserInfoService } from './core/account/userInfo.service';
 import { UserContactService } from './core/account/user-contact.service';
 import { MessageService } from './core/data-api/services/message.service';
 import { ProfileHubService } from './core/data-api/hubs/profile.hub';
-import { ContactHubService } from './core/data-api/hubs/contact.hub';
 
 @NgModule({
     declarations: [
@@ -89,8 +88,7 @@ import { ContactHubService } from './core/data-api/hubs/contact.hub';
         UserContactService,
         MessageHubService,
         MessageService,
-        ProfileHubService,
-        ContactHubService
+        ProfileHubService
     ]
 
 })

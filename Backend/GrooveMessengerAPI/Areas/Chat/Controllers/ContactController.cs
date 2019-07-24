@@ -24,18 +24,19 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         private IContactService _contactService;
         private readonly IUserService _userService;
         private readonly IUserResolverService _userResolverService;
+        private readonly IHubContext<ContactHub, IContactHubClient> _contactHubContext;
         public ContactController(
             IContactService contactService,
             IUserResolverService userResolver, 
-            IUserService userService
-
+            IUserService userService,
+            IHubContext<ContactHub, IContactHubClient> contactHubContext
           )
             : base(userResolver)
         {
             _contactService = contactService;
             _userResolverService = userResolverService;
             _userService = userService;
-
+            _contactHubContext = contactHubContext;
 
         }
 

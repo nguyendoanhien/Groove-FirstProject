@@ -40,6 +40,7 @@ export class UserInfoService {
         return this.http.post(cloudinaryUrl, fd).pipe(
             map((res: any) => {
                 this.userInfo.avatar = res.url;
+                console.log(res.url)
                 this.changeDisplayName().subscribe();
             }));
     }

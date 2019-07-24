@@ -32,7 +32,7 @@ export class MessageHubService {
 
         this._hubConnection
             .start()
-            .then(() => console.log('[Message Hub - ]Connection started'))
+            .then(() => console.log('Connection started'))
             .catch(err => console.log('Error while starting connection: ' + err))
     }
 
