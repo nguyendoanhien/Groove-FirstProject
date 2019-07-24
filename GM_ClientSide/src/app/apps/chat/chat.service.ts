@@ -76,6 +76,7 @@ export class ChatService implements Resolve<any>
                     this.chats = chats;
                     this.user = user;
                     this.user.chatList = chatList
+                    console.log(this.user.chatList);
                     resolve();
                 },
                 reject

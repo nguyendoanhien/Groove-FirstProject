@@ -5,6 +5,8 @@ const apiConvUrl = backendUrl + '/api/conversation';
 const apiBaseUrl = backendUrl + '/api';
 const apiMessageUrl = backendUrl + '/api/message';
 const messageHubUrl = backendUrl + '/messagehub';
+const apiConversationtUrl = backendUrl + '/api/Conversation';
+
 export const environment = {
   production: true,
   hmr: false,
@@ -27,6 +29,8 @@ export const environment = {
   apiGetChatListByUserId:apiConvUrl+'/dialogs/',
   apiMessageUrl: apiMessageUrl,
   messageHubUrl : messageHubUrl,
+  apiCreateNewConversationUrl:apiConversationtUrl,
+
   applicationGoogle: {
     clientId: '790976332784-alnl6bf2ofphpi9t6elcuhbkebifo787.apps.googleusercontent.com',
     clientSecret: 'vIlgfzy_LuUUn6I73QSYp1Cf'
