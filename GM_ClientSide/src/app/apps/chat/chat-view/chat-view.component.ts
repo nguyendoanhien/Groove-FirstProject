@@ -71,15 +71,12 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.selectedChat = chatData;
                     this.contact = chatData.contact;
                     this.dialog = chatData.dialog;
-                    this.chatId = chatData.chatId; // current conversation id
-                    this._chatService._messageHub.newChatMessage.next(null);
-                    console.log(this.selectedChat);
-                    console.log(chatData);
+                    this.chatId = chatData.chatId; // current conversation id               
                     this._chatService._messageHub.newChatMessage.subscribe((message: MessageModel) => {
+                        console.log(message);
                         if (message) {
                             if (this.chatId === message.fromConv) {
                                 this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time });
-                                this._chatService._messageHub.newChatMessage.next(null);
                             }
                         }
                     })
@@ -207,7 +204,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             time: new Date().toISOString()
         };
         var newMessage: IndexMessageModel = new IndexMessageModel(this.chatId, this.user.userId, null, message.message, 'Text', this.contact.userId);
-        console.log(newMessage);
         this._messageService.addMessage(newMessage).subscribe(success => {
             console.log("send successfull");
         }, err => console.log("send fail"));
@@ -224,21 +220,20 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     SayHi(contact: any) {
-
-        console.log(contact)
         this._userContactService.SayHi(contact).subscribe(
-            (res: any) => {    
-                console.log(res);
+            (res: any) => {
                 this._chatService.contacts.push(res.contact);
-                this._chatService.user.chatList.push(res.chatContact);              
+                this._chatService.user.chatList.push(res.chatContact);
                 this._chatService.chats.push(res.diaglog);
-                this._chatService.unknownContacts.filter(x=>x.userId !== res.contact.userId);
+                console.log(res.contact);
+                this._chatService.unknownContacts = this._chatService.unknownContacts.filter(item=>item.userId !== res.contact.userId);
+                console.log(this._chatService.unknownContacts);
                 const chatData = {
                     chatId: res.dialog.id, // This is id of conversation
                     dialog: res.dialog.dialog,
                     contact: res.contact
                 };
-                this._chatService.onChatSelected.next({ ...chatData });              
+                this._chatService.onChatSelected.next({ ...chatData });
             }
         );
     }
