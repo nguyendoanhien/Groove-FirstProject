@@ -7,16 +7,17 @@ using System.Text;
 
 namespace GrooveMessengerDAL.Configurations
 {
-    class UserInfoContactMappingConfiguration : IEntityTypeConfiguration<UserInfoContactEntity>
+    class UserInfoContactMappingConfiguration : BaseConfiguration<UserInfoContactEntity>
     {
-        public void Configure(EntityTypeBuilder<UserInfoContactEntity> builder)
+        public override void Configure(EntityTypeBuilder<UserInfoContactEntity> builder)
         {
+            base.Configure(builder);
             builder.ToTable("UserInfoContact");
             builder.Property(x => x.UserId).IsRequired();
             builder.Property(x => x.ContactId).IsRequired();
             builder.Property(x => x.NickName).HasMaxLength(120);
             builder.Property(b => b.Deleted).HasDefaultValueSql("0");
-            builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
+            //builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
             //builder.HasKey(bc => new { bc.ContactId, bc.UserId });
 
             builder.HasOne(uc => uc.UserInfo)

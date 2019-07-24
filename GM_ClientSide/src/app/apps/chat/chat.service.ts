@@ -88,7 +88,7 @@ export class ChatService implements Resolve<any>
      * @returns {Promise<any>}
      */
     getChat(contactId): Promise<any> {
-        console.log(contactId);
+        console.log(this.user.chatList);
         const chatItem = this.user.chatList.find((item) => {
             return item.contactId === contactId;
         });
@@ -112,7 +112,7 @@ export class ChatService implements Resolve<any>
                     const chatContact = this.contacts.concat(this.unknownContacts).find((contact) => {
                         return contact.userId === contactId;
                     });
-                    console.log(chatContact);
+
                     const chatData = {
                         // <<<<<<< HEAD
                         //                         chatId: chat.userId,
@@ -121,7 +121,7 @@ export class ChatService implements Resolve<any>
                         dialog: chat.dialog,
                         contact: chatContact
                     };
-                    console.log(chatData);
+
                     this.onChatSelected.next({ ...chatData });
 
                 }, reject);

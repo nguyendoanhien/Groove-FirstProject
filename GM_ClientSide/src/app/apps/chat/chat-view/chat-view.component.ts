@@ -70,8 +70,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.dialog = chatData.dialog;
                     this.chatId = chatData.chatId; // current conversation id
                     this._chatService._messageHub.newChatMessage.next(null);
-                    console.log(this.selectedChat);
-                    console.log(chatData);
+
                     this._chatService._messageHub.newChatMessage.subscribe((message: MessageModel) => {
                         if (message) {
                             if (this.chatId === message.fromConv) {
@@ -114,7 +113,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * @returns {boolean}
      */
     shouldShowContactAvatar(message, i): boolean {
-        console.log('this contact is:' + this.contact);
+
         return (
 
             message.who === this.contact.id &&
@@ -205,7 +204,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         };
         var newMessage: IndexMessageModel = new IndexMessageModel(this.chatId, this.user.userId, null, message.message, 'Text', this.contact.userId);
         this._messageService.addMessage(newMessage).subscribe((addedMessage: IndexMessageModel) => {
-            console.log(addedMessage);
+
             var messageToSend: MessageModel = new MessageModel(addedMessage.conversationId, addedMessage.senderId, addedMessage.id, addedMessage.content, addedMessage.createdOn);
             this._chatService._messageHub.addSendMessageToUser(messageToSend, this.selectedChat.contact.userId);
         });

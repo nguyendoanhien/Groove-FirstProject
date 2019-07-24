@@ -8,10 +8,11 @@ using System.Text;
 namespace GrooveMessengerDAL.Configurations
 {
 
-    public class MessageMappingConfiguration : IEntityTypeConfiguration<MessageEntity>
+    public class MessageMappingConfiguration : BaseConfiguration<MessageEntity>
     {
-        public void Configure(EntityTypeBuilder<MessageEntity> builder)
+        public override void Configure(EntityTypeBuilder<MessageEntity> builder)
         {
+            base.Configure(builder);
             builder.ToTable("Message");
             //builder.HasOne(x => x.).WithMany(x => x.MessageEntity).HasForeignKey(x => x.Id);
             builder.Property(x => x.SenderId).IsRequired();
