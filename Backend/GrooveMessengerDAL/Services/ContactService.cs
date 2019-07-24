@@ -157,7 +157,7 @@ namespace GrooveMessengerDAL.Services
                   new SqlParameter("UserId",SqlDbType.UniqueIdentifier){Value=string.IsNullOrEmpty(addContactModel.UserId) ? _userResolverService.CurrentUserInfoId() : addContactModel.UserId},
                   new SqlParameter("ContactId",SqlDbType.UniqueIdentifier) {Value=addContactModel.ContactId},
                   new SqlParameter("CreatedBy",SqlDbType.NVarChar,-1) {Value=string.IsNullOrEmpty(_userResolverService.CurrentUserName()) ? "Root" : _userResolverService.CurrentUserName()},
-                  new SqlParameter("NickName",SqlDbType.NVarChar,120) {Value=addContactModel.DisplayName},
+                  new SqlParameter("NickName",SqlDbType.NVarChar,120) {Value=addContactModel.NickName},
             };
 
 

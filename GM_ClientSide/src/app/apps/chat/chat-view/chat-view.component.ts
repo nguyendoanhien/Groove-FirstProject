@@ -10,6 +10,7 @@ import { ChatService } from '../chat.service';
 import { MessageModel } from 'app/models/message.model';
 import { MessageService } from 'app/core/data-api/services/message.service';
 import { IndexMessageModel } from 'app/models/indexMessage.model';
+import { UserContactService } from 'app/core/account/user-contact.service';
 
 @Component({
     selector: 'chat-view',
@@ -46,10 +47,12 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     constructor(
         private _chatService: ChatService,
-        private _messageService: MessageService
+        private _messageService: MessageService,
+        private _userContactService: UserContactService
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
+
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -75,8 +78,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this._chatService._messageHub.newChatMessage.subscribe((message: MessageModel) => {
                         if (message) {
                             if (this.chatId === message.fromConv) {
-                                this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time });    
-                                this._chatService._messageHub.newChatMessage.next(null);                            
+                                this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time });
+                                this._chatService._messageHub.newChatMessage.next(null);
                             }
                         }
                     })
@@ -203,7 +206,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             message: this.replyForm.form.value.message,
             time: new Date().toISOString()
         };
-        var newMessage: IndexMessageModel = new IndexMessageModel(this.chatId, this.user.userId, null, message.message, 'Text',this.contact.userId);
+        var newMessage: IndexMessageModel = new IndexMessageModel(this.chatId, this.user.userId, null, message.message, 'Text', this.contact.userId);
         console.log(newMessage);
         this._messageService.addMessage(newMessage).subscribe(success => {
             console.log("send successfull");
@@ -218,5 +221,25 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
             this.readyToReply();
         });
+    }
+
+    SayHi(contact: any) {
+
+        console.log(contact)
+        this._userContactService.SayHi(contact).subscribe(
+            (res: any) => {
+                // {convId: "190f502d-960e-4fc6-b689-bcb9a13f05d2", contactId: "8049ebda-c858-470f-8009-74a25714ba4d", displayName: "Tu Phi", lastMessage: "say hi", lastMessageTime: "2019-07-24T04:51:22.0074283"}
+
+                var obj = { id: res.conversation.id, dialog: [{ who: res.message.who, message: res.message.message, time: res.message.time }] };
+                var chatobj = {
+                    convId: res.conversation.id, contactId: res.contact.userId, displayName: res.contact.displayName, lastMessage: res.message.message, lastMessageTime: res.message.time
+                }
+                console.log(this._chatService.chats);
+                this._chatService.contacts.push(res.contact);
+                this._chatService.user.chatList.push(chatobj);
+                console.log(this._chatService.user.chatList);
+                this._chatService.chats.push(obj);
+            }
+        );
     }
 }
