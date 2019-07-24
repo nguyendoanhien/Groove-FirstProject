@@ -24,4 +24,9 @@ export class UserContactService {
     changeNickNameContact(contact: any) {
         return this._httpClient.put(apiContactURl + `/${contact.id}`,contact).pipe();
     }
+    SayHi(contact:any) {
+        return this._httpClient.post(environment.apiConvUrl,contact).pipe(
+           
+        );
+    }
 }

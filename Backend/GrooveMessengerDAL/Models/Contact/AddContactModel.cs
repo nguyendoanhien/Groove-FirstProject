@@ -10,8 +10,8 @@ namespace GrooveMessengerDAL.Models.Contact
         [Required]
         public string UserId { get; set; }
         [Required]
-        public string ContactId { get; set; }
+        public Guid ContactId { get; set; }
         [Required]
-        public string DisplayName { get; set; }
+        public string NickName { get; set; }
     }
 }
