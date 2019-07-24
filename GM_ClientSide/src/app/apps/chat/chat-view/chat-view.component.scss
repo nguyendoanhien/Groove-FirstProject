@@ -33,7 +33,11 @@ chat-view {
             .chat-messages {
                 position: relative;
                 padding: 16px 0 40px 40px;
-
+                .say-hi-button{                 
+                   position: relative;
+                   left: 50%;
+                   transform: translateX(-50%);
+                }
                 .message-row {
                     position: relative;
                     display: flex;
