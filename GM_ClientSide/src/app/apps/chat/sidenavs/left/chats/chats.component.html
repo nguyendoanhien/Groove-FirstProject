@@ -101,7 +101,7 @@
     <div *fuseIfOnDom [@animateStagger]="{value:'50'}">
         <!-- UNKNOWN CONTACTS LIST-->
         <div class="unknown-contact-list" fxLayout="column"
-            *ngIf="currentSumLength<=3 && searchText.length>0&&currentUnknownContactLength>0">
+            *ngIf="currentSumLength<=3 && searchText.length>0&&unknownContacts.length>0">
 
             <div matSubheader>
                 Unknown Contacts
@@ -109,7 +109,7 @@
             </div>
             <ng-container *ngIf="this.unknownContacts">
                 <button mat-button class="unknownContacts" *ngFor="let unknownContacts of unknownContacts"
-                    (click)="getChat(unknownContacts.id)" [@animate]="{value:'*',params:{y:'100%'}}" #someVar>
+                    (click)="getChat(unknownContacts.userId)" [@animate]="{value:'*',params:{y:'100%'}}" #someVar>
 
                     <div fxLayout="row" fxLayoutAlign="start center">
 

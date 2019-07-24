@@ -77,7 +77,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                 var emailList = await _contactService.GetUserContactEmailList();
                 foreach (var connectionId in _hubConnectionStore.GetConnections(emailList))
                 {
-                    _userProfileHubContext.Clients.Client(connectionId).ClientChangeUserProfile(userProfile);
+                    await _userProfileHubContext.Clients.Client(connectionId).ClientChangeUserProfile(userProfile);
                 }
                 return userInfo;
             }

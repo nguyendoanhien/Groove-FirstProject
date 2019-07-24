@@ -8,9 +8,11 @@ import { User } from '../model/user.model';
 import { environment } from 'environments/environment';
 import { UserInfoService } from 'app/core/account/userInfo.service';
 import { UserContactService } from 'app/core/account/user-contact.service';
-import {MessageHubService} from '../../core/data-api/hubs/message.hub';
+import { MessageHubService } from '../../core/data-api/hubs/message.hub';
 import { MessageModel } from 'app/models/message.model';
 import { UserProfileService } from 'app/core/identity/userprofile.service';
+import { ProfileHubService } from 'app/core/data-api/hubs/profile.hub';
+
 @Injectable()
 export class ChatService implements Resolve<any>
 {
@@ -25,7 +27,7 @@ export class ChatService implements Resolve<any>
     onLeftSidenavViewChanged: Subject<any>;
     onRightSidenavViewChanged: Subject<any>;
     _userContactService: UserContactService;
-    _messageHub : MessageHubService;   
+    _messageHub: MessageHubService;
     /**
      * Constructor
      *
@@ -34,20 +36,20 @@ export class ChatService implements Resolve<any>
      * @param {MessageHubService} _messageHubService
      * @param {UserProfileService} _userProfileService
      */
-    constructor(private _httpClient: HttpClient, userContactService: UserContactService, 
-        private _userInformList: UserInfoService,private _messageHubService: MessageHubService,
-        private _userProfileService : UserProfileService
-        ) {
+    constructor(private _httpClient: HttpClient, userContactService: UserContactService,
+        private _userInformList: UserInfoService, private _messageHubService: MessageHubService,
+        private _userProfileService: UserProfileService
+    ) {
         // Set the defaults
         this.onChatSelected = new BehaviorSubject(null);
-        this.onContactSelected = new BehaviorSubject(null);       
+        this.onContactSelected = new BehaviorSubject(null);
         this.onChatsUpdated = new Subject();
         this.onUserUpdated = new Subject();
         this.onLeftSidenavViewChanged = new Subject();
         this.onRightSidenavViewChanged = new Subject();
         this.onRightSidenavViewChanged = new Subject();
-        this._userContactService = userContactService; 
-        this._messageHub = _messageHubService;       
+        this._userContactService = userContactService;
+        this._messageHub = _messageHubService;
     }
 
     /**
@@ -61,17 +63,19 @@ export class ChatService implements Resolve<any>
         return new Promise((resolve, reject) => {
             Promise.all([
                 this.getContacts(),
-                //this.getUnknownContacts(),
+                this.getUnknownContacts(),
                 this.getChats(),
                 this.getUser(),
                 this.getChatList()
             ]).then(
-                ([contacts, chats, user, chatList]) => {
+                ([contacts, unknownContacts, chats, user, chatList]) => {
                     this.contacts = contacts;
-                    //this.unknownContacts = unknownContacts;
+                    this.unknownContacts = unknownContacts;
+                    console.log(this.unknownContacts);
+                    console.log(unknownContacts);
                     this.chats = chats;
                     this.user = user;
-                    this.user.chatList = chatList                   
+                    this.user.chatList = chatList
                     resolve();
                 },
                 reject
@@ -90,23 +94,29 @@ export class ChatService implements Resolve<any>
         const chatItem = this.user.chatList.find((item) => {
             return item.contactId === contactId;
         });
-        // Create new chat, if it's not created yet.
-        if (!chatItem) {
-            this.createNewChat(contactId).then((newChats) => {
-                this.getChat(contactId);
-            });
-            return;
-        }
 
         return new Promise((resolve, reject) => {
+            if (!chatItem) {
+                const unknowContact = this.unknownContacts.find((unknowContact) => {
+                    return unknowContact.userId === contactId;
+                });
+                console.log(unknowContact);
+                const chatData = {
+                    chatId: unknowContact.userId, // this is not id of conversation
+                    dialog: null,
+                    contact: unknowContact
+                };
+
+                this.onChatSelected.next({ ...chatData });
+            }
             this._httpClient.get(environment.apiGetChatListByConvId + chatItem.convId)
-                .subscribe((response: any) => {                   
+                .subscribe((response: any) => {
                     const chat = response;
                     const chatContact = this.contacts.concat(this.unknownContacts).find((contact) => {
                         return contact.userId === contactId;
                     });
                     const chatData = {
-                        chatId: chat.id,
+                        chatId: chat.id, // This is id of conversation
                         dialog: chat.dialog,
                         contact: chatContact
                     };
@@ -117,56 +127,6 @@ export class ChatService implements Resolve<any>
 
         });
 
-    }
-
-    /**
-     * Create new chat
-     *
-     * @param contactId
-     * @returns {Promise<any>}
-     */
-    createNewChat(contactId): Promise<any> {
-
-        return new Promise((resolve, reject) => {
-
-            const contact = this.unknownContacts.concat(this.contacts).find((item) => {
-                return item.userId === contactId;
-            });
-
-            const chatId = FuseUtils.generateGUID();
-
-            const chat = {
-                id: chatId,
-                dialog: []
-            };
-
-            const chatListItem = {
-                contactId: contactId,
-                id: chatId,
-                lastMessageTime: '2017-02-18T10:30:18.931Z',
-                name: contact.displayName,
-                unread: null
-            };
-
-            // Add new chat list item to the user's chat list
-            this.user.chatList.push(chatListItem);
-
-            // Post the created chat
-            this._httpClient.post('api/chat-chats', { ...chat })
-                .subscribe((response: any) => {
-
-                    // Post the new the user data
-                    this._httpClient.post('api/chat-user/' + this.user.id, this.user)
-                        .subscribe(newUserData => {
-
-                            // Update the user data from server
-                            this.getUser().then(updatedUser => {
-                                this.onUserUpdated.next(updatedUser);
-                                resolve(updatedUser);
-                            });
-                        });
-                }, reject);
-        });
     }
 
     /**
@@ -228,27 +188,22 @@ export class ChatService implements Resolve<any>
      * @returns {Promise<any>}
      */
     getContacts(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this._userContactService.getContacts()
-                .subscribe((response: any) => {
-                    resolve(response);
-                }, reject);
-        });     
+        return this._userContactService.getContacts().toPromise();
+
+
     }
-
-    // getUnknownContacts(displayNameSearch?: string): Promise<any> {
-    //     //return this._userContactService.getUnknownContacts(displayNameSearch).toPromise();
-    // }
-
+    getUnknownContacts(displayNameSearch?: string): Promise<any> {
+        return this._userContactService.getUnknownContacts(displayNameSearch).toPromise();
+    }
 
     /**
      * Get chats
      *
      * @returns {Promise<any>}
      */
-    getChats(): Promise<any> {        
+    getChats(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this._httpClient.get(environment.apiGetChatListByUserId+ this._userProfileService.userProfile.UserId) // using static user id to test
+            this._httpClient.get(environment.apiGetChatListByUserId + this._userProfileService.userProfile.UserId) // using static user id to test
                 .subscribe((response: any) => {
                     resolve(response);
                 }, reject);

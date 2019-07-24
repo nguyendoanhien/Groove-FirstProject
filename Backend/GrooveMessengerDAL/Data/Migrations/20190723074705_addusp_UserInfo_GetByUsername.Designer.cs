@@ -4,14 +4,16 @@ using GrooveMessengerDAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GrooveMessengerDAL.Migrations
 {
     [DbContext(typeof(GrooveMessengerDbContext))]
-    partial class GrooveMessengerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190723074705_addusp_UserInfo_GetByUsername")]
+    partial class addusp_UserInfo_GetByUsername
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,8 +143,7 @@ namespace GrooveMessengerDAL.Migrations
             modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoContactEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("newsequentialid()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<Guid>("ContactId");
 

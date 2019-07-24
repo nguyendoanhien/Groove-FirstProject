@@ -1,10 +1,14 @@
+using GrooveMessengerAPI.Areas.Chat.Models.Contact;
 using GrooveMessengerAPI.Controllers;
+using GrooveMessengerAPI.Hubs;
+using GrooveMessengerAPI.Hubs.Utils;
 using GrooveMessengerAPI.Models;
 using GrooveMessengerDAL.Models.Contact;
 using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Threading.Tasks;
 
@@ -18,15 +22,22 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
     public class ContactController : ApiControllerBase
     {
         private IContactService _contactService;
+        private readonly IUserService _userService;
         private readonly IUserResolverService _userResolverService;
+        private readonly IHubContext<ContactHub, IContactHubClient> _contactHubContext;
         public ContactController(
             IContactService contactService,
-
-            IUserResolverService userResolver)
+            IUserResolverService userResolver, 
+            IUserService userService,
+            IHubContext<ContactHub, IContactHubClient> contactHubContext
+          )
             : base(userResolver)
         {
             _contactService = contactService;
             _userResolverService = userResolverService;
+            _userService = userService;
+            _contactHubContext = contactHubContext;
+
         }
 
         [HttpGet("getallcontactinform")]
@@ -35,11 +46,15 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
 
             return Ok(await _contactService.GetUserContactList());
         }
-        ////[HttpGet("getallunknowncontactinform")]
-        ////public async Task<IActionResult> GetUnknown([FromQuery]PagingParameterModel pagingparametermodel)
-        ////{
-        ////    return Ok(await _contactService.GetUserUnknownContact(displayNameSearch: pagingparametermodel.SearchKey));
-        ////}
+
+
+        [HttpGet("getallunknowncontactinform")]
+        public async Task<IActionResult> GetUnknown([FromQuery]PagingParameterModel pagingparametermodel)
+        {
+            return Ok(await _contactService.GetUserUnknownContact(displayNameSearch: pagingparametermodel.SearchKey));
+        }
+
+
         [HttpDelete("{id}")]
         public IActionResult DeleteContact(Guid Id)
         {

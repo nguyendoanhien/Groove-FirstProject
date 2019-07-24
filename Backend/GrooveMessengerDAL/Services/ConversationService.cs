@@ -16,6 +16,7 @@ namespace GrooveMessengerDAL.Services
     {
         private IGenericRepository<ConversationEntity, Guid, GrooveMessengerDbContext> _conRepository;
         private IGenericRepository<ParticipantEntity, Guid, GrooveMessengerDbContext> _parRepository;
+        private IGenericRepository<MessageEntity, Guid, GrooveMessengerDbContext> _mesRepository;
         private IMapper _mapper;
         private IUowBase<GrooveMessengerDbContext> _uow;
         private IParticipantService _participantService;
@@ -45,6 +46,12 @@ namespace GrooveMessengerDAL.Services
             _uow.SaveChanges();
         }
 
+        public IEnumerable<ConversationEntity> GetConversations(string UserId)
+        {
+            List<Guid> conIdList = _participantService.GetAllConversationIdOfAUser(UserId).ToList();
+            var result = _conRepository.GetAll().Where(x => conIdList.Contains(x.Id));
+            return result;
+        }
 
         //public IndexConversationModel getGetConversationById(Guid id)
         //{
