@@ -114,7 +114,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * @returns {boolean}
      */
     shouldShowContactAvatar(message, i): boolean {
-
+        console.log('this contact is:' + this.contact);
         return (
 
             message.who === this.contact.id &&
@@ -203,7 +203,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             message: this.replyForm.form.value.message,
             time: new Date().toISOString()
         };
-        var newMessage: IndexMessageModel = new IndexMessageModel(this.chatId, this.user.userId, null, message.message, 'Text');
+        var newMessage: IndexMessageModel = new IndexMessageModel(this.chatId, this.user.userId, null, message.message, 'Text', this.contact.userId);
         this._messageService.addMessage(newMessage).subscribe((addedMessage: IndexMessageModel) => {
             console.log(addedMessage);
             var messageToSend: MessageModel = new MessageModel(addedMessage.conversationId, addedMessage.senderId, addedMessage.id, addedMessage.content, addedMessage.createdOn);

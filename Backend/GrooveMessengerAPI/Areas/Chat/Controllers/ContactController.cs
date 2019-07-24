@@ -46,11 +46,13 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
 
             return Ok(await _contactService.GetUserContactList());
         }
+
         [HttpGet("getallunknowncontactinform")]
         public async Task<IActionResult> GetUnknown([FromQuery]PagingParameterModel pagingparametermodel)
         {
             return Ok(await _contactService.GetUserUnknownContact(displayNameSearch: pagingparametermodel.SearchKey));
         }
+
         [HttpDelete("{id}")]
         public IActionResult DeleteContact(Guid Id)
         {

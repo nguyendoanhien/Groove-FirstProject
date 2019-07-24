@@ -77,7 +77,6 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-debugger;
 
         this.initGetUserInfo();
         this.updateChangeProfileHub();
@@ -204,7 +203,6 @@ debugger;
 }
 //Global----------------------------------
 Array.prototype.equals = function (array) {
-    debugger;
     // if the other array is a falsy value, return
     if (!array)
         return false;

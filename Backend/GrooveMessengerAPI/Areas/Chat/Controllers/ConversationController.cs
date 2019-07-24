@@ -16,6 +16,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         [HttpGet("dialogs/{UserId}")]
         public IActionResult GetAll(string UserId)
         {
+            if (UserId == "undefined") return Ok();
             if (ModelState.IsValid)
             {
                 var rs = _conService.GetAllConversationOfAUser(UserId);

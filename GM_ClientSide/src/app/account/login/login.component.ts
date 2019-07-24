@@ -99,7 +99,6 @@ export class LoginComponent implements OnInit {
     }
 
     signinWithGoogle(): void {
-debugger;
         const socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
 
         this._authService.signIn(socialPlatformProvider)

@@ -17,13 +17,13 @@
 
                 <!-- CHAT CONTACT-->
                 <div class="chat-contact" fxLayout="row" fxLayoutAlign="start center"
-                    fuseMatSidenavToggler="chat-right-sidenav" (click)="selectContact()">
+                    fuseMatSidenavToggler="chat-right-sidenav" (click)="selectContact()" *ngIf="contact">
 
                     <div class="avatar-wrapper">
 
                         <img [src]="contact.avatar" class="avatar" alt="{{contact.displayName}}" />
 
-                        <mat-icon class="s-16 status" [ngClass]="contact.status">
+                        <mat-icon class="s-16 status" [ngClass]="contact?.status">
                         </mat-icon>
                     </div>
 
@@ -56,7 +56,14 @@
 
         <!-- CHAT MESSAGES -->
         <div class="chat-messages">
-
+            <div style="text-align: center" *ngIf="!dialog"><img src="../../../../assets/images/profile/say-hi.png" />
+            </div>
+            <p *ngIf="!dialog" style="text-align: center"><b>Say hi to {{contact.displayName}} with a wave.</b></p>
+            <button *ngIf="!dialog" _ngcontent-bsa-c60="" color="accent" mat-raised-button=""
+                class="mat-raised-button mat-accent say-hi-button"><span class="mat-button-wrapper">Say Hi!</span>
+                <div class="mat-button-ripple mat-ripple" matripple=""></div>
+                <div class="mat-button-focus-overlay"></div>
+            </button>
             <!-- MESSAGE -->
             <div *ngFor="let message of dialog; let i = index" class="message-row" [ngClass]="{
                             'me': message.who === user.userId,
