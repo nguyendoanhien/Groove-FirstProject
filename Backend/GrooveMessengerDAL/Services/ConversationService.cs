@@ -105,7 +105,7 @@ namespace GrooveMessengerDAL.Services
                 {
                     ParameterName = "ConversationId",
                     SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
-                    SqlValue = ConversationId
+                    SqlValue = Guid.Parse(ConversationId)
                 };
 
             var contactList = _conRepository.ExecuteReturedStoredProcedure<DialogDraftModel>(spName, parameter);
