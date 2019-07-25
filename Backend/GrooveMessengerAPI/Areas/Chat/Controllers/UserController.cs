@@ -27,14 +27,14 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         private readonly IUserService _userService;
         private readonly IContactService _contactService;
         private readonly IHubContext<UserProfileHub, IUserProfileHubClient> _userProfileHubContext;
-        private HubConnectionStore<string> _hubConnectionStore;
+        private HubConnectionStorage _hubConnectionStore;
         public UserController(
             UserManager<ApplicationUser> userManager,
             IUserService userService,
             IContactService contactService,
             IUserResolverService userResolver,
             IHubContext<UserProfileHub, IUserProfileHubClient> userProfileHubContext,
-            HubConnectionStore<string> hubConnectionStore
+            HubConnectionStorage hubConnectionStore
             ) : base(userResolver)
         {
             _userManager = userManager;
@@ -75,7 +75,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                 };
 
                 var emailList = await _contactService.GetUserContactEmailList();
-                foreach (var connectionId in _hubConnectionStore.GetConnections(emailList))
+                foreach (var connectionId in _hubConnectionStore.GetConnections("profile", emailList))
                 {
                     await _userProfileHubContext.Clients.Client(connectionId).ClientChangeUserProfile(userProfile);
                 }

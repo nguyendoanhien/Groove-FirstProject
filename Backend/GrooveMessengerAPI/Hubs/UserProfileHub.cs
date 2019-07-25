@@ -15,10 +15,11 @@ namespace GrooveMessengerAPI.Hubs
     {
         private IContactService _contactService;
 
-        public UserProfileHub(HubConnectionStore<string> connectionStore,
+        public UserProfileHub(HubConnectionStorage connectionStore,
             IContactService contactService) : base(connectionStore)
         {
             _contactService = contactService;
+            topic = "profile";
         }
 
 
@@ -29,7 +30,7 @@ namespace GrooveMessengerAPI.Hubs
         {
             var emailList = await _contactService.GetUserContactEmailList();
 
-            foreach (var connectionId in connectionStore.GetConnections(emailList))
+            foreach (var connectionId in connectionStore.GetConnections(topic, emailList))
             {
                 await Clients.Client(connectionId).ClientChangeUserProfile(updateUserProfile);
             }

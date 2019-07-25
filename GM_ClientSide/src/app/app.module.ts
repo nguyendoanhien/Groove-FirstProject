@@ -86,11 +86,8 @@ import { ContactHubService } from './core/data-api/hubs/contact.hub';
         RegisterService,
         UserInfoService,
         ResetPasswordService,
-        UserContactService,
-        MessageHubService,
-        MessageService,
-        ProfileHubService,
-        ContactHubService
+        UserContactService,       
+        MessageService        
     ]
 
 })

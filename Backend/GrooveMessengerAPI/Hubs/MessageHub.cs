@@ -14,10 +14,10 @@ namespace GrooveMessengerAPI.Hubs
     public class MessageHub : HubBase<IMessageHubClient>
     {
         public MessageHub(
-            HubConnectionStore<string> connectionStore
+            HubConnectionStorage connectionStore
            ) :base(connectionStore)
         {
-    
+            topic = "message";
         }
         
 
@@ -35,7 +35,7 @@ namespace GrooveMessengerAPI.Hubs
         {
             string username = Context.User.Identity.Name;
 
-            foreach (var connectionId in connectionStore.GetConnections(toUser))
+            foreach (var connectionId in connectionStore.GetConnections(topic, toUser))
             {
                 await Clients.Client(connectionId).SendMessageViewingStatus(username);
             }
