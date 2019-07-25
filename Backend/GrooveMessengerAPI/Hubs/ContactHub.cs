@@ -28,7 +28,7 @@ namespace GrooveMessengerAPI.Hubs
         
         
         public ContactHub(
-            HubConnectionStore<string> connectionStore,
+            HubConnectionStorage connectionStore,
             IContactService contactService,
             IConversationService conversationService,
             IParticipantService participantService,
@@ -44,6 +44,7 @@ namespace GrooveMessengerAPI.Hubs
             _userResolverservice = userResolverservice;
             _messageService = messageService;
             _userInfoContact = userInfoContact;
+            topic = "contact";
         }
 
 
@@ -62,21 +63,11 @@ namespace GrooveMessengerAPI.Hubs
 
         public override Task OnConnectedAsync()
         {
-            string name = Context.User.Identity.Name;
-
-            if (!connectionStore.GetConnections(name).Contains(Context.ConnectionId))
-            {
-                var conn = Context.ConnectionId;
-                connectionStore.Add(name, conn);
-            }
             return base.OnConnectedAsync();
         }
 
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            string name = Context.User.Identity.Name;
-
-            connectionStore.Remove(name, Context.ConnectionId);
             return base.OnDisconnectedAsync(exception);
         }
     }

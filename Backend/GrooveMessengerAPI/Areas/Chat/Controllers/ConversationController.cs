@@ -36,11 +36,11 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         private readonly IContactService _contactService;
         private readonly IUserService _userService;
         private readonly IHubContext<ContactHub, IContactHubClient> _contactHubContext;
-        private HubConnectionStore<string> _hubConnectionStore;
+        private HubConnectionStorage _hubConnectionStore;
 
         public ConversationController(IConversationService conService, IMessageService messageService, IParticipantService participantService,
             UserManager<ApplicationUser> userManager, IContactService contactService, IUserService userService,
-        IUserResolverService userResolver, IHubContext<ContactHub, IContactHubClient> contactHubContext, HubConnectionStore<string> hubConnectionStore
+        IUserResolverService userResolver, IHubContext<ContactHub, IContactHubClient> contactHubContext, HubConnectionStorage hubConnectionStore
             ) : base(userResolver)
         {
             _conService = conService;
@@ -133,7 +133,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
 
             var contactEmail = await _userManager.FindByIdAsync(userIndex.UserId);
 
-            foreach (var connectionId in _hubConnectionStore.GetConnections(contactEmail.Email))
+            foreach (var connectionId in _hubConnectionStore.GetConnections("message", contactEmail.Email))
             {
                 await _contactHubContext.Clients.Client(connectionId).SendNewContactToFriend(userIndexcurrent, chatContactToSend, dialog);
 

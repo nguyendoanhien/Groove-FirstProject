@@ -3,9 +3,7 @@ import * as signalR from "@aspnet/signalr";
 import { AuthService } from 'app/core/auth/auth.service';
 import { BehaviorSubject} from 'rxjs';
 import { ContactModel } from 'app/models/contact.model';
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class ContactHubService{
 
     public newContact: BehaviorSubject<Object>
