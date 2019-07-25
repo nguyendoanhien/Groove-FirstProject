@@ -21,7 +21,7 @@ namespace GrooveMessengerAPI.Configurations
             services.AddScoped<IParticipantService, ParticipantService>();
             services.AddScoped<IUserService, UserService>();
 
-            services.AddSingleton(typeof(HubConnectionStore<>), typeof(HubConnectionStore<>));
+            services.AddSingleton(typeof(HubConnectionStorage), typeof(HubConnectionStorage));
         }
     }
 }

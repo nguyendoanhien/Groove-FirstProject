@@ -4,9 +4,8 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { MessageModel } from './../../../models/message.model';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'environments/environment';
-@Injectable({
-    providedIn: 'root'
-})
+
+@Injectable()
 export class MessageHubService {
 
     public newChatMessage: BehaviorSubject<MessageModel>
