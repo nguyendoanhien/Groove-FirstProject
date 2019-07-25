@@ -34,7 +34,7 @@ export class ChatService implements Resolve<any>
      * Constructor
      *
      * @param {HttpClient} _httpClient
-     * @param {UserInfoService} _userInformList 
+     * @param {UserInfoService} _userInformList
      * @param {MessageHubService} _messageHubService
      * @param {UserProfileService} _userProfileService
      */
@@ -100,7 +100,7 @@ export class ChatService implements Resolve<any>
      * @returns {Promise<any>}
      */
     getChat(contactId): Promise<any> {
-
+        console.log(this.user.chatList);
         const chatItem = this.user.chatList.find((item) => {
             return item.contactId === contactId;
         });
@@ -124,7 +124,11 @@ export class ChatService implements Resolve<any>
                     const chatContact = this.contacts.concat(this.unknownContacts).find((contact) => {
                         return contact.userId === contactId;
                     });
+
                     const chatData = {
+                        // <<<<<<< HEAD
+                        //                         chatId: chat.userId,
+                        // =======
                         chatId: chat.id, // This is id of conversation
                         dialog: chat.dialog,
                         contact: chatContact
@@ -203,6 +207,7 @@ export class ChatService implements Resolve<any>
     }
     getUnknownContacts(displayNameSearch?: string): Promise<any> {
         return this._userContactService.getUnknownContacts(displayNameSearch).toPromise();
+
     }
 
     /**
@@ -240,6 +245,9 @@ export class ChatService implements Resolve<any>
     getChatList(): Promise<any> {
         return new Promise((resolve, reject) => {
             this._httpClient.get(environment.apiGetContactChatList)
+                // =======
+                //             this._httpClient.get('https://localhost:44383/api/contact/getchatlistsp')
+                // >>>>>>> 485cad35367b9bf806ff66315b8edb404a3033ad
                 .subscribe((response: any) => {
                     resolve(response);
                 }, reject);

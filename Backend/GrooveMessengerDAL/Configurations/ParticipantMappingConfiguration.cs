@@ -7,10 +7,11 @@ using System.Text;
 
 namespace GrooveMessengerDAL.Configurations
 {
-    public class ParticipantMappingConfiguration : IEntityTypeConfiguration<ParticipantEntity>
+    public class ParticipantMappingConfiguration : BaseConfiguration<ParticipantEntity>
     {
-        public void Configure(EntityTypeBuilder<ParticipantEntity> builder)
+        public override void Configure(EntityTypeBuilder<ParticipantEntity> builder)
         {
+            base.Configure(builder);
             builder.ToTable("Participant");
 
             builder.Property(x => x.Status).HasColumnName("Status").IsRequired();
