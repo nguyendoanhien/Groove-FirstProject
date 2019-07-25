@@ -133,7 +133,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
 
             var contactEmail = await _userManager.FindByIdAsync(userIndex.UserId);
 
-            foreach (var connectionId in _hubConnectionStore.GetConnections("message", contactEmail.Email))
+            foreach (var connectionId in _hubConnectionStore.GetConnections("contact", contactEmail.Email))
             {
                 await _contactHubContext.Clients.Client(connectionId).SendNewContactToFriend(userIndexcurrent, chatContactToSend, dialog);
 
