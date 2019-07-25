@@ -30,6 +30,7 @@ export const environment = {
     apiGetContactChatList: apiContactUrl+'/getchatlist',
     apiGetChatListByConvId: apiConvUrl + '/dialog/',
     apiGetChatListByUserId:apiConvUrl+'/dialogs/',
+    apiConvUrl:apiConvUrl,
     apiGetUser: apiUserUrl,
     apiMessageUrl: apiMessageUrl,
     messageHubUrl: messageHubUrl,

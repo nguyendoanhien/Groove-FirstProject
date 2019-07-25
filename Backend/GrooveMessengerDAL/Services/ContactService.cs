@@ -142,10 +142,17 @@ namespace GrooveMessengerDAL.Services
 
         public void DeleteContact(Guid Id)
         {
-            var getContact = _userInfoContactRepository.GetSingle(Id);
-            getContact.Deleted = true;
-            _userInfoContactRepository.Edit(getContact);
-            _uow.SaveChanges();
+            var spName = "[dbo].[usp_UserInfoContact_DeleteContact]";
+            var parameter =
+                new SqlParameter
+                {
+                    ParameterName = "Id",
+                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                    SqlValue = Id,
+
+                };
+            var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<bool>(spName, parameter);
+
 
         }
 
@@ -157,7 +164,7 @@ namespace GrooveMessengerDAL.Services
                   new SqlParameter("UserId",SqlDbType.UniqueIdentifier){Value=string.IsNullOrEmpty(addContactModel.UserId) ? _userResolverService.CurrentUserInfoId() : addContactModel.UserId},
                   new SqlParameter("ContactId",SqlDbType.UniqueIdentifier) {Value=addContactModel.ContactId},
                   new SqlParameter("CreatedBy",SqlDbType.NVarChar,-1) {Value=string.IsNullOrEmpty(_userResolverService.CurrentUserName()) ? "Root" : _userResolverService.CurrentUserName()},
-                  new SqlParameter("NickName",SqlDbType.NVarChar,120) {Value=addContactModel.DisplayName},
+                  new SqlParameter("NickName",SqlDbType.NVarChar,120) {Value=addContactModel.NickName},
             };
 
 
@@ -173,7 +180,7 @@ namespace GrooveMessengerDAL.Services
                    new SqlParameter("Nickname",SqlDbType.NVarChar,120){Value = editContactModel.DisplayName},
                    new SqlParameter("Id",SqlDbType.UniqueIdentifier){Value = editContactModel.Id}
                 };
-            var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<int>(spName, parameter);
+            var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<bool>(spName, parameter);
         }
 
         public UserInfoContactEntity GetSingle(Guid Id)

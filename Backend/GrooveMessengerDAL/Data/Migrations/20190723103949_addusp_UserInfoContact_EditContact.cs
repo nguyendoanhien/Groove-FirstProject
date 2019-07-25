@@ -22,7 +22,7 @@ namespace GrooveMessengerDAL.Migrations
 	                SET NOCOUNT ON;
 		
 	                UPDATE UserInfoContact
-					SET NickName = @Nickname
+					SET UserInfoContact.NickName = @Nickname
 					WHERE UserInfoContact.Id = @Id
 
                 END

@@ -15,7 +15,7 @@ export class UserInfoService {
 
     constructor(private router: Router,
         private http: HttpClient,
-        ) {
+    ) {
         this.userInfo = new UserInfo();
     }
 
@@ -40,7 +40,6 @@ export class UserInfoService {
         return this.http.post(cloudinaryUrl, fd).pipe(
             map((res: any) => {
                 this.userInfo.avatar = res.url;
-               
                 this.changeDisplayName().subscribe();
             }));
     }

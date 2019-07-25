@@ -10,6 +10,7 @@ import { ChatService } from '../chat.service';
 import { MessageModel } from 'app/models/message.model';
 import { MessageService } from 'app/core/data-api/services/message.service';
 import { IndexMessageModel } from 'app/models/indexMessage.model';
+import { UserContactService } from 'app/core/account/user-contact.service';
 
 @Component({
     selector: 'chat-view',
@@ -46,10 +47,12 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     constructor(
         private _chatService: ChatService,
-        private _messageService: MessageService
+        private _messageService: MessageService,
+        private _userContactService: UserContactService
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
+
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -68,14 +71,13 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.selectedChat = chatData;
                     this.contact = chatData.contact;
                     this.dialog = chatData.dialog;
-                    this.chatId = chatData.chatId; // current conversation id
-                    this._chatService._messageHub.newChatMessage.next(null);
 
+                    this.chatId = chatData.chatId; // current conversation id
                     this._chatService._messageHub.newChatMessage.subscribe((message: MessageModel) => {
+                        console.log(message);
                         if (message) {
                             if (this.chatId === message.fromConv) {
                                 this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time });
-                                this._chatService._messageHub.newChatMessage.next(null);
                             }
                         }
                     })
@@ -203,11 +205,17 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             time: new Date().toISOString()
         };
         var newMessage: IndexMessageModel = new IndexMessageModel(this.chatId, this.user.userId, null, message.message, 'Text', this.contact.userId);
+<<<<<<< HEAD
         this._messageService.addMessage(newMessage).subscribe((addedMessage: IndexMessageModel) => {
 
             var messageToSend: MessageModel = new MessageModel(addedMessage.conversationId, addedMessage.senderId, addedMessage.id, addedMessage.content, addedMessage.createdOn);
             this._chatService._messageHub.addSendMessageToUser(messageToSend, this.selectedChat.contact.userId);
         });
+=======
+        this._messageService.addMessage(newMessage).subscribe(success => {
+            console.log("send successfull");
+        }, err => console.log("send fail"));
+>>>>>>> cd4414b89cd5281f85048549f19578cf63deac80
         // Add the message to the chat
         this.dialog.push(message);
 
@@ -218,5 +226,24 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
             this.readyToReply();
         });
+    }
+
+    SayHi(contact: any) {
+        this._userContactService.SayHi(contact).subscribe(
+            (res: any) => {
+                this._chatService.contacts.push(res.contact);
+                this._chatService.user.chatList.push(res.chatContact);
+                this._chatService.chats.push(res.diaglog);
+                console.log(res.contact);
+                this._chatService.unknownContacts = this._chatService.unknownContacts.filter(item=>item.userId !== res.contact.userId);
+                console.log(this._chatService.unknownContacts);
+                const chatData = {
+                    chatId: res.dialog.id, // This is id of conversation
+                    dialog: res.dialog.dialog,
+                    contact: res.contact
+                };
+                this._chatService.onChatSelected.next({ ...chatData });
+            }
+        );
     }
 }

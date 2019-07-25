@@ -103,7 +103,6 @@ export class LoginComponent implements OnInit {
 
         this._authService.signIn(socialPlatformProvider)
             .then((userData) => {
-                
                 this._userProfileService.logInGoogle(userData.idToken);
 
             });

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using GrooveMessengerDAL.Models.CustomModel;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Data.SqlClient;
 
 namespace GrooveMessengerDAL.Services
 {
@@ -35,22 +36,37 @@ namespace GrooveMessengerDAL.Services
 
         public void DeleteMessage(Guid id)
         {
+            var spName = "[dbo].[usp_Message_DeleteMessage]";
+            var parameter = new SqlParameter
+            {
+                ParameterName = "Id",
+                SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                SqlValue = id,
+            };
 
-            var storedData = _mesRepository.GetSingle(id);
-            storedData.Deleted = true;
-            _mesRepository.Edit(storedData);
-            _uow.SaveChanges();
+            var delMsg = _mesRepository.ExecuteReturedStoredProcedure<bool>(spName, parameter);
+
+
+            //var storedData = _mesRepository.GetSingle(id);
+            //storedData.Deleted = true;
+            //_mesRepository.Edit(storedData);
+            //_uow.SaveChanges();
         }
-
-
 
         public void EditMessageModel(EditMessageModel data)
         {
-            var storedData = _mesRepository.GetSingle(data.Id);
-            storedData.Content = data.Content;
+            var spName = "[dbo].[usp_Message_EditMessage]";
+            var parameter = new SqlParameter[]
+            {
+                new SqlParameter("Content",System.Data.SqlDbType.NVarChar,1000){Value = data.Content},
+                new SqlParameter("Id",System.Data.SqlDbType.UniqueIdentifier){Value = data.Id}
+            };
 
-            _mesRepository.Edit(storedData);
-            _uow.SaveChanges();
+            var editMsg = _mesRepository.ExecuteReturedStoredProcedure<bool>(spName, parameter);
+            //var storedData = _mesRepository.GetSingle(data.Id);
+            //storedData.Content = data.Content;
+            //_mesRepository.Edit(storedData);
+            //_uow.SaveChanges();
         }
 
         public EditMessageModel GetMessageForEdit(Guid id)
