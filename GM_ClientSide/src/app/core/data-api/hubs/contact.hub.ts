@@ -13,7 +13,7 @@ export class ContactHubService{
     constructor(private authService: AuthService) {
         this.startConnection();
         this.newContact= new BehaviorSubject<Object>(null);
-        this._hubConnection.on('SendNewContactToFriend', (contact: ContactModel,chatContact:any,dialog:any)=> {           
+        this._hubConnection.on('SendNewContactToFriend', (contact: ContactModel,chatContact:any,dialog:any)=> {        
             var newContact = {contact:contact,chatContact:chatContact,dialog:dialog};        
             this.newContact.next(newContact);
         });
@@ -27,7 +27,7 @@ export class ContactHubService{
 
         this._hubConnection
             .start()
-            .then(() => console.log('Connection started'))
+            .then(() => console.log('[ContactHub]: Connection started'))
             .catch(err => console.log('Error while starting connection: ' + err))
     }
 }
