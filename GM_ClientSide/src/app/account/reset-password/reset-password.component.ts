@@ -105,6 +105,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
         };        
         this._resetPasswordService.resetPassword(resetPassword).subscribe(val => {
             this._route.navigate(['/account/login']);
+            alert("Your password have successfully changed")
         }, err =>this.isResetFailture=true);
 
     }
