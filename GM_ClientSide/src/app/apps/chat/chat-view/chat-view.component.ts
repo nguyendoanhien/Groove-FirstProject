@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, take } from 'rxjs/operators';
 
 import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
 
@@ -11,6 +11,7 @@ import { MessageModel } from 'app/models/message.model';
 import { MessageService } from 'app/core/data-api/services/message.service';
 import { IndexMessageModel } from 'app/models/indexMessage.model';
 import { UserContactService } from 'app/core/account/user-contact.service';
+import { RxSpeechRecognitionService, resultList } from '@kamiazya/ngx-speech-recognition';
 
 @Component({
     selector: 'chat-view',
@@ -48,7 +49,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     constructor(
         private _chatService: ChatService,
         private _messageService: MessageService,
-        private _userContactService: UserContactService
+        private _userContactService: UserContactService,
+        public _rxSpeechRecognitionService: RxSpeechRecognitionService
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
@@ -210,12 +212,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             var messageToSend: MessageModel = new MessageModel(addedMessage.conversationId, addedMessage.senderId, addedMessage.id, addedMessage.content, addedMessage.createdOn);
             this._chatService._messageHub.addSendMessageToUser(messageToSend, this.selectedChat.contact.userId);
         });
-        // =======
-        //         this._messageService.addMessage(newMessage).subscribe(success => {
-        //             console.log("send successfull");
-        //         }, err => console.log("send fail"));
-        // >>>>>>> cd4414b89cd5281f85048549f19578cf63deac80
-        // Add the message to the chat
+
         this.dialog.push(message);
 
         // Reset the reply form
@@ -244,5 +241,18 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this._chatService.onChatSelected.next({ ...chatData });
             }
         );
+    }
+
+
+    listen() {
+
+        this._rxSpeechRecognitionService
+            .listen()
+            .pipe(resultList, take(1))
+            .subscribe((list: SpeechRecognitionResultList) => {
+                console.log('chat voice' + list.item(0).item(0).transcript);
+                this.replyInput.value += list.item(0).item(0).transcript + ' ';
+                console.log('RxComponent:onresult', this.replyForm.form.value.message, list);
+            });
     }
 }

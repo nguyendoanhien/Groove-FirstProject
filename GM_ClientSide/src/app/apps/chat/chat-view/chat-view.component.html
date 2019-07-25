@@ -9,10 +9,10 @@
             <div fxLayout="row" fxLayoutAlign="start center">
 
                 <!-- RESPONSIVE CHATS BUTTON-->
-                <button mat-icon-button fxHide.gt-md class="responsive-chats-button mr-16"
+                <!-- <button mat-icon-button fxHide.gt-md class="responsive-chats-button mr-16"
                     fuseMatSidenavToggler="chat-left-sidenav" aria-label="chats button">
                     <mat-icon>chat</mat-icon>
-                </button>
+                </button> -->
                 <!-- / RESPONSIVE CHATS BUTTON-->
 
                 <!-- CHAT CONTACT-->
@@ -102,6 +102,13 @@
                     <textarea matInput #replyInput placeholder="Type your message" ngModel name="message" [rows]="1"
                         [matTextareaAutosize]="true"></textarea>
                 </mat-form-field>
+
+                <button class="record-button" mat-icon-button type="submit" type="button" aria-label="Send message"
+                    #voiceButton [disabled]="_rxSpeechRecognitionService.started$ | async" (click)="listen()">
+                    <mat-icon [ngStyle]="voiceButton.disabled && {'color':'red'}">
+                        record_voice_over
+                    </mat-icon>
+                </button>
 
                 <button class="send-message-button" mat-icon-button type="submit" aria-label="Send message">
                     <mat-icon class="secondary-text">send</mat-icon>
