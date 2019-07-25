@@ -85,7 +85,7 @@ namespace GrooveMessengerDAL.Services
             foreach (var chatbox in chatBoxes)
             {
                 List<DialogModel> dialogModels = new List<DialogModel>();
-                ChatModel chatModel = new ChatModel() { Id = chatbox.Key, Dialog = dialogModels };
+                ChatModel chatModel = new ChatModel() { Id = chatbox.Key.ToString(), Dialog = dialogModels };
                 chatModels.Add(chatModel);
                 foreach (var message in chatbox.Dialogs)
                 {
@@ -116,7 +116,7 @@ namespace GrooveMessengerDAL.Services
                 DialogModel dialogModel = new DialogModel() { Who = item.Who, Message = item.Message, Time = item.Time };
                 dialogModels.Add(dialogModel);
             }
-            ChatModel chatModel = new ChatModel() { Id = Guid.Parse(ConversationId), Dialog = dialogModels };
+            ChatModel chatModel = new ChatModel() { Id = ConversationId, Dialog = dialogModels };
             return chatModel;
         }
 

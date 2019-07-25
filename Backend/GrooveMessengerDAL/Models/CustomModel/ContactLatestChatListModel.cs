@@ -4,7 +4,7 @@ namespace GrooveMessengerDAL.Models.CustomModel
 {
     public class ContactLatestChatListModel
     {
-        public Guid ConvId { get; set; }
+        public string ConvId { get; set; }
 
         public string ContactId { get; set; }
 
@@ -15,7 +15,5 @@ namespace GrooveMessengerDAL.Models.CustomModel
         public string LastMessage { get; set; }
 
         public DateTime? LastMessageTime { get; set; }
-
-        public string Unread { get; set; }
     }
 }

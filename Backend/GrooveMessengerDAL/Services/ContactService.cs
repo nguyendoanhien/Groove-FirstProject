@@ -102,7 +102,6 @@ namespace GrooveMessengerDAL.Services
                     SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
                     SqlValue = _userResolverService.CurrentUserId()
                 };
-            var currentUser = 
             var contactList = _userInfoRepository.ExecuteReturedStoredProcedure<ContactLatestChatListModel>(spName, parameter);
             return contactList;
         }
