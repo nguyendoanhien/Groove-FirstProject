@@ -205,17 +205,16 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             time: new Date().toISOString()
         };
         var newMessage: IndexMessageModel = new IndexMessageModel(this.chatId, this.user.userId, null, message.message, 'Text', this.contact.userId);
-<<<<<<< HEAD
         this._messageService.addMessage(newMessage).subscribe((addedMessage: IndexMessageModel) => {
 
             var messageToSend: MessageModel = new MessageModel(addedMessage.conversationId, addedMessage.senderId, addedMessage.id, addedMessage.content, addedMessage.createdOn);
             this._chatService._messageHub.addSendMessageToUser(messageToSend, this.selectedChat.contact.userId);
         });
-=======
-        this._messageService.addMessage(newMessage).subscribe(success => {
-            console.log("send successfull");
-        }, err => console.log("send fail"));
->>>>>>> cd4414b89cd5281f85048549f19578cf63deac80
+        // =======
+        //         this._messageService.addMessage(newMessage).subscribe(success => {
+        //             console.log("send successfull");
+        //         }, err => console.log("send fail"));
+        // >>>>>>> cd4414b89cd5281f85048549f19578cf63deac80
         // Add the message to the chat
         this.dialog.push(message);
 
@@ -235,7 +234,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this._chatService.user.chatList.push(res.chatContact);
                 this._chatService.chats.push(res.diaglog);
                 console.log(res.contact);
-                this._chatService.unknownContacts = this._chatService.unknownContacts.filter(item=>item.userId !== res.contact.userId);
+                this._chatService.unknownContacts = this._chatService.unknownContacts.filter(item => item.userId !== res.contact.userId);
                 console.log(this._chatService.unknownContacts);
                 const chatData = {
                     chatId: res.dialog.id, // This is id of conversation
