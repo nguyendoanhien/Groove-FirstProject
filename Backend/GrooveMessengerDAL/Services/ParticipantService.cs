@@ -24,8 +24,6 @@ namespace GrooveMessengerDAL.Services
             _uow = uow;
         }
 
-        
-
         public IEnumerable<Guid> GetAllConversationIdOfAUser(string UserId)
         {
             return _parRepository.GetBy(x => x.UserId == UserId).Select(x=>x.ConversationId).Distinct().ToList();

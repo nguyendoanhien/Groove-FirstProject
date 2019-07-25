@@ -46,27 +46,7 @@ namespace GrooveMessengerAPI.Hubs
             _userInfoContact = userInfoContact;
         }
 
-        
-        public async Task SendNewContactToUser(AddContactModel Contact, CreateConversationModel createConversationModel)
-        {
-            foreach (var connectionId in connectionStore.GetConnections(Contact.ContactId))
-            {
-                await Clients.Client(connectionId).SendNewContactToFriend(Contact.ContactId);
-            }
-        }
 
-        public async Task SendRemoveContactToUser(string msg, string toUser)
-        {
-            foreach (var connectionId in connectionStore.GetConnections(toUser))
-            {
-                await Clients.Client(connectionId).SendRemoveContactToFriend(msg);
-            }
-        }
-
-        public void UpdateContactList()
-        {
-            _contactService.GetUserContactList();
-        }
 
         public override Task OnConnectedAsync()
         {

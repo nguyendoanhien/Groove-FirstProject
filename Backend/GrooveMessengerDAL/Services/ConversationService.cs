@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GrooveMessengerDAL.Data;
 using GrooveMessengerDAL.Entities;
+using GrooveMessengerDAL.Models.Conversation;
 using GrooveMessengerDAL.Models.CustomModel;
 using GrooveMessengerDAL.Repositories.Interface;
 using GrooveMessengerDAL.Services.Interface;
@@ -91,6 +92,15 @@ namespace GrooveMessengerDAL.Services
                 Dialog = dialogs.ToList()
             };
             return chatModel;
+        }
+
+        public void AddConversation(CreateConversationModel createMessageModel)
+        {
+          
+                var mes = _mapper.Map<CreateConversationModel, ConversationEntity>(createMessageModel);
+                _conRepository.Add(mes);
+                _uow.SaveChanges();
+            
         }
     }
 }

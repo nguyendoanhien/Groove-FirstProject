@@ -104,12 +104,12 @@
             *ngIf="currentSumLength<=3 && searchText.length>0&&unknownContacts.length>0">
 
             <div matSubheader>
-                Unknown Contacts
+                People
 
             </div>
             <ng-container *ngIf="this.unknownContacts">
                 <button mat-button class="unknownContacts" *ngFor="let unknownContacts of unknownContacts"
-                    (click)="getChat(unknownContacts.id)" [@animate]="{value:'*',params:{y:'100%'}}" #someVar>
+                    (click)="getChat(unknownContacts.userId)" [@animate]="{value:'*',params:{y:'100%'}}" #someVar>
 
                     <div fxLayout="row" fxLayoutAlign="start center">
 
