@@ -113,12 +113,25 @@ namespace GrooveMessengerDAL.Services
         }
 
 
-        public void UpdateStatusMessage(Guid Id)
+        public int SetValueSeenBy(string userId, Guid conversationId)
         {
-            var message = _mesRepository.GetSingle(Id);
-            message.SeenBy = "Seen";
-            _mesRepository.Edit(message);
-            _uow.SaveChanges();
+            var spName = "[dbo].[msp_SetValueSeenBy]";
+            var parameter1 =
+                new SqlParameter
+                {
+                    ParameterName = "conversationId",
+                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                    SqlValue = conversationId
+                };
+            var parameter2 =
+                new SqlParameter
+                {
+                    ParameterName = "userId",
+                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                    SqlValue = userId
+                };
+
+            return _mesRepository.ExecuteReturedStoredProcedure<int>(spName, parameter2, parameter1).FirstOrDefault();
         }
         public IEnumerable<DialogModel> GetDialogs(Guid ConversationId)
         {
@@ -142,6 +155,26 @@ namespace GrooveMessengerDAL.Services
             var msgs = _mesRepository.GetAll();
             _uow.SaveChanges();
         }
+        public int GetUnreadMessages(Guid conversationId, string userId)
+        {
+            var spName = "[dbo].[msp_Message_GetUnreadMessage]";
+            var parameter1 =
+                new SqlParameter
+                {
+                    ParameterName = "conversationId",
+                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                    SqlValue = conversationId
+                };
+            var parameter2 =
+                new SqlParameter
+                {
+                    ParameterName = "userId",
+                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                    SqlValue = userId
+                };
 
+            return _mesRepository.ExecuteReturedStoredProcedure<int>(spName, parameter2, parameter1).FirstOrDefault();
+
+        }
     }
 }

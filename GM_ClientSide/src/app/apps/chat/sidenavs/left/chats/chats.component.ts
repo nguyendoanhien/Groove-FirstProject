@@ -11,6 +11,9 @@ import { UserInfoService } from 'app/core/account/userInfo.service';
 import { HubConnection } from '@aspnet/signalr';
 import { UserInfo } from '../user/userInfo.model';
 import { ProfileHubService } from 'app/core/data-api/hubs/profile.hub';
+import { MessageModel } from 'app/models/message.model';
+import { MessageService } from 'app/core/data-api/services/message.service';
+import { UnreadMessage } from 'app/models/UnreadMessage.model';
 @Component({
     selector: 'chat-chats-sidenav',
     templateUrl: './chats.component.html',
@@ -47,7 +50,8 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         private _fuseMatSidenavHelperService: FuseMatSidenavHelperService,
         public _mediaObserver: MediaObserver,
         public _userInfoService: UserInfoService,
-        private profileHubService: ProfileHubService
+        private profileHubService: ProfileHubService,
+        private _messageService: MessageService
     ) {
         // Set the defaults
         this.chatSearch = {
@@ -82,8 +86,9 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 
         this.user = this._chatService.user;
         this.chats = this._chatService.chats;
+
         this.contacts = this._chatService.contacts;
-        
+
         this.unknownContacts = this._chatService.unknownContacts;
 
         this._chatService.onChatsUpdated
@@ -97,6 +102,28 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             .subscribe(updatedUser => {
                 this.user = updatedUser;
             });
+        this._chatService._messageHub.newChatMessage.subscribe((message: MessageModel) => {
+            if (message) {
+                var chatList = this.user.chatList as Array<any>;
+                var chat = chatList.find(x => x.convId == message.fromConv);
+                chat.message = message.payload;
+                chat.lastMessage = message.payload;
+                chat.lastMessageTime = message.time;
+                this._chatService._messageHub.newChatMessage.next(null);
+            }
+        });
+
+        this._chatService._messageHub.unreadMessage.subscribe((unreadMessage: UnreadMessage) => {
+            if (unreadMessage) {
+                var chatList = this.user.chatList as Array<any>;
+                var chat = chatList.find(x => x.convId == unreadMessage.conversationId);
+                if (unreadMessage.amount > 100) {
+                    chat.unread = '99+';
+                }
+                else chat.unread = unreadMessage.amount;
+                this._chatService._messageHub.unreadMessage.next(null);
+            }
+        });
     }
 
 
@@ -133,6 +160,14 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         if (!this._mediaObserver.isActive('gt-md')) {
             this._fuseMatSidenavHelperService.getSidenav('chat-left-sidenav').toggle();
         }
+    }
+
+    async setValueSeenBy(conversationId) {
+        debugger
+        await this._messageService.updateUnreadMessages(conversationId).subscribe(val => console.log(val), err => console.log(err));
+        var chatList = this.user.chatList as Array<any>;
+        var chat = chatList.find(x => x.convId == conversationId);
+        chat.unread = '0';
     }
 
     /**

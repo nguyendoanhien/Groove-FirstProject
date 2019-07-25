@@ -19,7 +19,8 @@ namespace GrooveMessengerDAL.Services.Interface
         void AddMessage(CreateMessageModel msg);
         Task<IndexMessageModel> AddMessageAsync(CreateMessageModel msg);
         MessageEntity GetMessageById(Guid id);
-        void UpdateStatusMessage(Guid Id);
+        int SetValueSeenBy(string userId, Guid conversationId);
         IEnumerable<DialogModel> GetDialogs(Guid ConversationId);
+        int GetUnreadMessages(Guid conversationId, string userId);
     }
 }

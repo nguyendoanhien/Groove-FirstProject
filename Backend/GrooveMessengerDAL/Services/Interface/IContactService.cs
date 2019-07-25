@@ -6,13 +6,13 @@ using GrooveMessengerDAL.Models.User;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using GrooveMessengerDAL.Models;
 
 namespace GrooveMessengerDAL.Services.Interface
 {
     public interface IContactService
     {
-        //Task<List<ContactLatestChatListModel>> GetLatestContactChatListByUserId();
-        List<ContactLatestChatListModel> GetLatestContactChatListByUserId_SP();
+        List<ContactLatestChatListModel> GetLatestContactChatListByUserId();
         Task<IEnumerable<IndexUserInfoModel>> GetUserContactList(string username = null);
         Task<IEnumerable<string>> GetUserContactEmailList(string username = null);
         Task<string> GetUserContactEmail(string userId);
@@ -21,5 +21,6 @@ namespace GrooveMessengerDAL.Services.Interface
         void AddContact(AddContactModel addContactModel);
         void EditContact(EditContactModel addContactModel);
         UserInfoContactEntity GetSingle(Guid Id);
+        Task<List<ApplicationUser>> GetContacts(Guid conversationId);
     }
 }
