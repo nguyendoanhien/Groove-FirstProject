@@ -4,9 +4,9 @@ using System.Text;
 
 namespace GrooveMessengerDAL.Models.CustomModel
 {
-    public class ChatModel
+    public class UnreadMessageModel
     {
-        public Guid Id { get; set; }
-        public ICollection<DialogModel> Dialog { get; set; }
+        public Guid ConversationId { get; set; }
+        public int Amount { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using GrooveMessengerDAL.Services.Interface;
 using GrooveMessengerDAL.Uow.Interface;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace GrooveMessengerDAL.Services
@@ -50,47 +51,69 @@ namespace GrooveMessengerDAL.Services
             var result = _conRepository.GetAll().Where(x => conIdList.Contains(x.Id));
             return result;
         }
-
-        //public IndexConversationModel getGetConversationById(Guid id)
-        //{
-        //    var entity = _conRepository.FindBy(x => x.Id == id).Include(i => i.MessageEntity).FirstOrDefault();
-        //    var result = _mapper.Map<ConversationEntity, IndexConversationModel>(entity);
-        //    return result;
-        //}
-
-
-        //public IEnumerable<ConversationEntity> GetConversations(string UserId)
-        //{
-        //    List<Guid> conIdList = _participantService.GetAllConversationIdOfAUser(UserId).ToList();
-        //    var result = _conRepository.GetAll().Where(x => conIdList.Contains(x.Id));
-        //    return result;
-        //}
-
-
-        public IEnumerable<ChatModel> GetAllConversationOfAUser(string UserId)
+        // Truc: add
+        public IEnumerable<DialogDraftModel> GetAllConversationOfAUserDraft(string UserId = null)
         {
-            var conversationList = _parRepository.GetAll().Where(x => x.UserId == UserId).Select(x => x.ConversationEntity).ToList();
-            List<ChatModel> chats = new List<ChatModel>();
-            foreach (ConversationEntity item in conversationList)
-            {
-                var dialogs = _messageService.GetDialogs(item.Id);
-                ChatModel chatModel = new ChatModel()
+            var spName = "[dbo].[msp_GetAllConversationsWithMessages]";
+            var parameter =
+                new SqlParameter
                 {
-                    Id = item.Id.ToString(),
-                    Dialog = dialogs.ToList()
+                    ParameterName = "UserId",
+                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                    SqlValue = UserId
                 };
-                chats.Add(chatModel);
-            }
-            return chats;
+
+            var contactList = _conRepository.ExecuteReturedStoredProcedure<DialogDraftModel>(spName, parameter);
+            return contactList;
         }
-        public ChatModel GetConversationOfAUser(string ConversationId)
+
+        // Truc: refractor
+        public IEnumerable<ChatModel> GetAllConversationOfAUser(string UserId = null)
         {
-            var dialogs = _messageService.GetDialogs(Guid.Parse(ConversationId));
-            ChatModel chatModel = new ChatModel()
+            List<ChatModel> chatModels = new List<ChatModel>();
+            IEnumerable<DialogDraftModel> dialogDraftModels = GetAllConversationOfAUserDraft(UserId);
+
+            var chatBoxes = from chat in dialogDraftModels
+                            group chat by chat.Id into chatGroup
+                            select new
+                            {
+                                Key = chatGroup.Key,
+                                Dialogs = chatGroup
+                            };
+            foreach (var chatbox in chatBoxes)
             {
-                Id = ConversationId,
-                Dialog = dialogs.ToList()
-            };
+                List<DialogModel> dialogModels = new List<DialogModel>();
+                ChatModel chatModel = new ChatModel() { Id = chatbox.Key, Dialog = dialogModels };
+                chatModels.Add(chatModel);
+                foreach (var message in chatbox.Dialogs)
+                {
+                    DialogModel dialogModel = new DialogModel() { Message = message.Message, Who = message.Who, Time = message.Time };
+                    dialogModels.Add(dialogModel);
+                }
+            }
+            return chatModels;
+        }
+        // Truc: refractor
+        public ChatModel GetConversationById(string ConversationId)
+        {
+            var spName = "[dbo].[csp_GetConversationById]";
+            var parameter =
+                new SqlParameter
+                {
+                    ParameterName = "ConversationId",
+                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                    SqlValue = ConversationId
+                };
+
+            var contactList = _conRepository.ExecuteReturedStoredProcedure<DialogDraftModel>(spName, parameter);
+
+            List<DialogModel> dialogModels = new List<DialogModel>();
+            foreach (var item in contactList)
+            {
+                DialogModel dialogModel = new DialogModel() { Who = item.Who, Message = item.Message, Time = item.Time };
+                dialogModels.Add(dialogModel);
+            }
+            ChatModel chatModel = new ChatModel() { Id = Guid.Parse(ConversationId), Dialog = dialogModels };
             return chatModel;
         }
 
