@@ -19,14 +19,14 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         private readonly IMessageService _mesService;
         private readonly IContactService _contactService;
         private IHubContext<MessageHub, IMessageHubClient> _hubContext;
-        private HubConnectionStore<string> _connectionStore;      
+        private HubConnectionStorage _connectionStore;      
 
         public MessageController(
             IMessageService mesService,          
             IContactService contactService,
             IUserResolverService userResolver,
             IHubContext<MessageHub, IMessageHubClient> hubContext,
-            HubConnectionStore<string> connectionStore
+            HubConnectionStorage connectionStore
             ) : base(userResolver)
         {
             _mesService = mesService;         
@@ -96,7 +96,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                     Message message = new Message(createdMessage.ConversationId, createdMessage.SenderId, createdMessage.Id, createdMessage.Content, createdMessage.CreatedOn);
 
                     var receiverEmail = await _contactService.GetUserContactEmail(createMessageModel.Receiver);
-                    foreach (var connectionId in _connectionStore.GetConnections(receiverEmail))
+                    foreach (var connectionId in _connectionStore.GetConnections("message", receiverEmail))
                     {
                         await _hubContext.Clients.Client(connectionId).SendMessage(message);
                     }
