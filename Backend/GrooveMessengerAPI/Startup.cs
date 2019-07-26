@@ -118,8 +118,6 @@ namespace GrooveMessengerAPI
             {
                 RegisterRouting(routes);
             });
-
-
         }
     }
 }
