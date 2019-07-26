@@ -111,7 +111,7 @@ export class LoginComponent implements OnInit {
 
                 this._userProfileService.logInGoogle(userData.idToken);
 
-            }, (err) => console.log('Error!'));
+            });
     }
 
     signinWithFB(): void {

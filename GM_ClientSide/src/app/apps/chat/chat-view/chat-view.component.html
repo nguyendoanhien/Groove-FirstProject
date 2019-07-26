@@ -1,5 +1,6 @@
 <!-- CHAT -->
-<div class="chat" fxFlex fxLayout="column">
+
+<div class=" chat" fxFlex fxLayout="column">
 
     <!-- CHAT TOOLBAR -->
     <mat-toolbar class="chat-toolbar">
@@ -73,16 +74,26 @@
                             'last-of-group': isLastMessageOfGroup(message, i)
                             }">
 
-                <img *ngIf="shouldShowContactAvatar(message, i)" src="{{contact.avatar}}" class="avatar">
+                <!-- <img *ngIf="shouldShowContactAvatar(message, i)" src="{{contact.avatar}}" class="avatar"> -->
 
                 <div class="bubble">
                     <div class="message">{{message.message}}</div>
+
                     <div class="time secondary-text">{{message.time | date:'short'}}</div>
                 </div>
+                <!-- {{this._appHelperService.ExtractUrl(message.message)}} -->
+                <!-- {{Say()|async}} -->
+                <div class="bubble" *ngFor="let url of message.message | extractUrl">
+                    <div>
+                        <!-- <img src="{{getOgImage(url)}}"> -->
+                        abc
+                        {{url}}
 
+                    </div>
+
+                </div>
+                <!-- / MESSAGE -->
             </div>
-            <!-- / MESSAGE -->
-
         </div>
         <!-- CHAT MESSAGES -->
 

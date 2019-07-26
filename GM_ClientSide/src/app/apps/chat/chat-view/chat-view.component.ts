@@ -13,7 +13,12 @@ import { IndexMessageModel } from 'app/models/indexMessage.model';
 import { UserContactService } from 'app/core/account/user-contact.service';
 import { RxSpeechRecognitionService, resultList } from '@kamiazya/ngx-speech-recognition';
 import { OpenGrapthService } from 'app/core/data-api/services/open-grapth.service';
-
+import { AppHelperService } from 'app/core/utilities/app-helper.service';
+import * as $ from 'jquery/dist/jquery.min.js';
+import * as ts from "typescript";
+import { Meta } from '@angular/platform-browser';
+import { FacebookService } from 'ngx-facebook';
+import { ApiMethod } from 'ngx-facebook/dist/esm/providers/facebook';
 @Component({
     selector: 'chat-view',
     templateUrl: './chat-view.component.html',
@@ -28,7 +33,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     contact: any;
     replyInput: any;
     selectedChat: any;
-
+    FB: any;
+    numbers = Array(5).fill(0).map((x, i) => i);
     @ViewChild(FusePerfectScrollbarDirective, { static: false })
     directiveScroll: FusePerfectScrollbarDirective;
 
@@ -52,7 +58,9 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         private _messageService: MessageService,
         private _userContactService: UserContactService,
         public _rxSpeechRecognitionService: RxSpeechRecognitionService,
-        private _openGrapthService: OpenGrapthService
+        private _openGrapthService: OpenGrapthService,
+        public _appHelperService: AppHelperService,
+        private fbk: FacebookService
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
@@ -67,6 +75,18 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * On init
      */
     ngOnInit(): void {
+        this.fbk.init({
+            appId: '459900294839907', cookie: true, status: true, xfbml: true, version: 'v3.3'
+        });
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id))
+                return;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "//connect.facebook.net/en_US/all.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
         this.user = this._chatService.user;
         this._chatService.onChatSelected
             .pipe(takeUntil(this._unsubscribeAll))
@@ -82,7 +102,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             });
 
         this._chatService._messageHub.newChatMessage.subscribe((message: MessageModel) => {
-            console.log(message);
             if (message) {
                 if (this.chatId === message.fromConv) {
                     this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time });
@@ -195,11 +214,25 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     /**
      * Reply
      */
-    reply(event): void {
-        this._openGrapthService. (encodeURIComponent('http://zing.vn')).subscribe(data => {
-            console.log(data);
-        }
-        );
+
+    async getOgImage(urlPath: string) {
+        console.log('url Path is' + urlPath);
+        // let imageUrl = '';
+        // var apiMethod: ApiMethod = "post";
+        // await this.fbk.api(
+        //     '/',
+        //     apiMethod,
+        //     { "scrape": "true", "id": "https://www.skype.com/en/" }
+        // ).then(function (response) {
+        //     imageUrl = response.image[0].url;
+        // }
+        // );
+        // return imageUrl;
+        return '';
+    }
+    async reply(event) {
+        console.log(this.dialog);
+        // console.log(await this.getOgImage(this.replyForm.form.value.message));
         event.preventDefault();
 
         if (!this.replyForm.form.value.message) {
@@ -214,9 +247,16 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         };
         var newMessage: IndexMessageModel = new IndexMessageModel(this.chatId, this.user.userId, null, message.message, 'Text', this.contact.userId);
         this._messageService.addMessage(newMessage).subscribe(success => {
-            console.log("send successfull");
+
         }, err => console.log("send fail"));
         // Add the message to the chat
+
+        //TODO: Hien:Show preview Image From Url(s) of a long string
+        // var arrUrl = this._appHelperService.ExtractUrl(message.message);
+        // console.log(arrUrl);
+        // arrUrl.forEach(element => {
+        //     console.log(element);
+        // });
         this.dialog.push(message);
 
         // Reset the reply form
@@ -235,9 +275,9 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this._chatService.contacts.push(res.contact);
                 this._chatService.user.chatList.push(res.chatContact);
                 this._chatService.chats.push(res.diaglog);
-                console.log(res.contact);
+
                 this._chatService.unknownContacts = this._chatService.unknownContacts.filter(item => item.userId !== res.contact.userId);
-                console.log(this._chatService.unknownContacts);
+
                 const chatData = {
                     chatId: res.dialog.id, // This is id of conversation
                     dialog: res.dialog.dialog,
@@ -255,9 +295,12 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             .listen()
             .pipe(resultList, take(1))
             .subscribe((list: SpeechRecognitionResultList) => {
-                console.log('chat voice' + list.item(0).item(0).transcript);
+                // console.log('chat voice' + list.item(0).item(0).transcript);
                 this.replyInput.value += list.item(0).item(0).transcript + ' ';
-                console.log('RxComponent:onresult', this.replyForm.form.value.message, list);
             });
+    }
+
+    Say() {
+        alert(123);
     }
 }

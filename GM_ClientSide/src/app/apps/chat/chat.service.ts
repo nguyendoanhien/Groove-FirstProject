@@ -53,12 +53,12 @@ export class ChatService implements Resolve<any>
         this.onRightSidenavViewChanged = new Subject();
         this._userContactService = userContactService;
         this._messageHub = _messageHubService;
-        this._contactHub = _contactHubService;      
-        this._contactHub.newContact.subscribe((res:any) => {
-            if(res){
+        this._contactHub = _contactHubService;
+        this._contactHub.newContact.subscribe((res: any) => {
+            if (res) {
                 this.chats.push(res.dialog);
                 this.user.chatList.push(res.chatContact);
-                this.contacts.push(res.contact);            
+                this.contacts.push(res.contact);
             }
         });
 
@@ -100,7 +100,6 @@ export class ChatService implements Resolve<any>
      * @returns {Promise<any>}
      */
     getChat(contactId): Promise<any> {
-        console.log(this.user.chatList);
         const chatItem = this.user.chatList.find((item) => {
             return item.contactId === contactId;
         });
@@ -126,9 +125,6 @@ export class ChatService implements Resolve<any>
                     });
 
                     const chatData = {
-                        // <<<<<<< HEAD
-                        //                         chatId: chat.userId,
-                        // =======
                         chatId: chat.id, // This is id of conversation
                         dialog: chat.dialog,
                         contact: chatContact

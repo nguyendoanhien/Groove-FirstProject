@@ -44,6 +44,9 @@ import {
     RxSpeechRecognitionService
 } from '@kamiazya/ngx-speech-recognition';
 import { OpenGrapthService } from './core/data-api/services/open-grapth.service';
+import { AppHelperService } from './core/utilities/app-helper.service';
+import { FacebookModule } from 'ngx-facebook';
+
 
 @NgModule({
     declarations: [
@@ -55,7 +58,7 @@ import { OpenGrapthService } from './core/data-api/services/open-grapth.service'
         BrowserAnimationsModule,
         HttpClientModule,
         AppRoutingModule,
-
+        FacebookModule.forRoot(),
         TranslateModule.forRoot(),
         InMemoryWebApiModule.forRoot(FakeDbService, {
             delay: 0,
@@ -104,7 +107,8 @@ import { OpenGrapthService } from './core/data-api/services/open-grapth.service'
         ResetPasswordService,
         UserContactService,
         MessageService,
-        OpenGrapthService
+        OpenGrapthService,
+        AppHelperService
         ,
         {
             provide: SpeechRecognitionLang,
