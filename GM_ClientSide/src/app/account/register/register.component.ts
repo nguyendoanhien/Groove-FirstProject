@@ -72,8 +72,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
         this.registerModel = new RegisterModel();
         this.registerForm = this._formBuilder.group({
             name: [this.registerModel.displayName, [Validators.required, Validators.minLength(6), Validators.maxLength(120), Validators.pattern(/^((?!\s{2,}).)*$/)]],
-            email: [this.registerModel.email, [Validators.required, Validators.pattern("[a-zA-Z0-9.-]{1,}@[a-z0-9.-]+\.[a-z]{2,4}$")]],
-            password: [this.registerModel.password, [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)]],
+            email: [this.registerModel.email, [Validators.required, Validators.pattern(/^[a-z][a-z0-9_\.]{5,32}@[a-z0-9]{3,}(\.[a-z0-9]{2,4}){1,2}$/)]],
+            password: [this.registerModel.password, [Validators.required, Validators.pattern(/^(?=[a-zA-Z0-9!%^&*()+#@$?]{8,40}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9]).*$/)]],
             passwordConfirm: ['', [Validators.required, confirmPasswordValidator]]
         });
         // Update the validity of the 'passwordConfirm' field

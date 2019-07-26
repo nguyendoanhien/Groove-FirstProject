@@ -1,12 +1,17 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
-
+import { from } from 'rxjs';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
 import { UserProfileService } from 'app/core/identity/userprofile.service';
 import { Router } from '@angular/router';
 import { AuthService, GoogleLoginProvider, FacebookLoginProvider } from 'angularx-social-login';
+
+import { retryWhen, tap, scan, delay, retry, delayWhen, map } from 'rxjs/operators';
+import { timer, interval } from 'rxjs';
+
+
 @Component({
     selector: 'login',
     templateUrl: './login.component.html',
@@ -63,13 +68,13 @@ export class LoginComponent implements OnInit {
         if (this._cookieService.get('userName')) {
             this.checkRemember = true;
             this.loginForm = this._formBuilder.group({
-                userName: [this._cookieService.get('userName'), [Validators.required, Validators.pattern('[a-zA-Z0-9.-]{1,}@[a-z0-9.-]+\.[a-z]{2,4}$'), Validators.minLength(6)]],
-                password: [this._cookieService.get('password'), [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)]]
+                userName: [this._cookieService.get('userName'), [Validators.required, Validators.pattern(/^[a-z][a-z0-9_\.]{5,32}@[a-z0-9]{3,}(\.[a-z0-9]{2,4}){1,2}$/), Validators.minLength(6)]],
+                password: [this._cookieService.get('password'), [Validators.required, Validators.pattern(/^(?=[a-zA-Z0-9!%^&*()+#@$?]{8,40}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9]).*$/)]]
             });
         } else {
             this.loginForm = this._formBuilder.group({
-                userName: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9.-]{1,}@[a-z0-9.-]+\.[a-z]{2,4}$'), Validators.minLength(6)]],
-                password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)]]
+                userName: ['', [Validators.required, Validators.pattern(/^[a-z][a-z0-9_\.]{5,32}@[a-z0-9]{3,}(\.[a-z0-9]{2,4}){1,2}$/), Validators.minLength(6)]],
+                password: ['', [Validators.required, Validators.pattern(/^(?=[a-zA-Z0-9!%^&*()+#@$?]{8,40}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9]).*$/)]]
             });
         }
 
@@ -100,12 +105,13 @@ export class LoginComponent implements OnInit {
 
     signinWithGoogle(): void {
         const socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
+        const source = interval(1000);
+        from(this._authService.signIn(socialPlatformProvider))
+            .subscribe((userData) => {
 
-        this._authService.signIn(socialPlatformProvider)
-            .then((userData) => {
                 this._userProfileService.logInGoogle(userData.idToken);
 
-            });
+            }, (err) => console.log('Error!'));
     }
 
     signinWithFB(): void {
