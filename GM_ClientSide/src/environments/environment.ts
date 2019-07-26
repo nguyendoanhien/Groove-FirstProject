@@ -16,7 +16,7 @@ export const environment = {
     appName: 'Groove Messenger Client',
     backendUrl: backendUrl,
     authBaseUrl: authBaseUrl,
-    apiContactUrl:apiContactUrl,
+    apiContactUrl: apiContactUrl,
     authLoginUrl: authBaseUrl + '/login',
     authRegisterUrl: authBaseUrl + '/register',
     authConfirmEmailUrl: authBaseUrl + '/confirmemail',
@@ -27,10 +27,10 @@ export const environment = {
     apigetUserInfo: authBaseUrl + '/user',
     apiContactGetAllInformUrl: apiContactUrl + '/getallcontactinform',
     apiContactGetAllUnknownInformUrl: apiContactUrl + '/getallunknowncontactinform',
-    apiGetContactChatList: apiContactUrl+'/getchatlist',
+    apiGetContactChatList: apiContactUrl + '/getchatlist',
     apiGetChatListByConvId: apiConvUrl + '/dialog/',
-    apiGetChatListByUserId:apiConvUrl+'/dialogs/',
-    apiConvUrl:apiConvUrl,
+    apiGetChatListByUserId: apiConvUrl + '/dialogs/',
+    apiConvUrl: apiConvUrl,
     apiGetUser: apiUserUrl,
     apiMessageUrl: apiMessageUrl,
     messageHubUrl: messageHubUrl,
@@ -42,6 +42,11 @@ export const environment = {
         appId: '354060818601401',
         appSecreta: 'db1a4f4128e269fa6ca6d47e72cdd0a6'
     },
+    openGrapth:
+    {
+        appId: '1cc1af51-54ef-4c2f-a54d-5d2c3b96d7cb'
+    },
+    apiOpenGrapthUrl: 'https://opengraph.io/api/1.1/site',
     apiUserUrl: apiBaseUrl + '/user',
     apiUserContactUrl: apiBaseUrl + '/usercontact',
     apiUrl: apiBaseUrl + '/notes',
@@ -53,7 +58,6 @@ export const environment = {
         profileUrl: backendUrl + '/profileHub'
     }
 };
-
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

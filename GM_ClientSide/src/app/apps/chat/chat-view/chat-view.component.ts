@@ -12,6 +12,7 @@ import { MessageService } from 'app/core/data-api/services/message.service';
 import { IndexMessageModel } from 'app/models/indexMessage.model';
 import { UserContactService } from 'app/core/account/user-contact.service';
 import { RxSpeechRecognitionService, resultList } from '@kamiazya/ngx-speech-recognition';
+import { OpenGrapthService } from 'app/core/data-api/services/open-grapth.service';
 
 @Component({
     selector: 'chat-view',
@@ -50,7 +51,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         private _chatService: ChatService,
         private _messageService: MessageService,
         private _userContactService: UserContactService,
-        public _rxSpeechRecognitionService: RxSpeechRecognitionService
+        public _rxSpeechRecognitionService: RxSpeechRecognitionService,
+        private _openGrapthService: OpenGrapthService
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
@@ -73,20 +75,20 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.selectedChat = chatData;
                     this.contact = chatData.contact;
                     this.dialog = chatData.dialog;
-                    this.chatId = chatData.chatId; // current conversation id              
-                   
+                    this.chatId = chatData.chatId; // current conversation id
+
                     this.readyToReply();
                 }
             });
 
-            this._chatService._messageHub.newChatMessage.subscribe((message: MessageModel) => {
-                console.log(message);
-                if (message) {
-                    if (this.chatId === message.fromConv) {
-                        this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time });
-                    }
+        this._chatService._messageHub.newChatMessage.subscribe((message: MessageModel) => {
+            console.log(message);
+            if (message) {
+                if (this.chatId === message.fromConv) {
+                    this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time });
                 }
-            })
+            }
+        })
     }
 
     /**
@@ -194,7 +196,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * Reply
      */
     reply(event): void {
-
+        this._openGrapthService. (encodeURIComponent('http://zing.vn')).subscribe(data => {
+            console.log(data);
+        }
+        );
         event.preventDefault();
 
         if (!this.replyForm.form.value.message) {
@@ -221,6 +226,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
             this.readyToReply();
         });
+
     }
 
     SayHi(contact: any) {
@@ -230,7 +236,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this._chatService.user.chatList.push(res.chatContact);
                 this._chatService.chats.push(res.diaglog);
                 console.log(res.contact);
-                this._chatService.unknownContacts = this._chatService.unknownContacts.filter(item=>item.userId !== res.contact.userId);
+                this._chatService.unknownContacts = this._chatService.unknownContacts.filter(item => item.userId !== res.contact.userId);
                 console.log(this._chatService.unknownContacts);
                 const chatData = {
                     chatId: res.dialog.id, // This is id of conversation

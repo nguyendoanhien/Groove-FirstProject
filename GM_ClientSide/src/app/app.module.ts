@@ -43,6 +43,7 @@ import {
     SpeechRecognitionService,
     RxSpeechRecognitionService
 } from '@kamiazya/ngx-speech-recognition';
+import { OpenGrapthService } from './core/data-api/services/open-grapth.service';
 
 @NgModule({
     declarations: [
@@ -103,6 +104,8 @@ import {
         ResetPasswordService,
         UserContactService,
         MessageService,
+        OpenGrapthService
+        ,
         {
             provide: SpeechRecognitionLang,
             useValue: 'en-US',
