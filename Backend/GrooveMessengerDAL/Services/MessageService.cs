@@ -115,7 +115,7 @@ namespace GrooveMessengerDAL.Services
 
         public int SetValueSeenBy(string userId, Guid conversationId)
         {
-            var spName = "[dbo].[msp_SetValueSeenBy]";
+            var spName = "[dbo].[usp_Message_SetValueSeenBy]";
             var parameter1 =
                 new SqlParameter
                 {
