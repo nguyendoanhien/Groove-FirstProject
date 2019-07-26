@@ -157,7 +157,7 @@ namespace GrooveMessengerDAL.Services
         }
         public int GetUnreadMessages(Guid conversationId, string userId)
         {
-            var spName = "[dbo].[msp_Message_GetUnreadMessage]";
+            var spName = "[dbo].[usp_Message_GetUnreadMessageAmount]";
             var parameter1 =
                 new SqlParameter
                 {

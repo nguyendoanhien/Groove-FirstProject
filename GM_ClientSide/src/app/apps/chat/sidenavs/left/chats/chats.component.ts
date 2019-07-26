@@ -90,7 +90,6 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         this.contacts = this._chatService.contacts;
 
         this.unknownContacts = this._chatService.unknownContacts;
-
         this._chatService.onChatsUpdated
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(updatedChats => {
@@ -115,12 +114,28 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 
         this._chatService._messageHub.unreadMessage.subscribe((unreadMessage: UnreadMessage) => {
             if (unreadMessage) {
+                debugger
+                console.log(unreadMessage);
                 var chatList = this.user.chatList as Array<any>;
                 var chat = chatList.find(x => x.convId == unreadMessage.conversationId);
                 if (unreadMessage.amount > 100) {
                     chat.unread = '99+';
                 }
                 else chat.unread = unreadMessage.amount;
+                // switch (true) {
+                //     case (unreadMessage.amount == 0): {
+                //         chat.unread = '';
+                //         break;
+                //     }
+                //     case (unreadMessage.amount < 100): {
+                //         chat.unread = unreadMessage.amount;
+                //         break;
+                //     }
+                //     default: {
+                //         chat.unread = '99+';
+                //         break;
+                //     }
+                // } 
                 this._chatService._messageHub.unreadMessage.next(null);
             }
         });
@@ -163,11 +178,10 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     }
 
     async setValueSeenBy(conversationId) {
-        debugger
         await this._messageService.updateUnreadMessages(conversationId).subscribe(val => console.log(val), err => console.log(err));
         var chatList = this.user.chatList as Array<any>;
         var chat = chatList.find(x => x.convId == conversationId);
-        chat.unread = '0';
+        chat.unread = '';
     }
 
     /**

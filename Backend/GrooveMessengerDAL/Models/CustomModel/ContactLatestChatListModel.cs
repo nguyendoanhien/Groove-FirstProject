@@ -15,7 +15,5 @@ namespace GrooveMessengerDAL.Models.CustomModel
         public string LastMessage { get; set; }
 
         public DateTime? LastMessageTime { get; set; }
-
-        public string Unread { get; set; }
     }
 }
