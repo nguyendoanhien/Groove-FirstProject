@@ -4,14 +4,16 @@ using GrooveMessengerDAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GrooveMessengerDAL.Migrations
 {
     [DbContext(typeof(GrooveMessengerDbContext))]
-    partial class GrooveMessengerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190723034845_AddSp_msp_GetAllConversationsWithMessages")]
+    partial class AddSp_msp_GetAllConversationsWithMessages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,8 +24,7 @@ namespace GrooveMessengerDAL.Migrations
             modelBuilder.Entity("GrooveMessengerDAL.Entities.ConversationEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("newsequentialid()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Avatar")
                         .IsRequired()
@@ -59,8 +60,7 @@ namespace GrooveMessengerDAL.Migrations
             modelBuilder.Entity("GrooveMessengerDAL.Entities.MessageEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("newsequentialid()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -106,8 +106,7 @@ namespace GrooveMessengerDAL.Migrations
             modelBuilder.Entity("GrooveMessengerDAL.Entities.ParticipantEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("newsequentialid()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<Guid>("ConversationId");
 
@@ -144,8 +143,7 @@ namespace GrooveMessengerDAL.Migrations
             modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoContactEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("newsequentialid()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<Guid>("ContactId");
 
@@ -184,8 +182,7 @@ namespace GrooveMessengerDAL.Migrations
             modelBuilder.Entity("GrooveMessengerDAL.Entities.UserInfoEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("newsequentialid()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Avatar");
 

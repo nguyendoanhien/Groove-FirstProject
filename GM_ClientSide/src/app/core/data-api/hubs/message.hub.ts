@@ -20,6 +20,7 @@ export class MessageHubService {
         this.unreadMessage = new BehaviorSubject(null);
         this.startConnection();
         this._hubConnection.on('SendMessage', (message: MessageModel) => {
+            debugger;
             this.newChatMessage.next(message);
         });
         this._hubConnection.on('SendRemovedMessage', (message: MessageModel) => {

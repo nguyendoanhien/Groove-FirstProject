@@ -15,7 +15,7 @@ export class UserInfoService {
 
     constructor(private router: Router,
         private http: HttpClient,
-        ) {
+    ) {
         this.userInfo = new UserInfo();
     }
 

@@ -7,10 +7,11 @@ using System.Text;
 
 namespace GrooveMessengerDAL.Configurations
 {
-    public class UserInfoMappingConfiguration : IEntityTypeConfiguration<UserInfoEntity>
+    public class UserInfoMappingConfiguration : BaseConfiguration<UserInfoEntity>
     {
-        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<UserInfoEntity> builder)
+        public override void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<UserInfoEntity> builder)
         {
+            base.Configure(builder);
             builder.ToTable("UserInfo");
             builder.Property(x => x.DisplayName).HasColumnName("DisplayName").IsRequired().HasMaxLength(120);
             builder.Property(x => x.Mood).HasColumnName("Mood").HasMaxLength(150);

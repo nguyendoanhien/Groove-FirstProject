@@ -35,6 +35,14 @@ import { UserContactService } from './core/account/user-contact.service';
 import { MessageService } from './core/data-api/services/message.service';
 import { ProfileHubService } from './core/data-api/hubs/profile.hub';
 import { ContactHubService } from './core/data-api/hubs/contact.hub';
+import {
+    SpeechRecognitionModule,
+    SpeechRecognitionLang,
+    SpeechRecognitionMaxAlternatives,
+    SpeechRecognitionGrammars,
+    SpeechRecognitionService,
+    RxSpeechRecognitionService
+} from '@kamiazya/ngx-speech-recognition';
 
 @NgModule({
     declarations: [
@@ -67,8 +75,15 @@ import { ContactHubService } from './core/data-api/hubs/contact.hub';
         FuseThemeOptionsModule,
 
         // App modules
-        LayoutModule
+        LayoutModule,
+
         // AccountModule
+        SpeechRecognitionModule.withConfig({
+            lang: 'en-US',
+            interimResults: true,
+            maxAlternatives: 10,
+        })
+
     ],
     bootstrap: [
         AppComponent
@@ -87,10 +102,17 @@ import { ContactHubService } from './core/data-api/hubs/contact.hub';
         UserInfoService,
         ResetPasswordService,
         UserContactService,
-        MessageHubService,
         MessageService,
-        ProfileHubService,
-        ContactHubService
+        {
+            provide: SpeechRecognitionLang,
+            useValue: 'en-US',
+        },
+        {
+            provide: SpeechRecognitionMaxAlternatives,
+            useValue: 1,
+        },
+        SpeechRecognitionService,
+        RxSpeechRecognitionService
     ]
 
 })

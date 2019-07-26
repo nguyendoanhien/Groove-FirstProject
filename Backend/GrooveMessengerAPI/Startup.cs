@@ -108,7 +108,7 @@ namespace GrooveMessengerAPI
 
             ConfigureLog(loggerFactory);
 
-            RegisterMiddlewares(app);
+            RegisterMiddlewares(app, env);
             SeedRootUserDatabase(serviceProvider);
 
             // Using SignalR

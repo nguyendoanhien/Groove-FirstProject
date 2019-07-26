@@ -2,8 +2,8 @@
 using GrooveMessengerDAL.Data;
 using GrooveMessengerDAL.Entities;
 using GrooveMessengerDAL.Models;
-using GrooveMessengerDAL.Models.CustomModel;
 using GrooveMessengerDAL.Models.Contact;
+using GrooveMessengerDAL.Models.CustomModel;
 using GrooveMessengerDAL.Models.User;
 using GrooveMessengerDAL.Repositories.Interface;
 using GrooveMessengerDAL.Services.Interface;
@@ -92,20 +92,28 @@ namespace GrooveMessengerDAL.Services
             var email = await _userInfoRepository.FindBy(x => x.UserId == userId).Include(x => x.ApplicationUser).Select(x => x.ApplicationUser.Email).FirstAsync();
             return email;
         }
-        public List<ContactLatestChatListModel> GetLatestContactChatListByUserId()
-        {
-            var spName = "[dbo].[msp_GetLastestMessageOfAConversation]";
-            var parameter =
-                new SqlParameter
-                {
-                    ParameterName = "UserId",
-                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
-                    SqlValue = _userResolverService.CurrentUserId()
-                };
+        //public async Task<List<ContactLatestChatListModel>> GetLatestContactChatListByUserId()
+        //{
+        //    List<ContactLatestChatListModel> contactList = new List<ContactLatestChatListModel> { };
 
-            var contactList = _userInfoRepository.ExecuteReturedStoredProcedure<ContactLatestChatListModel>(spName, parameter);
-            return contactList;
-        }
+        //    var currentUser = await _userManager.FindByEmailAsync("anhtrucphanit@gmail.com");
+        //    var convOfCurrentUser = _parRepository.GetBy(x => x.UserId == currentUser.Id.ToString()).Include(inc => inc.ConversationEntity).Select(x => x.ConversationEntity).ToList();
+        //    foreach (var item in convOfCurrentUser)
+        //    {
+        //        var contactOfCurrentUser = _parRepository.GetBy(x => x.UserId != currentUser.Id.ToString() && x.ConversationId == item.Id).FirstOrDefault();
+        //        var convLastestMessage = _mesgRepository.GetBy(x => x.ConversationId == item.Id).OrderByDescending(x => x.Id).FirstOrDefault();
+        //        var userContactInfo = _userInfoRepository.GetBy(x => x.UserId == contactOfCurrentUser.UserId).SingleOrDefault();
+        //        contactList.Add(new ContactLatestChatListModel()
+        //        {
+        //            ConvId = item.Id,
+        //            ContactId = contactOfCurrentUser.UserId,
+        //            DisplayName = userContactInfo.DisplayName,
+        //            LastMessage = convLastestMessage.Content,
+        //            LastMessageTime = convLastestMessage.CreatedOn
+        //        });
+        //    }
+        //    return contactList;
+        //}
 
         public async Task<IEnumerable<IndexUserInfoModel>> GetUserUnknownContact(string username = null, string displayNameSearch = null)
         {
@@ -179,8 +187,23 @@ namespace GrooveMessengerDAL.Services
         {
             return _userInfoContactRepository.GetSingle(Id);
         }
+                
+        public List<ContactLatestChatListModel> GetLatestContactChatListByUserId_SP()
+        {
+            var spName = "[dbo].[usp_Message_GetTheLatest]";
+            var parameter =
+                new SqlParameter
+                {
+                    ParameterName = "UserId",
+                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                    SqlValue = _userResolverService.CurrentUserId()
+                };
 
-        // Truc: Get contacts in a conversation.
+            var contactList = _userInfoRepository.ExecuteReturedStoredProcedure<ContactLatestChatListModel>(spName, parameter);
+            return contactList;
+        }
+
+ 		// Truc: Get contacts in a conversation.
         public async Task<List<ApplicationUser>> GetContacts(Guid conversationId)
         {
             List<ApplicationUser> users = new List<ApplicationUser>();
