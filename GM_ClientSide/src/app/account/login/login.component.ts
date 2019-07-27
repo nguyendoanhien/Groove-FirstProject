@@ -10,6 +10,7 @@ import { AuthService, GoogleLoginProvider, FacebookLoginProvider } from 'angular
 
 import { retryWhen, tap, scan, delay, retry, delayWhen, map } from 'rxjs/operators';
 import { timer, interval } from 'rxjs';
+import { FacebookService } from 'ngx-facebook';
 
 
 @Component({
@@ -34,7 +35,8 @@ export class LoginComponent implements OnInit {
         private _userProfileService: UserProfileService,
         private _cookieService: CookieService,
         private _authService: AuthService,
-        private _router: Router
+        private _router: Router,
+        private fbk: FacebookService
     ) {
         // Configure the layout
         this._fuseConfigService.config = {
@@ -81,6 +83,14 @@ export class LoginComponent implements OnInit {
         if (localStorage.getItem('token') != null) {
             this._router.navigate(['apps', 'chat']);
         }
+        this.fbk.api(
+            '/',
+            "post",
+            { "scrape": "true", "id": "https://www.skype.com/en/" }
+        ).then(function (response) {
+            console.log('log here');
+            console.log(response.image[0].url);
+        });
     }
 
     onPaste(event: ClipboardEvent) {

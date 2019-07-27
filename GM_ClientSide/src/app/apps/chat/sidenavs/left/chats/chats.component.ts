@@ -178,7 +178,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     }
 
     async setValueSeenBy(conversationId) {
-        await this._messageService.updateUnreadMessages(conversationId).subscribe(val => console.log(val), err => console.log(err));
+        await this._messageService.updateUnreadMessages(conversationId).subscribe();
         var chatList = this.user.chatList as Array<any>;
         var chat = chatList.find(x => x.convId == conversationId);
         chat.unread = '';

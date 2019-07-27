@@ -19,6 +19,7 @@ import * as ts from "typescript";
 import { Meta } from '@angular/platform-browser';
 import { FacebookService } from 'ngx-facebook';
 import { ApiMethod } from 'ngx-facebook/dist/esm/providers/facebook';
+declare var window: any;
 @Component({
     selector: 'chat-view',
     templateUrl: './chat-view.component.html',
@@ -34,6 +35,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     replyInput: any;
     selectedChat: any;
     FB: any;
+
     numbers = Array(5).fill(0).map((x, i) => i);
     @ViewChild(FusePerfectScrollbarDirective, { static: false })
     directiveScroll: FusePerfectScrollbarDirective;
@@ -64,7 +66,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
-
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -75,9 +76,24 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * On init
      */
     ngOnInit(): void {
-        this.fbk.init({
-            appId: '459900294839907', cookie: true, status: true, xfbml: true, version: 'v3.3'
+      
+        console.log('o day');
+
+        this.fbk.api(
+            '/',
+            "post",
+            { "scrape": "true", "id": "https://www.skype.com/en/" }
+        ).then(function (response) {
+            console.log('log here');
+            console.log(response.image[0].url);
         });
+
+        this.fbk.init({
+            appId: '354060818601401', cookie: true, status: true, xfbml: true, version: 'v3.3'
+        });
+
+
+
         (function (d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0];
             if (d.getElementById(id))
@@ -87,6 +103,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             js.src = "//connect.facebook.net/en_US/all.js";
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
+
         this.user = this._chatService.user;
         this._chatService.onChatSelected
             .pipe(takeUntil(this._unsubscribeAll))
@@ -116,6 +133,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     ngAfterViewInit(): void {
         this.replyInput = this.replyInputField.first.nativeElement;
         this.readyToReply();
+
     }
 
     /**
@@ -217,21 +235,24 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
     async getOgImage(urlPath: string) {
         console.log('url Path is' + urlPath);
-        // let imageUrl = '';
-        // var apiMethod: ApiMethod = "post";
-        // await this.fbk.api(
-        //     '/',
-        //     apiMethod,
-        //     { "scrape": "true", "id": "https://www.skype.com/en/" }
-        // ).then(function (response) {
-        //     imageUrl = response.image[0].url;
-        // }
-        // );
-        // return imageUrl;
-        return '';
+        let imageUrl = '';
+        var apiMethod: ApiMethod = "post";
+
+        await this.fbk.api(
+            '/',
+            apiMethod,
+            { "scrape": "true", "id": "https://www.skype.com/en/" }
+        ).then(function (response) {
+            imageUrl = response.image[0].url;
+            console.log(imageUrl)
+        }
+        );
+        return imageUrl;
     }
     async reply(event) {
-        console.log(this.dialog);
+        debugger;
+
+        this.getOgImage('abc');
         // console.log(await this.getOgImage(this.replyForm.form.value.message));
         event.preventDefault();
 

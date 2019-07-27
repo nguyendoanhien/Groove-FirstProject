@@ -20,6 +20,7 @@ export class TokenHttpInterceptor implements HttpInterceptor {
 
   }
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    
     const securityToken = this.authService.getToken();
     if (request.url === loginUrl) {
       request.headers.set('Content-Type', 'application/json; charset=UTF-8');

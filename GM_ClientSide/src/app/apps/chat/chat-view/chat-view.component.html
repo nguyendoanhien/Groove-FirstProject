@@ -83,15 +83,14 @@
                 </div>
                 <!-- {{this._appHelperService.ExtractUrl(message.message)}} -->
                 <!-- {{Say()|async}} -->
-                <div class="bubble" *ngFor="let url of message.message | extractUrl">
+                <!-- <div class="bubble" *ngFor="let url of this._appHelperService.ExtractUrl(message.message)">
                     <div>
-                        <!-- <img src="{{getOgImage(url)}}"> -->
-                        abc
-                        {{url}}
+                        <img src="{{getOgImage(url)}}">
+                       
 
                     </div>
 
-                </div>
+                </div> -->
                 <!-- / MESSAGE -->
             </div>
         </div>
