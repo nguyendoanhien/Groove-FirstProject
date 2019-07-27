@@ -48,18 +48,6 @@ namespace GrooveMessengerAPI.Hubs
         }
 
 
-        //public async Task SendNewContactToUser(AddContactModel Contact, CreateConversationModel createConversationModel)
-        //{
-        //    foreach (var connectionId in connectionStore.GetConnections(.ContactId))
-        //    {
-        //        await Clients.Client(connectionId).SendNewContactToFriend(Contact.ContactId);
-        //    }
-        //}
-
-
-
-
-
 
         public override Task OnConnectedAsync()
         {

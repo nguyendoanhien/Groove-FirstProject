@@ -140,7 +140,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             if (user == null)
                 return BadRequest();
 
-            if (user.PasswordHash == null || !(_userManager.IsEmailConfirmedAsync(user).Result))
+            if (!(_userManager.IsEmailConfirmedAsync(user).Result))
                 return BadRequest();
 
             var token = _userManager.GeneratePasswordResetTokenAsync(user).Result;
@@ -234,7 +234,9 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                 if (user == null)
                 {
                     user = new ApplicationUser { UserName = payload.Email, Email = payload.Email };
+                    user.EmailConfirmed = true;
                     var resultCreate = await _userManager.CreateAsync(user);
+
                     CreateUserInfoModel userInfo = new CreateUserInfoModel();
                     userInfo.UserId = user.Id;
                     userInfo.DisplayName = payload.Name;
@@ -303,8 +305,9 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                     Email = userInfo.Email,
                     UserName = userInfo.Email
                 };
-
+                appUser.EmailConfirmed = true;
                 var result = await _userManager.CreateAsync(appUser);
+
                 CreateUserInfoModel userInform = new CreateUserInfoModel();
                 userInform.UserId = appUser.Id;
                 userInform.DisplayName = userInfo.Name;
