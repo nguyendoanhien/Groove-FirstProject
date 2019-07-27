@@ -164,7 +164,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
 
                 foreach (var contact in contactsList)
                 {
-                    foreach (var connectionId in _connectionStore.GetConnections("message", contact.UserName))
+                    foreach (var connectionId in _connectionStore.GetConnections("message",contact.UserName))
                     {
                         int unreadMessageAmount = _mesService.GetUnreadMessages(conversationId, contact.Id);
                         UnreadMessageModel unreadMessageModel = new UnreadMessageModel() { ConversationId = conversationId, Amount = unreadMessageAmount };

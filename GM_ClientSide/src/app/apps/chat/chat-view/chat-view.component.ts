@@ -12,7 +12,6 @@ import { MessageService } from 'app/core/data-api/services/message.service';
 import { IndexMessageModel } from 'app/models/indexMessage.model';
 import { UserContactService } from 'app/core/account/user-contact.service';
 import { RxSpeechRecognitionService, resultList } from '@kamiazya/ngx-speech-recognition';
-
 @Component({
     selector: 'chat-view',
     templateUrl: './chat-view.component.html',
@@ -73,20 +72,20 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.selectedChat = chatData;
                     this.contact = chatData.contact;
                     this.dialog = chatData.dialog;
-                    this.chatId = chatData.chatId; // current conversation id              
-                   
+                    this.chatId = chatData.chatId; // current conversation id   
                     this.readyToReply();
                 }
             });
 
-            this._chatService._messageHub.newChatMessage.subscribe((message: MessageModel) => {
-                console.log(message);
-                if (message) {
-                    if (this.chatId === message.fromConv) {
-                        this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time });
-                    }
+
+        this._chatService._messageHub.newChatMessage.subscribe((message: MessageModel) => {
+            console.log(message);
+            if (message) {
+                if (this.chatId === message.fromConv) {
+                    this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time });
                 }
-            })
+            }
+        })
     }
 
     /**
@@ -222,6 +221,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             this.readyToReply();
         });
         // Truc: Call controller backend
+        debugger
         this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
             .subscribe(val => { console.log(val + 'chatview'); }, error => { console.log(error); }
             );
