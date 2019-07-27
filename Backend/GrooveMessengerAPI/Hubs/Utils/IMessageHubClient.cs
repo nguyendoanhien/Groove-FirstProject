@@ -1,4 +1,5 @@
 ﻿using GrooveMessengerAPI.Areas.Chat.Models;
+using GrooveMessengerDAL.Models.CustomModel;
 using System.Threading.Tasks;
 
 namespace GrooveMessengerAPI.Hubs.Utils
@@ -9,6 +10,7 @@ namespace GrooveMessengerAPI.Hubs.Utils
         Task SendRemovedMessage(Message message);
         Task SendEditedMessage(Message message);
         Task SendMessageViewingStatus(string fromUser);
+        Task SendUnreadMessagesAmount(UnreadMessageModel unreadMessage);
     }
 
     public enum MessageEventTypes

@@ -190,7 +190,7 @@ namespace GrooveMessengerDAL.Services
                 
         public List<ContactLatestChatListModel> GetLatestContactChatListByUserId_SP()
         {
-            var spName = "[dbo].[msp_GetLastestMessageOfAConversation]";
+            var spName = "[dbo].[usp_Message_GetTheLatest]";
             var parameter =
                 new SqlParameter
                 {
@@ -201,6 +201,18 @@ namespace GrooveMessengerDAL.Services
 
             var contactList = _userInfoRepository.ExecuteReturedStoredProcedure<ContactLatestChatListModel>(spName, parameter);
             return contactList;
+        }
+        //DONE:Truc> Get contacts in a conversation.
+        public async Task<List<ApplicationUser>> GetContacts(Guid conversationId)
+        {
+            List<ApplicationUser> users = new List<ApplicationUser>();
+            var participants = _parRepository.GetAll().Where(x => x.ConversationId == conversationId && x.UserId != _userResolverService.CurrentUserId()).Select(x => x.UserId);
+            foreach (var item in participants)
+            {
+                var user = await _userManager.FindByIdAsync(item);
+                users.Add(user);
+            }
+            return users;
         }
     }
 }

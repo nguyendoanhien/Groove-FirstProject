@@ -139,7 +139,7 @@
             </div>
 
             <button mat-button class="contact" *ngFor="let chat of user.chatList | filter: searchText as vars"
-                (click)="getChat(chat.contactId)" ngClass="{'unread':contact.unread}"
+                (click)="setValueSeenBy(chat.convId);getChat(chat.contactId);" ngClass="{'unread':contact.unread}"
                 [@animate]="{value:'*',params:{y:'100%'}}">
 
 

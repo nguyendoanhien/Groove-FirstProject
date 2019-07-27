@@ -6,6 +6,7 @@ using GrooveMessengerDAL.Models.User;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using GrooveMessengerDAL.Models;
 
 namespace GrooveMessengerDAL.Services.Interface
 {
@@ -21,5 +22,6 @@ namespace GrooveMessengerDAL.Services.Interface
         void AddContact(AddContactModel addContactModel);
         void EditContact(EditContactModel addContactModel);
         UserInfoContactEntity GetSingle(Guid Id);
+        Task<List<ApplicationUser>> GetContacts(Guid conversationId);
     }
 }

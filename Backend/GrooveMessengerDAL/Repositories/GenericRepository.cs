@@ -1,22 +1,18 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using GrooveMessengerDAL.Entities;
+﻿using GrooveMessengerDAL.Entities;
+using GrooveMessengerDAL.Models;
 using GrooveMessengerDAL.Repositories.Interface;
 using GrooveMessengerDAL.Services.Interface;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Text;
 using System.Data;
-using System.Reflection;
-using System.Collections;
-using System.Data.Common;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
 using static GrooveMessengerDAL.Entities.UserInfoEntity;
-using GrooveMessengerDAL.Models.User;
-using GrooveMessengerDAL.Models;
 
 namespace GrooveMessengerDAL.Repositories
 {
@@ -259,23 +255,30 @@ namespace GrooveMessengerDAL.Repositories
                 var item = Activator.CreateInstance<TResult>();
                 foreach (var property in properties)
                 {
-                    if (!reader.IsDBNull(reader.GetOrdinal(property.Name)))
+                    try
                     {
+                        if (!reader.IsDBNull(reader.GetOrdinal(property.Name)))
+                        {
 
-                        var attrs = System.Attribute.GetCustomAttributes(property);
-                        if (attrs.Any(x => x is MapBy))
-                        {
-                            var enumType = typeof(StatusName);
-                            var currentValue = reader[property.Name];
-                            var enumValue = Enum.Parse(enumType, currentValue.ToString());
-                            var convertedValue = enumValue.ToString();
-                            property.SetValue(item, convertedValue);
+                            var attrs = System.Attribute.GetCustomAttributes(property);
+                            if (attrs.Any(x => x is MapBy))
+                            {
+                                var enumType = typeof(StatusName);
+                                var currentValue = reader[property.Name];
+                                var enumValue = Enum.Parse(enumType, currentValue.ToString());
+                                var convertedValue = enumValue.ToString();
+                                property.SetValue(item, convertedValue);
+                            }
+                            else
+                            {
+                                var convertTo = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                                property.SetValue(item, Convert.ChangeType(reader[property.Name], convertTo), null);
+                            }
                         }
-                        else
-                        {
-                            var convertTo = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-                            property.SetValue(item, Convert.ChangeType(reader[property.Name], convertTo), null);
-                        }
+                    }
+                    catch
+                    {
+                        continue;
                     }
                 }
                 results.Add(item);

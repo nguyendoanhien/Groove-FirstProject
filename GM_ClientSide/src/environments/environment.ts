@@ -34,6 +34,8 @@ export const environment = {
     apiGetUser: apiUserUrl,
     apiMessageUrl: apiMessageUrl,
     messageHubUrl: messageHubUrl,
+    apiUnreadMessage: apiMessageUrl + '/unread/',
+    apiReadMessage: apiMessageUrl + '/read/',
     applicationGoogle: {
         clientId: '687824117544-nvc2uojbm14hc330gl8qh3lsrtl3tc4a.apps.googleusercontent.com',
         clientSecret: 'ugBBsDjYS-Rz20RVlx9r7Blo'

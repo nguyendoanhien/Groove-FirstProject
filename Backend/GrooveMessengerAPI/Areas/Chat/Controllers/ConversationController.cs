@@ -59,7 +59,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             if (UserId == "undefined") return Ok();
             if (ModelState.IsValid)
             {
-                var rs = _conService.GetAllConversationOfAUser(UserId);
+                var rs = _conService.GetAllConversationOfAUser(CurrentUserId.ToString());
                 return Ok(rs);
             }
             return BadRequest();

@@ -246,27 +246,23 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             time: new Date().toISOString()
         };
         var newMessage: IndexMessageModel = new IndexMessageModel(this.chatId, this.user.userId, null, message.message, 'Text', this.contact.userId);
-        this._messageService.addMessage(newMessage).subscribe(success => {
-
+        await this._messageService.addMessage(newMessage).subscribe(success => {
+            console.log("send successfull");
         }, err => console.log("send fail"));
         // Add the message to the chat
-
-        //TODO: Hien:Show preview Image From Url(s) of a long string
-        // var arrUrl = this._appHelperService.ExtractUrl(message.message);
-        // console.log(arrUrl);
-        // arrUrl.forEach(element => {
-        //     console.log(element);
-        // });
-        this.dialog.push(message);
-
+        //this.dialog.push(message); //Truc: don't need because broadcast to user + contact
         // Reset the reply form
         this.replyForm.reset();
 
         // Update the server
-        this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
+        await this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
             this.readyToReply();
         });
-
+        // Truc: Call controller backend
+        debugger
+        this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
+            .subscribe(val => { console.log(val + 'chatview'); }, error => { console.log(error); }
+            );
     }
 
     SayHi(contact: any) {
@@ -275,9 +271,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this._chatService.contacts.push(res.contact);
                 this._chatService.user.chatList.push(res.chatContact);
                 this._chatService.chats.push(res.diaglog);
-
+                console.log(res.contact);
                 this._chatService.unknownContacts = this._chatService.unknownContacts.filter(item => item.userId !== res.contact.userId);
-
                 const chatData = {
                     chatId: res.dialog.id, // This is id of conversation
                     dialog: res.dialog.dialog,
@@ -303,4 +298,5 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     Say() {
         alert(123);
     }
+
 }

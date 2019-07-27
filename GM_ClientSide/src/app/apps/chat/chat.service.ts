@@ -125,6 +125,9 @@ export class ChatService implements Resolve<any>
                     });
 
                     const chatData = {
+                        // <<<<<<< HEAD
+                        //                         chatId: chat.userId,
+                        // =======
                         chatId: chat.id, // This is id of conversation
                         dialog: chat.dialog,
                         contact: chatContact
@@ -133,7 +136,6 @@ export class ChatService implements Resolve<any>
                     this.onChatSelected.next({ ...chatData });
 
                 }, reject);
-
         });
 
     }
