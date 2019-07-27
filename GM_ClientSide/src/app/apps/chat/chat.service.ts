@@ -80,7 +80,7 @@ export class ChatService implements Resolve<any>
                 this.getUser(),
                 this.getChatList()
             ]).then(
-                ([contacts, unknownContacts, chats, user, chatList]) => {
+                ([contacts,unknownContacts, chats, user, chatList]) => {
                     this.contacts = contacts;
                     this.unknownContacts = unknownContacts;
                     this.chats = chats;
@@ -207,6 +207,7 @@ export class ChatService implements Resolve<any>
         return this._userContactService.getUnknownContacts(displayNameSearch).toPromise();
 
     }
+
 
     /**
      * Get chats
