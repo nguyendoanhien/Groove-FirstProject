@@ -212,7 +212,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             console.log("send successfull");
         }, err => console.log("send fail"));
         // Add the message to the chat
-        this.dialog.push(message);
+        //this.dialog.push(message); //Truc: don't need because broadcast to user + contact
 
         // Reset the reply form
         this.replyForm.reset();
@@ -221,11 +221,17 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
             this.readyToReply();
         });
+        // Truc: Call controller backend
+        debugger
+        this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
+            .subscribe(val => { console.log(val + 'chatview'); }, error => { console.log(error); }
+            );
     }
 
     SayHi(contact: any) {
         this._userContactService.SayHi(contact).subscribe(
             (res: any) => {
+                debugger;
                 this._chatService.contacts.push(res.contact);
                 this._chatService.user.chatList.push(res.chatContact);
                 this._chatService.chats.push(res.diaglog);

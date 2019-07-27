@@ -53,12 +53,12 @@ export class ChatService implements Resolve<any>
         this.onRightSidenavViewChanged = new Subject();
         this._userContactService = userContactService;
         this._messageHub = _messageHubService;
-        this._contactHub = _contactHubService;      
-        this._contactHub.newContact.subscribe((res:any) => {
-            if(res){
+        this._contactHub = _contactHubService;
+        this._contactHub.newContact.subscribe((res: any) => {
+            if (res) {
                 this.chats.push(res.dialog);
                 this.user.chatList.push(res.chatContact);
-                this.contacts.push(res.contact);            
+                this.contacts.push(res.contact);
             }
         });
 
@@ -83,9 +83,9 @@ export class ChatService implements Resolve<any>
                 ([contacts,unknownContacts, chats, user, chatList]) => {
                     this.contacts = contacts;
                     this.unknownContacts = unknownContacts;
-                    this.chats = chats;
+                    this.chats = (chats === null ? [] : chats);
                     this.user = user;
-                    this.user.chatList = chatList
+                    this.user.chatList = chatList;
                     resolve();
                 },
                 reject
@@ -118,6 +118,7 @@ export class ChatService implements Resolve<any>
 
                 this.onChatSelected.next({ ...chatData });
             }
+            else{
             this._httpClient.get(environment.apiGetChatListByConvId + chatItem.convId)
                 .subscribe((response: any) => {
                     const chat = response;
@@ -137,7 +138,7 @@ export class ChatService implements Resolve<any>
                     this.onChatSelected.next({ ...chatData });
 
                 }, reject);
-
+            }
         });
 
     }

@@ -139,7 +139,7 @@
             </div>
 
             <button mat-button class="contact" *ngFor="let chat of user.chatList | filter: searchText as vars"
-                (click)="getChat(chat.contactId)" ngClass="{'unread':contact.unread}"
+                (click)="setValueSeenBy(chat.convId);getChat(chat.contactId);" ngClass="{'unread':contact.unread}"
                 [@animate]="{value:'*',params:{y:'100%'}}">
 
 
@@ -164,7 +164,7 @@
                                 {{chat.lastMessageTime | date}}
 
                             </div>
-                            <div *ngIf="chat.unread" class="mt-4 unread-message-count accent">{{chat.unread}}</div>
+                            <div *ngIf="chat.unread && chat.unread>0" class="mt-4 unread-message-count accent">{{chat.unread}}</div>
                         </div>
 
                     </div>
