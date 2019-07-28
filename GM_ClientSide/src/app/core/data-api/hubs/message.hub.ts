@@ -16,11 +16,12 @@ export class MessageHubService {
     public unreadMessage: BehaviorSubject<UnreadMessage>
 
     constructor(private authService: AuthService) {
+        debugger;
         this.newChatMessage = new BehaviorSubject(null);
         this.unreadMessage = new BehaviorSubject(null);
         this.startConnection();
         this._hubConnection.on('SendMessage', (message: MessageModel) => {
-            debugger;
+
             this.newChatMessage.next(message);
         });
         this._hubConnection.on('SendRemovedMessage', (message: MessageModel) => {
@@ -33,6 +34,7 @@ export class MessageHubService {
     }
 
     public startConnection = () => {
+        
         const securityToken = this.authService.getToken();
         this._hubConnection = new signalR.HubConnectionBuilder()
             .withUrl(environment.messageHubUrl, { accessTokenFactory: () => securityToken })
@@ -40,7 +42,7 @@ export class MessageHubService {
 
         this._hubConnection
             .start()
-            .then(() => console.log('[Message Hub - ]Connection started'))
+            .then(() => { console.log('[Message Hub - ]Connection started');debugger; })
             .catch(err => console.log('Error while starting connection: ' + err))
     }
 

@@ -18,7 +18,7 @@
         <mat-toolbar-row class="toolbar-bottom" fxLayout="column" fxLayoutAlign="center center">
 
             <input type="file" #file (change)="onUpload($event)" style="display:none" />
-            <img [src]="this._userInfoService.userInfo.avatar" class="avatar user-avatar huge" alt=""
+            <img [attr.src]="this._userInfoService.userInfo.avatar" class="avatar user-avatar huge" alt=""
                 style="cursor:pointer" (click)="file.click()" />
 
             <input class="user-name my-8" (input)="this._userInfoService.userInfo.displayName = $event.target.value"

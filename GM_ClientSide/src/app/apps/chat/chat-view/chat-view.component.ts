@@ -19,6 +19,7 @@ import * as ts from "typescript";
 import { Meta } from '@angular/platform-browser';
 import { FacebookService } from 'ngx-facebook';
 import { ApiMethod } from 'ngx-facebook/dist/esm/providers/facebook';
+import { Cloudinary } from '@cloudinary/angular-5.x';
 declare var window: any;
 @Component({
     selector: 'chat-view',
@@ -62,7 +63,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         public _rxSpeechRecognitionService: RxSpeechRecognitionService,
         private _openGrapthService: OpenGrapthService,
         public _appHelperService: AppHelperService,
-        private fbk: FacebookService
+        private fbk: FacebookService,
+        private cloudinary: Cloudinary
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
@@ -76,8 +78,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * On init
      */
     ngOnInit(): void {
-      
-        console.log('o day');
+
 
         this.fbk.api(
             '/',
@@ -88,21 +89,21 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             console.log(response.image[0].url);
         });
 
-        this.fbk.init({
-            appId: '354060818601401', cookie: true, status: true, xfbml: true, version: 'v3.3'
-        });
+        // this.fbk.init({
+        //     appId: '354060818601401', cookie: true, status: true, xfbml: true, version: 'v3.3'
+        // });
 
 
 
-        (function (d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id))
-                return;
-            js = d.createElement(s);
-            js.id = id;
-            js.src = "//connect.facebook.net/en_US/all.js";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
+        // (function (d, s, id) {
+        //     var js, fjs = d.getElementsByTagName(s)[0];
+        //     if (d.getElementById(id))
+        //         return;
+        //     js = d.createElement(s);
+        //     js.id = id;
+        //     js.src = "//connect.facebook.net/en_US/all.js";
+        //     fjs.parentNode.insertBefore(js, fjs);
+        // }(document, 'script', 'facebook-jssdk'));
 
         this.user = this._chatService.user;
         this._chatService.onChatSelected
@@ -234,7 +235,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      */
 
     async getOgImage(urlPath: string) {
-        console.log('url Path is' + urlPath);
         let imageUrl = '';
         var apiMethod: ApiMethod = "post";
 
@@ -250,7 +250,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         return imageUrl;
     }
     async reply(event) {
-        debugger;
+
 
         this.getOgImage('abc');
         // console.log(await this.getOgImage(this.replyForm.form.value.message));
@@ -268,7 +268,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         };
         var newMessage: IndexMessageModel = new IndexMessageModel(this.chatId, this.user.userId, null, message.message, 'Text', this.contact.userId);
         await this._messageService.addMessage(newMessage).subscribe(success => {
-            console.log("send successfull");
         }, err => console.log("send fail"));
         // Add the message to the chat
         //this.dialog.push(message); //Truc: don't need because broadcast to user + contact

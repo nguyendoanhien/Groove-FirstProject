@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
 import { FuseSharedModule } from '@fuse/shared.module';
 import { AppsComponent } from './apps.component'
 import { ChatComponent } from './chat/chat.component';
@@ -33,8 +32,8 @@ const routes = [
     providers: [
         MessageHubService,
         ProfileHubService,
-        ContactHubService,
-        FacebookService
+        ContactHubService
+   
     ]
 })
 export class AppsModule {

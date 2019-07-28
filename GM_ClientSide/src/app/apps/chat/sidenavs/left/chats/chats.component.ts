@@ -114,8 +114,6 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 
         this._chatService._messageHub.unreadMessage.subscribe((unreadMessage: UnreadMessage) => {
             if (unreadMessage) {
-                debugger
-                console.log(unreadMessage);
                 var chatList = this.user.chatList as Array<any>;
                 var chat = chatList.find(x => x.convId == unreadMessage.conversationId);
                 if (unreadMessage.amount > 100) {

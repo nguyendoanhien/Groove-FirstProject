@@ -45,8 +45,9 @@ import {
 } from '@kamiazya/ngx-speech-recognition';
 import { OpenGrapthService } from './core/data-api/services/open-grapth.service';
 import { AppHelperService } from './core/utilities/app-helper.service';
-import { FacebookModule } from 'ngx-facebook';
-
+import { FacebookModule, FacebookService } from 'ngx-facebook';
+import { CloudinaryModule } from '@cloudinary/angular-5.x';
+import * as  Cloudinary from 'cloudinary-core';
 
 @NgModule({
     declarations: [
@@ -86,7 +87,8 @@ import { FacebookModule } from 'ngx-facebook';
             lang: 'en-US',
             interimResults: true,
             maxAlternatives: 10,
-        })
+        }),
+        CloudinaryModule.forRoot(Cloudinary, { cloud_name: 'groovemessenger', upload_preset: 'qlbjv3if', private_cdn: 'true' })
 
     ],
     bootstrap: [
@@ -119,7 +121,8 @@ import { FacebookModule } from 'ngx-facebook';
             useValue: 1,
         },
         SpeechRecognitionService,
-        RxSpeechRecognitionService
+        RxSpeechRecognitionService,
+        FacebookService
     ]
 
 })

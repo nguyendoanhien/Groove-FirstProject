@@ -68,6 +68,7 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
         this.selectedFile = <File>event.target.files[0];
         var fd = new FormData();
         fd.append('file', this.selectedFile);
+        
         this._userInfoService.onUpload(fd).subscribe();
 
     }

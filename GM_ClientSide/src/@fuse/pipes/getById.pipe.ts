@@ -26,5 +26,7 @@ export class GetByIdPipe implements PipeTransform {
         if (foundItem) {
             return foundItem[property];
         }
+        if(property=='avatar')
+            return 'assets/images/avatars/profile.jpg';
     }
 }

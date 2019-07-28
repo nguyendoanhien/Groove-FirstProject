@@ -38,7 +38,6 @@ export class ProfileHubService {
     private registerClientHandlers(): void {
         this._hubConnection.on('ClientChangeUserProfile', (data: UserInfo) => {
             this.UserProfileChanged.next(data);
-
         });
     }
  

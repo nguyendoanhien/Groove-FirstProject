@@ -20,11 +20,12 @@ export class ContactHubService{
     }
     
     public startConnection = () => {
+        debugger;
         const securityToken = this.authService.getToken();
         this._hubConnection = new signalR.HubConnectionBuilder()
             .withUrl('https://localhost:44383/contacthub', { accessTokenFactory: () => securityToken })
             .build();
-
+          
         this._hubConnection
             .start()
             .then(() => console.log('[ContactHub]: Connection started'))

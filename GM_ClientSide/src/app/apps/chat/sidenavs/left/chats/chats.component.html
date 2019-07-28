@@ -10,7 +10,7 @@
             <div class="avatar-wrapper">
 
                 <!-- USER AVATAR -->
-                <img (click)="changeLeftSidenavView('user')" [src]="this._userInfoService.userInfo.avatar"
+                <img (click)="changeLeftSidenavView('user')" [attr.src]="this._userInfoService.userInfo.avatar"
                     class="mat-avatar avatar" alt="" />
                 <!-- / USER AVATAR -->
 
@@ -146,7 +146,7 @@
                 <div fxLayout="row" fxLayoutAlign="start center">
 
                     <div class="avatar-wrapper" fxFlex="0 1 auto" fxLayoutAlign="center center">
-                        <img class="avatar" [src]="contacts | getById:chat.contactId:'avatar'"
+                        <img class="avatar" [attr.src]="contacts | getById:chat.contactId:'avatar'" 
                             alt="{{contacts | getById:chat.contactId:'displayName'}}" />
                         <mat-icon class="s-16 status" [ngClass]="contacts | getById:chat.contactId:'status'">
                         </mat-icon>
