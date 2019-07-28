@@ -244,9 +244,6 @@ export class ChatService implements Resolve<any>
     getChatList(): Promise<any> {
         return new Promise((resolve, reject) => {
             this._httpClient.get(environment.apiGetContactChatList)
-                // =======
-                //             this._httpClient.get('https://localhost:44383/api/contact/getchatlistsp')
-                // >>>>>>> 485cad35367b9bf806ff66315b8edb404a3033ad
                 .subscribe((response: any) => {
                     resolve(response);
                 }, reject);

@@ -114,7 +114,6 @@ namespace GrooveMessengerDAL.Services
         //    }
         //    return contactList;
         //}
-
         public async Task<IEnumerable<IndexUserInfoModel>> GetUserUnknownContact(string username = null, string displayNameSearch = null)
         {
             var spName = "[dbo].[usp_Contact_GetUnknownContact]";
@@ -202,7 +201,7 @@ namespace GrooveMessengerDAL.Services
             var contactList = _userInfoRepository.ExecuteReturedStoredProcedure<ContactLatestChatListModel>(spName, parameter);
             return contactList;
         }
-        //DONE:Truc> Get contacts in a conversation.
+
         public async Task<List<ApplicationUser>> GetContacts(Guid conversationId)
         {
             List<ApplicationUser> users = new List<ApplicationUser>();

@@ -104,12 +104,11 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                 return BadRequest("Failed");
             }
         }
-        [HttpGet("getchatlist")]    
+
+        [HttpGet("getchatlist")]
         public  IActionResult GetChatList()
-        {       
+        {
             return Ok(_contactService.GetLatestContactChatListByUserId_SP());
         }
-
-
     }
 }
