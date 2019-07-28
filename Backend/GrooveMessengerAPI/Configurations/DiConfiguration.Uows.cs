@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using GrooveMessengerDAL.Uow;
+﻿using GrooveMessengerDAL.Uow;
 using GrooveMessengerDAL.Uow.Interface;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GrooveMessengerAPI.Configurations
 {

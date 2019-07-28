@@ -1,10 +1,9 @@
-using GrooveMessengerDAL.Entities;
-using GrooveMessengerDAL.Models.CustomModel;
-using GrooveMessengerDAL.Models.Message;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GrooveMessengerDAL.Entities;
+using GrooveMessengerDAL.Models.CustomModel;
+using GrooveMessengerDAL.Models.Message;
 
 namespace GrooveMessengerDAL.Services.Interface
 {

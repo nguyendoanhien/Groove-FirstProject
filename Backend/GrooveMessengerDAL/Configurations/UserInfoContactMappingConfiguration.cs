@@ -1,13 +1,10 @@
 ﻿using GrooveMessengerDAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GrooveMessengerDAL.Configurations
 {
-    class UserInfoContactMappingConfiguration : BaseConfiguration<UserInfoContactEntity>
+    internal class UserInfoContactMappingConfiguration : BaseConfiguration<UserInfoContactEntity>
     {
         public override void Configure(EntityTypeBuilder<UserInfoContactEntity> builder)
         {
@@ -31,7 +28,6 @@ namespace GrooveMessengerDAL.Configurations
 
             //builder.HasOne(u => u.ContactInfo).WithMany(z => z.Users).HasForeignKey(u => u.Id);
             //builder.HasOne(u => u.ContactInfo).WithMany(z => z.Contacts).HasForeignKey(u => u.ContactId);
-
         }
     }
 }

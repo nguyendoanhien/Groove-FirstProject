@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using AutoMapper;
 using GrooveMessengerDAL.Data;
 using GrooveMessengerDAL.Entities;
-using GrooveMessengerDAL.Models;
 using GrooveMessengerDAL.Models.Note;
 using GrooveMessengerDAL.Repositories.Interface;
 using GrooveMessengerDAL.Services.Interface;
@@ -15,19 +15,19 @@ namespace GrooveMessengerDAL.Services
 {
     public class NoteService : INoteService
     {
-        private IGenericRepository<NoteEntity, int, GrooveMessengerDbContext> _noteRepository;
-        private IMapper _mapper;
-        private IUowBase<GrooveMessengerDbContext> _uow;
+        private readonly IMapper _mapper;
+        private readonly IGenericRepository<NoteEntity, int, GrooveMessengerDbContext> _noteRepository;
+        private readonly IUowBase<GrooveMessengerDbContext> _uow;
 
         public NoteService(
             IGenericRepository<NoteEntity, int, GrooveMessengerDbContext> notesRepo,
             IUowBase<GrooveMessengerDbContext> uow,
             IMapper mapper
-            )
+        )
         {
-            this._noteRepository = notesRepo;
-            this._uow = uow;
-            this._mapper = mapper;
+            _noteRepository = notesRepo;
+            _uow = uow;
+            _mapper = mapper;
         }
 
         public IEnumerable<IndexModel> GetNoteList()
@@ -51,20 +51,21 @@ namespace GrooveMessengerDAL.Services
                 new SqlParameter
                 {
                     ParameterName = "title",
-                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    SqlDbType = SqlDbType.NVarChar,
                     SqlValue = "This is a test ';--"
                 });
             parameters.Add(
                 new SqlParameter
                 {
                     ParameterName = "createdOn",
-                    SqlDbType = System.Data.SqlDbType.DateTime2,
+                    SqlDbType = SqlDbType.DateTime2,
                     SqlValue = "2019-02-03 00:00:00"
                 });
             //var storedData = _noteRepository.ExecuteReturedStoredProcedure("usp_Notes_GetData", parameters.ToArray());
             //var result = _mapper.Map<IEnumerable<NoteEntity>, IEnumerable<FullModel>>(storedData);
 
-            var storedData = _noteRepository.ExecuteReturedStoredProcedure<NoteEntity>("usp_Notes_GetData", parameters.ToArray());
+            var storedData =
+                _noteRepository.ExecuteReturedStoredProcedure<NoteEntity>("usp_Notes_GetData", parameters.ToArray());
             var result = _mapper.Map<IEnumerable<NoteEntity>, IEnumerable<FullModel>>(storedData);
             return result;
         }

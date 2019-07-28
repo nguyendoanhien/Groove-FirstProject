@@ -1,9 +1,14 @@
-export class UserInfo {
-    public id: string;
-    public userId: string;
-    public displayName: string;
-    public mood: string;
-    public status: string;
-    public avatar: string;
-}
+import { environment } from 'environments/environment';
 
+export class UserInfo {
+    id: string;
+    userId: string;
+    displayName: string;
+    mood: string;
+    status: string;
+    avatar: string;
+
+    constructor() {
+        this.avatar = environment.backendUrl + '/Images/avatar.png';        
+    }
+}

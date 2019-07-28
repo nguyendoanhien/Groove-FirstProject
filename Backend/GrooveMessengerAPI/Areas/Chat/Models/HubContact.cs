@@ -1,8 +1,5 @@
-﻿using GrooveMessengerDAL.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
+using GrooveMessengerDAL.Models;
 
 namespace GrooveMessengerAPI.Areas.Chat.Models.Contact
 {
@@ -12,8 +9,9 @@ namespace GrooveMessengerAPI.Areas.Chat.Models.Contact
         public string UserId { get; set; }
         public string DisplayName { get; set; }
         public string Mood { get; set; }
-        [MapBy(typeof(StatusName))]
-        public string Status { get; set; }
+
+        [MapBy(typeof(StatusName))] public string Status { get; set; }
+
         public string Avatar { get; set; }
     }
 }

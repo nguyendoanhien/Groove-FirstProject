@@ -1,7 +1,6 @@
-﻿using GrooveMessengerDAL.Entities;
+﻿using System.Collections.Generic;
+using GrooveMessengerDAL.Entities;
 using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace GrooveMessengerDAL.Models
 {
@@ -14,5 +13,4 @@ namespace GrooveMessengerDAL.Models
 
         public virtual ICollection<ParticipantEntity> ParticipantEntity { get; set; }
     }
-
 }

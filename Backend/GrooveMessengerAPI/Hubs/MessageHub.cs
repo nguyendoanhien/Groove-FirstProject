@@ -1,12 +1,8 @@
-﻿using GrooveMessengerAPI.Areas.Chat.Models;
+﻿using System;
+using System.Threading.Tasks;
 using GrooveMessengerAPI.Hubs.Utils;
-using GrooveMessengerDAL.Models;
-using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Threading.Tasks;
 
 namespace GrooveMessengerAPI.Hubs
 {
@@ -15,11 +11,11 @@ namespace GrooveMessengerAPI.Hubs
     {
         public MessageHub(
             HubConnectionStorage connectionStore
-           ) :base(connectionStore)
+        ) : base(connectionStore)
         {
             topic = "message";
         }
-        
+
 
         //public async Task SendMessageToUser(Message message, string toUser)
         //{
@@ -33,12 +29,10 @@ namespace GrooveMessengerAPI.Hubs
 
         public async Task SendMessageViewingStatus(string toUser)
         {
-            string username = Context.User.Identity.Name;
+            var username = Context.User.Identity.Name;
 
             foreach (var connectionId in connectionStore.GetConnections(topic, toUser))
-            {
                 await Clients.Client(connectionId).SendMessageViewingStatus(username);
-            }
         }
 
 

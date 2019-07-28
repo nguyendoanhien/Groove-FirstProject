@@ -9,7 +9,7 @@
     <meta charset="utf-8">
     <meta name="description" content="Material design admin template with pre-built apps and pages">
     <meta name="keywords"
-        content="HTML,CSS,AngularJS,Angular,Angular 2,Angular 4,Angular 5,Angular 6,Angular 7,Material,Material 2">
+          content="HTML,CSS,AngularJS,Angular,Angular 2,Angular 4,Angular 5,Angular 6,Angular 7,Material,Material 2">
     <meta name="author" content="Withinpixels">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
@@ -21,176 +21,140 @@
     <!-- FUSE Splash Screen CSS -->
     <style type="text/css">
         #fuse-splash-screen {
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
             background-color: #2D323D;
-            z-index: 99999;
+            bottom: 0;
+            display: block;
+            left: 0;
             pointer-events: none;
+            position: absolute;
+            right: 0;
+            top: 0;
+            z-index: 99999;
         }
 
         #fuse-splash-screen .center {
             display: block;
-            width: 100%;
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
+            width: 100%;
         }
 
         #fuse-splash-screen .logo {
-            width: 128px;
             margin: 0 auto;
+            width: 128px;
         }
 
-        #fuse-splash-screen .logo img {
-            filter: drop-shadow(0px 10px 6px rgba(0, 0, 0, 0.2))
-        }
+        #fuse-splash-screen .logo img { filter: drop-shadow(0px 10px 6px rgba(0, 0, 0, 0.2)) }
 
         #fuse-splash-screen .spinner-wrapper {
             display: block;
+            height: 100px;
+            min-height: 100px;
             position: relative;
             width: 100%;
-            min-height: 100px;
-            height: 100px;
         }
 
         #fuse-splash-screen .spinner-wrapper .spinner {
-            position: absolute;
-            overflow: hidden;
+            animation: outer-rotate 2.91667s linear infinite;
             left: 50%;
             margin-left: -50px;
-            animation: outer-rotate 2.91667s linear infinite;
+            overflow: hidden;
+            position: absolute;
         }
 
         #fuse-splash-screen .spinner-wrapper .spinner .inner {
-            width: 100px;
+            animation: sporadic-rotate 5.25s cubic-bezier(0.35, 0, 0.25, 1) infinite;
             height: 100px;
             position: relative;
-            animation: sporadic-rotate 5.25s cubic-bezier(0.35, 0, 0.25, 1) infinite;
+            width: 100px;
         }
 
         #fuse-splash-screen .spinner-wrapper .spinner .inner .gap {
-            position: absolute;
+            border-top: 10px solid;
+            bottom: 0;
+            box-sizing: border-box;
             left: 49px;
+            position: absolute;
             right: 49px;
             top: 0;
-            bottom: 0;
-            border-top: 10px solid;
-            box-sizing: border-box;
         }
 
         #fuse-splash-screen .spinner-wrapper .spinner .inner .left,
         #fuse-splash-screen .spinner-wrapper .spinner .inner .right {
+            height: 100px;
+            overflow: hidden;
             position: absolute;
             top: 0;
-            height: 100px;
             width: 50px;
-            overflow: hidden;
         }
 
         #fuse-splash-screen .spinner-wrapper .spinner .inner .left .half-circle,
         #fuse-splash-screen .spinner-wrapper .spinner .inner .right .half-circle {
-            position: absolute;
-            top: 0;
-            width: 100px;
-            height: 100px;
-            box-sizing: border-box;
             border: 10px solid #4285F4;
             border-bottom-color: transparent;
             border-radius: 50%;
+            box-sizing: border-box;
+            height: 100px;
+            position: absolute;
+            top: 0;
+            width: 100px;
         }
 
-        #fuse-splash-screen .spinner-wrapper .spinner .inner .left {
-            left: 0;
-        }
+        #fuse-splash-screen .spinner-wrapper .spinner .inner .left { left: 0; }
 
         #fuse-splash-screen .spinner-wrapper .spinner .inner .left .half-circle {
-            left: 0;
-            border-right-color: transparent;
-            animation: left-wobble 1.3125s cubic-bezier(0.35, 0, 0.25, 1) infinite;
             -webkit-animation: left-wobble 1.3125s cubic-bezier(0.35, 0, 0.25, 1) infinite;
+            animation: left-wobble 1.3125s cubic-bezier(0.35, 0, 0.25, 1) infinite;
+            border-right-color: transparent;
+            left: 0;
         }
 
-        #fuse-splash-screen .spinner-wrapper .spinner .inner .right {
-            right: 0;
-        }
+        #fuse-splash-screen .spinner-wrapper .spinner .inner .right { right: 0; }
 
         #fuse-splash-screen .spinner-wrapper .spinner .inner .right .half-circle {
-            right: 0;
-            border-left-color: transparent;
-            animation: right-wobble 1.3125s cubic-bezier(0.35, 0, 0.25, 1) infinite;
             -webkit-animation: right-wobble 1.3125s cubic-bezier(0.35, 0, 0.25, 1) infinite;
+            animation: right-wobble 1.3125s cubic-bezier(0.35, 0, 0.25, 1) infinite;
+            border-left-color: transparent;
+            right: 0;
         }
 
         @keyframes outer-rotate {
-            0% {
-                transform: rotate(0deg) scale(0.5);
-            }
+            0% { transform: rotate(0deg) scale(0.5); }
 
-            100% {
-                transform: rotate(360deg) scale(0.5);
-            }
+            100% { transform: rotate(360deg) scale(0.5); }
         }
 
         @keyframes left-wobble {
-
             0%,
-            100% {
-                transform: rotate(130deg);
-            }
+            100% { transform: rotate(130deg); }
 
-            50% {
-                transform: rotate(-5deg);
-            }
+            50% { transform: rotate(-5deg); }
         }
 
         @keyframes right-wobble {
-
             0%,
-            100% {
-                transform: rotate(-130deg);
-            }
+            100% { transform: rotate(-130deg); }
 
-            50% {
-                transform: rotate(5deg);
-            }
+            50% { transform: rotate(5deg); }
         }
 
         @keyframes sporadic-rotate {
-            12.5% {
-                transform: rotate(135deg);
-            }
+            12.5% { transform: rotate(135deg); }
 
-            25% {
-                transform: rotate(270deg);
-            }
+            25% { transform: rotate(270deg); }
 
-            37.5% {
-                transform: rotate(405deg);
-            }
+            37.5% { transform: rotate(405deg); }
 
-            50% {
-                transform: rotate(540deg);
-            }
+            50% { transform: rotate(540deg); }
 
-            62.5% {
-                transform: rotate(675deg);
-            }
+            62.5% { transform: rotate(675deg); }
 
-            75% {
-                transform: rotate(810deg);
-            }
+            75% { transform: rotate(810deg); }
 
-            87.5% {
-                transform: rotate(945deg);
-            }
+            87.5% { transform: rotate(945deg); }
 
-            100% {
-                transform: rotate(1080deg);
-            }
+            100% { transform: rotate(1080deg); }
         }
     </style>
     <!-- / FUSE Splash Screen CSS -->
@@ -198,37 +162,37 @@
 
 <body>
 
-    <!-- FUSE Splash Screen -->
-    <fuse-splash-screen id="fuse-splash-screen">
+<!-- FUSE Splash Screen -->
+<fuse-splash-screen id="fuse-splash-screen">
 
-        <div class="center">
+    <div class="center">
 
-            <div class="logo">
-                <img width="128" src="assets/images/logos/logo.png">
-            </div>
+        <div class="logo">
+            <img width="128" src="assets/images/logos/logo.png">
+        </div>
 
-            <!-- Material Design Spinner -->
-            <div class="spinner-wrapper">
-                <div class="spinner">
-                    <div class="inner">
-                        <div class="gap"></div>
-                        <div class="left">
-                            <div class="half-circle"></div>
-                        </div>
-                        <div class="right">
-                            <div class="half-circle"></div>
-                        </div>
+        <!-- Material Design Spinner -->
+        <div class="spinner-wrapper">
+            <div class="spinner">
+                <div class="inner">
+                    <div class="gap"></div>
+                    <div class="left">
+                        <div class="half-circle"></div>
+                    </div>
+                    <div class="right">
+                        <div class="half-circle"></div>
                     </div>
                 </div>
             </div>
-            <!-- / Material Design Spinner -->
-
         </div>
+        <!-- / Material Design Spinner -->
 
-    </fuse-splash-screen>
-    <!-- / FUSE Splash Screen -->
+    </div>
 
-    <app></app>
+</fuse-splash-screen>
+<!-- / FUSE Splash Screen -->
+
+<app></app>
 
 </body>
 

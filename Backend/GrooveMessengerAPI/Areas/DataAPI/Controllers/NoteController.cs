@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using GrooveMessengerDAL.Models.Note;
 using GrooveMessengerDAL.Services.Interface;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Logging;
-using System;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GrooveMessengerAPI.Areas.DataAPI.Controllers
 {
@@ -63,13 +60,9 @@ namespace GrooveMessengerAPI.Areas.DataAPI.Controllers
         public IActionResult CreateNote([FromBody] CreateModel note)
         {
             if (ModelState.IsValid)
-            {
                 _noteService.AddNote(note);
-            }
             else
-            {
                 return new BadRequestResult();
-            }
 
             return Ok();
         }
@@ -78,10 +71,7 @@ namespace GrooveMessengerAPI.Areas.DataAPI.Controllers
         public IActionResult DeleteNote(int id)
         {
             var isExisting = _noteService.CheckExisting(id);
-            if (!isExisting)
-            {
-                return new NotFoundResult();
-            }
+            if (!isExisting) return new NotFoundResult();
 
             _noteService.DeleteNote(id);
             return Ok();

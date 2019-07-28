@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GrooveMessengerDAL.Entities
+﻿namespace GrooveMessengerDAL.Entities
 {
     public class NoteEntity : AuditBaseEntity<int>
     {

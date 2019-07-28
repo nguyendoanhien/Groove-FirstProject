@@ -12,7 +12,6 @@ namespace GrooveMessengerAPI
                 routes.MapHub<MessageHub>("/messagehub");
                 routes.MapHub<UserProfileHub>("/profilehub");
                 routes.MapHub<ContactHub>("/contacthub");
-
             });
         }
     }

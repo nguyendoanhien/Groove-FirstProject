@@ -1,17 +1,15 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from "@angular/core";
 
-import { fuseAnimations } from '@fuse/animations';
+import { fuseAnimations } from "@fuse/animations";
 
 @Component({
-    selector     : 'chat-start',
-    templateUrl  : './chat-start.component.html',
-    styleUrls    : ['./chat-start.component.scss'],
+    selector: "chat-start",
+    templateUrl: "./chat-start.component.html",
+    styleUrls: ["./chat-start.component.scss"],
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations: fuseAnimations
 })
-export class ChatStartComponent
-{
-    constructor()
-    {
+export class ChatStartComponent {
+    constructor() {
     }
 }

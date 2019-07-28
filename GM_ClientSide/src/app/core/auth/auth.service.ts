@@ -1,19 +1,20 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
+
 @Injectable()
 export class AuthService {
-    public getToken(): string {
-        return localStorage.getItem('token') === null ? '' : localStorage.getItem('token');
+    getToken(): string {
+        return localStorage.getItem("token") === null ? "" : localStorage.getItem("token");
     }
 
-    public setToken(token: string): void {
-        localStorage.setItem('token', token);
+    setToken(token: string): void {
+        localStorage.setItem("token", token);
     }
 
-    public clearToken(): void {
-        localStorage.removeItem('token');
+    clearToken(): void {
+        localStorage.removeItem("token");
     }
 
-    public isAuthenticated(): boolean {
+    isAuthenticated(): boolean {
         const token = this.getToken();
         if (token === null || token.length === 0) {
             return false;

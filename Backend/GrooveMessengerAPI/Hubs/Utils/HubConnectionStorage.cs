@@ -8,13 +8,7 @@ namespace GrooveMessengerAPI.Hubs.Utils
         private readonly Dictionary<string, HashSet<string>> _connections =
             new Dictionary<string, HashSet<string>>();
 
-        public int Count
-        {
-            get
-            {
-                return _connections.Count;
-            }
-        }
+        public int Count => _connections.Count;
 
         public void Add(string topic, string key, string connectionId)
         {
@@ -36,24 +30,17 @@ namespace GrooveMessengerAPI.Hubs.Utils
 
         public IEnumerable<string> GetConnections(string topic, IEnumerable<string> keys)
         {
-            List<string> result = new List<string>();
+            var result = new List<string>();
             foreach (var key in keys)
-            {
                 if (_connections.TryGetValue($"{topic}_{key}", out var connections))
-                {
                     result.AddRange(connections);
-                }
-            }          
             return result;
         }
 
         public IEnumerable<string> GetConnections(string topic, string key)
         {
             HashSet<string> connections;
-            if (_connections.TryGetValue($"{topic}_{key}", out connections))
-            {
-                return connections;
-            }
+            if (_connections.TryGetValue($"{topic}_{key}", out connections)) return connections;
 
             return Enumerable.Empty<string>();
         }
@@ -63,19 +50,13 @@ namespace GrooveMessengerAPI.Hubs.Utils
             lock (_connections)
             {
                 HashSet<string> connections;
-                if (!_connections.TryGetValue($"{topic}_{key}", out connections))
-                {
-                    return;
-                }
+                if (!_connections.TryGetValue($"{topic}_{key}", out connections)) return;
 
                 lock (connections)
                 {
                     connections.Remove(connectionId);
 
-                    if (connections.Count == 0)
-                    {
-                        _connections.Remove($"{topic}_{key}");
-                    }
+                    if (connections.Count == 0) _connections.Remove($"{topic}_{key}");
                 }
             }
         }

@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
-using GrooveMessengerDAL.Services.Interface;
-using GrooveMessengerDAL.Entities;
-using System;
 using System.Linq;
+using System.Security.Claims;
+using GrooveMessengerDAL.Services.Interface;
+using Microsoft.AspNetCore.Http;
 
 namespace GrooveMessengerDAL.Services
 {
     public class UserResolverService : IUserResolverService
     {
         private readonly IHttpContextAccessor _context;
+
         public UserResolverService(IHttpContextAccessor context)
         {
             _context = context;
@@ -30,6 +29,7 @@ namespace GrooveMessengerDAL.Services
         {
             return _context.HttpContext.User?.Claims.FirstOrDefault(x => x.Type == "UserId").Value;
         }
+
         public string CurrentUserInfoId()
         {
             return _context.HttpContext.User?.Claims.FirstOrDefault(x => x.Type == "UserInfoId").Value;

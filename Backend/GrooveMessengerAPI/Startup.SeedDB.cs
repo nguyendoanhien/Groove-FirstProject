@@ -1,5 +1,5 @@
-﻿using GrooveMessengerDAL.Data;
-using System;
+﻿using System;
+using GrooveMessengerDAL.Data;
 
 namespace GrooveMessengerAPI
 {

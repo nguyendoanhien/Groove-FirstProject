@@ -2,12 +2,12 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+using GrooveMessengerDAL.Configurations;
 using GrooveMessengerDAL.Entities;
 using GrooveMessengerDAL.Models;
 using GrooveMessengerDAL.Services.Interface;
-using GrooveMessengerDAL.Configurations;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace GrooveMessengerDAL.Data
 {
@@ -21,6 +21,7 @@ namespace GrooveMessengerDAL.Data
         {
             _userResolverService = userResolverService;
         }
+
         public GrooveMessengerDbContext(DbContextOptions<GrooveMessengerDbContext> options)
             : base(options)
         {
@@ -42,7 +43,6 @@ namespace GrooveMessengerDAL.Data
             builder.ApplyConfiguration(new ConversationMappingConfiguration());
             builder.ApplyConfiguration(new UserInfoMappingConfiguration());
             builder.ApplyConfiguration(new UserInfoContactMappingConfiguration());
-
         }
 
         private void SaveChangeOverride()
@@ -55,29 +55,21 @@ namespace GrooveMessengerDAL.Data
                 var entry = entityEntry;
                 if (entry.Entity.GetType().GetInterface(typeof(IAuditBaseEntity).Name) != null)
                 {
-
                     if (entry.State == EntityState.Modified)
-                    {
                         entry.Property("UpdatedBy").CurrentValue = _userResolverService.CurrentUserName();
-                    }
 
-                    if (entry.State == EntityState.Modified)
-                    {
-                        entry.Property("UpdatedOn").CurrentValue = DateTime.UtcNow;
-                    }
+                    if (entry.State == EntityState.Modified) entry.Property("UpdatedOn").CurrentValue = DateTime.UtcNow;
                 }
 
                 if (entry.Entity.GetType().GetInterface(typeof(IBaseEntity).Name) != null)
                 {
                     if (entry.State == EntityState.Added)
-                    {
-                        entry.Property("CreatedBy").CurrentValue = string.IsNullOrEmpty(_userResolverService.CurrentUserName()) ? "Root" : _userResolverService.CurrentUserName();
-                    }
+                        entry.Property("CreatedBy").CurrentValue =
+                            string.IsNullOrEmpty(_userResolverService.CurrentUserName())
+                                ? "Root"
+                                : _userResolverService.CurrentUserName();
 
-                    if (entry.State == EntityState.Added)
-                    {
-                        entry.Property("CreatedOn").CurrentValue = DateTime.UtcNow;
-                    }
+                    if (entry.State == EntityState.Added) entry.Property("CreatedOn").CurrentValue = DateTime.UtcNow;
                 }
             }
         }
@@ -101,6 +93,5 @@ namespace GrooveMessengerDAL.Data
         }
 
         //public DbSet<NoteEntity> Notes { get; set; }
-
     }
 }
