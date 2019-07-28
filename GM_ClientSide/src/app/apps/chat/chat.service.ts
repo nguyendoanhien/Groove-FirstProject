@@ -217,7 +217,6 @@ export class ChatService implements Resolve<any>
      */
     getChats(): Promise<any> {
         return new Promise((resolve, reject) => {
-            debugger
             this._httpClient.get(environment.apiGetChatListByUserId + this._userProfileService.userProfile.UserId) // using static user id to test
                 .subscribe((response: any) => {
                     resolve(response);
