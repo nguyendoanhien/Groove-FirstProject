@@ -95,7 +95,6 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             .subscribe(updatedChats => {
                 this.chats = updatedChats;
             });
-
         this._chatService.onUserUpdated
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(updatedUser => {
@@ -122,20 +121,6 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                     chat.unread = '99+';
                 }
                 else chat.unread = unreadMessage.amount;
-                // switch (true) {
-                //     case (unreadMessage.amount == 0): {
-                //         chat.unread = '';
-                //         break;
-                //     }
-                //     case (unreadMessage.amount < 100): {
-                //         chat.unread = unreadMessage.amount;
-                //         break;
-                //     }
-                //     default: {
-                //         chat.unread = '99+';
-                //         break;
-                //     }
-                // } 
                 this._chatService._messageHub.unreadMessage.next(null);
             }
         });

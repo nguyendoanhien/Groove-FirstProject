@@ -108,7 +108,6 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         
         public  IActionResult GetChatList()
         {
-            
             return Ok(_contactService.GetLatestContactChatListByUserId_SP());
         }
     }

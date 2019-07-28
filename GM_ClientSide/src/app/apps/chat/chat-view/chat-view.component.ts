@@ -187,6 +187,9 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.directiveScroll.scrollToBottom(0, speed);
             });
         }
+        this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
+            .subscribe(val => { console.log(val + 'chatview'); }, error => { console.log(error); }
+            );
     }
 
     /**
@@ -220,11 +223,18 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         await this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
             this.readyToReply();
         });
-        // Truc: Call controller backend
-        debugger
+        // Truc: Call count unread messages in controller backend
         this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
             .subscribe(val => { console.log(val + 'chatview'); }, error => { console.log(error); }
             );
+
+        await this._messageService.updateUnreadMessages(this.chatId)
+            .subscribe(val => 
+                {var chatList = this.user.chatList as Array<any>;
+                var chat = chatList.find(x => x.convId == this.chatId);
+                chat.unread = val;}, 
+                err => console.log(err));
+        
     }
 
     SayHi(contact: any) {

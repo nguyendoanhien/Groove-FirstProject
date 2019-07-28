@@ -69,7 +69,7 @@ namespace GrooveMessengerDAL.Services
         //    return result;
         //}
                 
-        public IEnumerable<ChatModel> GetAllConversationOfAUser(string UserId = null)
+        public IEnumerable<ChatModel> GetAllConversationOfAUser(string UserId)
         {
             List<ChatModel> chatModels = new List<ChatModel>();
             IEnumerable<DialogDraftModel> dialogDraftModels = GetAllConversationOfAUserDraft(UserId);
@@ -96,7 +96,7 @@ namespace GrooveMessengerDAL.Services
         }
         public IEnumerable<DialogDraftModel> GetAllConversationOfAUserDraft(string UserId = null)
         {
-            var spName = "[dbo].[msp_GetAllConversationsWithMessages]";
+            var spName = "[dbo].[usp_Message_GetAllConversationsWithMessages]";
             var parameter =
                 new SqlParameter
                 {
@@ -111,13 +111,13 @@ namespace GrooveMessengerDAL.Services
         
         public ChatModel GetConversationById(string ConversationId)
         {
-            var spName = "[dbo].[csp_GetConversationById]";
+            var spName = "[dbo].[usp_Message_GetByConversationId]";
             var parameter =
                 new SqlParameter
                 {
                     ParameterName = "ConversationId",
                     SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
-                    SqlValue = string.IsNullOrEmpty(ConversationId) ? _userResolverService.CurrentUserInfoId() : ConversationId
+                    SqlValue = ConversationId
                 };
 
             var contactList = _conRepository.ExecuteReturedStoredProcedure<DialogDraftModel>(spName, parameter);
@@ -139,10 +139,6 @@ namespace GrooveMessengerDAL.Services
                 _conRepository.Add(mes);
                 _uow.SaveChanges();
             
-        }
-        public ChatModel GetConversationOfAUser(string ConversationId)
-        {
-            throw new NotImplementedException();
         }
     }
 }
