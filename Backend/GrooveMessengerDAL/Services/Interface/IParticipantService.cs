@@ -1,7 +1,6 @@
-﻿using GrooveMessengerDAL.Entities;
-using GrooveMessengerDAL.Models.Participant;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using GrooveMessengerDAL.Models.Participant;
 
 namespace GrooveMessengerDAL.Services.Interface
 {

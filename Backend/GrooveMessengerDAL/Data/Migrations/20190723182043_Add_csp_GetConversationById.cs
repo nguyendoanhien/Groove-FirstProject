@@ -38,11 +38,11 @@ namespace GrooveMessengerDAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(
-               @"
+                @"
                 DROP PROCEDURE [dbo].[csp_GetConversationById]
                 GO
                 "
-               );
+            );
         }
     }
 }

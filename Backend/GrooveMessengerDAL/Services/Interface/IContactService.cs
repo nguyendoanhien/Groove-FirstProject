@@ -1,11 +1,11 @@
-
-using GrooveMessengerDAL.Models.CustomModel;
-using GrooveMessengerDAL.Entities;
-using GrooveMessengerDAL.Models.Contact;
-using GrooveMessengerDAL.Models.User;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System;
+using GrooveMessengerDAL.Entities;
+using GrooveMessengerDAL.Models;
+using GrooveMessengerDAL.Models.Contact;
+using GrooveMessengerDAL.Models.CustomModel;
+using GrooveMessengerDAL.Models.User;
 
 namespace GrooveMessengerDAL.Services.Interface
 {
@@ -16,10 +16,14 @@ namespace GrooveMessengerDAL.Services.Interface
         Task<IEnumerable<IndexUserInfoModel>> GetUserContactList(string username = null);
         Task<IEnumerable<string>> GetUserContactEmailList(string username = null);
         Task<string> GetUserContactEmail(string userId);
-        Task<IEnumerable<IndexUserInfoModel>> GetUserUnknownContact(string username = null, string displayNameSearch = null);
+
+        Task<IEnumerable<IndexUserInfoModel>> GetUserUnknownContact(string username = null,
+            string displayNameSearch = null);
+
         void DeleteContact(Guid Id);
         void AddContact(AddContactModel addContactModel);
         void EditContact(EditContactModel addContactModel);
         UserInfoContactEntity GetSingle(Guid Id);
+        Task<List<ApplicationUser>> GetContacts(Guid conversationId);
     }
 }

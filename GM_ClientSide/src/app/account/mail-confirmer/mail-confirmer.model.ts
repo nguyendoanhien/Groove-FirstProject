@@ -1,4 +1,4 @@
-export class MailConfirmModel{
+export class MailConfirmModel {
     userId: string;
     ctoken: string;
 }

@@ -1,22 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using GrooveMessengerDAL.Entities;
+using GrooveMessengerDAL.Models;
 using GrooveMessengerDAL.Repositories.Interface;
 using GrooveMessengerDAL.Services.Interface;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Text;
-using System.Data;
-using System.Reflection;
-using System.Collections;
-using System.Data.Common;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using static GrooveMessengerDAL.Entities.UserInfoEntity;
-using GrooveMessengerDAL.Models.User;
-using GrooveMessengerDAL.Models;
 
 namespace GrooveMessengerDAL.Repositories
 {
@@ -28,13 +24,13 @@ namespace GrooveMessengerDAL.Repositories
 
         private DbSet<TEntity> _entity;
 
-        protected DbSet<TEntity> Entity => _entity ?? (_entity = DbContext.Set<TEntity>());
-
         public GenericRepository(TContext dbContext, IUserResolverService userResolverService)
         {
             DbContext = dbContext;
             UserResolverService = userResolverService;
         }
+
+        protected DbSet<TEntity> Entity => _entity ?? (_entity = DbContext.Set<TEntity>());
 
         public IQueryable<TEntity> GetAll()
         {
@@ -43,10 +39,7 @@ namespace GrooveMessengerDAL.Repositories
 
         public Task<IQueryable<TEntity>> GetAllAsync()
         {
-            var result = Task.Run(() =>
-            {
-                return GetAll();
-            });
+            var result = Task.Run(() => { return GetAll(); });
             return result;
         }
 
@@ -58,25 +51,19 @@ namespace GrooveMessengerDAL.Repositories
 
         public Task<TEntity> GetSingleAsync(TKey entityId)
         {
-            var result = Task.Run(() =>
-            {
-                return GetSingle(entityId);
-            });
+            var result = Task.Run(() => { return GetSingle(entityId); });
             return result;
         }
 
         public IQueryable<TEntity> GetBy(Expression<Func<TEntity, bool>> predicate)
         {
-            return Entity.AsNoTracking().Where(x => (x.Deleted == null || !x.Deleted.Value))
+            return Entity.AsNoTracking().Where(x => x.Deleted == null || !x.Deleted.Value)
                 .Where(predicate);
         }
 
         public Task<IQueryable<TEntity>> GetByAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            var result = Task.Run(() =>
-            {
-                return GetBy(predicate);
-            });
+            var result = Task.Run(() => { return GetBy(predicate); });
             return result;
         }
 
@@ -87,10 +74,7 @@ namespace GrooveMessengerDAL.Repositories
 
         public Task<IQueryable<TEntity>> FindAllAsync()
         {
-            var result = Task.Run(() =>
-            {
-                return FindAll();
-            });
+            var result = Task.Run(() => { return FindAll(); });
             return result;
         }
 
@@ -102,25 +86,19 @@ namespace GrooveMessengerDAL.Repositories
 
         public Task<TEntity> FindSingleAsync(TKey entityId)
         {
-            var result = Task.Run(() =>
-            {
-                return FindSingle(entityId);
-            });
+            var result = Task.Run(() => { return FindSingle(entityId); });
             return result;
         }
 
         public IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate)
         {
-            return Entity.Where(x => (x.Deleted == null || !x.Deleted.Value))
+            return Entity.Where(x => x.Deleted == null || !x.Deleted.Value)
                 .Where(predicate);
         }
 
         public Task<IQueryable<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            var result = Task.Run(() =>
-            {
-                return FindBy(predicate);
-            });
+            var result = Task.Run(() => { return FindBy(predicate); });
             return result;
         }
 
@@ -146,10 +124,7 @@ namespace GrooveMessengerDAL.Repositories
 
         public Task DeleteAsync(TKey entityId)
         {
-            var result = Task.Run(() =>
-            {
-                Delete(entityId);
-            });
+            var result = Task.Run(() => { Delete(entityId); });
             return result;
         }
 
@@ -161,10 +136,7 @@ namespace GrooveMessengerDAL.Repositories
 
         public Task EditAsync(TEntity entity)
         {
-            var result = Task.Run(() =>
-            {
-                Edit(entity);
-            });
+            var result = Task.Run(() => { Edit(entity); });
             return result;
         }
 
@@ -174,7 +146,8 @@ namespace GrooveMessengerDAL.Repositories
             return result;
         }
 
-        public IQueryable<TEntity> ExecuteReturedStoredProcedure(string storedProcedureName, params SqlParameter[] parameters)
+        public IQueryable<TEntity> ExecuteReturedStoredProcedure(string storedProcedureName,
+            params SqlParameter[] parameters)
         {
             var wrapperQuery = BuildSqlExecutionStatement(storedProcedureName, parameters);
             return Entity.FromSql(wrapperQuery, parameters);
@@ -186,21 +159,21 @@ namespace GrooveMessengerDAL.Repositories
             return DbContext.Database.ExecuteSqlCommand(wrapperQuery, parameters);
         }
 
-        public List<TResult> ExecuteReturedStoredProcedure<TResult>(string storedProcedureName, params SqlParameter[] parameters)
+        public List<TResult> ExecuteReturedStoredProcedure<TResult>(string storedProcedureName,
+            params SqlParameter[] parameters)
         {
             var parameterNames = "";
             var parameterDeclaration = "";
             var parameterInput = "";
             var parameterCount = parameters.Count() - 1;
-            for (int i = 0; i <= parameterCount; i++)
+            for (var i = 0; i <= parameterCount; i++)
             {
                 parameterNames += $"@{parameters[i].ParameterName}";
                 parameterDeclaration += $"@{parameters[i].ParameterName} {parameters[i].SqlDbType.ToString()}";
                 if (parameters[i].SqlDbType.ToString().ToLower().Contains("char"))
-                {
                     parameterDeclaration += $"({(parameters[i].Size <= 0 ? "MAX" : parameters[i].Size.ToString())})";
-                }
-                parameterInput += $"@{parameters[i].ParameterName} = N'{parameters[i].Value?.ToString().Replace("'", "''")}'";
+                parameterInput +=
+                    $"@{parameters[i].ParameterName} = N'{parameters[i].Value?.ToString().Replace("'", "''")}'";
                 if (i < parameterCount)
                 {
                     parameterNames += ", ";
@@ -208,14 +181,13 @@ namespace GrooveMessengerDAL.Repositories
                     parameterInput += ", ";
                 }
             }
-            var commandText = $"exec sp_executesql N'EXECUTE {storedProcedureName} {parameterNames}', N'{parameterDeclaration}',{parameterInput}";
+
+            var commandText =
+                $"exec sp_executesql N'EXECUTE {storedProcedureName} {parameterNames}', N'{parameterDeclaration}',{parameterInput}";
             using (var command = DbContext.Database.GetDbConnection().CreateCommand())
             {
                 command.CommandText = commandText;
-                if (command.Connection.State == ConnectionState.Closed)
-                {
-                    command.Connection.Open();
-                }
+                if (command.Connection.State == ConnectionState.Closed) command.Connection.Open();
                 using (var reader = command.ExecuteReader())
                 {
                     var results = CreateList<TResult>(reader);
@@ -232,14 +204,13 @@ namespace GrooveMessengerDAL.Repositories
             var length = parameters.Count() - 1;
 
 
-            for (int i = 0; i < parameters.Count(); i++)
+            for (var i = 0; i < parameters.Count(); i++)
             {
                 spSignature.AppendFormat(" @{0}", parameters[i].ParameterName);
                 if (i != length) spSignature.Append(",");
             }
 
             return spSignature.ToString();
-
         }
 
         private List<TResult> CreateList<TResult>(IDataReader reader)
@@ -249,37 +220,43 @@ namespace GrooveMessengerDAL.Repositories
 
             while (reader.Read())
             {
-                if (typeof(TResult).IsPrimitive || typeof(TResult) == typeof(String) || typeof(TResult) == typeof(int))
+                if (typeof(TResult).IsPrimitive || typeof(TResult) == typeof(string) || typeof(TResult) == typeof(int))
                 {
-                    var value = (TResult)reader[0];
+                    var value = (TResult) reader[0];
                     results.Add(value);
                     continue;
                 }
 
                 var item = Activator.CreateInstance<TResult>();
                 foreach (var property in properties)
-                {
-                    if (!reader.IsDBNull(reader.GetOrdinal(property.Name)))
+                    try
                     {
-
-                        var attrs = System.Attribute.GetCustomAttributes(property);
-                        if (attrs.Any(x => x is MapBy))
+                        if (!reader.IsDBNull(reader.GetOrdinal(property.Name)))
                         {
-                            var enumType = typeof(StatusName);
-                            var currentValue = reader[property.Name];
-                            var enumValue = Enum.Parse(enumType, currentValue.ToString());
-                            var convertedValue = enumValue.ToString();
-                            property.SetValue(item, convertedValue);
-                        }
-                        else
-                        {
-                            var convertTo = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-                            property.SetValue(item, Convert.ChangeType(reader[property.Name], convertTo), null);
+                            var attrs = Attribute.GetCustomAttributes(property);
+                            if (attrs.Any(x => x is MapBy))
+                            {
+                                var enumType = typeof(StatusName);
+                                var currentValue = reader[property.Name];
+                                var enumValue = Enum.Parse(enumType, currentValue.ToString());
+                                var convertedValue = enumValue.ToString();
+                                property.SetValue(item, convertedValue);
+                            }
+                            else
+                            {
+                                var convertTo = Nullable.GetUnderlyingType(property.PropertyType) ??
+                                                property.PropertyType;
+                                property.SetValue(item, Convert.ChangeType(reader[property.Name], convertTo), null);
+                            }
                         }
                     }
-                }
+                    catch
+                    {
+                    }
+
                 results.Add(item);
             }
+
             return results;
         }
     }

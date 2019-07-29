@@ -37,7 +37,6 @@ namespace GrooveMessengerDAL.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
         }
     }
 }

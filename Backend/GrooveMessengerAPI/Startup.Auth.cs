@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Text;
+using System.Threading.Tasks;
 using GrooveMessengerDAL.Data;
+using GrooveMessengerDAL.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using GrooveMessengerDAL.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
 
 namespace GrooveMessengerAPI
 {
@@ -17,18 +17,16 @@ namespace GrooveMessengerAPI
     {
         public void RegisterAuth(IServiceCollection services)
         {
-
-
             services.AddAuthentication(x =>
-                 {
-                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                 })
+                {
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
                 .AddJwtBearer(cfg =>
                 {
                     cfg.RequireHttpsMetadata = false;
                     cfg.SaveToken = true;
-                    cfg.TokenValidationParameters = new TokenValidationParameters()
+                    cfg.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidIssuer = Configuration["JWTAuthentication:Issuer"],
                         ValidAudience = Configuration["JWTAuthentication:Audience"],
@@ -41,7 +39,7 @@ namespace GrooveMessengerAPI
                         ValidateAudience = true
                     };
 
-                    cfg.Events = new JwtBearerEvents()
+                    cfg.Events = new JwtBearerEvents
                     {
                         OnMessageReceived = context =>
                         {
@@ -49,11 +47,9 @@ namespace GrooveMessengerAPI
 
                             var path = context.HttpContext.Request.Path;
 
-                            if (!string.IsNullOrEmpty(accessToken) 
+                            if (!string.IsNullOrEmpty(accessToken)
                             )
-                            {
                                 context.Token = accessToken;
-                            }
 
                             return Task.CompletedTask;
                         },
@@ -64,7 +60,7 @@ namespace GrooveMessengerAPI
                             context.Response.ContentType = "text/plain";
                             context.Response.WriteAsync("Token is not valid.").Wait();
                             return Task.CompletedTask;
-                        },
+                        }
                         //OnChallenge = context =>
                         //{
                         //    context.Response.StatusCode = 401;
@@ -74,10 +70,11 @@ namespace GrooveMessengerAPI
                         //}
                     };
                 }).AddGoogle(options =>
-            {
-                options.ClientId = Configuration.GetSection("ApplicationGoogle:ClientId").Value;
-                options.ClientSecret = Configuration.GetSection("ApplicationGoogle:ClientSecret").Value; ;
-            });
+                {
+                    options.ClientId = Configuration.GetSection("ApplicationGoogle:ClientId").Value;
+                    options.ClientSecret = Configuration.GetSection("ApplicationGoogle:ClientSecret").Value;
+                    ;
+                });
         }
 
         public void RegisterIdentity(IServiceCollection services)

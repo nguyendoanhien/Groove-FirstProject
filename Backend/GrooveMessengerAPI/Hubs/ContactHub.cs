@@ -1,18 +1,10 @@
-﻿using GrooveMessengerAPI.Areas.Chat.Models;
-using GrooveMessengerAPI.Areas.Chat.Models.Contact;
+﻿using System;
+using System.Threading.Tasks;
+using GrooveMessengerAPI.Constants;
 using GrooveMessengerAPI.Hubs.Utils;
-using GrooveMessengerDAL.Models.Contact;
-using GrooveMessengerDAL.Models.Conversation;
-using GrooveMessengerDAL.Models.Message;
-using GrooveMessengerDAL.Models.Participant;
-using GrooveMessengerDAL.Models.User;
 using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GrooveMessengerAPI.Hubs
 {
@@ -21,12 +13,12 @@ namespace GrooveMessengerAPI.Hubs
     {
         private IContactService _contactService;
         private IConversationService _conversationService;
-        private IParticipantService _participantService;
-        private IUserResolverService _userResolverservice;
         private IMessageService _messageService;
+        private IParticipantService _participantService;
         private IUserService _userInfoContact;
-        
-        
+        private IUserResolverService _userResolverservice;
+
+
         public ContactHub(
             HubConnectionStorage connectionStore,
             IContactService contactService,
@@ -35,30 +27,16 @@ namespace GrooveMessengerAPI.Hubs
             IUserResolverService userResolverservice,
             IMessageService messageService,
             IUserService userInfoContact
-            ) 
-            : base(connectionStore)
+        )
+            : base(connectionStore, HubConstant.ContactHubTopic)
         {
             _contactService = contactService;
             _conversationService = conversationService;
             _participantService = participantService;
             _userResolverservice = userResolverservice;
             _messageService = messageService;
-            _userInfoContact = userInfoContact;
-            topic = "contact";
+            _userInfoContact = userInfoContact;        
         }
-
-
-        //public async Task SendNewContactToUser(AddContactModel Contact, CreateConversationModel createConversationModel)
-        //{
-        //    foreach (var connectionId in connectionStore.GetConnections(.ContactId))
-        //    {
-        //        await Clients.Client(connectionId).SendNewContactToFriend(Contact.ContactId);
-        //    }
-        //}
-
-
-
-
 
 
         public override Task OnConnectedAsync()

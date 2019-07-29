@@ -11,8 +11,6 @@ namespace GrooveMessengerDAL.Mappers
             CreateMap<DeleteContactModel, UserInfoContactEntity>();
             CreateMap<EditContactModel, UserInfoContactEntity>();
             CreateMap<AddContactModel, UserInfoContactEntity>();
-            
         }
     }
-
 }

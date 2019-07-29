@@ -17,12 +17,12 @@
         <!-- TOOLBAR BOTTOM -->
         <mat-toolbar-row class="toolbar-bottom" fxLayout="column" fxLayoutAlign="center center">
 
-            <input type="file" #file (change)="onUpload($event)" style="display:none" />
+            <input type="file" #file (change)="onUpload($event)" style="display: none"/>
             <img [src]="this._userInfoService.userInfo.avatar" class="avatar user-avatar huge" alt=""
-                style="cursor:pointer" (click)="file.click()" />
+                 style="cursor: pointer" (click)="file.click()"/>
 
             <input class="user-name my-8" (input)="this._userInfoService.userInfo.displayName = $event.target.value"
-                [value]="this._userInfoService.userInfo.displayName" (focusout)="changeDisplayName()" />
+                   [value]="this._userInfoService.userInfo.displayName" (focusout)="changeDisplayName()"/>
         </mat-toolbar-row>
         <!-- / TOOLBAR BOTTOM -->
 
@@ -43,7 +43,7 @@
         </mat-form-field>
 
         <mat-radio-group [(ngModel)]="this._userInfoService.userInfo.status" [ngModelOptions]="{standalone: true}"
-            fxLayout="column" (change)="changeDisplayName()">
+                         fxLayout="column" (change)="changeDisplayName()">
 
             <mat-radio-button value="online" class="py-8">
                 <div fxLayout="row" fxLayoutAlign="start center">

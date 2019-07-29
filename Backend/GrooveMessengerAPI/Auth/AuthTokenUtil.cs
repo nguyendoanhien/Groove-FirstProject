@@ -1,14 +1,11 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.Extensions.Configuration;
 using GrooveMessengerDAL.Models;
-using GrooveMessengerDAL.Repositories.Interface;
-using GrooveMessengerDAL.Data;
-using GrooveMessengerDAL.Entities;
 using GrooveMessengerDAL.Models.User;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 namespace GrooveMessengerAPI.Auth
 {
@@ -19,7 +16,7 @@ namespace GrooveMessengerAPI.Auth
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWTAuthentication:SecretKey"]));
 
-            var claims = new Claim[]
+            var claims = new[]
             {
                 new Claim(ClaimTypes.Name, userName),
                 new Claim("DisplayName", userName.Split('@')[0]),
@@ -28,21 +25,22 @@ namespace GrooveMessengerAPI.Auth
             };
 
             var token = new JwtSecurityToken(
-                issuer: config["JWTAuthentication:Issuer"],
-                audience: config["JWTAuthentication:Audience"],
-                claims: claims,
-                notBefore: DateTime.UtcNow,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
+                config["JWTAuthentication:Issuer"],
+                config["JWTAuthentication:Audience"],
+                claims,
+                DateTime.UtcNow,
+                DateTime.Now.AddDays(1),
+                new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
             );
             return token;
         }
 
-        public static JwtSecurityToken GetJwtToken(ApplicationUser user, IndexUserInfoModel userInfo, IConfiguration config)
+        public static JwtSecurityToken GetJwtToken(ApplicationUser user, IndexUserInfoModel userInfo,
+            IConfiguration config)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWTAuthentication:SecretKey"]));
 
-            var claims = new Claim[]
+            var claims = new[]
             {
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim("UserName", user.UserName),
@@ -52,12 +50,12 @@ namespace GrooveMessengerAPI.Auth
             };
 
             var token = new JwtSecurityToken(
-                issuer: config["JWTAuthentication:Issuer"],
-                audience: config["JWTAuthentication:Audience"],
-                claims: claims,
-                notBefore: DateTime.UtcNow,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
+                config["JWTAuthentication:Issuer"],
+                config["JWTAuthentication:Audience"],
+                claims,
+                DateTime.UtcNow,
+                DateTime.Now.AddDays(1),
+                new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
             );
             return token;
         }
@@ -76,6 +74,7 @@ namespace GrooveMessengerAPI.Auth
             var result = new JwtSecurityTokenHandler().WriteToken(token);
             return result;
         }
+
         public static JwtSecurityToken DecodeJwt(string encodedJwt)
         {
             var stream = "[encoded jwt]";

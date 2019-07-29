@@ -5,11 +5,9 @@ namespace GrooveMessengerDAL.Entities
 {
     public abstract class AuditBaseEntity<TKey> : BaseEntity<TKey>, IAuditBaseEntity
     {
-        [Column("UpdatedBy")]
-        public string UpdatedBy { get; set; }
+        [Column("UpdatedBy")] public string UpdatedBy { get; set; }
 
-        [Column("UpdatedOn")]
-        public DateTime? UpdatedOn { get; set; }
+        [Column("UpdatedOn")] public DateTime? UpdatedOn { get; set; }
     }
 
     public interface IAuditBaseEntity

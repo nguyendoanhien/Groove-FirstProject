@@ -8,8 +8,8 @@ namespace GrooveMessengerDAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "DisplayName",
-                table: "AspNetUsers",
+                "DisplayName",
+                "AspNetUsers",
                 maxLength: 120,
                 nullable: false,
                 oldClrType: typeof(string),
@@ -17,35 +17,32 @@ namespace GrooveMessengerDAL.Migrations
                 oldNullable: true);
 
             migrationBuilder.CreateTable(
-                name: "Conversation",
-                columns: table => new
+                "Conversation",
+                table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(),
                     Deleted = table.Column<bool>(nullable: true),
                     CreatedBy = table.Column<string>(nullable: true),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(),
                     UpdatedBy = table.Column<string>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(maxLength: 50, nullable: false),
-                    Avatar = table.Column<string>(maxLength: 50, nullable: false)
+                    Name = table.Column<string>(maxLength: 50),
+                    Avatar = table.Column<string>(maxLength: 50)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Conversation", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Conversation", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "UserInfo",
-                columns: table => new
+                "UserInfo",
+                table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(),
                     Deleted = table.Column<bool>(nullable: true),
                     CreatedBy = table.Column<string>(nullable: true),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(),
                     UpdatedBy = table.Column<string>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(nullable: true),
                     Mood = table.Column<string>(maxLength: 150, nullable: true),
-                    Status = table.Column<int>(nullable: false),
+                    Status = table.Column<int>(),
                     Avatar = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: true)
                 },
@@ -53,166 +50,166 @@ namespace GrooveMessengerDAL.Migrations
                 {
                     table.PrimaryKey("PK_UserInfo", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserInfo_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        "FK_UserInfo_AspNetUsers_UserId",
+                        x => x.UserId,
+                        "AspNetUsers",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Message",
-                columns: table => new
+                "Message",
+                table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(),
                     Deleted = table.Column<bool>(nullable: true),
                     CreatedBy = table.Column<string>(nullable: true),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(),
                     UpdatedBy = table.Column<string>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(nullable: true),
-                    ConversationId = table.Column<Guid>(nullable: false),
-                    SenderId = table.Column<string>(nullable: false),
+                    ConversationId = table.Column<Guid>(),
+                    SenderId = table.Column<string>(),
                     SeenBy = table.Column<string>(nullable: true),
-                    Content = table.Column<string>(maxLength: 1000, nullable: false),
-                    Type = table.Column<string>(nullable: false)
+                    Content = table.Column<string>(maxLength: 1000),
+                    Type = table.Column<string>()
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Message", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Message_Conversation_ConversationId",
-                        column: x => x.ConversationId,
-                        principalTable: "Conversation",
-                        principalColumn: "Id",
+                        "FK_Message_Conversation_ConversationId",
+                        x => x.ConversationId,
+                        "Conversation",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Message_AspNetUsers_SenderId",
-                        column: x => x.SenderId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        "FK_Message_AspNetUsers_SenderId",
+                        x => x.SenderId,
+                        "AspNetUsers",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Participant",
-                columns: table => new
+                "Participant",
+                table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(),
                     Deleted = table.Column<bool>(nullable: true),
                     CreatedBy = table.Column<string>(nullable: true),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(),
                     UpdatedBy = table.Column<string>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(nullable: true),
-                    ConversationId = table.Column<Guid>(nullable: false),
+                    ConversationId = table.Column<Guid>(),
                     UserId = table.Column<string>(nullable: true),
-                    Status = table.Column<int>(nullable: false)
+                    Status = table.Column<int>()
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Participant", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Participant_Conversation_ConversationId",
-                        column: x => x.ConversationId,
-                        principalTable: "Conversation",
-                        principalColumn: "Id",
+                        "FK_Participant_Conversation_ConversationId",
+                        x => x.ConversationId,
+                        "Conversation",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Participant_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        "FK_Participant_AspNetUsers_UserId",
+                        x => x.UserId,
+                        "AspNetUsers",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserInfoContact",
-                columns: table => new
+                "UserInfoContact",
+                table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(),
                     Deleted = table.Column<bool>(nullable: true),
                     CreatedBy = table.Column<string>(nullable: true),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(),
                     UpdatedBy = table.Column<string>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(nullable: true),
-                    UserId = table.Column<Guid>(nullable: false),
-                    ContactId = table.Column<Guid>(nullable: false),
+                    UserId = table.Column<Guid>(),
+                    ContactId = table.Column<Guid>(),
                     NickName = table.Column<string>(maxLength: 120, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserInfoContact", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserInfoContact_UserInfo_ContactId",
-                        column: x => x.ContactId,
-                        principalTable: "UserInfo",
-                        principalColumn: "Id",
+                        "FK_UserInfoContact_UserInfo_ContactId",
+                        x => x.ContactId,
+                        "UserInfo",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_UserInfoContact_UserInfo_UserId",
-                        column: x => x.UserId,
-                        principalTable: "UserInfo",
-                        principalColumn: "Id",
+                        "FK_UserInfoContact_UserInfo_UserId",
+                        x => x.UserId,
+                        "UserInfo",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Message_ConversationId",
-                table: "Message",
-                column: "ConversationId");
+                "IX_Message_ConversationId",
+                "Message",
+                "ConversationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Message_SenderId",
-                table: "Message",
-                column: "SenderId");
+                "IX_Message_SenderId",
+                "Message",
+                "SenderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Participant_ConversationId",
-                table: "Participant",
-                column: "ConversationId");
+                "IX_Participant_ConversationId",
+                "Participant",
+                "ConversationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Participant_UserId",
-                table: "Participant",
-                column: "UserId");
+                "IX_Participant_UserId",
+                "Participant",
+                "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserInfo_UserId",
-                table: "UserInfo",
-                column: "UserId",
+                "IX_UserInfo_UserId",
+                "UserInfo",
+                "UserId",
                 unique: true,
                 filter: "[UserId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserInfoContact_ContactId",
-                table: "UserInfoContact",
-                column: "ContactId");
+                "IX_UserInfoContact_ContactId",
+                "UserInfoContact",
+                "ContactId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserInfoContact_UserId",
-                table: "UserInfoContact",
-                column: "UserId");
+                "IX_UserInfoContact_UserId",
+                "UserInfoContact",
+                "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Message");
+                "Message");
 
             migrationBuilder.DropTable(
-                name: "Participant");
+                "Participant");
 
             migrationBuilder.DropTable(
-                name: "UserInfoContact");
+                "UserInfoContact");
 
             migrationBuilder.DropTable(
-                name: "Conversation");
+                "Conversation");
 
             migrationBuilder.DropTable(
-                name: "UserInfo");
+                "UserInfo");
 
             migrationBuilder.AlterColumn<string>(
-                name: "DisplayName",
-                table: "AspNetUsers",
+                "DisplayName",
+                "AspNetUsers",
                 maxLength: 50,
                 nullable: true,
                 oldClrType: typeof(string),

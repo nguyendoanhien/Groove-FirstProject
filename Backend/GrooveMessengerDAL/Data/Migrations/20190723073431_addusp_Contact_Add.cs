@@ -2,12 +2,12 @@
 
 namespace GrooveMessengerDAL.Migrations
 {
-	public partial class addusp_Contact_Add : Migration
-	{
-		protected override void Up(MigrationBuilder migrationBuilder)
-		{
-			migrationBuilder.Sql(
-							@"-- =============================================
+    public partial class addusp_Contact_Add : Migration
+    {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.Sql(
+                @"-- =============================================
 				-- Author:		Doan Hien
 				-- Create date: 23-7-2019
 				-- Description:	Add Contact
@@ -43,18 +43,17 @@ namespace GrooveMessengerDAL.Migrations
 	
 				END
 				GO"
-				);
+            );
+        }
 
-		}
-
-		protected override void Down(MigrationBuilder migrationBuilder)
-		{
-			migrationBuilder.Sql(
-			   @"
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.Sql(
+                @"
 				DROP PROCEDURE [dbo].[usp_Contact_Add]
 				GO
 				"
-			   );
-		}
-	}
+            );
+        }
+    }
 }

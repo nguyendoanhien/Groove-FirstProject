@@ -1,12 +1,9 @@
-﻿using GrooveMessengerAPI.Areas.Chat.Models;
+﻿using System;
+using System.Threading.Tasks;
+using GrooveMessengerAPI.Constants;
 using GrooveMessengerAPI.Hubs.Utils;
-using GrooveMessengerDAL.Models;
-using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Threading.Tasks;
 
 namespace GrooveMessengerAPI.Hubs
 {
@@ -15,32 +12,9 @@ namespace GrooveMessengerAPI.Hubs
     {
         public MessageHub(
             HubConnectionStorage connectionStore
-           ) :base(connectionStore)
-        {
-            topic = "message";
+        ) : base(connectionStore, HubConstant.MessageHubTopic)
+        {        
         }
-        
-
-        //public async Task SendMessageToUser(Message message, string toUser)
-        //{
-        //    string username = Context.User.Identity.Name;            
-        //    var recieverInform = await _userManager.FindByIdAsync(toUser);
-        //    foreach (var connectionId in connectionStore.GetConnections(recieverInform.UserName))
-        //    {
-        //        await Clients.Client(connectionId).SendMessage(message);
-        //    }
-        //}
-
-        public async Task SendMessageViewingStatus(string toUser)
-        {
-            string username = Context.User.Identity.Name;
-
-            foreach (var connectionId in connectionStore.GetConnections(topic, toUser))
-            {
-                await Clients.Client(connectionId).SendMessageViewingStatus(username);
-            }
-        }
-
 
         public override Task OnConnectedAsync()
         {

@@ -1,7 +1,6 @@
-﻿using GrooveMessengerDAL.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using GrooveMessengerDAL.Entities;
 
 namespace GrooveMessengerDAL.Models.Conversation
 {
