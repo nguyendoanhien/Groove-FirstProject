@@ -1,18 +1,16 @@
-import { Component,ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from "@angular/core";
 
-import { fuseAnimations } from '@fuse/animations';
+import { fuseAnimations } from "@fuse/animations";
 
 
 @Component({
-    selector     : 'apps',
-    templateUrl  : './apps.component.html',
+    selector: "apps",
+    templateUrl: "./apps.component.html",
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations: fuseAnimations
 })
-export class AppsComponent 
-{
-    constructor()
-    {
+export class AppsComponent {
+    constructor() {
     }
 
 }

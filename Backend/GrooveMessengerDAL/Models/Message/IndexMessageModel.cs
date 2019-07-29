@@ -4,7 +4,6 @@ namespace GrooveMessengerDAL.Models.Message
 {
     public class IndexMessageModel
     {
-
         public Guid Id { get; set; }
 
         public DateTime CreatedOn { get; set; }

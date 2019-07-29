@@ -1,28 +1,30 @@
-import { Router } from '@angular/router';
-import { Injectable, ErrorHandler } from '@angular/core';
-import { AuthService } from '../auth/auth.service';
-import { environment } from '../../../environments/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { LoginModel } from '../../account/login/login.model';
-import { JwtHelperService } from '@auth0/angular-jwt';
-import { Subject, Observable, Subscription } from 'rxjs';
-import { catchError, retry, map } from 'rxjs/operators';
-import { UserProfileModel } from 'app/account/user-profile/user-profile.model';
+import { Router } from "@angular/router";
+import { Injectable } from "@angular/core";
+import { AuthService } from "../auth/auth.service";
+import { environment } from "../../../environments/environment";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { LoginModel } from "../../account/login/login.model";
+import { JwtHelperService } from "@auth0/angular-jwt";
+import { Subject, Observable, Subscription } from "rxjs";
+import { map } from "rxjs/operators";
+import { UserProfileModel } from "app/account/user-profile/user-profile.model";
 
 const loginUrl = environment.authLoginUrl;
 const authGoogleUrl = environment.authGoogleUrl;
 const authFBUrl = environment.authFacebookUrl;
 const httpOptions = {
     headers: new HttpHeaders({
-        'Accept': 'text/html, application/xhtml+xml, */*',
-        'Content-Type': 'application/json'
+        'Accept': "text/html, application/xhtml+xml, */*",
+        'Content-Type': "application/json"
     }),
-    responseType: 'text' as 'json'
+    responseType: "text" as "json"
 };
+
 @Injectable()
 export class UserProfileService {
 
-    public userProfile: UserProfileModel;
+    userProfile: UserProfileModel;
+
     constructor(private router: Router,
         private authService: AuthService,
         private http: HttpClient,
@@ -30,12 +32,12 @@ export class UserProfileService {
         this.userProfile = new UserProfileModel();
     }
 
-    public displayNameSub$: Subject<string> = new Subject<string>();
+    displayNameSub$ = new Subject<string>();
 
     logIn(loginModel: LoginModel): Observable<void> {
         const userName = loginModel.userName;
         const password = loginModel.password;
-        if (userName !== '' && password !== '') {
+        if (userName !== "" && password !== "") {
             const body = {
                 Username: userName,
                 Password: password
@@ -45,7 +47,7 @@ export class UserProfileService {
                 .pipe(
                     map((token: string) => {
                         this.parseJwtToken(token);
-                        this.router.navigate(['chat']);
+                        this.router.navigate(["chat"]);
                     })
                 );
         }
@@ -56,11 +58,11 @@ export class UserProfileService {
         return this.http.post<string>(authGoogleUrl + `?accessToken=${googleAccessToken}`, null, httpOptions).pipe(
             map((token: string) => {
                 this.parseJwtToken(token);
-                this.router.navigate(['chat']);
+                this.router.navigate(["chat"]);
             })
         ).subscribe(
-            (success) => console.log('success la' + success),
-            (error) => console.log('error la' + error)
+            (success) => console.log(`success la${success}`),
+            (error) => console.log(`error la${error}`)
         );
     }
 
@@ -69,17 +71,17 @@ export class UserProfileService {
             .pipe(
                 map((token: string) => {
                     this.parseJwtToken(token);
-                    this.router.navigate(['chat']);
+                    this.router.navigate(["chat"]);
                 })
             ).subscribe();
     }
 
     logOut(): Promise<boolean> {
         this.authService.clearToken();
-        return this.router.navigate(['account', 'login']);
+        return this.router.navigate(["account", "login"]);
     }
 
-    public parseJwtToken(token: string): void {
+    parseJwtToken(token: string): void {
         const jwt = token;
         const jwtHelper = new JwtHelperService();
         const decodedJwt = jwtHelper.decodeToken(jwt);

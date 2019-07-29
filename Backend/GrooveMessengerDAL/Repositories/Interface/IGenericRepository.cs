@@ -1,17 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
-using GrooveMessengerDAL.Entities;
-using System.Data.SqlClient;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using GrooveMessengerDAL.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace GrooveMessengerDAL.Repositories.Interface
 {
     public interface IGenericRepository<TEntity, TKey, TContext>
-       where TEntity : BaseEntity<TKey> where TContext : DbContext
+        where TEntity : BaseEntity<TKey> where TContext : DbContext
     {
         IQueryable<TEntity> GetAll();
 
@@ -55,7 +55,7 @@ namespace GrooveMessengerDAL.Repositories.Interface
 
         int ExecuteStoredProcedure(string storedProcedureName, params SqlParameter[] parameters);
 
-        List<TResult> ExecuteReturedStoredProcedure<TResult>(string storedProcedureName, params SqlParameter[] parameters);
-
+        List<TResult> ExecuteReturedStoredProcedure<TResult>(string storedProcedureName,
+            params SqlParameter[] parameters);
     }
 }

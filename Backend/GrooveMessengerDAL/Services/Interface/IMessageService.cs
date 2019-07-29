@@ -1,10 +1,9 @@
-using GrooveMessengerDAL.Entities;
-using GrooveMessengerDAL.Models.CustomModel;
-using GrooveMessengerDAL.Models.Message;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GrooveMessengerDAL.Entities;
+using GrooveMessengerDAL.Models.CustomModel;
+using GrooveMessengerDAL.Models.Message;
 
 namespace GrooveMessengerDAL.Services.Interface
 {
@@ -19,7 +18,8 @@ namespace GrooveMessengerDAL.Services.Interface
         void AddMessage(CreateMessageModel msg);
         Task<IndexMessageModel> AddMessageAsync(CreateMessageModel msg);
         MessageEntity GetMessageById(Guid id);
-        void UpdateStatusMessage(Guid Id);
+        int SetValueSeenBy(string userId, Guid conversationId);
         IEnumerable<DialogModel> GetDialogs(Guid ConversationId);
+        int GetUnreadMessages(Guid conversationId, string userId);
     }
 }

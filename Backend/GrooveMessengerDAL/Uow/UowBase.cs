@@ -1,16 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Threading.Tasks;
 using GrooveMessengerDAL.Uow.Interface;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace GrooveMessengerDAL.Uow
 {
-    public class UowBase<TContext> : IUowBase<TContext> where TContext:DbContext
+    public class UowBase<TContext> : IUowBase<TContext> where TContext : DbContext
     {
         protected readonly DbContext DbContext;
+
         public UowBase(TContext dbContext)
         {
             DbContext = dbContext;
         }
+
         public void SaveChanges()
         {
             DbContext.SaveChanges();

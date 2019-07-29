@@ -1,23 +1,21 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
-import { fuseAnimations } from '@fuse/animations';
+import { fuseAnimations } from "@fuse/animations";
 
-import { ChatService } from './chat.service';
-import * as signalR from '@aspnet/signalr';
-import { HubConnection } from '@aspnet/signalr';
-import { ProfileHubService } from 'app/core/data-api/hubs/profile.hub';
+import { ChatService } from "./chat.service";
+import { HubConnection } from "@aspnet/signalr";
+import { ProfileHubService } from "app/core/data-api/hubs/profile.hub";
 
 @Component({
-    selector     : 'chat',
-    templateUrl  : './chat.component.html',
-    styleUrls    : ['./chat.component.scss'],
+    selector: "chat",
+    templateUrl: "./chat.component.html",
+    styleUrls: ["./chat.component.scss"],
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations: fuseAnimations
 })
-export class ChatComponent implements OnInit, OnDestroy
-{
+export class ChatComponent implements OnInit, OnDestroy {
     selectedChat: any;
 
     // Private
@@ -33,9 +31,7 @@ export class ChatComponent implements OnInit, OnDestroy
     constructor(
         private _chatService: ChatService,
         private _profileHub: ProfileHubService
-
-    )
-    {
+    ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
     }
@@ -47,25 +43,18 @@ export class ChatComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         this._chatService.onChatSelected
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(chatData => {
                 this.selectedChat = chatData;
             });
-        this._hubConnection = new signalR.HubConnectionBuilder()
-            .withUrl('https://localhost:44383/contactHub')
-            .configureLogging(signalR.LogLevel.Information)
-            .build();
-
     }
 
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();

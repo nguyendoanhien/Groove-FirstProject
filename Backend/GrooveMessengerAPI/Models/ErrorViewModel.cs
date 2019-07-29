@@ -1,5 +1,3 @@
-using System;
-
 namespace GrooveMessengerAPI.Models
 {
     public class ErrorViewModel

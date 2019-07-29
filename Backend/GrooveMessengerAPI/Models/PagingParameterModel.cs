@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace GrooveMessengerAPI.Models
+﻿namespace GrooveMessengerAPI.Models
 {
     public class PagingParameterModel
     {
-        const int maxPageSize = 20;
+        private const int maxPageSize = 20;
 
         public int pageNumber { get; set; } = 1;
 
@@ -15,12 +10,8 @@ namespace GrooveMessengerAPI.Models
 
         public int pageSize
         {
-
-            get { return _pageSize; }
-            set
-            {
-                _pageSize = (value > maxPageSize) ? maxPageSize : value;
-            }
+            get => _pageSize;
+            set => _pageSize = value > maxPageSize ? maxPageSize : value;
         }
 
         public string SearchKey { get; set; } = null;

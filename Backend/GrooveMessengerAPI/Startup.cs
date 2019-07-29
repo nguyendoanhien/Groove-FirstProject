@@ -1,38 +1,31 @@
 ﻿using System;
+using GrooveMessengerAPI.Auth;
+using GrooveMessengerAPI.Configurations;
+using GrooveMessengerAPI.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using GrooveMessengerAPI.Configurations;
-using AutoMapper;
 using Microsoft.Extensions.Logging;
-using GrooveMessengerAPI.Middlewares;
-using GrooveMessengerAPI.Hubs;
-using Microsoft.EntityFrameworkCore;
-using GrooveMessengerDAL.Data;
-using GrooveMessengerAPI.Auth;
-using GrooveMessengerDAL.Services.Interface;
-using GrooveMessengerDAL.Services;
-using System.Linq;
 
 namespace GrooveMessengerAPI
 {
     public partial class Startup
     {
-        public IConfiguration Configuration { get; }
-
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile("appsettings.json", true, true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
                 .AddEnvironmentVariables();
 
             Configuration = builder.Build();
         }
+
+        public IConfiguration Configuration { get; }
 
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -51,25 +44,25 @@ namespace GrooveMessengerAPI
                     builder =>
                     {
                         builder.AllowAnyOrigin()
-                               .AllowAnyHeader()
-                               .AllowAnyMethod()
-                               .AllowCredentials();
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowCredentials();
                     });
 
                 var clientAppUrl = Configuration.GetSection("Client").Value;
 
                 options.AddPolicy("AllowHubClient",
-                   builder =>
-                   {
-                       builder.WithOrigins(clientAppUrl)
-                              .AllowAnyHeader()
-                              .AllowAnyMethod()
-                              .AllowCredentials();
-                   });
+                    builder =>
+                    {
+                        builder.WithOrigins(clientAppUrl)
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowCredentials();
+                    });
             });
-     
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-           
+
             RegisterAuth(services);
             RegisterIdentity(services);
             RegisterAutoMapperProfiles(services);
@@ -77,13 +70,22 @@ namespace GrooveMessengerAPI
             DiConfiguration.Register(services);
 
             // Register SignalR
-            services.AddSignalR();
+            //services.AddSignalR();
+            services.AddSignalR(hubOptions =>
+            {
+                hubOptions.EnableDetailedErrors = bool.Parse(Configuration.GetSection("SignalR:EnableDetailedErrors").Value);
+                hubOptions.KeepAliveInterval = TimeSpan.FromSeconds(int.Parse(Configuration.GetSection("SignalR:KeepAliveInterval").Value));
+                hubOptions.HandshakeTimeout = TimeSpan.FromSeconds(int.Parse(Configuration.GetSection("SignalR:HandshakeTimeout").Value));
+                hubOptions.ClientTimeoutInterval = TimeSpan.FromSeconds(int.Parse(Configuration.GetSection("SignalR:ClientTimeoutInterval").Value));
+            });
+
             services.AddScoped<UserProfileHub, UserProfileHub>();
             services.AddScoped<IAuthEmailSenderUtil, AuthEmailSenderUtil>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,
+            IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -114,10 +116,7 @@ namespace GrooveMessengerAPI
             // Using SignalR
             RegisterHub(app);
 
-            app.UseMvc(routes =>
-            {
-                RegisterRouting(routes);
-            });
+            app.UseMvc(RegisterRouting);
         }
     }
 }

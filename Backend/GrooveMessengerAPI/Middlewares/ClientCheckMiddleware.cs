@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -11,11 +10,12 @@ namespace GrooveMessengerAPI.Middlewares
 {
     public class ClientCheckMiddlewareMiddleware
     {
-        private readonly RequestDelegate _next;
         private readonly ILogger<ClientCheckMiddlewareMiddleware> _logger;
-        private IConfiguration _config;
+        private readonly RequestDelegate _next;
+        private readonly IConfiguration _config;
 
-        public ClientCheckMiddlewareMiddleware(RequestDelegate next, ILogger<ClientCheckMiddlewareMiddleware> logger, IConfiguration config)
+        public ClientCheckMiddlewareMiddleware(RequestDelegate next, ILogger<ClientCheckMiddlewareMiddleware> logger,
+            IConfiguration config)
         {
             _next = next ?? throw new ArgumentNullException(nameof(next));
             _logger = logger;
@@ -33,18 +33,15 @@ namespace GrooveMessengerAPI.Middlewares
             var validClients = _config.GetSection("Client").Value;
             var server = _config.GetSection("Server").Value;
 
-            if (server.Equals(origin))
-            {
-                return this._next(context);
-            }
+            if (server.Equals(origin)) return _next(context);
             if (!string.IsNullOrEmpty(origin) && !validClients.Equals(origin))
             {
-                context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                context.Response.StatusCode = (int) HttpStatusCode.Forbidden;
                 return context.Response.WriteAsync("Error: Not valid client");
             }
-            return this._next(context);
-        }
 
+            return _next(context);
+        }
     }
 
     // Extension method used to add the middleware to the HTTP request pipeline.

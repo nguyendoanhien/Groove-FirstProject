@@ -1,20 +1,19 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
-import { fuseAnimations } from '@fuse/animations';
+import { fuseAnimations } from "@fuse/animations";
 
-import { ChatService } from '../../chat.service';
+import { ChatService } from "../../chat.service";
 
 @Component({
-    selector     : 'chat-right-sidenav',
-    templateUrl  : './right.component.html',
-    styleUrls    : ['./right.component.scss'],
+    selector: "chat-right-sidenav",
+    templateUrl: "./right.component.html",
+    styleUrls: ["./right.component.scss"],
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations: fuseAnimations
 })
-export class ChatRightSidenavComponent implements OnInit, OnDestroy
-{
+export class ChatRightSidenavComponent implements OnInit, OnDestroy {
     view: string;
 
     // Private
@@ -22,10 +21,9 @@ export class ChatRightSidenavComponent implements OnInit, OnDestroy
 
     constructor(
         private _chatService: ChatService
-    )
-    {
+    ) {
         // Set the defaults
-        this.view = 'contact';
+        this.view = "contact";
 
         // Set the private defaults
         this._unsubscribeAll = new Subject();
@@ -38,8 +36,7 @@ export class ChatRightSidenavComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         this._chatService.onRightSidenavViewChanged
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(view => {
@@ -50,8 +47,7 @@ export class ChatRightSidenavComponent implements OnInit, OnDestroy
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();

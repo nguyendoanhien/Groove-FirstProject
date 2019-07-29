@@ -38,7 +38,7 @@ namespace GrooveMessengerDAL.Migrations
 
                 END
                 GO"
-                );
+            );
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -48,7 +48,7 @@ namespace GrooveMessengerDAL.Migrations
                 DROP PROCEDURE [dbo].[usp_GetUserContactEmailList]
                 GO
                 "
-                );
+            );
         }
     }
 }

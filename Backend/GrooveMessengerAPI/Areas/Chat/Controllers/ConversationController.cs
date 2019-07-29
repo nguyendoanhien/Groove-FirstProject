@@ -1,5 +1,7 @@
-﻿using GrooveMessengerAPI.Areas.Chat.Models;
-using GrooveMessengerAPI.Areas.Chat.Models.Contact;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using GrooveMessengerAPI.Areas.Chat.Models;
 using GrooveMessengerAPI.Controllers;
 using GrooveMessengerAPI.Hubs;
 using GrooveMessengerAPI.Hubs.Utils;
@@ -16,32 +18,29 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace GrooveMessengerAPI.Areas.Chat.Controllers
 {
-    
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class ConversationController : ApiControllerBase
     {
         private readonly IConversationService _conService;
+        private readonly IHubContext<ContactHub, IContactHubClient> _contactHubContext;
+        private readonly IContactService _contactService;
         private readonly IMessageService _messageService;
         private readonly IParticipantService _participantService;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IContactService _contactService;
         private readonly IUserService _userService;
-        private readonly IHubContext<ContactHub, IContactHubClient> _contactHubContext;
-        private HubConnectionStorage _hubConnectionStore;
+        private readonly HubConnectionStorage _hubConnectionStore;
 
-        public ConversationController(IConversationService conService, IMessageService messageService, IParticipantService participantService,
+        public ConversationController(IConversationService conService, IMessageService messageService,
+            IParticipantService participantService,
             UserManager<ApplicationUser> userManager, IContactService contactService, IUserService userService,
-        IUserResolverService userResolver, IHubContext<ContactHub, IContactHubClient> contactHubContext, HubConnectionStorage hubConnectionStore
-            ) : base(userResolver)
+            IUserResolverService userResolver, IHubContext<ContactHub, IContactHubClient> contactHubContext,
+            HubConnectionStorage hubConnectionStore
+        ) : base(userResolver)
         {
             _conService = conService;
             _messageService = messageService;
@@ -59,9 +58,10 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             if (UserId == "undefined") return Ok();
             if (ModelState.IsValid)
             {
-                var rs = _conService.GetAllConversationOfAUser(UserId);
+                var rs = _conService.GetAllConversationOfAUser(CurrentUserId.ToString());
                 return Ok(rs);
             }
+
             return BadRequest();
         }
 
@@ -73,23 +73,18 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                 var rs = _conService.GetConversationById(ConversationId);
                 return Ok(rs);
             }
+
             return BadRequest();
         }
 
         [HttpPost("addconversation")]
         public IActionResult Post([FromBody] CreateConversationModel createMessageModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-            else
-            {
-                _conService.AddConversation(createMessageModel);
-                return Ok();
-            }
-        }
+            if (!ModelState.IsValid) return BadRequest();
 
+            _conService.AddConversation(createMessageModel);
+            return Ok();
+        }
 
 
         [HttpPost]
@@ -100,47 +95,72 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
 
             // get current userinfo 
 
-            IndexUserInfoModel userIndexcurrent = _userService.GetUserInfo(user.Id);
+            var userIndexcurrent = _userService.GetUserInfo(user.Id);
 
             // add contact userindex->usercurrent
-            AddContactModel contact = new AddContactModel() { UserId = userIndexcurrent.Id.ToString(), NickName = userIndex.DisplayName, ContactId = userIndex.Id };
+            var contact = new AddContactModel
+                {UserId = userIndexcurrent.Id.ToString(), NickName = userIndex.DisplayName, ContactId = userIndex.Id};
             _contactService.AddContact(contact);
 
             // add contact usercurrent ->userindex
-            AddContactModel contactcurrent = new AddContactModel() { UserId = userIndex.Id.ToString(), NickName = userIndexcurrent.DisplayName, ContactId = userIndexcurrent.Id };
+            var contactcurrent = new AddContactModel
+            {
+                UserId = userIndex.Id.ToString(), NickName = userIndexcurrent.DisplayName,
+                ContactId = userIndexcurrent.Id
+            };
             _contactService.AddContact(contactcurrent);
 
             // create conversation
-            CreateConversationModel createConversationModel = new CreateConversationModel() { Id = Guid.NewGuid(), Avatar = "https://localhost:44383/images/avatar.png", Name = userIndex.DisplayName };
+            var createConversationModel = new CreateConversationModel
+            {
+                Id = Guid.NewGuid(), Avatar = "https://localhost:44383/images/avatar.png", Name = userIndex.DisplayName
+            };
             _conService.AddConversation(createConversationModel);
 
-            CreateMessageModel createMessageModel = new CreateMessageModel() { Content = "Hello "+ userIndex.DisplayName +". Nice to meet you!", SenderId = userIndexcurrent.UserId, Type = "text", ConversationId = createConversationModel.Id };
+            var createMessageModel = new CreateMessageModel
+            {
+                Content = "Hello " + userIndex.DisplayName + ". Nice to meet you!", SenderId = userIndexcurrent.UserId,
+                Type = "text", ConversationId = createConversationModel.Id
+            };
             _messageService.AddMessage(createMessageModel);
 
 
             //// create participant
-            ParticipantModel par = new ParticipantModel() { Id = Guid.NewGuid(), UserId = userIndex.UserId, ConversationId = createConversationModel.Id, Status = 1 };
+            var par = new ParticipantModel
+            {
+                Id = Guid.NewGuid(), UserId = userIndex.UserId, ConversationId = createConversationModel.Id, Status = 1
+            };
             _participantService.AddParticipant(par);
-            ParticipantModel parcurrent = new ParticipantModel() { Id = Guid.NewGuid(), UserId = user.Id, ConversationId = createConversationModel.Id, Status = 1 };
+            var parcurrent = new ParticipantModel
+                {Id = Guid.NewGuid(), UserId = user.Id, ConversationId = createConversationModel.Id, Status = 1};
             _participantService.AddParticipant(parcurrent);
 
 
-            List<DialogModel> diaglogModel = new List<DialogModel> { };
-            diaglogModel.Add(new DialogModel() { Who = createMessageModel.SenderId, Message = createMessageModel.Content, Time = DateTime.UtcNow });
-            var dialog = new { id = createConversationModel.Id, dialog = diaglogModel };
-            ContactChatList chatContact = new ContactChatList { ConvId = createConversationModel.Id.ToString(), ContactId = userIndex.UserId, DisplayName = userIndex.DisplayName, LastMessage = createMessageModel.Content, LastMessageTime = DateTime.UtcNow };
+            var diaglogModel = new List<DialogModel>();
+            diaglogModel.Add(new DialogModel
+                {Who = createMessageModel.SenderId, Message = createMessageModel.Content, Time = DateTime.UtcNow});
+            var dialog = new {id = createConversationModel.Id, dialog = diaglogModel};
+            var chatContact = new ContactChatList
+            {
+                ConvId = createConversationModel.Id.ToString(), ContactId = userIndex.UserId,
+                DisplayName = userIndex.DisplayName, LastMessage = createMessageModel.Content,
+                LastMessageTime = DateTime.UtcNow
+            };
 
-            ContactChatList chatContactToSend = new ContactChatList { ConvId = createConversationModel.Id.ToString(), ContactId = userIndexcurrent.UserId, DisplayName = userIndexcurrent.DisplayName, LastMessage = createMessageModel.Content, LastMessageTime = DateTime.UtcNow };
+            var chatContactToSend = new ContactChatList
+            {
+                ConvId = createConversationModel.Id.ToString(), ContactId = userIndexcurrent.UserId,
+                DisplayName = userIndexcurrent.DisplayName, LastMessage = createMessageModel.Content,
+                LastMessageTime = DateTime.UtcNow
+            };
 
             var contactEmail = await _userManager.FindByIdAsync(userIndex.UserId);
 
             foreach (var connectionId in _hubConnectionStore.GetConnections("contact", contactEmail.Email))
-            {
-                await _contactHubContext.Clients.Client(connectionId).SendNewContactToFriend(userIndexcurrent, chatContactToSend, dialog);
+                await _contactHubContext.Clients.Client(connectionId)
+                    .SendNewContactToFriend(userIndexcurrent, chatContactToSend, dialog);
 
-            }
-
-            return new ObjectResult(new { Contact =userIndex, ChatContact = chatContact, dialog });
+            return new ObjectResult(new {Contact = userIndex, ChatContact = chatContact, dialog});
         }
     }
 }

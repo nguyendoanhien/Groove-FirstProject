@@ -1,13 +1,10 @@
-﻿using GrooveMessengerDAL.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using GrooveMessengerDAL.Models;
 
 namespace GrooveMessengerDAL.Entities
 {
     public class MessageEntity : AuditBaseEntity<Guid>
     {
-
         public Guid ConversationId { get; set; }
 
         public string SenderId { get; set; }

@@ -1,30 +1,33 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { Router } from "@angular/router"
-import { FuseConfigService } from '@fuse/services/config.service';
-import { fuseAnimations } from '@fuse/animations';
-import { RegisterModel } from './register.model';
-import { RegisterService } from 'app/core/account/register.service';
+import { FuseConfigService } from "@fuse/services/config.service";
+import { fuseAnimations } from "@fuse/animations";
+import { RegisterModel } from "./register.model";
+import { RegisterService } from "app/core/account/register.service";
 
 @Component({
-    selector: 'register',
-    templateUrl: './register.component.html',
-    styleUrls: ['./register.component.scss'],
+    selector: "register",
+    templateUrl: "./register.component.html",
+    styleUrls: ["./register.component.scss"],
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations
 })
 export class RegisterComponent implements OnInit, OnDestroy {
     registerForm: FormGroup;
-    isAcceptTerms: boolean = false;
-    isLoading: boolean = false;
+    isAcceptTerms = false;
+    isLoading = false;
     registerModel: RegisterModel;
-    emailErr: boolean = false;
+    emailErr = false;
     // Private
     private _unsubscribeAll: Subject<any>;
 
-    constructor(private _fuseConfigService: FuseConfigService, private _formBuilder: FormBuilder, private _router: Router, private registerService: RegisterService) {
+    constructor(private _fuseConfigService: FuseConfigService,
+        private _formBuilder: FormBuilder,
+        private _router: Router,
+        private registerService: RegisterService) {
         // Configure the layout
         this._fuseConfigService.config = {
             layout: {
@@ -45,6 +48,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
     }
+
     /**
      * On click events
      */
@@ -52,14 +56,15 @@ export class RegisterComponent implements OnInit, OnDestroy {
         this.emailErr = false;
         this.isLoading = true;
         this.registerService.register(this.registerModel).subscribe(res => {
-            this.isLoading = false;
-            this._router.navigate(['/account/mail-confirmation']);
-            this.registerService.mailToSendRegister.next(this.registerModel.email);
-        }, err => {
-            this.isLoading = false
-            
-            this.emailErr = !err.error.errors['Email'] ? false : true;
-        });
+                this.isLoading = false;
+                this._router.navigate(["/account/mail-confirmation"]);
+                this.registerService.mailToSendRegister.next(this.registerModel.email);
+            },
+            err => {
+                this.isLoading = false;
+
+                this.emailErr = !err.error.errors["Email"] ? false : true;
+            });
     }
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -71,23 +76,38 @@ export class RegisterComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.registerModel = new RegisterModel();
         this.registerForm = this._formBuilder.group({
-            name: [this.registerModel.displayName, [Validators.required, Validators.minLength(6), Validators.maxLength(120), Validators.pattern(/^((?!\s{2,}).)*$/)]],
-            email: [this.registerModel.email, [Validators.required, Validators.pattern(/^[a-z][a-z0-9_\.]{5,32}@[a-z0-9]{3,}(\.[a-z0-9]{2,4}){1,2}$/)]],
-            password: [this.registerModel.password, [Validators.required, Validators.pattern(/^(?=[a-zA-Z0-9!%^&*()+#@$?]{8,40}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9]).*$/)]],
-            passwordConfirm: ['', [Validators.required, confirmPasswordValidator]]
+            name: [
+                this.registerModel.displayName,
+                [
+                    Validators.required, Validators.minLength(6), Validators.maxLength(120),
+                    Validators.pattern(/^((?!\s{2,}).)*$/)
+                ]
+            ],
+            email: [
+                this.registerModel.email,
+                [Validators.required, Validators.pattern(/^[a-z][a-z0-9_\.]{5,32}@[a-z0-9]{3,}(\.[a-z0-9]{2,4}){1,2}$/)]
+            ],
+            password: [
+                this.registerModel.password,
+                [
+                    Validators.required,
+                    Validators.pattern(/^(?=[a-zA-Z0-9!%^&*()+#@$?]{8,40}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9]).*$/)
+                ]
+            ],
+            passwordConfirm: ["", [Validators.required, confirmPasswordValidator]]
         });
         // Update the validity of the 'passwordConfirm' field
         // when the 'password' field changes
-        this.registerForm.get('password').valueChanges
+        this.registerForm.get("password").valueChanges
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(() => {
-                this.registerForm.get('passwordConfirm').updateValueAndValidity();
+                this.registerForm.get("passwordConfirm").updateValueAndValidity();
             });
     }
 
     onPaste(event: ClipboardEvent) {
-        event.preventDefault()
-     }
+        event.preventDefault();
+    }
 
     /**
      * On destroy
@@ -111,14 +131,14 @@ export const confirmPasswordValidator: ValidatorFn = (control: AbstractControl):
         return null;
     }
 
-    const password = control.parent.get('password');
-    const passwordConfirm = control.parent.get('passwordConfirm');
+    const password = control.parent.get("password");
+    const passwordConfirm = control.parent.get("passwordConfirm");
 
     if (!password || !passwordConfirm) {
         return null;
     }
 
-    if (passwordConfirm.value === '') {
+    if (passwordConfirm.value === "") {
         return null;
     }
 

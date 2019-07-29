@@ -7,12 +7,12 @@ namespace GrooveMessengerAPI.Areas.Chat.Models
         public string From { get; set; }
         public StatusName Status { get; set; }
     }
+
     public enum StatusName
     {
         Online,
         Away,
-        [Description("Do not disturb")]
-        DoNotDisturb,
+        [Description("Do not disturb")] DoNotDisturb,
         Offline
     }
 }

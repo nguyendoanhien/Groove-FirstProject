@@ -18,10 +18,10 @@
 
         <!-- TOOLBAR BOTTOM -->
         <mat-toolbar-row class="toolbar-bottom" fxLayout="column" fxLayoutAlign="center center">
-            <img [src]="contact.avatar" class="avatar contact-avatar huge" alt="{{contact.displayName}}" />
+            <img [src]="contact.avatar" class="avatar contact-avatar huge" alt="{{contact.displayName}}"/>
             <!-- <div class="contact-name my-8">{{contact.displayName}}</div> -->
             <input class="user-name my-8" (input)="contact.displayName = $event.target.value"
-                [value]="contact.displayName" (focusout)="changeNickNameContact()" />
+                   [value]="contact.displayName" (focusout)="changeNickNameContact()"/>
         </mat-toolbar-row>
         <!-- / TOOLBAR BOTTOM -->
 

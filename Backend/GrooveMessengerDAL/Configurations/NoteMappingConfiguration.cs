@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GrooveMessengerDAL.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using GrooveMessengerDAL.Entities;
 
 namespace GrooveMessengerDAL.Configurations
 {

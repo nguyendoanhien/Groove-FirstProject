@@ -9,7 +9,6 @@ namespace GrooveMessengerAPI.Configurations
             RegisterRepositories(services);
             RegisterUows(services);
             RegisterServices(services);
-           
         }
     }
 }
