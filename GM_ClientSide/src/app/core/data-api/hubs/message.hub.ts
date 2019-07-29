@@ -16,13 +16,13 @@ export class MessageHubService {
     unreadMessage: BehaviorSubject<UnreadMessage>;
 
     constructor(private authService: AuthService) {
-        debugger;
+
         this.newChatMessage = new BehaviorSubject(null);
         this.unreadMessage = new BehaviorSubject(null);
         this.startConnection();
         this._hubConnection.on("SendMessage",
             (message: MessageModel) => {
-                debugger;
+
                 this.newChatMessage.next(message);
             });
         this._hubConnection.on("SendRemovedMessage",
@@ -31,7 +31,6 @@ export class MessageHubService {
             });
         this._hubConnection.on("SendUnreadMessagesAmount",
             (message: UnreadMessage) => {
-                console.log(message);
                 this.unreadMessage.next(message);
             });
     }
@@ -47,7 +46,6 @@ export class MessageHubService {
             .catch(err => console.log(`[Message Hub]: Error while starting connection: ${err}`));
     };
     addSendMessageToUser(message: MessageModel, toUser: string) {
-        console.log(message);
         this._hubConnection.invoke("SendMessageToUser", message, toUser).catch(function (err) {
             return console.error(err.toString());
         });

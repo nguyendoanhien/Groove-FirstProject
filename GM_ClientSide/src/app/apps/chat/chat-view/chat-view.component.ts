@@ -85,7 +85,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             "post",
             { "scrape": "true", "id": "https://www.skype.com/en/" }
         ).then(function (response) {
-            console.log('log here');
             console.log(response.image[0].url);
         });
 
@@ -280,7 +279,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         });
         // Truc: Call count unread messages in controller backend
         this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
-            .subscribe(val => { console.log(val + "chatview"); },
+            .subscribe(val => { },
                 error => { console.log(error); }
             );
 
@@ -297,7 +296,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     SayHi(contact: any) {
         this._userContactService.SayHi(contact).subscribe(
             (res: any) => {
-                debugger;
+
                 this._chatService.contacts.push(res.contact);
                 this._chatService.user.chatList.push(res.chatContact);
                 this._chatService.chats.push(res.diaglog);
