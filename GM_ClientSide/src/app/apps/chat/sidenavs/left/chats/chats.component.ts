@@ -97,7 +97,6 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             .subscribe(updatedChats => {
                 this.chats = updatedChats;
             });
-
         this._chatService.onUserUpdated
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(updatedUser => {
@@ -116,27 +115,12 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 
         this._chatService._messageHub.unreadMessage.subscribe((unreadMessage: UnreadMessage) => {
             if (unreadMessage) {
-                debugger;
-                console.log(unreadMessage);
-                const chatList = this.user.chatList as Array<any>;
-                const chat = chatList.find(x => x.convId == unreadMessage.conversationId);
+                var chatList = this.user.chatList as Array<any>;
+                var chat = chatList.find(x => x.convId == unreadMessage.conversationId);
                 if (unreadMessage.amount > 100) {
-                    chat.unread = "99+";
-                } else chat.unread = unreadMessage.amount;
-                // switch (true) {
-                //     case (unreadMessage.amount == 0): {
-                //         chat.unread = '';
-                //         break;
-                //     }
-                //     case (unreadMessage.amount < 100): {
-                //         chat.unread = unreadMessage.amount;
-                //         break;
-                //     }
-                //     default: {
-                //         chat.unread = '99+';
-                //         break;
-                //     }
-                // } 
+                    chat.unread = '99+';
+                }
+                else chat.unread = unreadMessage.amount;
                 this._chatService._messageHub.unreadMessage.next(null);
             }
         });
@@ -178,16 +162,12 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     }
 
     async setValueSeenBy(conversationId) {
-        await this._messageService.updateUnreadMessages(conversationId)
-            .subscribe(val => console.log(val), err => console.log(err));
-        const chatList = this.user.chatList as Array<any>;
-        const chat = chatList.find(x => x.convId == conversationId);
-        chat.unread = "";
-        chat.isActive = true;
-        const otherConversations = chatList.filter(x => x.convId !== conversationId);
-        for (const other of otherConversations) {
-            other.isActive = false;
-       }
+        await this._messageService.updateUnreadMessages(conversationId).subscribe(val =>{
+        }, err => console.log(err));
+        
+        var chatList = this.user.chatList as Array<any>;
+        var chat = chatList.find(x => x.convId == conversationId);
+        chat.unread = '';
     }
 
     /**

@@ -81,18 +81,19 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             var createdMessage = await _mesService.AddMessageAsync(createMessageModel); // add message to db
             if (createdMessage != null) // broadcast message to user
             {
-                var message = new Message(createdMessage.ConversationId, createdMessage.SenderId, createdMessage.Id,
-                    createdMessage.Content, createdMessage.CreatedOn);
+                Message message = new Message(createdMessage.ConversationId, createdMessage.SenderId, createdMessage.Id, createdMessage.Content, createdMessage.CreatedOn);
 
                 var receiverEmail = await _contactService.GetUserContactEmail(createMessageModel.Receiver);
                 foreach (var connectionId in _connectionStore.GetConnections("message", receiverEmail))
+                {
                     await _hubContext.Clients.Client(connectionId).SendMessage(message);
-                //Merge: Check if OK
+                }
                 foreach (var connectionId in _connectionStore.GetConnections("message", CurrentUserName))
+                {
                     await _hubContext.Clients.Client(connectionId).SendMessage(message);
+                }
                 return Ok();
             }
-
             return NotFound();
         }
 
@@ -115,7 +116,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             _mesService.SetValueSeenBy(CurrentUserId.ToString(), conversationId);
             foreach (var connectionId in _connectionStore.GetConnections("message", CurrentUserId.ToString()))
             {
-                var unreadMessageModel = new UnreadMessageModel {ConversationId = conversationId, Amount = 0};
+                var unreadMessageModel = new UnreadMessageModel { ConversationId = conversationId, Amount = 0 };
                 _hubContext.Clients.Client(connectionId).SendUnreadMessagesAmount(unreadMessageModel);
             }
 
@@ -135,14 +136,14 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             var contactsList = await _contactService.GetContacts(conversationId);
 
             foreach (var contact in contactsList)
-            foreach (var connectionId in _connectionStore.GetConnections("message", contact.UserName))
-            {
-                var unreadMessageAmount = _mesService.GetUnreadMessages(conversationId, contact.Id);
-                var unreadMessageModel = new UnreadMessageModel
-                    {ConversationId = conversationId, Amount = unreadMessageAmount};
+                foreach (var connectionId in _connectionStore.GetConnections("message", contact.UserName))
+                {
+                    var unreadMessageAmount = _mesService.GetUnreadMessages(conversationId, contact.Id);
+                    var unreadMessageModel = new UnreadMessageModel
+                    { ConversationId = conversationId, Amount = unreadMessageAmount };
 
-                await _hubContext.Clients.Client(connectionId).SendUnreadMessagesAmount(unreadMessageModel);
-            }
+                    await _hubContext.Clients.Client(connectionId).SendUnreadMessagesAmount(unreadMessageModel);
+                }
 
             return Ok();
         }
