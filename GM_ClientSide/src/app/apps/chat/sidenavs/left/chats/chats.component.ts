@@ -115,8 +115,9 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 
         this._chatService._messageHub.unreadMessage.subscribe((unreadMessage: UnreadMessage) => {
             if (unreadMessage) {
-                var chatList = this.user.chatList as Array<any>;
-                var chat = chatList.find(x => x.convId == unreadMessage.conversationId);
+
+                const chatList = this.user.chatList as Array<any>;
+                const chat = chatList.find(x => x.convId == unreadMessage.conversationId);
                 if (unreadMessage.amount > 100) {
                     chat.unread = '99+';
                 }
@@ -199,14 +200,13 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         this._userInfoService.userInfo.status = "offline";
         await this._userInfoService.changeDisplayName().subscribe();
         this._userProfileService.logOut();
-
+        window.location.reload();
     }
 
     CountData() {
 
         this._chatService.getUnknownContacts(this.searchText).then(
             data => {
-
                 if (!this.unknownContacts.equals(data)) this.unknownContacts = data;
             }
         );

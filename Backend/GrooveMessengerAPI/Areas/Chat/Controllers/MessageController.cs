@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using GrooveMessengerAPI.Areas.Chat.Models;
+using GrooveMessengerAPI.Constants;
 using GrooveMessengerAPI.Controllers;
 using GrooveMessengerAPI.Hubs;
 using GrooveMessengerAPI.Hubs.Utils;
@@ -73,56 +74,6 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             return null;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CreateMessageModel createMessageModel)
-        {
-            if (!ModelState.IsValid) return BadRequest();
-
-            var createdMessage = await _mesService.AddMessageAsync(createMessageModel); // add message to db
-            if (createdMessage != null) // broadcast message to user
-            {
-                Message message = new Message(createdMessage.ConversationId, createdMessage.SenderId, createdMessage.Id, createdMessage.Content, createdMessage.CreatedOn);
-
-                var receiverEmail = await _contactService.GetUserContactEmail(createMessageModel.Receiver);
-                foreach (var connectionId in _connectionStore.GetConnections("message", receiverEmail))
-                {
-                    await _hubContext.Clients.Client(connectionId).SendMessage(message);
-                }
-                foreach (var connectionId in _connectionStore.GetConnections("message", CurrentUserName))
-                {
-                    await _hubContext.Clients.Client(connectionId).SendMessage(message);
-                }
-                return Ok();
-            }
-            return NotFound();
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult DeleteMessage(Guid id)
-        {
-            var isExisting = _mesService.CheckExisting(id);
-            if (!isExisting) return new NotFoundResult();
-
-            _mesService.DeleteMessage(id);
-            return Ok();
-        }
-
-
-        [HttpGet("read/{conversationId}")]
-        public IActionResult Get(Guid conversationId)
-        {
-            if (!ModelState.IsValid) return BadRequest();
-
-            _mesService.SetValueSeenBy(CurrentUserId.ToString(), conversationId);
-            foreach (var connectionId in _connectionStore.GetConnections("message", CurrentUserId.ToString()))
-            {
-                var unreadMessageModel = new UnreadMessageModel { ConversationId = conversationId, Amount = 0 };
-                _hubContext.Clients.Client(connectionId).SendUnreadMessagesAmount(unreadMessageModel);
-            }
-
-            return Ok();
-        }
-
         //Truc: Get UnreadMessageAmount
         [HttpGet("unread/{conversationId}")]
         public async Task<IActionResult> GetUnreadMessages(Guid conversationId)
@@ -145,6 +96,55 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                     await _hubContext.Clients.Client(connectionId).SendUnreadMessagesAmount(unreadMessageModel);
                 }
 
+            return Ok();
+        }
+
+
+        [HttpGet("read/{conversationId}")]
+        public IActionResult Get(Guid conversationId)
+        {
+            if (!ModelState.IsValid) return BadRequest();
+
+            _mesService.SetValueSeenBy(CurrentUserId.ToString(), conversationId);
+            foreach (var connectionId in _connectionStore.GetConnections("message", CurrentUserId.ToString()))
+            {
+                var unreadMessageModel = new UnreadMessageModel { ConversationId = conversationId, Amount = 0 };
+                _hubContext.Clients.Client(connectionId).SendUnreadMessagesAmount(unreadMessageModel);
+            }
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] CreateMessageModel createMessageModel)
+        {
+            if (!ModelState.IsValid) return BadRequest();
+
+            var createdMessage = await _mesService.AddMessageAsync(createMessageModel); // add message to db
+            if (createdMessage != null) // broadcast message to user
+            {
+                var message = new Message(createdMessage.ConversationId, createdMessage.SenderId, createdMessage.Id,
+                    createdMessage.Content, createdMessage.CreatedOn);
+
+                var receiverEmail = await _contactService.GetUserContactEmail(createMessageModel.Receiver);
+                foreach (var connectionId in _connectionStore.GetConnections(HubConstant.MessageHubTopic, receiverEmail))
+                    await _hubContext.Clients.Client(connectionId).SendMessage(message);
+                //Merge: Check if OK
+                foreach (var connectionId in _connectionStore.GetConnections(HubConstant.MessageHubTopic, CurrentUserName))
+                    await _hubContext.Clients.Client(connectionId).SendMessage(message);
+                return Ok();
+            }
+
+            return NotFound();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteMessage(Guid id)
+        {
+            var isExisting = _mesService.CheckExisting(id);
+            if (!isExisting) return new NotFoundResult();
+
+            _mesService.DeleteMessage(id);
             return Ok();
         }
     }
