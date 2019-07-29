@@ -120,6 +120,7 @@ namespace GrooveMessengerDAL.Services
         //    }
         //    return contactList;
         //}
+
         public async Task<IEnumerable<IndexUserInfoModel>> GetUserUnknownContact(string username = null, string displayNameSearch = null)
         {
             var spName = "[dbo].[usp_Contact_GetUnknownContact]";

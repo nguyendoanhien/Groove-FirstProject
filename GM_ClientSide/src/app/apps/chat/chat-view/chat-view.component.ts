@@ -116,6 +116,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.readyToReply();
                 }
             });
+
         this._chatService._messageHub.newChatMessage.subscribe((message: MessageModel) => {
             if (message) {
                 if (this.chatId === message.fromConv) {
@@ -283,7 +284,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 error => { console.log(error); }
             );
 
-        await this._messageService.updateUnreadMessages(this.chatId)
+
+        this._messageService.updateUnreadMessages(this.chatId)
             .subscribe(val => {
                 var chatList = this.user.chatList as Array<any>;
                 var chat = chatList.find(x => x.convId == this.chatId);

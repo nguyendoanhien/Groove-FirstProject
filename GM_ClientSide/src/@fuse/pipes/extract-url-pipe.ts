@@ -21,19 +21,24 @@ export class ExtractUrlPipe implements PipeTransform {
     }
 
     transform(message: string) {
+
         var res = this._appHelperService.ExtractUrl(message);
+
         var result: Promise<any[]>;
-        if (res !== null) {
+        if (res != null) {
             result = Promise.all(res.map(async (val): Promise<any> => {
+                var imageLink = await this.getOgImage(val);
+                if (imageLink == "") imageLink = "No Image";
                 var obj = {
-                    imgLink: await this.getOgImage(val),
+                    imgLink: imageLink,
                     urlLink: val
                 }
                 return obj;
-            }))
+            })
+            )
+
+
         }
-        console.log('new res');
-        console.log(result);
         return result;
 
     }
@@ -46,9 +51,9 @@ export class ExtractUrlPipe implements PipeTransform {
             { "scrape": "true", "id": urlPath }
         ).then(function (response) {
             imageUrl = response.image[0].url;
-            console.log(imageUrl)
         }
-        );
+        ).catch(err => console.log('promise eror is' + err));
+
         return imageUrl;
     }
 }

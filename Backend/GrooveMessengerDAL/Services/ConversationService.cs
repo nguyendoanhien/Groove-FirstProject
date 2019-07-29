@@ -27,10 +27,8 @@ namespace GrooveMessengerDAL.Services
 
         public ConversationService(IGenericRepository<ConversationEntity, Guid, GrooveMessengerDbContext> conRepository,
             IGenericRepository<ParticipantEntity, Guid, GrooveMessengerDbContext> parRepository, IMapper mapper,
-            IGenericRepository<MessageEntity, Guid, GrooveMessengerDbContext> mesRepository,
             IUowBase<GrooveMessengerDbContext> uow, IMessageService messageService,
-            IUserResolverService userResolverService,
-            IParticipantService participantService)
+            IUserResolverService userResolverService)
         {
             _conRepository = conRepository;
             _parRepository = parRepository;
@@ -38,9 +36,6 @@ namespace GrooveMessengerDAL.Services
             _uow = uow;
             _messageService = messageService;
             _userResolverService = userResolverService;
-            _participantService = participantService;
-            _mesRepository = mesRepository;
-
         }
 
         public void AddConversation()
@@ -67,28 +62,29 @@ namespace GrooveMessengerDAL.Services
         //    var result = _conRepository.GetAll().Where(x => conIdList.Contains(x.Id));
         //    return result;
         //}
-        public IEnumerable<ChatModel> GetAllConversationOfAUser(string UserId = null)
+                
+        public IEnumerable<ChatModel> GetAllConversationOfAUser(string UserId)
         {
             var chatModels = new List<ChatModel>();
             var dialogDraftModels = GetAllConversationOfAUserDraft(UserId);
 
             var chatBoxes = from chat in dialogDraftModels
-                            group chat by chat.Id
+                group chat by chat.Id
                 into chatGroup
-                            select new
-                            {
-                                chatGroup.Key,
-                                Dialogs = chatGroup
-                            };
+                select new
+                {
+                    chatGroup.Key,
+                    Dialogs = chatGroup
+                };
             foreach (var chatbox in chatBoxes)
             {
-                var dialogModels = new List<DialogModel>();
-                var chatModel = new ChatModel { Id = chatbox.Key.ToString(), Dialog = dialogModels };
+                List<DialogModel> dialogModels = new List<DialogModel>();
+                ChatModel chatModel = new ChatModel() { Id = chatbox.Key.ToString(), Dialog = dialogModels };
                 chatModels.Add(chatModel);
                 foreach (var message in chatbox.Dialogs)
                 {
                     var dialogModel = new DialogModel
-                    { Message = message.Message, Who = message.Who, Time = message.Time };
+                        {Message = message.Message, Who = message.Who, Time = message.Time};
                     dialogModels.Add(dialogModel);
                 }
             }
@@ -109,7 +105,7 @@ namespace GrooveMessengerDAL.Services
             var contactList = _conRepository.ExecuteReturedStoredProcedure<DialogDraftModel>(spName, parameter);
             return contactList;
         }
-
+        
         public ChatModel GetConversationById(string ConversationId)
         {
             var spName = "[dbo].[usp_Message_GetByConversationId]";
@@ -117,10 +113,8 @@ namespace GrooveMessengerDAL.Services
                 new SqlParameter
                 {
                     ParameterName = "ConversationId",
-                    SqlDbType = SqlDbType.UniqueIdentifier,
-                    SqlValue = string.IsNullOrEmpty(ConversationId)
-                        ? _userResolverService.CurrentUserInfoId()
-                        : ConversationId
+                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                    SqlValue = ConversationId
                 };
 
             var contactList = _conRepository.ExecuteReturedStoredProcedure<DialogDraftModel>(spName, parameter);
@@ -128,11 +122,10 @@ namespace GrooveMessengerDAL.Services
             var dialogModels = new List<DialogModel>();
             foreach (var item in contactList)
             {
-                var dialogModel = new DialogModel { Who = item.Who, Message = item.Message, Time = item.Time };
+                var dialogModel = new DialogModel {Who = item.Who, Message = item.Message, Time = item.Time};
                 dialogModels.Add(dialogModel);
             }
-
-            var chatModel = new ChatModel { Id = ConversationId, Dialog = dialogModels };
+            ChatModel chatModel = new ChatModel() { Id = ConversationId, Dialog = dialogModels };
             return chatModel;
         }
 
@@ -141,18 +134,6 @@ namespace GrooveMessengerDAL.Services
             var mes = _mapper.Map<CreateConversationModel, ConversationEntity>(createMessageModel);
             _conRepository.Add(mes);
             _uow.SaveChanges();
-        }
-
-        public ChatModel GetConversationOfAUser(string ConversationId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<ConversationEntity> GetConversations(string UserId)
-        {
-            var conIdList = _participantService.GetAllConversationIdOfAUser(UserId).ToList();
-            var result = _conRepository.GetAll().Where(x => conIdList.Contains(x.Id));
-            return result;
         }
     }
 }

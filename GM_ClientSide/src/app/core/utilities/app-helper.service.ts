@@ -8,10 +8,19 @@ export class AppHelperService {
     constructor() { }
 
     ExtractUrl(s: string): Array<any> {
-        let stars = [];
         var urlRegex = /(https?:\/\/[^ ]*)/g;
         var urlList = s.match(urlRegex);
-        stars = urlList;
-        return stars;
+        var unique: any[];
+        if (urlList != null)
+            unique = urlList.filter(this.onlyUnique);
+        return unique;
+    }
+    onlyUnique(value, index, self) {
+        return self.indexOf(value) === index;
+    }
+    detectUrl(s: string) {
+        var urlRegex = /(https?:\/\/[^ ]*)/g;
+        var res = s.replace(urlRegex, `<a href='$1'>$1</a>`);
+        return res;
     }
 }

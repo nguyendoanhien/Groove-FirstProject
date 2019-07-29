@@ -7,6 +7,7 @@ import { FilterPipe } from './filter.pipe';
 import { CamelCaseToDashPipe } from './camelCaseToDash.pipe';
 import { UnknownContactFilterPipe } from 'app/custom-pipe/unknown-contact-filter.pipe';
 import { ExtractUrlPipe } from './extract-url-pipe';
+import { DetectUrlPipe } from './detect-url.pipe';
 
 @NgModule({
     declarations: [
@@ -16,7 +17,8 @@ import { ExtractUrlPipe } from './extract-url-pipe';
         FilterPipe,
         CamelCaseToDashPipe,
         UnknownContactFilterPipe,
-        ExtractUrlPipe
+        ExtractUrlPipe,
+        DetectUrlPipe
     ],
     imports: [],
     exports: [
@@ -26,7 +28,8 @@ import { ExtractUrlPipe } from './extract-url-pipe';
         FilterPipe,
         CamelCaseToDashPipe,
         UnknownContactFilterPipe,
-        ExtractUrlPipe
+        ExtractUrlPipe,
+        DetectUrlPipe
     ]
 })
 export class FusePipesModule {

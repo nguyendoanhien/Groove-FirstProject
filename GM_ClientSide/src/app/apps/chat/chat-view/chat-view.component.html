@@ -82,18 +82,20 @@
                 <!-- <img *ngIf="shouldShowContactAvatar(message, i)" src="{{contact.avatar}}" class="avatar"> -->
 
                 <div class="bubble">
-                    <div class="message">{{message.message}}</div>
-
+                    <div class="message" [innerHtml]="message.message | detectUrl">
+                    </div>
                     <div class="time secondary-text">{{message.time | date:'short'}}</div>
                 </div>
-                <!-- {{this._appHelperService.ExtractUrl(message.message)}} -->
-                <!-- {{Say()|async}} -->
                 <div class="bubble" *ngFor="let obj of message.message | extractUrl | async">
                     <div>
-                        <a href="{{obj.urlLink}}" target="_blank"> <img src="{{obj.imgLink}}"
-                                class='message-preview-image'></a>
+                        <div style="background-color: white">
+                            <a href="{{obj.urlLink}}" target="_blank"> <img src="{{obj.imgLink}}"
+                                    class='message-preview-image'></a>
 
-
+                        </div>
+                        <!-- <div>
+                            {{obj.urlLink}}
+                        </div> -->
 
                     </div>
 

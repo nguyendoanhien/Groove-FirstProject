@@ -20,19 +20,15 @@ export class MessageHubService {
         this.newChatMessage = new BehaviorSubject(null);
         this.unreadMessage = new BehaviorSubject(null);
         this.startConnection();
-        this._hubConnection.on("SendMessage",
-            (message: MessageModel) => {
-
-                this.newChatMessage.next(message);
-            });
-        this._hubConnection.on("SendRemovedMessage",
-            (message: MessageModel) => {
-                this.removedChatMessage.next(message);
-            });
-        this._hubConnection.on("SendUnreadMessagesAmount",
-            (message: UnreadMessage) => {
-                this.unreadMessage.next(message);
-            });
+        this._hubConnection.on('SendMessage', (message: MessageModel) => {
+            this.newChatMessage.next(message);
+        });
+        this._hubConnection.on('SendRemovedMessage', (message: MessageModel) => {
+            this.removedChatMessage.next(message);
+        });
+        this._hubConnection.on('SendUnreadMessagesAmount', (message: UnreadMessage) => {
+            this.unreadMessage.next(message);
+        });
     }
     startConnection = () => {
         const securityToken = this.authService.getToken();
@@ -45,7 +41,8 @@ export class MessageHubService {
             .then(() => console.log("[Message Hub]: Connection started"))
             .catch(err => console.log(`[Message Hub]: Error while starting connection: ${err}`));
     };
-    addSendMessageToUser(message: MessageModel, toUser: string) {
+
+    public addSendMessageToUser(message: MessageModel, toUser: string) {
         this._hubConnection.invoke("SendMessageToUser", message, toUser).catch(function (err) {
             return console.error(err.toString());
         });
