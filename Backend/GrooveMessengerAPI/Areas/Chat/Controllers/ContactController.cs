@@ -1,14 +1,10 @@
-using GrooveMessengerAPI.Areas.Chat.Models.Contact;
 using GrooveMessengerAPI.Controllers;
-using GrooveMessengerAPI.Hubs;
-using GrooveMessengerAPI.Hubs.Utils;
 using GrooveMessengerAPI.Models;
 using GrooveMessengerDAL.Models.Contact;
 using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Threading.Tasks;
 
@@ -26,7 +22,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         private readonly IUserResolverService _userResolverService;
         public ContactController(
             IContactService contactService,
-            IUserResolverService userResolver, 
+            IUserResolverService userResolver,
             IUserService userService
 
           )
@@ -105,9 +101,10 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             }
         }
         [HttpGet("getchatlist")]
-        public  IActionResult GetChatList()
+        public IActionResult GetChatList()
         {
             return Ok(_contactService.GetLatestContactChatListByUserId_SP());
+            
         }
 
 
