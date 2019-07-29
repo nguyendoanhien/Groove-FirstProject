@@ -130,7 +130,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                 foreach (var connectionId in _connectionStore.GetConnections(HubConstant.MessageHubTopic, receiverEmail))
                     await _hubContext.Clients.Client(connectionId).SendMessage(message);
                 //Merge: Check if OK
-                foreach (var connectionId in _connectionStore.GetConnections("message", CurrentUserName))
+                foreach (var connectionId in _connectionStore.GetConnections(HubConstant.MessageHubTopic, CurrentUserName))
                     await _hubContext.Clients.Client(connectionId).SendMessage(message);
                 return Ok();
             }

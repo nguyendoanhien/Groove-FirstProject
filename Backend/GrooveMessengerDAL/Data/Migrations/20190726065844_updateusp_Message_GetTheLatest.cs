@@ -47,7 +47,7 @@ namespace GrooveMessengerDAL.Migrations
 								SELECT TOP(1)P.UserId
 								FROM Participant P 
 								INNER JOIN [Conversation] C on P.ConversationId = C.Id
-								WHERE P.UserId != @UserId)
+								WHERE P.UserId != @UserId AND P.ConversationId = @ConversationId)
 		
 							DECLARE @ContactInfoId uniqueIdentifier 
 		                    SET @ContactInfoId = (
@@ -57,7 +57,7 @@ namespace GrooveMessengerDAL.Migrations
 		                    ) 
 		
 		                    DECLARE @DisplayName nvarchar(150) 
-		                    SET @DisplayName = (SELECT TOP(1)UI.DisplayName FROM UserInfo UI WHERE UI.Id = @ContactInfoId)
+		                    SET @DisplayName = (SELECT UI.DisplayName FROM UserInfo UI WHERE UI.Id = @ContactInfoId)
 		
 		                    DECLARE @LastMessage nvarchar(1000) 
                             SET @LastMessage = (
@@ -79,7 +79,8 @@ namespace GrooveMessengerDAL.Migrations
 											FROM Message 
 											WHERE ConversationId = @ConversationId AND SenderId !=@UserId
 											AND isnull(SeenBy,'') NOT LIKE '%'+cast(@UserId as nvarchar(255))+'%')
-							IF(@Unread > 99) SET @Unread = '99+'
+							IF(@Unread > 99) SET @Unread = '99+' 
+							ELSE IF (@Unread) = 0 SET @Unread = ''
                             IF @ConversationId IS NULL
                                 BREAK
 							
@@ -88,7 +89,7 @@ namespace GrooveMessengerDAL.Migrations
                             DELETE TOP(1) FROM @TempContactChatBox
 
                         END
-	                    SELECT * FROM @Result
+	                    SELECT * FROM @Result ORDER BY LastMessageTime DESC
                     END
 					Go
                    EXEC sp_rename 'dbo.msp_GetLastestMessageOfAConversation', 'usp_Message_GetTheLatest';

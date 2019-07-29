@@ -5,7 +5,7 @@ namespace GrooveMessengerDAL.Models.CustomModel
 {
     public class ChatModel
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public ICollection<DialogModel> Dialog { get; set; }
     }
 }
