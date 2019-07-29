@@ -13,6 +13,8 @@ import { MessageModel } from 'app/models/message.model';
 import { UserProfileService } from 'app/core/identity/userprofile.service';
 import { ProfileHubService } from 'app/core/data-api/hubs/profile.hub';
 import { ContactHubService } from 'app/core/data-api/hubs/contact.hub';
+import { map } from 'rxjs/operators';
+
 
 @Injectable()
 export class ChatService implements Resolve<any>
@@ -30,6 +32,7 @@ export class ChatService implements Resolve<any>
     _userContactService: UserContactService;
     _messageHub: MessageHubService;
     _contactHub: ContactHubService
+    Message:MessageModel;
     /**
      * Constructor
      *
@@ -253,4 +256,6 @@ export class ChatService implements Resolve<any>
                 }, reject);
         });
     }
+
+
 }

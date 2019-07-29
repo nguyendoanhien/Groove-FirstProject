@@ -102,7 +102,14 @@
                     <textarea matInput #replyInput placeholder="Type your message" ngModel name="message" [rows]="1"
                         [matTextareaAutosize]="true"></textarea>
                 </mat-form-field>
-
+            
+                <button class="file-button" mat-icon-button type="submit" type="button" aria-label="Send message" (click) = "file.click()">
+                    <input type="file" #file (change)="onUpload($event)" style ="display:none"/>
+                    <mat-icon >
+                        camera_alt
+                    </mat-icon>
+                </button>
+                
                 <button class="record-button" mat-icon-button type="submit" type="button" aria-label="Send message"
                     #voiceButton [disabled]="_rxSpeechRecognitionService.started$ | async" (click)="listen()">
                     <mat-icon [ngStyle]="voiceButton.disabled && {'color':'red'}">

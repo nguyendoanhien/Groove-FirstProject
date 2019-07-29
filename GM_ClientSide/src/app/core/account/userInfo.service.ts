@@ -34,8 +34,6 @@ export class UserInfoService {
     }
 
     onUpload(fd: FormData) {
-
-
         fd.append('upload_preset', cloudinaryPreset)
         return this.http.post(cloudinaryUrl, fd).pipe(
             map((res: any) => {
