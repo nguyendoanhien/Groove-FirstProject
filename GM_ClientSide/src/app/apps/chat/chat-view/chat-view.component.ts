@@ -28,6 +28,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     contact: any;
     replyInput: any;
     selectedChat: any;
+    selectedFile: File = null;
+    image : any ;
 
     @ViewChild(FusePerfectScrollbarDirective, { static: false })
     directiveScroll: FusePerfectScrollbarDirective;
@@ -218,7 +220,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             },
             err => console.log("send fail"));
         // Add the message to the chat
-        //this.dialog.push(message); //Truc: don't need because broadcast to user + contact
+        this.dialog.push(message); //Truc: don't need because broadcast to user + contact
 
         // Reset the reply form
         this.replyForm.reset();
@@ -267,5 +269,23 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.replyInput.value += list.item(0).item(0).transcript + " ";
                 console.log("RxComponent:onresult", this.replyForm.form.value.message, list);
             });
+    }
+
+    onUpload(event){
+        this.selectedFile = (event.target.files[0] as File);
+        const fd = new FormData();
+        fd.append("file", this.selectedFile);
+        const message = {
+            who: this.user.userId,
+            message:'',
+            time: new Date().toISOString()
+        };
+        const newMessage = new IndexMessageModel(this.chatId,
+            this.user.userId,
+            null,
+            message.message,
+            "Image",
+            this.contact.userId);
+        this._messageService.onUpload(fd,newMessage).subscribe();
     }
 }

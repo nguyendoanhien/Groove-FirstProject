@@ -262,4 +262,6 @@ export class ChatService implements Resolve<any> {
                     reject);
         });
     }
+
+    
 }

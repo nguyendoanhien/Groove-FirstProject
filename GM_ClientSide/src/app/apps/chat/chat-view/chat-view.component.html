@@ -83,6 +83,10 @@
 
                 <div class="bubble">
                     <div class="message">{{message.message}}</div>
+                    <!-- <ng-template *ngIf="message.type =='Image'">
+                            <img src="{{message.message}}">
+                    </ng-template> -->
+                    
                     <div class="time secondary-text">{{message.time | date:'short'}}</div>
                 </div>
 
