@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using AutoMapper;
+﻿using AutoMapper;
 using GrooveMessengerDAL.Entities;
 using GrooveMessengerDAL.Models.Note;
 
@@ -17,7 +15,6 @@ namespace GrooveMessengerDAL.Mappers
 
             CreateMap<CreateModel, NoteEntity>();
             CreateMap<EditModel, NoteEntity>();
-
         }
     }
 }

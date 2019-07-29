@@ -3,17 +3,17 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace GrooveMessengerAPI.Middlewares
 {
     public class AuthorizationTokenCheckMiddleware
     {
-        private readonly RequestDelegate _next;
         private readonly ILogger<AuthorizationTokenCheckMiddleware> _logger;
+        private readonly RequestDelegate _next;
 
-        public AuthorizationTokenCheckMiddleware(RequestDelegate next, ILogger<AuthorizationTokenCheckMiddleware> logger)
+        public AuthorizationTokenCheckMiddleware(RequestDelegate next,
+            ILogger<AuthorizationTokenCheckMiddleware> logger)
         {
             _next = next ?? throw new ArgumentNullException(nameof(next));
             _logger = logger;
@@ -25,16 +25,16 @@ namespace GrooveMessengerAPI.Middlewares
         }
 
         private Task HandleMiddlewareAsync(HttpContext context)
-        {   
+        {
             var token = context.Request.Headers["Authorization"];
             if (string.IsNullOrEmpty(token))
             {
-                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
                 return context.Response.WriteAsync("Error: No token");
             }
-            return this._next(context);        
-        }
 
+            return _next(context);
+        }
     }
 
     // Extension method used to add the middleware to the HTTP request pipeline.

@@ -1,5 +1,6 @@
-import { Pipe, PipeTransform } from '@angular/core';
-@Pipe({ name: 'unknownContactFilter' })
+import { Pipe, PipeTransform } from "@angular/core";
+
+@Pipe({ name: "unknownContactFilter" })
 export class UnknownContactFilterPipe implements PipeTransform {
     /**
      * Transform
@@ -11,7 +12,7 @@ export class UnknownContactFilterPipe implements PipeTransform {
      */
     transform(mainArr: any[], searchText: string, property: string): any {
         return mainArr.filter(itemObj => {
-            return itemObj['displayName'].toLowerCase().includes(searchText.toLowerCase());
+            return itemObj["displayName"].toLowerCase().includes(searchText.toLowerCase());
         });
     }
 }

@@ -6,6 +6,7 @@ export class User {
     status: Status;
     chatList: any[];
 }
+
 export enum Status {
     NotSet,
     Online,

@@ -1,27 +1,28 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
 using GrooveMessengerDAL.Data;
 using GrooveMessengerDAL.Entities;
+using GrooveMessengerDAL.Models.CustomModel;
 using GrooveMessengerDAL.Models.Message;
 using GrooveMessengerDAL.Repositories.Interface;
 using GrooveMessengerDAL.Services.Interface;
 using GrooveMessengerDAL.Uow.Interface;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
-using GrooveMessengerDAL.Models.CustomModel;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System.Data.SqlClient;
 
 namespace GrooveMessengerDAL.Services
 {
     public class MessageService : IMessageService
     {
-        private IGenericRepository<MessageEntity, Guid, GrooveMessengerDbContext> _mesRepository;
-        private IMapper _mapper;
-        private IUowBase<GrooveMessengerDbContext> _uow;
-       
-        public MessageService(IGenericRepository<MessageEntity, Guid, GrooveMessengerDbContext> mesRepository, IMapper mapper, IUowBase<GrooveMessengerDbContext> uow)
+        private readonly IMapper _mapper;
+        private readonly IGenericRepository<MessageEntity, Guid, GrooveMessengerDbContext> _mesRepository;
+        private readonly IUowBase<GrooveMessengerDbContext> _uow;
+
+        public MessageService(IGenericRepository<MessageEntity, Guid, GrooveMessengerDbContext> mesRepository,
+            IMapper mapper, IUowBase<GrooveMessengerDbContext> uow)
         {
             _mesRepository = mesRepository;
             _mapper = mapper;
@@ -40,8 +41,8 @@ namespace GrooveMessengerDAL.Services
             var parameter = new SqlParameter
             {
                 ParameterName = "Id",
-                SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
-                SqlValue = id,
+                SqlDbType = SqlDbType.UniqueIdentifier,
+                SqlValue = id
             };
 
             var delMsg = _mesRepository.ExecuteReturedStoredProcedure<bool>(spName, parameter);
@@ -56,10 +57,10 @@ namespace GrooveMessengerDAL.Services
         public void EditMessageModel(EditMessageModel data)
         {
             var spName = "[dbo].[usp_Message_EditMessage]";
-            var parameter = new SqlParameter[]
+            var parameter = new[]
             {
-                new SqlParameter("Content",System.Data.SqlDbType.NVarChar,1000){Value = data.Content},
-                new SqlParameter("Id",System.Data.SqlDbType.UniqueIdentifier){Value = data.Id}
+                new SqlParameter("Content", SqlDbType.NVarChar, 1000) {Value = data.Content},
+                new SqlParameter("Id", SqlDbType.UniqueIdentifier) {Value = data.Id}
             };
 
             var editMsg = _mesRepository.ExecuteReturedStoredProcedure<bool>(spName, parameter);
@@ -78,7 +79,6 @@ namespace GrooveMessengerDAL.Services
 
         public async Task<EditMessageModel> GetMessageForEditAsync(Guid id)
         {
-            
             var storedData = await _mesRepository.GetSingleAsync(id);
             var result = _mapper.Map<MessageEntity, EditMessageModel>(storedData);
             return result;
@@ -86,7 +86,7 @@ namespace GrooveMessengerDAL.Services
 
         public IEnumerable<MessageEntity> loadMoreMessages(int pageNumber, int pageSize)
         {
-            var messages = _mesRepository.GetAll().OrderByDescending(x=>x.CreatedOn);
+            var messages = _mesRepository.GetAll().OrderByDescending(x => x.CreatedOn);
             var result = messages.Skip((pageNumber - 1) * pageSize).Take(pageSize);
             return result;
         }
@@ -120,27 +120,28 @@ namespace GrooveMessengerDAL.Services
                 new SqlParameter
                 {
                     ParameterName = "conversationId",
-                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                    SqlDbType = SqlDbType.UniqueIdentifier,
                     SqlValue = conversationId
                 };
             var parameter2 =
                 new SqlParameter
                 {
                     ParameterName = "userId",
-                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                    SqlDbType = SqlDbType.UniqueIdentifier,
                     SqlValue = userId
                 };
 
             return _mesRepository.ExecuteReturedStoredProcedure<int>(spName, parameter2, parameter1).FirstOrDefault();
         }
+
         public IEnumerable<DialogModel> GetDialogs(Guid ConversationId)
         {
             var messageList = _mesRepository.GetAll().Where(x => x.ConversationId == ConversationId)
-                .OrderByDescending(x=>x.CreatedOn).ToList();
-            List<DialogModel> dialogs = new List<DialogModel>();
-            foreach (MessageEntity item in messageList)
+                .OrderByDescending(x => x.CreatedOn).ToList();
+            var dialogs = new List<DialogModel>();
+            foreach (var item in messageList)
             {
-                DialogModel dialog = new DialogModel()
+                var dialog = new DialogModel
                 {
                     Who = item.SenderId,
                     Message = item.Content,
@@ -148,13 +149,10 @@ namespace GrooveMessengerDAL.Services
                 };
                 dialogs.Add(dialog);
             }
+
             return dialogs;
         }
-        public void GetAllMsg()
-        {
-            var msgs = _mesRepository.GetAll();
-            _uow.SaveChanges();
-        }
+
         public int GetUnreadMessages(Guid conversationId, string userId)
         {
             var spName = "[dbo].[usp_Message_GetUnreadMessageAmount]";
@@ -162,19 +160,24 @@ namespace GrooveMessengerDAL.Services
                 new SqlParameter
                 {
                     ParameterName = "conversationId",
-                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                    SqlDbType = SqlDbType.UniqueIdentifier,
                     SqlValue = conversationId
                 };
             var parameter2 =
                 new SqlParameter
                 {
                     ParameterName = "userId",
-                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                    SqlDbType = SqlDbType.UniqueIdentifier,
                     SqlValue = userId
                 };
 
             return _mesRepository.ExecuteReturedStoredProcedure<int>(spName, parameter2, parameter1).FirstOrDefault();
+        }
 
+        public void GetAllMsg()
+        {
+            var msgs = _mesRepository.GetAll();
+            _uow.SaveChanges();
         }
     }
 }

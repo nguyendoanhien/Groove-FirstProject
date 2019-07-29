@@ -55,11 +55,11 @@ namespace GrooveMessengerDAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(
-                 @"
+                @"
                  DROP PROCEDURE [dbo].[usp_Message_SetValueSeenBy]
                  GO
                  "
-                );
+            );
         }
     }
 }

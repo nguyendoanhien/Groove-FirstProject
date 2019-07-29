@@ -1,4 +1,4 @@
-import { FuseConfig } from '@fuse/types';
+import { FuseConfig } from "@fuse/types";
 
 /**
  * Default Fuse Configuration
@@ -10,34 +10,34 @@ import { FuseConfig } from '@fuse/types';
 
 export const fuseConfig: FuseConfig = {
     // Color themes can be defined in src/app/app.theme.scss
-    colorTheme: 'theme-default',
+    colorTheme: "theme-default",
     customScrollbars: true,
     layout: {
-        style: 'vertical-layout-1',
-        width: 'fullwidth',
+        style: "vertical-layout-1",
+        width: "fullwidth",
         navbar: {
-            primaryBackground: 'fuse-navy-700',
-            secondaryBackground: 'fuse-navy-900',
+            primaryBackground: "fuse-navy-700",
+            secondaryBackground: "fuse-navy-900",
             folded: false,
             hidden: true,
-            position: 'left',
-            variant: 'vertical-style-1'
+            position: "left",
+            variant: "vertical-style-1"
         },
         toolbar: {
             customBackgroundColor: false,
-            background: 'fuse-white-500',
+            background: "fuse-white-500",
             hidden: true,
-            position: 'below-static'
+            position: "below-static"
         },
         footer: {
             customBackgroundColor: true,
-            background: 'fuse-navy-900',
+            background: "fuse-navy-900",
             hidden: true,
-            position: 'below-fixed'
+            position: "below-fixed"
         },
         sidepanel: {
             hidden: true,
-            position: 'right'
+            position: "right"
         }
     }
 };

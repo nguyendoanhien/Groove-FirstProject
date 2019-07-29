@@ -2,12 +2,12 @@
 
 namespace GrooveMessengerDAL.Migrations
 {
-	public partial class addusp_Contact_GetUnknownContact : Migration
-	{
-		protected override void Up(MigrationBuilder migrationBuilder)
-		{
-			migrationBuilder.Sql(
-					@"-- =============================================
+    public partial class addusp_Contact_GetUnknownContact : Migration
+    {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.Sql(
+                @"-- =============================================
 			        -- Author:		Doan Hien
 			        -- Create date: 2019-07-23
 			        -- Description:	Get Unknown Contacts
@@ -38,18 +38,17 @@ namespace GrooveMessengerDAL.Migrations
 
 			        END
 			        GO"
-				);
+            );
+        }
 
-		}
-
-		protected override void Down(MigrationBuilder migrationBuilder)
-		{
-			migrationBuilder.Sql(
-			   @"
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.Sql(
+                @"
 				DROP PROCEDURE [dbo].[usp_Contact_GetUnknownContact]
 				GO
 				"
-			   );
-		}
-	}
+            );
+        }
+    }
 }

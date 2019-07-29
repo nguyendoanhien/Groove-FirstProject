@@ -1,6 +1,6 @@
-export class LoginModel{
-    public userName: string;
-    public password: string;
+export class LoginModel {
+    userName: string;
+    password: string;
 
     /**
      *

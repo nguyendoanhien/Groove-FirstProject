@@ -1,12 +1,12 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
-import { NgForm } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { takeUntil, take } from 'rxjs/operators';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewChildren, ViewEncapsulation } from "@angular/core";
+import { NgForm } from "@angular/forms";
+import { Subject } from "rxjs";
+import { takeUntil, take } from "rxjs/operators";
 
-import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
+import { FusePerfectScrollbarDirective } from
+    "@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive";
 
-import { ChatService } from '../chat.service';
-
+import { ChatService } from "../chat.service";
 import { MessageModel } from 'app/models/message.model';
 import { MessageService } from 'app/core/data-api/services/message.service';
 import { IndexMessageModel } from 'app/models/indexMessage.model';
@@ -22,9 +22,9 @@ import { ApiMethod } from 'ngx-facebook/dist/esm/providers/facebook';
 import { Cloudinary } from '@cloudinary/angular-5.x';
 declare var window: any;
 @Component({
-    selector: 'chat-view',
-    templateUrl: './chat-view.component.html',
-    styleUrls: ['./chat-view.component.scss'],
+    selector: "chat-view",
+    templateUrl: "./chat-view.component.html",
+    styleUrls: ["./chat-view.component.scss"],
     encapsulation: ViewEncapsulation.None
 })
 export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -41,10 +41,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild(FusePerfectScrollbarDirective, { static: false })
     directiveScroll: FusePerfectScrollbarDirective;
 
-    @ViewChildren('replyInput')
+    @ViewChildren("replyInput")
     replyInputField;
 
-    @ViewChild('replyForm', { static: false })
+    @ViewChild("replyForm", { static: false })
     replyForm: NgForm;
 
     // Private
@@ -113,7 +113,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.selectedChat = chatData;
                     this.contact = chatData.contact;
                     this.dialog = chatData.dialog;
-                    this.chatId = chatData.chatId; // current conversation id   
+                    this.chatId = chatData.chatId; // current conversation id
                     this.readyToReply();
                 }
             });
@@ -158,7 +158,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     shouldShowContactAvatar(message, i): boolean {
 
         return (
-
             message.who === this.contact.id &&
             ((this.dialog[i + 1] && this.dialog[i + 1].who !== this.contact.id) || !this.dialog[i + 1])
         );
@@ -227,7 +226,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             });
         }
         this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
-            .subscribe(val => { console.log(val + 'chatview'); }, error => { console.log(error); }
+            .subscribe(val => { }, error => { console.log(error); }
             );
     }
 
@@ -276,26 +275,29 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.replyForm.reset();
 
         // Update the server
-        await this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
+        this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
             this.readyToReply();
         });
         // Truc: Call count unread messages in controller backend
         this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
-            .subscribe(val => { console.log(val + 'chatview'); }, error => { console.log(error); }
+            .subscribe(val => { console.log(val + "chatview"); },
+                error => { console.log(error); }
             );
 
         await this._messageService.updateUnreadMessages(this.chatId)
-            .subscribe(val => 
-                {var chatList = this.user.chatList as Array<any>;
+            .subscribe(val => {
+                var chatList = this.user.chatList as Array<any>;
                 var chat = chatList.find(x => x.convId == this.chatId);
-                chat.unread = val;}, 
+                chat.unread = val;
+            },
                 err => console.log(err));
-        
+
     }
 
     SayHi(contact: any) {
         this._userContactService.SayHi(contact).subscribe(
             (res: any) => {
+                debugger;
                 this._chatService.contacts.push(res.contact);
                 this._chatService.user.chatList.push(res.chatContact);
                 this._chatService.chats.push(res.diaglog);

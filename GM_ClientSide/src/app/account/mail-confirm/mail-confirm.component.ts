@@ -1,20 +1,22 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from "@angular/core";
 
-import { FuseConfigService } from '@fuse/services/config.service';
-import { fuseAnimations } from '@fuse/animations';
-import { RegisterService } from 'app/core/account/register.service';
+import { FuseConfigService } from "@fuse/services/config.service";
+import { fuseAnimations } from "@fuse/animations";
+import { RegisterService } from "app/core/account/register.service";
 import { Router } from "@angular/router"
-import { ResetPasswordService } from 'app/core/account/reset-password.service';
+import { ResetPasswordService } from "app/core/account/reset-password.service";
+
 @Component({
-    selector: 'mail-confirm',
-    templateUrl: './mail-confirm.component.html',
-    styleUrls: ['./mail-confirm.component.scss'],
+    selector: "mail-confirm",
+    templateUrl: "./mail-confirm.component.html",
+    styleUrls: ["./mail-confirm.component.scss"],
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations
 })
 export class MailConfirmComponent {
     mailToSendForgot: string;
     mailToSendRegister: boolean;
+
     /**
      * Constructor
      *
@@ -30,9 +32,13 @@ export class MailConfirmComponent {
         private _resetPassService: ResetPasswordService
     ) {
         this._registerService.mailToSendRegister.subscribe(emailAddress => {
-            emailAddress ? this.mailToSendRegister = emailAddress : this._resetPassService.mailToSendForgot.subscribe(
-                emailAddress => emailAddress ? this.mailToSendForgot = emailAddress : this._router.navigate(['account', 'login'])
-            )
+            emailAddress
+                ? this.mailToSendRegister = emailAddress
+                : this._resetPassService.mailToSendForgot.subscribe(
+                    emailAddress => emailAddress
+                    ? this.mailToSendForgot = emailAddress
+                    : this._router.navigate(["account", "login"])
+                );
         });
         // Configure the layout
         this._fuseConfigService.config = {

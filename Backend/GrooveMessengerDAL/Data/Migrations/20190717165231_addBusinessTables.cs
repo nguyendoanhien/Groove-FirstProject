@@ -7,12 +7,12 @@ namespace GrooveMessengerDAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "DisplayName",
-                table: "AspNetUsers");
+                "DisplayName",
+                "AspNetUsers");
 
             migrationBuilder.AddColumn<string>(
-                name: "DisplayName",
-                table: "UserInfo",
+                "DisplayName",
+                "UserInfo",
                 maxLength: 150,
                 nullable: false,
                 defaultValue: "");
@@ -21,12 +21,12 @@ namespace GrooveMessengerDAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "DisplayName",
-                table: "UserInfo");
+                "DisplayName",
+                "UserInfo");
 
             migrationBuilder.AddColumn<string>(
-                name: "DisplayName",
-                table: "AspNetUsers",
+                "DisplayName",
+                "AspNetUsers",
                 maxLength: 120,
                 nullable: false,
                 defaultValue: "");

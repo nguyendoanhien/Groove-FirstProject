@@ -9,6 +9,5 @@ namespace GrooveMessengerDAL.Services.Interface
         IEnumerable<Claim> CurrentUserClaims();
         string CurrentUserId();
         string CurrentUserInfoId();
-
     }
 }

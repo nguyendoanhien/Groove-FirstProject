@@ -7,8 +7,8 @@ namespace GrooveMessengerDAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<bool>(
-                name: "Deleted",
-                table: "UserInfoContact",
+                "Deleted",
+                "UserInfoContact",
                 nullable: true,
                 defaultValueSql: "0",
                 oldClrType: typeof(bool),
@@ -18,8 +18,8 @@ namespace GrooveMessengerDAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<bool>(
-                name: "Deleted",
-                table: "UserInfoContact",
+                "Deleted",
+                "UserInfoContact",
                 nullable: true,
                 oldClrType: typeof(bool),
                 oldNullable: true,

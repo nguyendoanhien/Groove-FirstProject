@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace GrooveMessengerDAL.Entities
 {
-    public class UserInfoContactEntity:AuditBaseEntity<Guid>
+    public class UserInfoContactEntity : AuditBaseEntity<Guid>
     {
+        public Guid UserId { get; set; }
 
-        public  Guid UserId { get; set; }
-
-        public  Guid ContactId { get; set; }
+        public Guid ContactId { get; set; }
 
         public string NickName { get; set; }
 

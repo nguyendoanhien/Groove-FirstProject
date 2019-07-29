@@ -31,17 +31,17 @@ namespace GrooveMessengerDAL.Migrations
 	                AND isnull(SeenBy,'') NOT LIKE '%'+cast(@UserId as nvarchar(255))+'%'
                 END
                 GO"
-                );
+            );
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(
-                            @"
+                @"
                 DROP PROCEDURE [dbo].[usp_Message_GetUnreadMessageAmount]
                 GO
                 "
-                            );
+            );
         }
     }
 }

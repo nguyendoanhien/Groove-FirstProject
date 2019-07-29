@@ -1,8 +1,8 @@
-export class ContactModel{
-    ContactId:string;
-    NickName:string;
-    avatar:string;
-    id:string;
-    status:string;
-    mood:string;
+export class ContactModel {
+    ContactId: string;
+    NickName: string;
+    avatar: string;
+    id: string;
+    status: string;
+    mood: string;
 }

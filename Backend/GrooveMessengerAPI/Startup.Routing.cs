@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
 
 namespace GrooveMessengerAPI
 {
     public partial class Startup
     {
-        public void RegisterRouting(Microsoft.AspNetCore.Routing.IRouteBuilder routes)
+        public void RegisterRouting(IRouteBuilder routes)
         {
-
             //routes.MapAreaRoute("BusinessData", "Data",
             //   "Data/{controller}/{action?}/{id?}");
 
@@ -15,8 +15,8 @@ namespace GrooveMessengerAPI
             //    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");                     
 
             routes.MapRoute(
-               name: "default",
-               template: "{controller=Home}/{action=Index}/{id?}");
+                "default",
+                "{controller=Home}/{action=Index}/{id?}");
         }
     }
 }

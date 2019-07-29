@@ -1,22 +1,23 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { fuseAnimations } from '@fuse/animations';
-import { FuseConfigService } from '@fuse/services/config.service';
-import { ResetPasswordService } from 'app/core/account/reset-password.service';
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
+import { fuseAnimations } from "@fuse/animations";
+import { FuseConfigService } from "@fuse/services/config.service";
+import { ResetPasswordService } from "app/core/account/reset-password.service";
 
 
 @Component({
-    selector: 'forgot-password',
-    templateUrl: './forgot-password.component.html',
-    styleUrls: ['./forgot-password.component.scss'],
+    selector: "forgot-password",
+    templateUrl: "./forgot-password.component.html",
+    styleUrls: ["./forgot-password.component.scss"],
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations
 })
 export class ForgotPasswordComponent implements OnInit {
     forgotPasswordForm: FormGroup;
-    isLoading: boolean = false;
-    isEmailAlreadyExist: boolean = true;
+    isLoading = false;
+    isEmailAlreadyExist = true;
+
     /**
      * Constructor
      *
@@ -58,20 +59,28 @@ export class ForgotPasswordComponent implements OnInit {
      */
     ngOnInit(): void {
         this.forgotPasswordForm = this._formBuilder.group({
-            email: ['', [Validators.required, Validators.pattern(/^[a-z][a-z0-9_\.]{5,32}@[a-z0-9]{3,}(\.[a-z0-9]{2,4}){1,2}$/), Validators.minLength(6)]]
+            email: [
+                "",
+                [
+                    Validators.required,
+                    Validators.pattern(/^[a-z][a-z0-9_\.]{5,32}@[a-z0-9]{3,}(\.[a-z0-9]{2,4}){1,2}$/),
+                    Validators.minLength(6)
+                ]
+            ]
         });
     }
 
     onSubmit(): void {
         this.isLoading = true;
-        const email = this.forgotPasswordForm.get('email').value;
+        const email = this.forgotPasswordForm.get("email").value;
         this._resetPasswordService.forgotPassword(email).subscribe(val => {
-            this.isLoading = false;
-            this._resetPasswordService.mailToSendForgot.next(email);
-            this._route.navigate(['/account/mail-confirmation']);
-        }, err => {
-            this.isLoading = false;
-            this.isEmailAlreadyExist = false;
-        });
+                this.isLoading = false;
+                this._resetPasswordService.mailToSendForgot.next(email);
+                this._route.navigate(["/account/mail-confirmation"]);
+            },
+            err => {
+                this.isLoading = false;
+                this.isEmailAlreadyExist = false;
+            });
     }
 }

@@ -15,7 +15,8 @@
                 <!-- / USER AVATAR -->
 
                 <mat-icon class="s-16 status" [ngClass]="this._userInfoService.userInfo.status"
-                    [matMenuTriggerFor]="userStatusMenu"></mat-icon>
+                    [matMenuTriggerFor]="userStatusMenu">
+                </mat-icon>
 
                 <!-- USER STATUS -->
                 <mat-menu id="user-status-menu" #userStatusMenu="matMenu">
@@ -144,14 +145,12 @@
 
 
                 <div fxLayout="row" fxLayoutAlign="start center">
-
                     <div class="avatar-wrapper" fxFlex="0 1 auto" fxLayoutAlign="center center">
-                        <img class="avatar" [attr.src]="contacts | getById:chat.contactId:'avatar'" 
+                        <img class="avatar" [attr.src]="contacts | getById:chat.contactId:'avatar'"
                             alt="{{contacts | getById:chat.contactId:'displayName'}}" />
                         <mat-icon class="s-16 status" [ngClass]="contacts | getById:chat.contactId:'status'">
                         </mat-icon>
                     </div>
-
                     <div fxLayout="row" fxFlex>
 
                         <div class="pr-4" fxFlex fxLayout="column" fxLayoutAlign="center start">
@@ -164,7 +163,8 @@
                                 {{chat.lastMessageTime | date}}
 
                             </div>
-                            <div *ngIf="chat.unread" class="mt-4 unread-message-count accent">{{chat.unread}}</div>
+                            <div *ngIf="chat.unread && chat.unread>0" class="mt-4 unread-message-count accent">
+                                {{chat.unread}}</div>
                         </div>
 
                     </div>
@@ -197,24 +197,24 @@
                         <p class="contact-mood">{{contact.mood}}</p>
                     </div>
                     <!-- <ng-container *ngIf="this.contacts">
-                        <button mat-button class="contact" *ngFor="let contact of contacts| filter: searchText"
+                    <button mat-button class="contact" *ngFor="let contact of contacts| filter: searchText"
                             (click)="getChat(contact.id)" [@animate]="{value:'*',params:{y:'100%'}}">
 
-                            <div fxLayout="row" fxLayoutAlign="start center">
+                        <div fxLayout="row" fxLayoutAlign="start center">
 
-                                <div class="avatar-wrapper" fxFlex="0 1 auto">
-                                    <img src="{{contact.avatar}}" class="mat-avatar avatar"
-                                        alt="{{contact.displayName}}" />
-                                    <mat-icon class="s-16 status" [ngClass]="contact?.status"></mat-icon>
-                                </div>
-
-                                <div fxLayout="column" fxLayoutAlign="start start">
-                                    <div class="contact-name">{{contact.displayName}}</div>
-                                    <p class="contact-mood">{{contact.mood}}</p>
-                                </div>
+                            <div class="avatar-wrapper" fxFlex="0 1 auto">
+                                <img src="{{contact.avatar}}" class="mat-avatar avatar"
+                                     alt="{{contact.displayName}}" />
+                                <mat-icon class="s-16 status" [ngClass]="contact?.status"></mat-icon>
                             </div>
-                        </button>
-                    </ng-container> -->
+
+                            <div fxLayout="column" fxLayoutAlign="start start">
+                                <div class="contact-name">{{contact.displayName}}</div>
+                                <p class="contact-mood">{{contact.mood}}</p>
+                            </div>
+                        </div>
+                    </button>
+                </ng-container> -->
                 </div>
                 <!-- / CONTACTS LIST-->
 

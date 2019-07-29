@@ -1,6 +1,6 @@
-﻿using GrooveMessengerAPI.Areas.Chat.Models;
+﻿using System.Threading.Tasks;
+using GrooveMessengerAPI.Areas.Chat.Models;
 using GrooveMessengerDAL.Models.CustomModel;
-using System.Threading.Tasks;
 
 namespace GrooveMessengerAPI.Hubs.Utils
 {

@@ -1,30 +1,34 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+using AutoMapper;
 using GrooveMessengerDAL.Data;
-using GrooveMessengerDAL.Models;
 using GrooveMessengerDAL.Entities;
+using GrooveMessengerDAL.Models;
 using GrooveMessengerDAL.Models.User;
 using GrooveMessengerDAL.Repositories.Interface;
 using GrooveMessengerDAL.Services.Interface;
 using GrooveMessengerDAL.Uow.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using System.Linq.Expressions;
 using Microsoft.AspNetCore.Identity;
-using System.Data.SqlClient;
 
 namespace GrooveMessengerDAL.Services
 {
     public class UserService : IUserService
     {
-        private IGenericRepository<UserInfoEntity, Guid, GrooveMessengerDbContext> _userRepository;
-        private IMapper _mapper;
-        private IUowBase<GrooveMessengerDbContext> _uow;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
+        private readonly IUowBase<GrooveMessengerDbContext> _uow;
+
+        private readonly IGenericRepository<UserInfoContactEntity, Guid, GrooveMessengerDbContext>
+            _userInfoContactRepository;
+
+        private readonly IGenericRepository<UserInfoEntity, Guid, GrooveMessengerDbContext> _userRepository;
         public IUserResolverService _userResolverService;
-        private IGenericRepository<UserInfoContactEntity, Guid, GrooveMessengerDbContext> _userInfoContactRepository;
+
         public UserService(
             IGenericRepository<UserInfoEntity, Guid, GrooveMessengerDbContext> userRepository,
             IMapper mapper,
@@ -32,7 +36,7 @@ namespace GrooveMessengerDAL.Services
             UserManager<ApplicationUser> userManager,
             IUserResolverService userResolverService,
             IGenericRepository<UserInfoContactEntity, Guid, GrooveMessengerDbContext> userInformContactRepository
-            )
+        )
         {
             _userRepository = userRepository;
             _mapper = mapper;
@@ -54,42 +58,8 @@ namespace GrooveMessengerDAL.Services
 
         public IQueryable<UserInfoEntity> GetBy(Expression<Func<UserInfoEntity, bool>> predicate)
         {
-            IQueryable<UserInfoEntity> result = _userRepository.GetBy(predicate);
+            var result = _userRepository.GetBy(predicate);
             return result;
-        }
-        public async Task<IEnumerable<UserInfoEntity>> GetByUsernameAsync(string username)
-        {
-            var spName = "[dbo].[usp_UserInfo_GetByUsername]";
-            var parameter =
-                new SqlParameter
-                {
-                    ParameterName = "Username",
-                    SqlDbType = System.Data.SqlDbType.NVarChar,
-                    Size=256,
-                    SqlValue = username,
-                };
-
-            var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<UserInfoEntity>(spName, parameter);
-            return contactList;
-        }
-
-        public UserInfoEntity GetByUsername(string username)
-        {
-            var userInfo = this.GetBy(FuncGetByUsername(username)).FirstOrDefault();
-
-            return userInfo;
-        }
-
-        public async Task<UserInfoEntity> GetUser(Guid id)
-        {
-            return await _userRepository.GetSingleAsync(id);
-
-        }
-        //Delegate Libraries
-
-        Expression<Func<UserInfoEntity, bool>> FuncGetByUsername(string username)
-        {
-            return (data) => data.ApplicationUser.UserName == username;
         }
 
         public void Edit(UserInfoEntity entity)
@@ -103,7 +73,8 @@ namespace GrooveMessengerDAL.Services
             storedData.DisplayName = userInfo.DisplayName;
             storedData.Avatar = userInfo.Avatar;
             storedData.Mood = userInfo.Mood;
-            storedData.Status = (UserInfoEntity.StatusName)Enum.Parse(typeof(UserInfoEntity.StatusName), userInfo.Status, true);
+            storedData.Status =
+                (UserInfoEntity.StatusName)Enum.Parse(typeof(UserInfoEntity.StatusName), userInfo.Status, true);
             _userRepository.Edit(storedData);
             _uow.SaveChanges();
         }
@@ -114,6 +85,7 @@ namespace GrooveMessengerDAL.Services
             var result = _mapper.Map<UserInfoEntity, IndexUserInfoModel>(storedData);
             return result;
         }
+
         public async Task<IEnumerable<IndexUserInfoModel>> GetAllUserInfo()
         {
             var currentUser = await _userManager.FindByNameAsync(_userResolverService.CurrentUserName());
@@ -129,6 +101,41 @@ namespace GrooveMessengerDAL.Services
         public string GetPkByUserId(Guid userId)
         {
             return GetPkByUserId(userId.ToString());
+        }
+
+        public async Task<IEnumerable<UserInfoEntity>> GetByUsernameAsync(string username)
+        {
+            var spName = "[dbo].[usp_UserInfo_GetByUsername]";
+            var parameter =
+                new SqlParameter
+                {
+                    ParameterName = "Username",
+                    SqlDbType = SqlDbType.NVarChar,
+                    Size = 256,
+                    SqlValue = username
+                };
+
+            var contactList =
+                _userInfoContactRepository.ExecuteReturedStoredProcedure<UserInfoEntity>(spName, parameter);
+            return await Task.FromResult(contactList);
+        }
+
+        public UserInfoEntity GetByUsername(string username)
+        {
+            var userInfo = GetBy(FuncGetByUsername(username)).FirstOrDefault();
+
+            return userInfo;
+        }
+
+        public async Task<UserInfoEntity> GetUser(Guid id)
+        {
+            return await _userRepository.GetSingleAsync(id);
+        }
+        //Delegate Libraries
+
+        private Expression<Func<UserInfoEntity, bool>> FuncGetByUsername(string username)
+        {
+            return data => data.ApplicationUser.UserName == username;
         }
     }
 }

@@ -33,7 +33,7 @@ const routes = [
         MessageHubService,
         ProfileHubService,
         ContactHubService
-   
+
     ]
 })
 export class AppsModule {

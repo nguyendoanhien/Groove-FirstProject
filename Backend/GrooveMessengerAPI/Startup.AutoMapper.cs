@@ -8,7 +8,6 @@ namespace GrooveMessengerAPI
     {
         public void RegisterAutoMapperProfiles(IServiceCollection services)
         {
-
             var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new NoteAutoMapperProfile());
@@ -17,10 +16,9 @@ namespace GrooveMessengerAPI
                 mc.AddProfile(new ConversationAutoMapperProfile());
                 mc.AddProfile(new MessageAutoMapperProfile());
                 mc.AddProfile(new ParticipantAutoMapperProfile());
-
             });
 
-            IMapper mapper = mappingConfig.CreateMapper();
+            var mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
         }
     }

@@ -1,56 +1,59 @@
-
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import * as signalR from "@aspnet/signalr";
-import { AuthService } from 'app/core/auth/auth.service';
-import { MessageModel } from './../../../models/message.model';
-import { BehaviorSubject } from 'rxjs';
-import { environment } from 'environments/environment';
-import { UnreadMessage } from 'app/models/UnreadMessage.model';
+import { AuthService } from "app/core/auth/auth.service";
+import { MessageModel } from "./../../../models/message.model";
+import { BehaviorSubject } from "rxjs";
+import { environment } from "environments/environment";
+import { UnreadMessage } from "app/models/UnreadMessage.model";
 @Injectable({
-    providedIn: 'root'
+    providedIn: "root"
 })
 export class MessageHubService {
 
-    public newChatMessage: BehaviorSubject<MessageModel>
-    public removedChatMessage: BehaviorSubject<MessageModel>
-    public _hubConnection: signalR.HubConnection
-    public unreadMessage: BehaviorSubject<UnreadMessage>
+    newChatMessage: BehaviorSubject<MessageModel>;
+    removedChatMessage: BehaviorSubject<MessageModel>;
+    _hubConnection: signalR.HubConnection;
+    unreadMessage: BehaviorSubject<UnreadMessage>;
 
     constructor(private authService: AuthService) {
         debugger;
         this.newChatMessage = new BehaviorSubject(null);
         this.unreadMessage = new BehaviorSubject(null);
         this.startConnection();
-        this._hubConnection.on('SendMessage', (message: MessageModel) => {
-            this.newChatMessage.next(message);
-        });
-        this._hubConnection.on('SendRemovedMessage', (message: MessageModel) => {
-            this.removedChatMessage.next(message);
-        });
-        this._hubConnection.on('SendUnreadMessagesAmount', (message: UnreadMessage) => {
-            this.unreadMessage.next(message);
-        });
+        this._hubConnection.on("SendMessage",
+            (message: MessageModel) => {
+                debugger;
+                this.newChatMessage.next(message);
+            });
+        this._hubConnection.on("SendRemovedMessage",
+            (message: MessageModel) => {
+                this.removedChatMessage.next(message);
+            });
+        this._hubConnection.on("SendUnreadMessagesAmount",
+            (message: UnreadMessage) => {
+                console.log(message);
+                this.unreadMessage.next(message);
+            });
     }
-
-    public startConnection = () => {
-        
+    startConnection = () => {
         const securityToken = this.authService.getToken();
         this._hubConnection = new signalR.HubConnectionBuilder()
-            .withUrl(environment.messageHubUrl, { accessTokenFactory: () => securityToken })
+            .withUrl(environment.hub.messageUrl, { accessTokenFactory: () => securityToken })
             .build();
-
+        this._hubConnection.serverTimeoutInMilliseconds = environment.hub.serverTimeoutInSeconds * 1000;
         this._hubConnection
             .start()
-            .then(() => { console.log('[Message Hub - ]Connection started');debugger; })
-            .catch(err => console.log('Error while starting connection: ' + err))
-    }
-
-    public addSendMessageToUser(message: MessageModel, toUser: string) {
+            .then(() => console.log("[Message Hub]: Connection started"))
+            .catch(err => console.log(`[Message Hub]: Error while starting connection: ${err}`));
+    };
+    addSendMessageToUser(message: MessageModel, toUser: string) {
+        console.log(message);
         this._hubConnection.invoke("SendMessageToUser", message, toUser).catch(function (err) {
             return console.error(err.toString());
         });
     }
-    public addSendRemovedMessageToUser(chatMessageModel: MessageModel, toUser: string) {
+
+    addSendRemovedMessageToUser(chatMessageModel: MessageModel, toUser: string) {
         this._hubConnection.invoke("SendRemovedMessageToUser", chatMessageModel, toUser).catch(function (err) {
             return console.error(err.toString());
         });
