@@ -28,7 +28,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     contact: any;
     replyInput: any;
     selectedChat: any;
-    selectedFile:any = null;
+    selectedFile: any = null;
 
     @ViewChild(FusePerfectScrollbarDirective, { static: false })
     directiveScroll: FusePerfectScrollbarDirective;
@@ -123,7 +123,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
         return (
             message.who === this.contact.id &&
-                ((this.dialog[i + 1] && this.dialog[i + 1].who !== this.contact.id) || !this.dialog[i + 1])
+            ((this.dialog[i + 1] && this.dialog[i + 1].who !== this.contact.id) || !this.dialog[i + 1])
         );
     }
 
@@ -215,8 +215,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             "Text",
             this.contact.userId);
         this._messageService.addMessage(newMessage).subscribe(success => {
-                console.log("send successfull");
-            },
+            console.log("send successfull");
+        },
             err => console.log("send fail"));
         // Add the message to the chat
         //this.dialog.push(message); //Truc: don't need because broadcast to user + contact
@@ -257,27 +257,33 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         );
     }
 
-
+    listenSwitch = false;
+   
     listen() {
-
-        this._rxSpeechRecognitionService
-            .listen()
-            .pipe(resultList, take(1))
-            .subscribe((list: SpeechRecognitionResultList) => {
-                console.log(`chat voice${list.item(0).item(0).transcript}`);
-                this.replyInput.value += list.item(0).item(0).transcript + " ";
-                console.log("RxComponent:onresult", this.replyForm.form.value.message, list);
-            });
+        if (this.listenSwitch) {
+            this._rxSpeechRecognitionService
+                .listen()
+                .pipe(resultList, take(1))
+                .subscribe((list: SpeechRecognitionResultList) => {
+                    console.log(`chat voice${list.item(0).item(0).transcript}`);
+                    this.replyInput.value += list.item(0).item(0).transcript + " ";
+                    console.log("RxComponent:onresult", this.replyForm.form.value.message, list);
+                },err=>console.log('No Speech'));
+          
+        }
+        else {
+            this._rxSpeechRecognitionService.listen().subscribe().unsubscribe();
+        }
     }
-    
 
-    onUpload(event){
+
+    onUpload(event) {
         this.selectedFile = (event.target.files[0] as File);
         const fd = new FormData();
         fd.append("file", this.selectedFile);
         const message = {
             who: this.user.userId,
-            message:'',
+            message: '',
             time: new Date().toISOString()
         };
         const newMessage = new IndexMessageModel(this.chatId,
@@ -286,7 +292,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             message.message,
             "Image",
             this.contact.userId);
-        this._messageService.onUpload(fd,newMessage).subscribe();
+        this._messageService.onUpload(fd, newMessage).subscribe();
     }
 
     Say() {
