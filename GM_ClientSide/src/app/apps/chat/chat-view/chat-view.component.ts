@@ -8,11 +8,11 @@ import { FusePerfectScrollbarDirective } from
 
 import { ChatService } from "../chat.service";
 
-import { MessageModel } from "app/models/message.model";
-import { MessageService } from "app/core/data-api/services/message.service";
-import { IndexMessageModel } from "app/models/indexMessage.model";
-import { UserContactService } from "app/core/account/user-contact.service";
-import { RxSpeechRecognitionService, resultList } from "@kamiazya/ngx-speech-recognition";
+import { MessageModel } from 'app/models/message.model';
+import { MessageService } from 'app/core/data-api/services/message.service';
+import { IndexMessageModel } from 'app/models/indexMessage.model';
+import { UserContactService } from 'app/core/account/user-contact.service';
+import { RxSpeechRecognitionService, resultList } from '@kamiazya/ngx-speech-recognition';
 
 @Component({
     selector: "chat-view",
@@ -76,8 +76,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.selectedChat = chatData;
                     this.contact = chatData.contact;
                     this.dialog = chatData.dialog;
-                    this.chatId = chatData.chatId; // current conversation id              
-
+                    this.chatId = chatData.chatId; // current conversation id
                     this.readyToReply();
                 }
             });
@@ -190,6 +189,9 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.directiveScroll.scrollToBottom(0, speed);
             });
         }
+        this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
+            .subscribe(val => { console.log(val + 'chatview'); }, error => { console.log(error); }
+            );
     }
 
     /**
@@ -229,12 +231,20 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
             this.readyToReply();
         });
-        // Truc: Call controller backend
-        debugger;
+
+        // Truc: Call count unread messages in controller backend
         this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
             .subscribe(val => { console.log(val + "chatview"); },
                 error => { console.log(error); }
             );
+
+        this._messageService.updateUnreadMessages(this.chatId)
+            .subscribe(val => 
+                {var chatList = this.user.chatList as Array<any>;
+                var chat = chatList.find(x => x.convId == this.chatId);
+                chat.unread = val;}, 
+                err => console.log(err));
+        
     }
 
     SayHi(contact: any) {

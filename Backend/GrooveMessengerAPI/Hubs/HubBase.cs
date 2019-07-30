@@ -15,9 +15,10 @@ namespace GrooveMessengerAPI.Hubs
         protected string topic;
 
 
-        public HubBase(HubConnectionStorage connectionStore)
+        public HubBase(HubConnectionStorage connectionStore, string topic)
         {
             this.connectionStore = connectionStore;
+            this.topic = topic;
         }
 
         public override Task OnConnectedAsync()

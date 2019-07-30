@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using GrooveMessengerAPI.Areas.Chat.Models;
+using GrooveMessengerAPI.Constants;
 using GrooveMessengerAPI.Hubs.Utils;
 using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,10 +15,9 @@ namespace GrooveMessengerAPI.Hubs
         private readonly IContactService _contactService;
 
         public UserProfileHub(HubConnectionStorage connectionStore,
-            IContactService contactService) : base(connectionStore)
+            IContactService contactService) : base(connectionStore, HubConstant.ProfileHubTopic)
         {
-            _contactService = contactService;
-            topic = "profile";
+            _contactService = contactService;          
         }
 
 
