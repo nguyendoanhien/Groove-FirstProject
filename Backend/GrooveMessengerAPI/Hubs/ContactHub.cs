@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using GrooveMessengerAPI.Constants;
 using GrooveMessengerAPI.Hubs.Utils;
 using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -27,15 +28,14 @@ namespace GrooveMessengerAPI.Hubs
             IMessageService messageService,
             IUserService userInfoContact
         )
-            : base(connectionStore)
+            : base(connectionStore, HubConstant.ContactHubTopic)
         {
             _contactService = contactService;
             _conversationService = conversationService;
             _participantService = participantService;
             _userResolverservice = userResolverservice;
             _messageService = messageService;
-            _userInfoContact = userInfoContact;
-            topic = "contact";
+            _userInfoContact = userInfoContact;        
         }
 
 

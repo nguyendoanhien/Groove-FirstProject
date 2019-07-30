@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GrooveMessengerAPI.Areas.Chat.Models;
+using GrooveMessengerAPI.Constants;
 using GrooveMessengerAPI.Controllers;
 using GrooveMessengerAPI.Hubs;
 using GrooveMessengerAPI.Hubs.Utils;
@@ -156,7 +157,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
 
             var contactEmail = await _userManager.FindByIdAsync(userIndex.UserId);
 
-            foreach (var connectionId in _hubConnectionStore.GetConnections("contact", contactEmail.Email))
+            foreach (var connectionId in _hubConnectionStore.GetConnections(HubConstant.ContactHubTopic, contactEmail.Email))
                 await _contactHubContext.Clients.Client(connectionId)
                     .SendNewContactToFriend(userIndexcurrent, chatContactToSend, dialog);
 

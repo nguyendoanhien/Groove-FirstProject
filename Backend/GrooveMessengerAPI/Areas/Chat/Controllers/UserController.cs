@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using GrooveMessengerAPI.Areas.Chat.Models;
+using GrooveMessengerAPI.Constants;
 using GrooveMessengerAPI.Controllers;
 using GrooveMessengerAPI.Hubs;
 using GrooveMessengerAPI.Hubs.Utils;
@@ -71,7 +72,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                 };
 
                 var emailList = await _contactService.GetUserContactEmailList();
-                foreach (var connectionId in _hubConnectionStore.GetConnections("profile", emailList))
+                foreach (var connectionId in _hubConnectionStore.GetConnections(HubConstant.ProfileHubTopic, emailList))
                     await _userProfileHubContext.Clients.Client(connectionId).ClientChangeUserProfile(userProfile);
                 return userInfo;
             }

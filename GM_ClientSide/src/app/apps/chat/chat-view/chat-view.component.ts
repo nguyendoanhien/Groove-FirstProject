@@ -78,7 +78,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * On init
      */
     ngOnInit(): void {
-
+        console.log('ak is' + this.fbk.getAuthResponse()['accessToken']);
 
         this.fbk.api(
             '/',

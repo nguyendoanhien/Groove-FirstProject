@@ -17,6 +17,12 @@ export class ExtractUrlPipe implements PipeTransform {
     constructor(
         public _appHelperService: AppHelperService,
         private fbk: FacebookService) {
+        this.fbk.init({
+            appId: '354060818601401',
+            // autoLogAppEvents: true,
+            xfbml: true,
+            version: 'v3.3'
+        });
 
     }
 
@@ -28,7 +34,7 @@ export class ExtractUrlPipe implements PipeTransform {
         if (res != null) {
             result = Promise.all(res.map(async (val): Promise<any> => {
                 var imageLink = await this.getOgImage(val);
-                if (imageLink == "") imageLink = "No Image";
+                if (imageLink == "") imageLink = val;
                 var obj = {
                     imgLink: imageLink,
                     urlLink: val
@@ -43,6 +49,7 @@ export class ExtractUrlPipe implements PipeTransform {
 
     }
     async getOgImage(urlPath: string) {
+
         let imageUrl = '';
         var apiMethod: ApiMethod = "post";
         await this.fbk.api(
@@ -50,6 +57,7 @@ export class ExtractUrlPipe implements PipeTransform {
             apiMethod,
             { "scrape": "true", "id": urlPath }
         ).then(function (response) {
+            console.log(response);
             imageUrl = response.image[0].url;
         }
         ).catch(err => console.log('promise eror is' + err));

@@ -54,7 +54,7 @@ export class UserProfileService {
     }
 
     logInGoogle(googleAccessToken: string): Subscription {
-
+        debugger;
         return this.http.post<string>(authGoogleUrl + `?accessToken=${googleAccessToken}`, null, httpOptions).pipe(
             map((token: string) => {
                 this.parseJwtToken(token);
