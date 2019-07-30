@@ -42,9 +42,14 @@ export const environment = {
         appId: "354060818601401",
         appSecreta: "db1a4f4128e269fa6ca6d47e72cdd0a6"
     },
-    apiUserUrl: apiBaseUrl + "/user",
-    apiUserContactUrl: apiBaseUrl + "/usercontact",
-    apiUrl: apiBaseUrl + "/notes",
+    openGrapth:
+    {
+        appId: '1cc1af51-54ef-4c2f-a54d-5d2c3b96d7cb'
+    },
+    apiOpenGrapthUrl: 'https://opengraph.io/api/1.1/site',
+    apiUserUrl: apiBaseUrl + '/user',
+    apiUserContactUrl: apiBaseUrl + '/usercontact',
+    apiUrl: apiBaseUrl + '/notes',
     cloudinary: {
         url: "https://api.cloudinary.com/v1_1/groovemessenger/upload",
         upload_preset: "qlbjv3if"
@@ -56,12 +61,3 @@ export const environment = {
         serverTimeoutInSeconds: 120
     }
 };
-
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.

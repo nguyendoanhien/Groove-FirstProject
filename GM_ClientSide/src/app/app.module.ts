@@ -37,7 +37,12 @@ import {
     SpeechRecognitionMaxAlternatives,
     SpeechRecognitionService,
     RxSpeechRecognitionService
-} from "@kamiazya/ngx-speech-recognition";
+} from '@kamiazya/ngx-speech-recognition';
+import { OpenGrapthService } from './core/data-api/services/open-grapth.service';
+import { AppHelperService } from './core/utilities/app-helper.service';
+import { FacebookModule, FacebookService } from 'ngx-facebook';
+import { CloudinaryModule } from '@cloudinary/angular-5.x';
+import * as  Cloudinary from 'cloudinary-core';
 
 @NgModule({
     declarations: [
@@ -49,6 +54,7 @@ import {
         BrowserAnimationsModule,
         HttpClientModule,
         AppRoutingModule,
+        FacebookModule.forRoot(),
         TranslateModule.forRoot(),
         InMemoryWebApiModule.forRoot(FakeDbService,
             {
@@ -77,7 +83,8 @@ import {
             lang: "en-US",
             interimResults: true,
             maxAlternatives: 10,
-        })
+        }),
+        CloudinaryModule.forRoot(Cloudinary, { cloud_name: 'groovemessenger', upload_preset: 'qlbjv3if', private_cdn: 'true' })
     ],
     bootstrap: [
         AppComponent
@@ -97,6 +104,9 @@ import {
         ResetPasswordService,
         UserContactService,
         MessageService,
+        OpenGrapthService,
+        AppHelperService
+        ,
         {
             provide: SpeechRecognitionLang,
             useValue: "en-US",
@@ -106,7 +116,8 @@ import {
             useValue: 1,
         },
         SpeechRecognitionService,
-        RxSpeechRecognitionService
+        RxSpeechRecognitionService,
+        FacebookService
     ]
 
 })

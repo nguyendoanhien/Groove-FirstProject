@@ -73,7 +73,7 @@ namespace GrooveMessengerDAL.Services
 
             var contactList =
                 _userInfoContactRepository.ExecuteReturedStoredProcedure<IndexUserInfoModel>(spName, parameter);
-            return contactList;
+            return await Task.FromResult(contactList);
         }
 
 
@@ -89,7 +89,7 @@ namespace GrooveMessengerDAL.Services
                 };
 
             var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<string>(spName, parameter);
-            return contactList;
+            return await Task.FromResult(contactList);
         }
 
         public async Task<string> GetUserContactEmail(string userId)
@@ -143,7 +143,7 @@ namespace GrooveMessengerDAL.Services
 
             var contactList =
                 _userInfoContactRepository.ExecuteReturedStoredProcedure<IndexUserInfoModel>(spName, parameter);
-            return contactList;
+            return await Task.FromResult(contactList);
         }
 
         public void DeleteContact(Guid Id)
@@ -217,7 +217,7 @@ namespace GrooveMessengerDAL.Services
             return contactList;
         }
 
-        // Truc: Get contacts in a conversation.
+
         public async Task<List<ApplicationUser>> GetContacts(Guid conversationId)
         {
             var users = new List<ApplicationUser>();

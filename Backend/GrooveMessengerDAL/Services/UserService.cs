@@ -74,7 +74,7 @@ namespace GrooveMessengerDAL.Services
             storedData.Avatar = userInfo.Avatar;
             storedData.Mood = userInfo.Mood;
             storedData.Status =
-                (UserInfoEntity.StatusName) Enum.Parse(typeof(UserInfoEntity.StatusName), userInfo.Status, true);
+                (UserInfoEntity.StatusName)Enum.Parse(typeof(UserInfoEntity.StatusName), userInfo.Status, true);
             _userRepository.Edit(storedData);
             _uow.SaveChanges();
         }
@@ -117,7 +117,7 @@ namespace GrooveMessengerDAL.Services
 
             var contactList =
                 _userInfoContactRepository.ExecuteReturedStoredProcedure<UserInfoEntity>(spName, parameter);
-            return contactList;
+            return await Task.FromResult(contactList);
         }
 
         public UserInfoEntity GetByUsername(string username)

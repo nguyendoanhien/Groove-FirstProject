@@ -26,7 +26,6 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         private readonly IHubContext<UserProfileHub, IUserProfileHubClient> _userProfileHubContext;
         private readonly IUserService _userService;
         private readonly HubConnectionStorage _hubConnectionStore;
-
         public UserController(
             UserManager<ApplicationUser> userManager,
             IUserService userService,

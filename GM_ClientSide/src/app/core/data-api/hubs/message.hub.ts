@@ -1,11 +1,10 @@
-
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import * as signalR from "@aspnet/signalr";
-import { AuthService } from 'app/core/auth/auth.service';
-import { MessageModel } from './../../../models/message.model';
-import { BehaviorSubject } from 'rxjs';
-import { environment } from 'environments/environment';
-import { UnreadMessage } from 'app/models/UnreadMessage.model';
+import { AuthService } from "app/core/auth/auth.service";
+import { MessageModel } from "./../../../models/message.model";
+import { BehaviorSubject } from "rxjs";
+import { environment } from "environments/environment";
+import { UnreadMessage } from "app/models/UnreadMessage.model";
 @Injectable({
     providedIn: "root"
 })
@@ -17,6 +16,7 @@ export class MessageHubService {
     unreadMessage: BehaviorSubject<UnreadMessage>;
 
     constructor(private authService: AuthService) {
+
         this.newChatMessage = new BehaviorSubject(null);
         this.unreadMessage = new BehaviorSubject(null);
         this.startConnection();
@@ -30,7 +30,6 @@ export class MessageHubService {
             this.unreadMessage.next(message);
         });
     }
-
     startConnection = () => {
         const securityToken = this.authService.getToken();
         this._hubConnection = new signalR.HubConnectionBuilder()
@@ -50,7 +49,7 @@ export class MessageHubService {
     }
 
     addSendRemovedMessageToUser(chatMessageModel: MessageModel, toUser: string) {
-        this._hubConnection.invoke("SendRemovedMessageToUser", chatMessageModel, toUser).catch(function(err) {
+        this._hubConnection.invoke("SendRemovedMessageToUser", chatMessageModel, toUser).catch(function (err) {
             return console.error(err.toString());
         });
     }

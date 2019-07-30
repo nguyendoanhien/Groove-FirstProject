@@ -1,5 +1,6 @@
 <!-- CHAT -->
-<div class="chat" fxFlex fxLayout="column">
+
+<div class=" chat" fxFlex fxLayout="column">
 
     <!-- CHAT TOOLBAR -->
     <mat-toolbar class="chat-toolbar">
@@ -17,11 +18,11 @@
 
                 <!-- CHAT CONTACT-->
                 <div class="chat-contact" fxLayout="row" fxLayoutAlign="start center"
-                     fuseMatSidenavToggler="chat-right-sidenav" (click)="selectContact()" *ngIf="contact">
+                    fuseMatSidenavToggler="chat-right-sidenav" (click)="selectContact()" *ngIf="contact">
 
                     <div class="avatar-wrapper">
 
-                        <img [src]="contact.avatar" class="avatar" alt="{{contact.displayName}}"/>
+                        <img [src]="contact.avatar" class="avatar" alt="{{contact.displayName}}" />
 
                         <mat-icon class="s-16 status" [ngClass]="contact?.status">
                         </mat-icon>
@@ -57,15 +58,14 @@
         <!-- CHAT MESSAGES -->
         <div class="chat-messages">
             <div style="text-align: center" *ngIf="!dialog">
-                <img src="../../../../assets/images/profile/say-hi.png"/>
+                <img src="../../../../assets/images/profile/say-hi.png" />
             </div>
             <p *ngIf="!dialog" style="text-align: center">
                 <b>Say hi to {{contact.displayName}} with a wave.</b>
             </p>
             <button *ngIf="!dialog" _ngcontent-bsa-c60="" color="accent" mat-raised-button=""
-                    class="mat-raised-button mat-accent say-hi-button" (click)="SayHi(contact) ">
-                <span
-                    class="mat-button-wrapper">
+                class="mat-raised-button mat-accent say-hi-button" (click)="SayHi(contact) ">
+                <span class="mat-button-wrapper">
                     Say Hi!
                 </span>
                 <div class="mat-button-ripple mat-ripple" matripple=""></div>
@@ -79,20 +79,29 @@
                             'last-of-group': isLastMessageOfGroup(message, i)
                             }">
 
-                <img *ngIf="shouldShowContactAvatar(message, i)" src="{{contact.avatar}}" class="avatar">
+                <!-- <img *ngIf="shouldShowContactAvatar(message, i)" src="{{contact.avatar}}" class="avatar"> -->
 
                 <div class="bubble">
-                    <div class="message">{{message.message}}</div>
-                    <!-- <ng-template *ngIf="message.type =='Image'">
-                            <img src="{{message.message}}">
-                    </ng-template> -->
-                    
+                    <div class="message" [innerHtml]="message.message | detectUrl">
+                    </div>
                     <div class="time secondary-text">{{message.time | date:'short'}}</div>
                 </div>
+                <div class="bubble" *ngFor="let obj of message.message | extractUrl | async">
+                    <div>
+                        <div style="background-color: white">
+                            <a href="{{obj.urlLink}}" target="_blank"> <img src="{{obj.imgLink}}"
+                                    class='message-preview-image'></a>
 
+                        </div>
+                        <!-- <div>
+                            {{obj.urlLink}}
+                        </div> -->
+
+                    </div>
+
+                </div>
+                <!-- / MESSAGE -->
             </div>
-            <!-- / MESSAGE -->
-
         </div>
         <!-- CHAT MESSAGES -->
 
@@ -106,22 +115,15 @@
         <div class="reply-form" fxFlex="0 0 auto" fxLayout="row" fxLayoutAlign="center center">
 
             <form #replyForm="ngForm" (ngSubmit)="reply($event)" (keydown.enter)="reply($event)" fxFlex fxLayout="row"
-                  fxLayoutAlign="start center">
+                fxLayoutAlign="start center">
 
                 <mat-form-field class="message-text" fxFlex floatLabel="never" appearance="standard">
                     <textarea matInput #replyInput placeholder="Type your message" ngModel name="message" [rows]="1"
                         [matTextareaAutosize]="true"></textarea>
                 </mat-form-field>
-            
-                <button class="file-button" mat-icon-button type="submit" type="button" aria-label="Send message" (click) = "file.click()">
-                    <input type="file" #file (change)="onUpload($event)" style ="display:none"/>
-                    <mat-icon >
-                        camera_alt
-                    </mat-icon>
-                </button>
-                
+
                 <button class="record-button" mat-icon-button type="submit" type="button" aria-label="Send message"
-                        #voiceButton [disabled]="_rxSpeechRecognitionService.started$ | async" (click)="listen()">
+                    #voiceButton [disabled]="_rxSpeechRecognitionService.started$ | async" (click)="listen()">
                     <mat-icon [ngStyle]="voiceButton.disabled && {'color':'red'}">
                         record_voice_over
                     </mat-icon>

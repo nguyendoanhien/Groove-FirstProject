@@ -99,7 +99,7 @@ export class ChatService implements Resolve<any> {
      * @returns {Promise<any>}
      */
     getChat(contactId): Promise<any> {
-        console.log(this.user.chatList);
+        debugger;
         const chatItem = this.user.chatList.find((item) => {
             return item.contactId === contactId;
         });
@@ -119,23 +119,23 @@ export class ChatService implements Resolve<any> {
             } else {
                 this._httpClient.get(environment.apiGetChatListByConvId + chatItem.convId)
                     .subscribe((response: any) => {
-                            const chat = response;
-                            const chatContact = this.contacts.concat(this.unknownContacts).find((contact) => {
-                                return contact.userId === contactId;
-                            });
+                        const chat = response;
+                        const chatContact = this.contacts.concat(this.unknownContacts).find((contact) => {
+                            return contact.userId === contactId;
+                        });
 
-                            const chatData = {
-                                // <<<<<<< HEAD
-                                //                         chatId: chat.userId,
-                                // =======
-                                chatId: chat.id, // This is id of conversation
-                                dialog: chat.dialog,
-                                contact: chatContact
-                            };
+                        const chatData = {
+                            // <<<<<<< HEAD
+                            //                         chatId: chat.userId,
+                            // =======
+                            chatId: chat.id, // This is id of conversation
+                            dialog: chat.dialog,
+                            contact: chatContact
+                        };
 
-                            this.onChatSelected.next({ ...chatData });
+                        this.onChatSelected.next({ ...chatData });
 
-                        },
+                    },
                         reject);
             }
         });
@@ -168,8 +168,8 @@ export class ChatService implements Resolve<any> {
     updateUserData(userData): void {
         this._httpClient.post(`api/chat-user/${this.user.id}`, userData)
             .subscribe((response: any) => {
-                    this.user = userData;
-                }
+                this.user = userData;
+            }
             );
     }
 
@@ -190,8 +190,8 @@ export class ChatService implements Resolve<any> {
 
             this._httpClient.post(`api/chat-chats/${chatId}`, newData)
                 .subscribe(updatedChat => {
-                        resolve(updatedChat);
-                    },
+                    resolve(updatedChat);
+                },
                     reject);
         });
     }
@@ -224,8 +224,8 @@ export class ChatService implements Resolve<any> {
                 .get(environment.apiGetChatListByUserId +
                     this._userProfileService.userProfile.UserId) // using static user id to test
                 .subscribe((response: any) => {
-                        resolve(response);
-                    },
+                    resolve(response);
+                },
                     reject);
         });
     }
@@ -239,8 +239,8 @@ export class ChatService implements Resolve<any> {
         return new Promise((resolve, reject) => {
             this._httpClient.get(environment.apiUserUrl)
                 .subscribe((response: any) => {
-                        resolve(response);
-                    },
+                    resolve(response);
+                },
                     reject);
         });
     }
@@ -254,8 +254,8 @@ export class ChatService implements Resolve<any> {
         return new Promise((resolve, reject) => {
             this._httpClient.get(environment.apiGetContactChatList)
                 .subscribe((response: any) => {
-                        resolve(response);
-                    },
+                    resolve(response);
+                },
                     reject);
         });
     }

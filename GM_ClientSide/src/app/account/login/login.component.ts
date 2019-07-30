@@ -7,7 +7,6 @@ import { fuseAnimations } from "@fuse/animations";
 import { UserProfileService } from "app/core/identity/userprofile.service";
 import { Router } from "@angular/router";
 import { AuthService, GoogleLoginProvider, FacebookLoginProvider } from "angularx-social-login";
-
 import { interval } from "rxjs";
 
 
@@ -136,9 +135,9 @@ export class LoginComponent implements OnInit {
         from(this._authService.signIn(socialPlatformProvider))
             .subscribe((userData) => {
 
-                    this._userProfileService.logInGoogle(userData.idToken);
+                this._userProfileService.logInGoogle(userData.idToken);
 
-                },
+            },
                 (err) => console.log("Error!"));
     }
 
@@ -151,5 +150,3 @@ export class LoginComponent implements OnInit {
 
 
 }
-
-// root123@gmail.com  Root1234

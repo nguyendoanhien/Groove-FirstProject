@@ -39,7 +39,6 @@ export class ProfileHubService {
         this._hubConnection.on("ClientChangeUserProfile",
             (data: UserInfo) => {
                 this.UserProfileChanged.next(data);
-
             });
     }
 

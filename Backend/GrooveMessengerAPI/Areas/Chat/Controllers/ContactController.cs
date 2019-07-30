@@ -78,17 +78,8 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         public IActionResult EditContact(Guid id, [FromBody] EditContactModel editContactModel)
         {
             if (_contactService.GetSingle(id) == null) return BadRequest("Failed");
-
-
-            try
-            {
                 _contactService.EditContact(editContactModel);
                 return Ok("Success");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("Failed");
-            }
         }
 
         [HttpGet("getchatlist")]
