@@ -226,7 +226,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     async reply(event) {
 
 
-        this.getOgImage('abc');
 
         event.preventDefault();
 
