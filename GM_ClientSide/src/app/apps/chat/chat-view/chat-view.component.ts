@@ -28,6 +28,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     contact: any;
     replyInput: any;
     selectedChat: any;
+    selectedFile:any = null;
 
     @ViewChild(FusePerfectScrollbarDirective, { static: false })
     directiveScroll: FusePerfectScrollbarDirective;
@@ -268,4 +269,29 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 console.log("RxComponent:onresult", this.replyForm.form.value.message, list);
             });
     }
+    
+
+    onUpload(event){
+        this.selectedFile = (event.target.files[0] as File);
+        const fd = new FormData();
+        fd.append("file", this.selectedFile);
+        const message = {
+            who: this.user.userId,
+            message:'',
+            time: new Date().toISOString()
+        };
+        const newMessage = new IndexMessageModel(this.chatId,
+            this.user.userId,
+            null,
+            message.message,
+            "Image",
+            this.contact.userId);
+        this._messageService.onUpload(fd,newMessage).subscribe();
+    }
+
+    Say() {
+        alert(123);
+    }
+
 }
+

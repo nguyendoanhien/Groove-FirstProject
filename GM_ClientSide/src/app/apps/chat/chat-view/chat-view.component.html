@@ -73,20 +73,29 @@
             </button>
             <!-- MESSAGE -->
             <div *ngFor="let message of dialog; let i = index" class="message-row" [ngClass]="{
-                            'me': message.who === user.userId,
-                            'contact': message.who !== user.userId,
-                            'first-of-group': isFirstMessageOfGroup(message, i),
-                            'last-of-group': isLastMessageOfGroup(message, i)
-                            }">
+                'me': message.who === user.userId,
+                'contact': message.who !== user.userId,
+                'first-of-group': isFirstMessageOfGroup(message, i),
+                'last-of-group': isLastMessageOfGroup(message, i)
+                }">
 
-                <img *ngIf="shouldShowContactAvatar(message, i)" src="{{contact.avatar}}" class="avatar">
+                 <!-- <img *ngIf="shouldShowContactAvatar(message, i)" src="{{contact.avatar}}" class="avatar"> -->
 
                 <div class="bubble">
-                    <div class="message">{{message.message}}</div>
+                    <div class="message" [innerHtml]="message.message | detectUrl">
+                    </div>
                     <div class="time secondary-text">{{message.time | date:'short'}}</div>
-                </div>
+                    </div>
+                    <div class="bubble" *ngFor="let obj of message.message | extractUrl | async">
+                        <div>
+                            <div style="background-color: white">
+                            <a href="{{obj.urlLink}}" target="_blank"> <img src="{{obj.imgLink}}"
+                            class='message-preview-image'></a>
+                            </div>
+                        </div>
 
-            </div>
+                    </div>
+                </div>
             <!-- / MESSAGE -->
 
         </div>
