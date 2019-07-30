@@ -128,7 +128,12 @@ chat-view {
                                 margin-right: 12px;
                             }
                         }
-
+                        .time {
+                            justify-content: flex-end;
+                            right: 0;
+                            margin-right: 12px;
+                            margin-left: auto;
+                        }
                         &.first-of-group {
                             .bubble {
                                 border-top-right-radius: 20px;
@@ -164,6 +169,12 @@ chat-view {
                                 display: flex;
                             }
                         }
+                        .time {
+                            display: flex;
+                        }
+                    }
+                    .time{
+                        display: none;
                     }
                 }
             }

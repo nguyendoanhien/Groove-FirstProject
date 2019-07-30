@@ -13,6 +13,7 @@ import { MessageService } from "app/core/data-api/services/message.service";
 import { IndexMessageModel } from "app/models/indexMessage.model";
 import { UserContactService } from "app/core/account/user-contact.service";
 import { RxSpeechRecognitionService, resultList } from "@kamiazya/ngx-speech-recognition";
+import { ApiMethod, FacebookService } from 'ngx-facebook/dist/esm/providers/facebook';
 
 @Component({
     selector: "chat-view",
@@ -52,7 +53,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         private _chatService: ChatService,
         private _messageService: MessageService,
         private _userContactService: UserContactService,
-        public _rxSpeechRecognitionService: RxSpeechRecognitionService
+        public _rxSpeechRecognitionService: RxSpeechRecognitionService,
+        private fbk:FacebookService
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
@@ -194,7 +196,26 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     /**
      * Reply
      */
-    reply(event): void {
+
+    async getOgImage(urlPath: string) {
+        let imageUrl = '';
+        var apiMethod: ApiMethod = "post";
+
+        await this.fbk.api(
+            '/',
+            apiMethod,
+            { "scrape": "true", "id": "https://www.skype.com/en/" }
+        ).then(function (response) {
+            imageUrl = response.image[0].url;
+
+        }
+        );
+        return imageUrl;
+    }
+    async reply(event) {
+
+
+        this.getOgImage('abc');
 
         event.preventDefault();
 
@@ -243,10 +264,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this._chatService.contacts.push(res.contact);
                 this._chatService.user.chatList.push(res.chatContact);
                 this._chatService.chats.push(res.diaglog);
-                console.log(res.contact);
-                this._chatService.unknownContacts =
-                    this._chatService.unknownContacts.filter(item => item.userId !== res.contact.userId);
-                console.log(this._chatService.unknownContacts);
+                this._chatService.unknownContacts = this._chatService.unknownContacts.filter(item => item.userId !== res.contact.userId);
                 const chatData = {
                     chatId: res.dialog.id, // This is id of conversation
                     dialog: res.dialog.dialog,
@@ -258,7 +276,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     listenSwitch = false;
-   
+
     listen() {
         if (this.listenSwitch) {
             this._rxSpeechRecognitionService
@@ -268,8 +286,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     console.log(`chat voice${list.item(0).item(0).transcript}`);
                     this.replyInput.value += list.item(0).item(0).transcript + " ";
                     console.log("RxComponent:onresult", this.replyForm.form.value.message, list);
-                },err=>console.log('No Speech'));
-          
+                }, err => console.log('No Speech'));
+
         }
         else {
             this._rxSpeechRecognitionService.listen().subscribe().unsubscribe();
@@ -293,6 +311,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             "Image",
             this.contact.userId);
         this._messageService.onUpload(fd, newMessage).subscribe();
+
     }
 
     Say() {

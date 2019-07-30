@@ -1,8 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { FuseUtils } from '@fuse/utils';
-import { FacebookService } from 'ngx-facebook';
+import { FacebookService, LoginOptions } from 'ngx-facebook';
 import { AppHelperService } from 'app/core/utilities/app-helper.service';
 import { ApiMethod } from 'ngx-facebook/dist/esm/providers/facebook';
+import { environment } from 'environments/environment';
 
 @Pipe({ name: 'extractUrl' })
 export class ExtractUrlPipe implements PipeTransform {
@@ -17,12 +18,7 @@ export class ExtractUrlPipe implements PipeTransform {
     constructor(
         public _appHelperService: AppHelperService,
         private fbk: FacebookService) {
-        this.fbk.init({
-            appId: '354060818601401',
-            // autoLogAppEvents: true,
-            xfbml: true,
-            version: 'v3.3'
-        });
+
 
     }
 
@@ -33,11 +29,23 @@ export class ExtractUrlPipe implements PipeTransform {
         var result: Promise<any[]>;
         if (res != null) {
             result = Promise.all(res.map(async (val): Promise<any> => {
-                var imageLink = await this.getOgImage(val);
-                if (imageLink == "") imageLink = val;
-                var obj = {
-                    imgLink: imageLink,
-                    urlLink: val
+
+                if (val.includes('cloudinary')) {
+                    var obj = {
+                        imgLink: val,
+                        urlLink: null,
+                        imgTitle: null
+                    }
+                    return obj;
+                }
+
+                var objOg = await this.getOg(val);
+                if (objOg != null) {
+                    var obj = {
+                        imgLink: objOg.imageUrl,
+                        urlLink: val,
+                        imgTitle: objOg.titleUrl
+                    }
                 }
                 return obj;
             })
@@ -45,23 +53,43 @@ export class ExtractUrlPipe implements PipeTransform {
 
 
         }
+        result = result.then(data => data.filter(v => v));
+
         return result;
 
     }
-    async getOgImage(urlPath: string) {
+    async getOg(urlPath: string) {
+        var accessToken;
+        await this.fbk.getLoginStatus().then(response => {
 
-        let imageUrl = '';
+            if (response.status === 'connected') {
+                accessToken = response.authResponse.accessToken;
+            }
+            else {
+                accessToken = environment.applicationFacebook.access_token;
+            }
+        });
+
+        let obj: any;
         var apiMethod: ApiMethod = "post";
+
         await this.fbk.api(
             '/',
             apiMethod,
-            { "scrape": "true", "id": urlPath }
+            { "access_token": accessToken, "scrape": "true", "id": urlPath }
         ).then(function (response) {
-            console.log(response);
-            imageUrl = response.image[0].url;
-        }
-        ).catch(err => console.log('promise eror is' + err));
 
-        return imageUrl;
+
+            obj = {
+                imageUrl: response.image[0].url,
+                titleUrl: response.title
+            }
+
+        }
+        ).catch(err => {
+            obj = null;
+        });
+
+        return obj;
     }
 }

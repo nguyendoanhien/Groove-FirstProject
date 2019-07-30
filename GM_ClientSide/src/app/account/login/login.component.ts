@@ -8,6 +8,7 @@ import { UserProfileService } from "app/core/identity/userprofile.service";
 import { Router } from "@angular/router";
 import { AuthService, GoogleLoginProvider, FacebookLoginProvider } from "angularx-social-login";
 import { interval } from "rxjs";
+import { FacebookService } from 'ngx-facebook';
 
 
 @Component({
@@ -33,7 +34,8 @@ export class LoginComponent implements OnInit {
         private _userProfileService: UserProfileService,
         private _cookieService: CookieService,
         private _authService: AuthService,
-        private _router: Router
+        private _router: Router,
+        private _fb: FacebookService
     ) {
         // Configure the layout
         this._fuseConfigService.config = {
@@ -64,6 +66,13 @@ export class LoginComponent implements OnInit {
      * On init
      */
     ngOnInit(): void {
+        // this._fb.init({
+        //     appId: '354060818601401',
+        //     cookie: false,
+        //     // autoLogAppEvents: true,
+        //     xfbml: true,
+        //     version: 'v3.3'
+        // });
         if (this._cookieService.get("userName")) {
             this.checkRemember = true;
             this.loginForm = this._formBuilder.group({
@@ -131,9 +140,10 @@ export class LoginComponent implements OnInit {
 
     signinWithGoogle(): void {
         const socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
-        const source = interval(1000);
+
         from(this._authService.signIn(socialPlatformProvider))
             .subscribe((userData) => {
+
 
                 this._userProfileService.logInGoogle(userData.idToken);
 
@@ -142,10 +152,12 @@ export class LoginComponent implements OnInit {
     }
 
     signinWithFB(): void {
-        this._authService.signIn(FacebookLoginProvider.PROVIDER_ID).then(userData => {
-            this._userProfileService.logInFacebook(userData.authToken);
+        this._fb.login().then
+            ((userData) => {
 
-        });
+                this._userProfileService.logInFacebook(this._fb.getAuthResponse()['accessToken']);
+            }
+            )
     }
 
 
