@@ -79,7 +79,7 @@
                 'last-of-group': isLastMessageOfGroup(message, i)
                 }">
 
-                 <!-- <img *ngIf="shouldShowContactAvatar(message, i)" src="{{contact.avatar}}" class="avatar"> -->
+                <!-- <img *ngIf="shouldShowContactAvatar(message, i)" src="{{contact.avatar}}" class="avatar"> -->
 
                 <div class="bubble">
                     <div class="message" [innerHtml]="message.message | detectUrl">
@@ -88,19 +88,16 @@
                     <!-- <div class="time secondary-text">{{message.time | date:'short'}}</div> -->
                 </div>
                 <div class="bubble" *ngFor="let obj of message.message | extractUrl | async; let l = count"
-                    style="background-color:transparent !important">
-                    <div class='message' *ngIf="obj">
+                     style="background-color: transparent !important">
+                    <div class="message" *ngIf="obj">
                         <div style="background-color: white" style="position: relative">
                             <a href="{{obj.urlLink}}" target="_blank">
-                                <img src="{{obj.imgLink}}" style="width: 200px;height: 150px;"
-                                    class='message-preview-image'>
+                                <img src="{{obj.imgLink}}" style="height: 150px; width: 200px;"
+                                     class="message-preview-image">
                                 <div
-                                    style="position: absolute;bottom: 0px;     background-color: rgba(60, 60, 60, 0.5); width:100%">
-                                    <div *ngIf="obj.imgTitle" style="font-weight: bold;color:white
-                                    ">{{obj.imgTitle}}</div>
-                                    <div *ngIf="obj.urlLink" style="font-size:xx-small;color:white;  font-style: italic;
-
-                                    ">{{obj.urlLink}}</div>
+                                    style="background-color: rgba(60, 60, 60, 0.5); bottom: 0px; position: absolute; width: 100%">
+                                    <div *ngIf="obj.imgTitle" style="color: white; font-weight: bold;">{{obj.imgTitle}}</div>
+                                    <div *ngIf="obj.urlLink" style="color: white; font-size: xx-small; font-style: italic;">{{obj.urlLink}}</div>
 
                                 </div>
                             </a>
@@ -146,16 +143,16 @@
                     <textarea matInput #replyInput placeholder="Type your message" ngModel name="message" [rows]="1"
                         [matTextareaAutosize]="true"></textarea>
                 </mat-form-field>
-            
-                <button class="file-button" mat-icon-button type="submit" type="button" aria-label="Send message" (click) = "file.click()">
-                    <input type="file" #file (change)="onUpload($event)" style ="display:none"/>
+
+                <button class="file-button" mat-icon-button type="submit" type="button" aria-label="Send message" (click)="file.click()">
+                    <input type="file" #file (change)="onUpload($event)" style="display: none"/>
                     <mat-icon >
                         camera_alt
                     </mat-icon>
                 </button>
                 <!-- [disabled]="_rxSpeechRecognitionService.started$ | async"  -->
                 <button class="record-button" mat-icon-button type="submit" type="button" aria-label="Send message"
-                        #voiceButton (click)="listenSwitch=!listenSwitch;listen();" >
+                        #voiceButton (click)="listenSwitch=!listenSwitch;listen();">
                     <mat-icon [ngStyle]="listenSwitch && {'color':'red'}">
                         record_voice_over
                     </mat-icon>

@@ -3,7 +3,7 @@ import * as signalR from "@aspnet/signalr";
 import { AuthService } from "app/core/auth/auth.service";
 import { BehaviorSubject } from "rxjs";
 import { ContactModel } from "app/models/contact.model";
-import { environment } from 'environments/environment';
+import { environment } from "environments/environment";
 
 @Injectable()
 export class ContactHubService {

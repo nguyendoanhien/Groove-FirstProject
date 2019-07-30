@@ -17,7 +17,7 @@ export class UserInfoService {
         private http: HttpClient,
     ) {
         this.userInfo = new UserInfo();
-        this.userInfo.avatar='assets/images/avatars/profile.jpg'
+        this.userInfo.avatar = "assets/images/avatars/profile.jpg";
     }
 
     getUserInfo() {
@@ -27,10 +27,10 @@ export class UserInfoService {
     }
 
     changeDisplayName() {
-        
+
         return this.http.put(apiUserUrl, this.userInfo).pipe(
             map((res: any) => {
-                
+
                 this.userInfo = res as UserInfo;
             })
         );

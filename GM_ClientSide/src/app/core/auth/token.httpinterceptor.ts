@@ -36,7 +36,7 @@ export class TokenHttpInterceptor implements HttpInterceptor {
             });
             return next.handle(request).pipe(
                 tap(
-                    succ => { },
+                    succ => {},
                     err => {
                         if (err.status == 401) {
                             localStorage.removeItem("token");

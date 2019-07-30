@@ -44,11 +44,11 @@ export const environment = {
         access_token:
             "EAAFCBDVSVbkBAEmGKIgPfakhNnfXnM42ug4xgLN6uGGyIx8OItdoGlrmHouagaZBI8e5ekzr7Dq2y2BMupi3jrxZAJlksFn85GUN7tQjWIQq1F6JpBehiB7niISRHdZBDRd8akzqsmxcXHcNy5qzLTzsIAwbgZAUZBikTItDYmaGTUvWSC5nY"
     },
-    openGrapth:
+    openGraph:
     {
-        appId: "1cc1af51-54ef-4c2f-a54d-5d2c3b96d7cb"
+        appId: "1cc1af51-54ef-4c2f-a54d-5d2c3b96d7cb",
+        url: "https://opengraph.io/api/1.1/site"
     },
-    apiOpenGrapthUrl: "https://opengraph.io/api/1.1/site",
     apiUserUrl: apiBaseUrl + "/user",
     apiUserContactUrl: apiBaseUrl + "/usercontact",
     apiUrl: apiBaseUrl + "/notes",

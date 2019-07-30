@@ -13,7 +13,7 @@ import { MessageService } from "app/core/data-api/services/message.service";
 import { IndexMessageModel } from "app/models/indexMessage.model";
 import { UserContactService } from "app/core/account/user-contact.service";
 import { RxSpeechRecognitionService, resultList } from "@kamiazya/ngx-speech-recognition";
-import { ApiMethod, FacebookService } from 'ngx-facebook/dist/esm/providers/facebook';
+import { ApiMethod, FacebookService } from "ngx-facebook/dist/esm/providers/facebook";
 
 @Component({
     selector: "chat-view",
@@ -54,7 +54,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         private _messageService: MessageService,
         private _userContactService: UserContactService,
         public _rxSpeechRecognitionService: RxSpeechRecognitionService,
-        private fbk:FacebookService
+        private fbk: FacebookService
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
@@ -125,7 +125,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
         return (
             message.who === this.contact.id &&
-            ((this.dialog[i + 1] && this.dialog[i + 1].who !== this.contact.id) || !this.dialog[i + 1])
+                ((this.dialog[i + 1] && this.dialog[i + 1].who !== this.contact.id) || !this.dialog[i + 1])
         );
     }
 
@@ -198,22 +198,22 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      */
 
     async getOgImage(urlPath: string) {
-        let imageUrl = '';
-        var apiMethod: ApiMethod = "post";
+        let imageUrl = "";
+        const apiMethod: ApiMethod = "post";
 
         await this.fbk.api(
-            '/',
+            "/",
             apiMethod,
             { "scrape": "true", "id": "https://www.skype.com/en/" }
-        ).then(function (response) {
-            imageUrl = response.image[0].url;
+        ).then(function(response) {
+                imageUrl = response.image[0].url;
 
-        }
+            }
         );
         return imageUrl;
     }
-    async reply(event) {
 
+    async reply(event) {
 
 
         event.preventDefault();
@@ -235,8 +235,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             "Text",
             this.contact.userId);
         this._messageService.addMessage(newMessage).subscribe(success => {
-            console.log("send successfull");
-        },
+                console.log("send successfull");
+            },
             err => console.log("send fail"));
         // Add the message to the chat
         //this.dialog.push(message); //Truc: don't need because broadcast to user + contact
@@ -263,7 +263,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this._chatService.contacts.push(res.contact);
                 this._chatService.user.chatList.push(res.chatContact);
                 this._chatService.chats.push(res.diaglog);
-                this._chatService.unknownContacts = this._chatService.unknownContacts.filter(item => item.userId !== res.contact.userId);
+                this._chatService.unknownContacts =
+                    this._chatService.unknownContacts.filter(item => item.userId !== res.contact.userId);
                 const chatData = {
                     chatId: res.dialog.id, // This is id of conversation
                     dialog: res.dialog.dialog,
@@ -282,13 +283,13 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 .listen()
                 .pipe(resultList, take(1))
                 .subscribe((list: SpeechRecognitionResultList) => {
-                    console.log(`chat voice${list.item(0).item(0).transcript}`);
-                    this.replyInput.value += list.item(0).item(0).transcript + " ";
-                    console.log("RxComponent:onresult", this.replyForm.form.value.message, list);
-                }, err => console.log('No Speech'));
+                        console.log(`chat voice${list.item(0).item(0).transcript}`);
+                        this.replyInput.value += list.item(0).item(0).transcript + " ";
+                        console.log("RxComponent:onresult", this.replyForm.form.value.message, list);
+                    },
+                    err => console.log("No Speech"));
 
-        }
-        else {
+        } else {
             this._rxSpeechRecognitionService.listen().subscribe().unsubscribe();
         }
     }
@@ -300,7 +301,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         fd.append("file", this.selectedFile);
         const message = {
             who: this.user.userId,
-            message: '',
+            message: "",
             time: new Date().toISOString()
         };
         const newMessage = new IndexMessageModel(this.chatId,
@@ -318,4 +319,3 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
 }
-

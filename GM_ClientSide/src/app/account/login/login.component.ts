@@ -6,9 +6,8 @@ import { FuseConfigService } from "@fuse/services/config.service";
 import { fuseAnimations } from "@fuse/animations";
 import { UserProfileService } from "app/core/identity/userprofile.service";
 import { Router } from "@angular/router";
-import { AuthService, GoogleLoginProvider, FacebookLoginProvider } from "angularx-social-login";
-import { interval } from "rxjs";
-import { FacebookService } from 'ngx-facebook';
+import { AuthService, GoogleLoginProvider } from "angularx-social-login";
+import { FacebookService } from "ngx-facebook";
 
 
 @Component({
@@ -145,19 +144,19 @@ export class LoginComponent implements OnInit {
             .subscribe((userData) => {
 
 
-                this._userProfileService.logInGoogle(userData.idToken);
+                    this._userProfileService.logInGoogle(userData.idToken);
 
-            },
+                },
                 (err) => console.log("Error!"));
     }
 
     signinWithFB(): void {
         this._fb.login().then
-            ((userData) => {
+        ((userData) => {
 
-                this._userProfileService.logInFacebook(this._fb.getAuthResponse()['accessToken']);
+                this._userProfileService.logInFacebook(this._fb.getAuthResponse()["accessToken"]);
             }
-            )
+        );
     }
 
 
