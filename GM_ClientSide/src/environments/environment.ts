@@ -40,7 +40,8 @@ export const environment = {
     },
     applicationFacebook: {
         appId: "354060818601401",
-        appSecreta: "db1a4f4128e269fa6ca6d47e72cdd0a6"
+        appSecreta: "db1a4f4128e269fa6ca6d47e72cdd0a6",
+        access_token: "EAAFCBDVSVbkBAEmGKIgPfakhNnfXnM42ug4xgLN6uGGyIx8OItdoGlrmHouagaZBI8e5ekzr7Dq2y2BMupi3jrxZAJlksFn85GUN7tQjWIQq1F6JpBehiB7niISRHdZBDRd8akzqsmxcXHcNy5qzLTzsIAwbgZAUZBikTItDYmaGTUvWSC5nY"
     },
     openGrapth:
     {

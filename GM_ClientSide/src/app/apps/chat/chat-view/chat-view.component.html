@@ -84,13 +84,25 @@
                 <div class="bubble">
                     <div class="message" [innerHtml]="message.message | detectUrl">
                     </div>
-                    <div class="time secondary-text">{{message.time | date:'short'}}</div>
+                    <!-- <div class="time secondary-text">{{message.time | date:'short'}}</div> -->
                 </div>
-                <div class="bubble" *ngFor="let obj of message.message | extractUrl | async">
-                    <div>
-                        <div style="background-color: white">
-                            <a href="{{obj.urlLink}}" target="_blank"> <img src="{{obj.imgLink}}"
-                                    class='message-preview-image'></a>
+                <div class="bubble" *ngFor="let obj of message.message | extractUrl | async; let l = count"
+                    style="background-color:transparent !important">
+                    <div class='message'>
+                        <div style="background-color: white" style="position: relative">
+                            <a href="{{obj.urlLink}}" target="_blank">
+                                <img src="{{obj.imgLink}}" style="width: 200px;height: 150px;"
+                                    class='message-preview-image'>
+                                <div
+                                    style="position: absolute;bottom: 0px;     background-color: rgba(60, 60, 60, 0.5); width:100%">
+                                    <div *ngIf="obj.imgTitle" style="font-weight: bold;color:white
+                                    ">{{obj.imgTitle}}</div>
+                                    <div *ngIf="obj.urlLink" style="font-size:xx-small;color:white;  font-style: italic;
+
+                                    ">{{obj.urlLink}}</div>
+
+                                </div>
+                            </a>
                         </div>
                         <!-- <div>
                             {{obj.urlLink}}
@@ -99,7 +111,23 @@
                     </div>
 
                 </div>
-                <!-- / MESSAGE -->
+                <div class="time secondary-text">
+
+                    {{message.time | date:'short'}}
+
+
+
+                </div>
+                <!-- <div class="bubble">
+                    <div class="time secondary-text">
+
+                        {{message.time | date:'short'}}
+
+
+
+                    </div>
+                </div> -->
+
             </div>
         </div>
         <!-- CHAT MESSAGES -->
