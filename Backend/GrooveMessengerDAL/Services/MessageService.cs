@@ -84,7 +84,7 @@ namespace GrooveMessengerDAL.Services
             return result;
         }
 
-        public IEnumerable<MessageEntity> loadMoreMessages(int pageNumber, int pageSize)
+        public IEnumerable<MessageEntity> LoadMoreMessages(int pageNumber, int pageSize)
         {
             var messages = _mesRepository.GetAll().OrderByDescending(x => x.CreatedOn);
             var result = messages.Skip((pageNumber - 1) * pageSize).Take(pageSize);
@@ -106,9 +106,9 @@ namespace GrooveMessengerDAL.Services
             return _mapper.Map<MessageEntity, IndexMessageModel>(addedMessage.Entity);
         }
 
-        public MessageEntity GetMessageById(Guid Id)
+        public MessageEntity GetMessageById(Guid id)
         {
-            var messages = _mesRepository.GetSingle(Id);
+            var messages = _mesRepository.GetSingle(id);
             return messages;
         }
 
@@ -134,9 +134,9 @@ namespace GrooveMessengerDAL.Services
             return _mesRepository.ExecuteReturedStoredProcedure<int>(spName, parameter2, parameter1).FirstOrDefault();
         }
 
-        public IEnumerable<DialogModel> GetDialogs(Guid ConversationId)
+        public IEnumerable<DialogModel> GetDialogs(Guid conversationId)
         {
-            var messageList = _mesRepository.GetAll().Where(x => x.ConversationId == ConversationId)
+            var messageList = _mesRepository.GetAll().Where(x => x.ConversationId == conversationId)
                 .OrderByDescending(x => x.CreatedOn).ToList();
             var dialogs = new List<DialogModel>();
             foreach (var item in messageList)

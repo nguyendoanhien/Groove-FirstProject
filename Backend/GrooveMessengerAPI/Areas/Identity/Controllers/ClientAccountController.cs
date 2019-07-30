@@ -21,7 +21,6 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
     [ApiController]
     public class ClientAccountController : ControllerBase
     {
-        private static readonly HttpClient client = new HttpClient();
         private static readonly HttpClient Client = new HttpClient();
         private readonly IAuthEmailSenderUtil _authEmailSender;
         private readonly IConfiguration _config;
@@ -63,20 +62,20 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
         {
             if (!ModelState.IsValid) return BadRequest();
 
-            var new_user = new ApplicationUser {Email = model.Email, UserName = model.Email};
-            var result = await _userManager.CreateAsync(new_user, model.Password);
+            var newUser = new ApplicationUser {Email = model.Email, UserName = model.Email};
+            var result = await _userManager.CreateAsync(newUser, model.Password);
             var userInfo = new CreateUserInfoModel();
-            userInfo.UserId = new_user.Id;
+            userInfo.UserId = newUser.Id;
             userInfo.DisplayName = model.DisplayName;
             _userService.AddUserInfo(userInfo);
             if (result.Succeeded)
             {
                 var clientAppUrl = _config.GetSection("Client").Value;
-                var token = _userManager.GenerateEmailConfirmationTokenAsync(new_user).Result;
+                var token = _userManager.GenerateEmailConfirmationTokenAsync(newUser).Result;
                 // TODO: add temp log to diagnose issue on email confirmation, remove if all fine
                 _logger.LogError("Email confirm token: " + token);
                 var url = _config["EmailConfirmationRoute:Url"] + "?ctoken=" + HttpUtility.UrlEncode(token) +
-                          "&userid=" + new_user.Id;
+                          "&userid=" + newUser.Id;
                 var body = "<h1>Confirm Your Email</h1>" +
                            "<h3>Hello " + model.DisplayName + " ! </h3>" +
                            "<h3>Tap the button below to confirm your email address.</h3>" +

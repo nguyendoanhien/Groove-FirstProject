@@ -6,7 +6,7 @@ namespace GrooveMessengerDAL.Services.Interface
 {
     public interface IParticipantService
     {
-        IEnumerable<Guid> GetAllConversationIdOfAUser(string UserId);
+        IEnumerable<Guid> GetAllConversationIdOfAUser(string userId);
         void AddParticipant(ParticipantModel participantModel);
     }
 }

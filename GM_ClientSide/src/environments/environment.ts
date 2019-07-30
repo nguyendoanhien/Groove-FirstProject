@@ -41,16 +41,17 @@ export const environment = {
     applicationFacebook: {
         appId: "354060818601401",
         appSecreta: "db1a4f4128e269fa6ca6d47e72cdd0a6",
-        access_token: "EAAFCBDVSVbkBAEmGKIgPfakhNnfXnM42ug4xgLN6uGGyIx8OItdoGlrmHouagaZBI8e5ekzr7Dq2y2BMupi3jrxZAJlksFn85GUN7tQjWIQq1F6JpBehiB7niISRHdZBDRd8akzqsmxcXHcNy5qzLTzsIAwbgZAUZBikTItDYmaGTUvWSC5nY"
+        access_token:
+            "EAAFCBDVSVbkBAEmGKIgPfakhNnfXnM42ug4xgLN6uGGyIx8OItdoGlrmHouagaZBI8e5ekzr7Dq2y2BMupi3jrxZAJlksFn85GUN7tQjWIQq1F6JpBehiB7niISRHdZBDRd8akzqsmxcXHcNy5qzLTzsIAwbgZAUZBikTItDYmaGTUvWSC5nY"
     },
     openGrapth:
     {
-        appId: '1cc1af51-54ef-4c2f-a54d-5d2c3b96d7cb'
+        appId: "1cc1af51-54ef-4c2f-a54d-5d2c3b96d7cb"
     },
-    apiOpenGrapthUrl: 'https://opengraph.io/api/1.1/site',
-    apiUserUrl: apiBaseUrl + '/user',
-    apiUserContactUrl: apiBaseUrl + '/usercontact',
-    apiUrl: apiBaseUrl + '/notes',
+    apiOpenGrapthUrl: "https://opengraph.io/api/1.1/site",
+    apiUserUrl: apiBaseUrl + "/user",
+    apiUserContactUrl: apiBaseUrl + "/usercontact",
+    apiUrl: apiBaseUrl + "/notes",
     cloudinary: {
         url: "https://api.cloudinary.com/v1_1/groovemessenger/upload",
         upload_preset: "qlbjv3if"

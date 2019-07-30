@@ -20,10 +20,10 @@ namespace GrooveMessengerDAL.Services.Interface
         Task<IEnumerable<IndexUserInfoModel>> GetUserUnknownContact(string username = null,
             string displayNameSearch = null);
 
-        void DeleteContact(Guid Id);
+        void DeleteContact(Guid id);
         void AddContact(AddContactModel addContactModel);
         void EditContact(EditContactModel addContactModel);
-        UserInfoContactEntity GetSingle(Guid Id);
+        UserInfoContactEntity GetSingle(Guid id);
         Task<List<ApplicationUser>> GetContacts(Guid conversationId);
     }
 }

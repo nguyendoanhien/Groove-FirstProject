@@ -39,13 +39,13 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get([FromQuery] PagingParameterModel pagingparametermodel)
+        public IActionResult Get([FromQuery] PagingParameterModel pagingParameterModel)
         {
             if (!ModelState.IsValid) return BadRequest();
 
-            var CurrentPage = pagingparametermodel.pageNumber;
-            var PageSize = pagingparametermodel.pageSize;
-            var result = _mesService.loadMoreMessages(CurrentPage, PageSize);
+            var currentPage = pagingParameterModel.PageNumber;
+            var pageSize = pagingParameterModel.PageSize;
+            var result = _mesService.LoadMoreMessages(currentPage, pageSize);
             return Ok(result);
         }
 

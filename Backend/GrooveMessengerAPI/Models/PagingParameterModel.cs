@@ -2,16 +2,16 @@
 {
     public class PagingParameterModel
     {
-        private const int maxPageSize = 20;
+        private const int MaxPageSize = 20;
 
-        public int pageNumber { get; set; } = 1;
+        public int PageNumber { get; set; } = 1;
 
-        public int _pageSize { get; set; } = 10;
+        private int _pageSize = 10;
 
-        public int pageSize
+        public int PageSize
         {
             get => _pageSize;
-            set => _pageSize = value > maxPageSize ? maxPageSize : value;
+            set => _pageSize = value > MaxPageSize ? MaxPageSize : value;
         }
 
         public string SearchKey { get; set; } = null;

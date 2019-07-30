@@ -32,8 +32,8 @@ namespace GrooveMessengerDAL.Services
             _userInfoContactRepository;
 
         private readonly IGenericRepository<UserInfoEntity, Guid, GrooveMessengerDbContext> _userInfoRepository;
-        public UserManager<ApplicationUser> _userManager;
-        public IUserResolverService _userResolverService;
+        public UserManager<ApplicationUser> UserManager;
+        public IUserResolverService UserResolverService;
 
         public ContactService(
             UserManager<ApplicationUser> userManager,
@@ -47,12 +47,12 @@ namespace GrooveMessengerDAL.Services
             IUserService userService
         )
         {
-            _userResolverService = userResolverService;
+            UserResolverService = userResolverService;
             _uow = uow;
             _userInfoRepository = userInformRepository;
             _mapper = mapper;
             _userInfoContactRepository = userInformContactRepository;
-            _userManager = userManager;
+            UserManager = userManager;
 
             _parRepository = parRepository;
             _mesgRepository = mesgRepository;
@@ -68,7 +68,7 @@ namespace GrooveMessengerDAL.Services
                 {
                     ParameterName = "UserInfoId",
                     SqlDbType = SqlDbType.UniqueIdentifier,
-                    SqlValue = string.IsNullOrEmpty(username) ? _userResolverService.CurrentUserInfoId() : username
+                    SqlValue = string.IsNullOrEmpty(username) ? UserResolverService.CurrentUserInfoId() : username
                 };
 
             var contactList =
@@ -85,7 +85,7 @@ namespace GrooveMessengerDAL.Services
                 {
                     ParameterName = "UserInfoId",
                     SqlDbType = SqlDbType.UniqueIdentifier,
-                    SqlValue = string.IsNullOrEmpty(username) ? _userResolverService.CurrentUserInfoId() : username
+                    SqlValue = string.IsNullOrEmpty(username) ? UserResolverService.CurrentUserInfoId() : username
                 };
 
             var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<string>(spName, parameter);
@@ -131,7 +131,7 @@ namespace GrooveMessengerDAL.Services
                 {
                     ParameterName = "UserInfoId",
                     SqlDbType = SqlDbType.UniqueIdentifier,
-                    SqlValue = string.IsNullOrEmpty(username) ? _userResolverService.CurrentUserInfoId() : username
+                    SqlValue = string.IsNullOrEmpty(username) ? UserResolverService.CurrentUserInfoId() : username
                 },
                 new SqlParameter
                 {
@@ -147,7 +147,7 @@ namespace GrooveMessengerDAL.Services
             return await Task.FromResult(contactList);
         }
 
-        public void DeleteContact(Guid Id)
+        public void DeleteContact(Guid id)
         {
             var spName = "[dbo].[usp_UserInfoContact_DeleteContact]";
             var parameter =
@@ -155,7 +155,7 @@ namespace GrooveMessengerDAL.Services
                 {
                     ParameterName = "Id",
                     SqlDbType = SqlDbType.UniqueIdentifier,
-                    SqlValue = Id
+                    SqlValue = id
                 };
             var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<bool>(spName, parameter);
         }
@@ -168,15 +168,15 @@ namespace GrooveMessengerDAL.Services
                 new SqlParameter("UserId", SqlDbType.UniqueIdentifier)
                 {
                     Value = string.IsNullOrEmpty(addContactModel.UserId)
-                        ? _userResolverService.CurrentUserInfoId()
+                        ? UserResolverService.CurrentUserInfoId()
                         : addContactModel.UserId
                 },
                 new SqlParameter("ContactId", SqlDbType.UniqueIdentifier) {Value = addContactModel.ContactId},
                 new SqlParameter("CreatedBy", SqlDbType.NVarChar, -1)
                 {
-                    Value = string.IsNullOrEmpty(_userResolverService.CurrentUserName())
+                    Value = string.IsNullOrEmpty(UserResolverService.CurrentUserName())
                         ? "Root"
-                        : _userResolverService.CurrentUserName()
+                        : UserResolverService.CurrentUserName()
                 },
                 new SqlParameter("NickName", SqlDbType.NVarChar, 120) {Value = addContactModel.NickName}
             };
@@ -197,9 +197,9 @@ namespace GrooveMessengerDAL.Services
             var contactList = _userInfoContactRepository.ExecuteReturedStoredProcedure<bool>(spName, parameter);
         }
 
-        public UserInfoContactEntity GetSingle(Guid Id)
+        public UserInfoContactEntity GetSingle(Guid id)
         {
-            return _userInfoContactRepository.GetSingle(Id);
+            return _userInfoContactRepository.GetSingle(id);
         }
 
         public List<ContactLatestChatListModel> GetLatestContactChatListByUserId_SP()
@@ -210,7 +210,7 @@ namespace GrooveMessengerDAL.Services
                 {
                     ParameterName = "UserId",
                     SqlDbType = SqlDbType.UniqueIdentifier,
-                    SqlValue = _userResolverService.CurrentUserId()
+                    SqlValue = UserResolverService.CurrentUserId()
                 };
 
             var contactList =
@@ -223,11 +223,11 @@ namespace GrooveMessengerDAL.Services
         {
             var users = new List<ApplicationUser>();
             var participants = _parRepository.GetAll()
-                .Where(x => x.ConversationId == conversationId && x.UserId != _userResolverService.CurrentUserId())
+                .Where(x => x.ConversationId == conversationId && x.UserId != UserResolverService.CurrentUserId())
                 .Select(x => x.UserId);
             foreach (var item in participants)
             {
-                var user = await _userManager.FindByIdAsync(item);
+                var user = await UserManager.FindByIdAsync(item);
                 users.Add(user);
             }
 
