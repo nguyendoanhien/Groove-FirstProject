@@ -87,7 +87,8 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             var contactsList = await _contactService.GetContacts(conversationId);
 
             foreach (var contact in contactsList)
-                foreach (var connectionId in _connectionStore.GetConnections("message", contact.UserName))
+            {
+                foreach (var connectionId in _connectionStore.GetConnections(HubConstant.MessageHubTopic, contact.UserName))
                 {
                     var unreadMessageAmount = _mesService.GetUnreadMessages(conversationId, contact.Id);
                     var unreadMessageModel = new UnreadMessageModel
@@ -95,6 +96,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
 
                     await _hubContext.Clients.Client(connectionId).SendUnreadMessagesAmount(unreadMessageModel);
                 }
+            }
 
             return Ok();
         }
@@ -106,7 +108,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             if (!ModelState.IsValid) return BadRequest();
 
             _mesService.SetValueSeenBy(CurrentUserId.ToString(), conversationId);
-            foreach (var connectionId in _connectionStore.GetConnections("message", CurrentUserId.ToString()))
+            foreach (var connectionId in _connectionStore.GetConnections(HubConstant.MessageHubTopic, CurrentUserId.ToString()))
             {
                 var unreadMessageModel = new UnreadMessageModel { ConversationId = conversationId, Amount = 0 };
                 _hubContext.Clients.Client(connectionId).SendUnreadMessagesAmount(unreadMessageModel);

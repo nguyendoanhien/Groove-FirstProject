@@ -78,20 +78,22 @@ namespace GrooveMessengerDAL.Services
                 };
             foreach (var chatbox in chatBoxes)
             {
-                List<DialogModel> dialogModels = new List<DialogModel>();
-                ChatModel chatModel = new ChatModel() { Id = chatbox.Key.ToString(), Dialog = dialogModels };
-                chatModels.Add(chatModel);
-                foreach (var message in chatbox.Dialogs)
-                {
-                    var dialogModel = new DialogModel
-                        {Message = message.Message, Who = message.Who, Time = message.Time};
-                    dialogModels.Add(dialogModel);
+                if (!chatModels.Select(x => x.Id).Contains(chatbox.Key.ToString())) {
+                    List<DialogModel> dialogModels = new List<DialogModel>();
+                    ChatModel chatModel = new ChatModel() { Id = chatbox.Key.ToString(), Dialog = dialogModels };
+                    chatModels.Add(chatModel);
+                    foreach (var message in chatbox.Dialogs)
+                    {
+                        var dialogModel = new DialogModel
+                        { Message = message.Message, Who = message.Who, Time = message.Time };
+                        dialogModels.Add(dialogModel);
+                    }
                 }
             }
 
             return chatModels;
         }
-        public IEnumerable<DialogDraftModel> GetAllConversationOfAUserDraft(string UserId = null)
+        public IEnumerable<DialogModel> GetAllConversationOfAUserDraft(string UserId = null)
         {
             var spName = "[dbo].[usp_Message_GetAllConversationsWithMessages]";
             var parameter =
@@ -102,7 +104,7 @@ namespace GrooveMessengerDAL.Services
                     SqlValue = string.IsNullOrEmpty(UserId) ? _userResolverService.CurrentUserInfoId() : UserId
                 };
 
-            var contactList = _conRepository.ExecuteReturedStoredProcedure<DialogDraftModel>(spName, parameter);
+            var contactList = _conRepository.ExecuteReturedStoredProcedure<DialogModel>(spName, parameter);
             return contactList;
         }
         
@@ -117,12 +119,12 @@ namespace GrooveMessengerDAL.Services
                     SqlValue = ConversationId
                 };
 
-            var contactList = _conRepository.ExecuteReturedStoredProcedure<DialogDraftModel>(spName, parameter);
+            var contactList = _conRepository.ExecuteReturedStoredProcedure<DialogModel>(spName, parameter);
 
             var dialogModels = new List<DialogModel>();
             foreach (var item in contactList)
             {
-                var dialogModel = new DialogModel {Who = item.Who, Message = item.Message, Time = item.Time};
+                var dialogModel = new DialogModel {Id = item.Id, Who = item.Who, Message = item.Message, Time = item.Time, Avatar = item.Avatar, DisplayName = item.DisplayName};
                 dialogModels.Add(dialogModel);
             }
             ChatModel chatModel = new ChatModel() { Id = ConversationId, Dialog = dialogModels };
