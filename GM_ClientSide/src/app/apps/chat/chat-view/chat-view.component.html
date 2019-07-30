@@ -124,10 +124,10 @@
                         camera_alt
                     </mat-icon>
                 </button>
-                
+                <!-- [disabled]="_rxSpeechRecognitionService.started$ | async"  -->
                 <button class="record-button" mat-icon-button type="submit" type="button" aria-label="Send message"
-                        #voiceButton [disabled]="_rxSpeechRecognitionService.started$ | async" (click)="listen()">
-                    <mat-icon [ngStyle]="voiceButton.disabled && {'color':'red'}">
+                        #voiceButton (click)="listenSwitch=!listenSwitch;listen();" >
+                    <mat-icon [ngStyle]="listenSwitch && {'color':'red'}">
                         record_voice_over
                     </mat-icon>
                 </button>
