@@ -4,7 +4,17 @@ import { FacebookService, LoginOptions } from 'ngx-facebook';
 import { AppHelperService } from 'app/core/utilities/app-helper.service';
 import { ApiMethod } from 'ngx-facebook/dist/esm/providers/facebook';
 import { environment } from 'environments/environment';
+import { httpClientInMemBackendServiceFactory } from 'angular-in-memory-web-api';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 
+const httpOptions = {
+    headers: new HttpHeaders({
+        'Accept': "text/html, application/xhtml+xml, */*",
+        'Content-Type': "application/json"
+    }),
+    responseType: "text" as "json"
+};
 @Pipe({ name: 'extractUrl' })
 export class ExtractUrlPipe implements PipeTransform {
     /**
@@ -17,7 +27,8 @@ export class ExtractUrlPipe implements PipeTransform {
      */
     constructor(
         public _appHelperService: AppHelperService,
-        private fbk: FacebookService) {
+        private fbk: FacebookService,
+        private _httpClient: HttpClient) {
 
 
     }
@@ -53,7 +64,8 @@ export class ExtractUrlPipe implements PipeTransform {
 
 
         }
-        result = result.then(data => data.filter(v => v));
+        if (result !== undefined)
+            result = result.then(data => data.filter(v => v));
 
         return result;
 
@@ -79,7 +91,6 @@ export class ExtractUrlPipe implements PipeTransform {
             { "access_token": accessToken, "scrape": "true", "id": urlPath }
         ).then(function (response) {
 
-
             obj = {
                 imageUrl: response.image[0].url,
                 titleUrl: response.title
@@ -87,8 +98,28 @@ export class ExtractUrlPipe implements PipeTransform {
 
         }
         ).catch(err => {
-            obj = null;
-        });
+            // this._httpClient.get(`https://besticon-demo.herokuapp.com/allicons.json?url=${urlPath}`, httpOptions).pipe(
+            //     map((response: any) => {
+
+            //         return response
+            //     })
+
+            //     // obj = null;
+            // ).subscribe(response => {
+            //     console.log(response);
+            //     obj = {
+            //         imageUrl: response.icons[0].url,
+            //         titleUrl: response.url
+            //     }
+            // })
+            var arr = urlPath.split("/");
+            var result = arr[0] + "//" + arr[2]
+            obj = {
+                imageUrl: result + '/favicon.ico',
+                titleUrl: null
+            }
+
+        })
 
         return obj;
     }
