@@ -82,6 +82,9 @@ chat-chats-sidenav {
                     line-height: normal;
                     margin-top: 0;
                     color: rgba(0, 0, 0, 0.54);
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    width: 100%;
                 }
 
                 .contact-last-message-time {

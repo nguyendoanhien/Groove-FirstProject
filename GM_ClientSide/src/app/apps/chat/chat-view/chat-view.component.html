@@ -52,7 +52,8 @@
     <!-- / CHAT TOOLBAR -->
 
     <!-- CHAT CONTENT -->
-    <div id="chat-content" fxFlex="1 1 auto" fusePerfectScrollbar>
+    <div id="chat-content" #vcChatContent fxFlex="1 1 auto" (scroll)="onScroll($event)" fusePerfectScrollbar>
+        <!-- fusePerfectScrollbar> -->
 
         <!-- CHAT MESSAGES -->
         <div class="chat-messages">
@@ -71,6 +72,10 @@
                 <div class="mat-button-focus-overlay"></div>
             </button>
             <!-- MESSAGE -->
+            <div *ngIf="isOver" style="text-align: center; font-style: italic;">First Date Message :
+                {{dialog[0].time |date:'short'}}
+                <hr class="style4" style='	border-top: 1px dotted #8c8b8b;'>
+            </div>
             <div *ngFor="let message of dialog; let i = index" class="message-row" [ngClass]="{
                 'me': message.who === user.userId,
                 'contact': message.who !== user.userId,

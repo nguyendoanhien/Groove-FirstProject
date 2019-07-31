@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewChildren, ViewEncapsulation } from "@angular/core";
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewChildren, ViewEncapsulation, ElementRef, HostListener } from "@angular/core";
 import { NgForm, FormControl } from "@angular/forms";
 import { Subject } from "rxjs";
-import { takeUntil, take } from "rxjs/operators";
+import { takeUntil, take, debounceTime } from "rxjs/operators";
 
 import { FusePerfectScrollbarDirective } from
     "@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive";
@@ -13,7 +13,14 @@ import { IndexMessageModel } from "app/models/indexMessage.model";
 import { UserContactService } from "app/core/account/user-contact.service";
 import { RxSpeechRecognitionService, resultList } from "@kamiazya/ngx-speech-recognition";
 import { ApiMethod, FacebookService } from "ngx-facebook/dist/esm/providers/facebook";
-
+export class DialogModel {
+    id: string;
+    who: string;
+    message: string;
+    time: Date;
+    nickName: string;
+    avatar: string;
+}
 @Component({
     selector: "chat-view",
     templateUrl: "./chat-view.component.html",
@@ -23,21 +30,60 @@ import { ApiMethod, FacebookService } from "ngx-facebook/dist/esm/providers/face
 export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     user: any;
     chat: any;
-    dialog: any;
+    dialog: any[];
     chatId: string; // conversation id
     contact: any;
     replyInput: any;
     selectedChat: any;
     isHide: any = true;
     selectedFile: any = null;
+    @ViewChild('vcChatContent', { static: false }) vcChatContent: ElementRef;
     @ViewChild(FusePerfectScrollbarDirective, { static: false })
     directiveScroll: FusePerfectScrollbarDirective;
+    isOver = false;
+    lastClicked: Date = new Date();
 
     @ViewChildren("replyInput")
     replyInputField;
-
+    
     @ViewChild("replyForm", { static: false })
     replyForm: NgForm;
+
+    @HostListener('window:scroll', ['$event']) // for window scroll events
+    onScroll(event) {
+        this.LoadMoreMessage();
+    }
+    LoadMoreMessage() {
+
+        if (this.vcChatContent.nativeElement.scrollTop == 0) {
+
+            var now = new Date();
+            console.log(now.getSeconds() - this.lastClicked.getSeconds())
+            if (now.getSeconds() - this.lastClicked.getSeconds() > 2) {
+                this.lastClicked = now;
+                let CreatedOn = this.dialog[0].time;
+                console.log(CreatedOn);
+                this._chatService.getMoreChat(this.chatId, CreatedOn).pipe(
+                    debounceTime(5000)
+                ).subscribe(
+                    (res: any) => {
+
+                        let dialogs = res.dialog as DialogModel[];
+                        if (dialogs.length == 0) this.isOver = true;
+                        console.log(dialogs);
+                        Array.prototype.forEach.call(dialogs.reverse(), child => {
+                            this.dialog.unshift(child);
+                        });
+
+
+
+                    }
+                )
+            }
+
+
+        }
+    }
 
     // Private
     private _unsubscribeAll: Subject<any>;
@@ -98,6 +144,25 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     ngAfterViewInit(): void {
         this.replyInput = this.replyInputField.first.nativeElement;
         this.readyToReply();
+
+        let CreatedOn = this.dialog[0].time;
+        console.log(CreatedOn);
+        this._chatService.getMoreChat(this.chatId, CreatedOn).pipe(
+            debounceTime(5000)
+        ).subscribe(
+            (res: any) => {
+                let dialogs = res.dialog as DialogModel[];
+                console.log(dialogs);
+                Array.prototype.forEach.call(dialogs.reverse(), child => {
+                    this.dialog.unshift(child);
+                });
+                this.scrollToBottom();
+
+
+            }
+        )
+
+
     }
 
     /**

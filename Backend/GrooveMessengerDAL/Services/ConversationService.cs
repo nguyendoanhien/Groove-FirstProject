@@ -8,6 +8,7 @@ using GrooveMessengerDAL.Data;
 using GrooveMessengerDAL.Entities;
 using GrooveMessengerDAL.Models.Conversation;
 using GrooveMessengerDAL.Models.CustomModel;
+using GrooveMessengerDAL.Models.PagingModel;
 using GrooveMessengerDAL.Repositories.Interface;
 using GrooveMessengerDAL.Services.Interface;
 using GrooveMessengerDAL.Uow.Interface;
@@ -108,26 +109,25 @@ namespace GrooveMessengerDAL.Services
             return contactList;
         }
         
-        public ChatModel GetConversationById(string conversationId)
+        public ChatModel GetConversationById(string conversationId, PagingParameterModel pagingParameterModel)
         {
             var spName = "[dbo].[usp_Message_GetByConversationId]";
             var parameter =
-                new SqlParameter
-                {
-                    ParameterName = "ConversationId",
-                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
-                    SqlValue = conversationId
-                };
-
+               new[]
+               {
+                    new SqlParameter("ConversationId", SqlDbType.UniqueIdentifier) {Value = conversationId},
+                    new SqlParameter("CreatedOn", SqlDbType.DateTime2) {Value = pagingParameterModel.CreatedOn}
+               };
+        
             var contactList = _conRepository.ExecuteReturedStoredProcedure<DialogModel>(spName, parameter);
 
             var dialogModels = new List<DialogModel>();
             foreach (var item in contactList)
             {
-                var dialogModel = new DialogModel {Id = item.Id, Who = item.Who, Message = item.Message, Time = item.Time, Avatar = item.Avatar, DisplayName = item.DisplayName};
+                var dialogModel = new DialogModel { Id = item.Id, Who = item.Who, Message = item.Message, Time = item.Time, Avatar = item.Avatar, NickName = item.NickName };
                 dialogModels.Add(dialogModel);
             }
-            ChatModel chatModel = new ChatModel() { Id = conversationId, Dialog = dialogModels };
+            var chatModel = new ChatModel() { Id = conversationId, Dialog = dialogModels };
             return chatModel;
         }
 
