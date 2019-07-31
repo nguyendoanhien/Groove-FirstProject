@@ -62,7 +62,6 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                 var rs = _conService.GetAllConversationOfAUser(CurrentUserId.ToString());
                 return Ok(rs);
             }
-
             return BadRequest();
         }
 

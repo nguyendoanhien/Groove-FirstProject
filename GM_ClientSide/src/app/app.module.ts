@@ -38,6 +38,8 @@ import {
     SpeechRecognitionService,
     RxSpeechRecognitionService
 } from "@kamiazya/ngx-speech-recognition";
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'; // add this line
 import { OpenGrapthService } from "./core/data-api/services/open-grapth.service";
 import { AppHelperService } from "./core/utilities/app-helper.service";
 import { FacebookModule, FacebookService } from "ngx-facebook";
@@ -84,6 +86,7 @@ import * as Cloudinary from "cloudinary-core";
             interimResults: true,
             maxAlternatives: 10,
         }),
+        PickerModule,
         CloudinaryModule.forRoot(Cloudinary,
             { cloud_name: "groovemessenger", upload_preset: "qlbjv3if", private_cdn: "true" })
     ],
@@ -116,10 +119,13 @@ import * as Cloudinary from "cloudinary-core";
             useValue: 1,
         },
         SpeechRecognitionService,
+        RxSpeechRecognitionService
+    ],
+    schemas: [
+        CUSTOM_ELEMENTS_SCHEMA,
         RxSpeechRecognitionService,
         FacebookService
     ]
-
 })
 export class AppModule {
 }
