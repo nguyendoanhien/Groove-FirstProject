@@ -20,7 +20,7 @@ import { ChatLeftSidenavComponent } from "./sidenavs/left/left.component";
 import { ChatRightSidenavComponent } from "./sidenavs/right/right.component";
 import { ChatContactSidenavComponent } from "./sidenavs/right/contact/contact.component";
 import { ProfileHubService } from "app/core/data-api/hubs/profile.hub";
-
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
 @NgModule({
     declarations: [
         ChatComponent,
@@ -43,7 +43,8 @@ import { ProfileHubService } from "app/core/data-api/hubs/profile.hub";
         MatRadioModule,
         MatSidenavModule,
         MatToolbarModule,
-        FuseSharedModule
+        FuseSharedModule,
+        PickerModule
     ],
     providers: [
         ChatService,

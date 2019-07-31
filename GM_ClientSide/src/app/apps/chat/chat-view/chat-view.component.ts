@@ -13,7 +13,6 @@ import { MessageService } from 'app/core/data-api/services/message.service';
 import { IndexMessageModel } from 'app/models/indexMessage.model';
 import { UserContactService } from 'app/core/account/user-contact.service';
 import { RxSpeechRecognitionService, resultList } from '@kamiazya/ngx-speech-recognition';
-
 @Component({
     selector: "chat-view",
     templateUrl: "./chat-view.component.html",
@@ -28,7 +27,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     contact: any;
     replyInput: any;
     selectedChat: any;
-
+    isHide: any = true;
     @ViewChild(FusePerfectScrollbarDirective, { static: false })
     directiveScroll: FusePerfectScrollbarDirective;
 
@@ -121,7 +120,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
         return (
             message.who === this.contact.id &&
-                ((this.dialog[i + 1] && this.dialog[i + 1].who !== this.contact.id) || !this.dialog[i + 1])
+            ((this.dialog[i + 1] && this.dialog[i + 1].who !== this.contact.id) || !this.dialog[i + 1])
         );
     }
 
@@ -195,7 +194,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     /**
      * Reply
      */
-    reply(event): void {
+    async reply(event) {
 
         event.preventDefault();
 
@@ -203,21 +202,23 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             return;
         }
 
+
         // Message
         const message = {
             who: this.user.userId,
             message: this.replyForm.form.value.message,
             time: new Date().toISOString()
         };
+        this.messageInput = ''; //reset
         const newMessage = new IndexMessageModel(this.chatId,
             this.user.userId,
             null,
             message.message,
             "Text",
             this.contact.userId);
-        this._messageService.addMessage(newMessage).subscribe(success => {
-                console.log("send successfull");
-            },
+        await this._messageService.addMessage(newMessage).subscribe(success => {
+            console.log("send successfull");
+        },
             err => console.log("send fail"));
         // Add the message to the chat
         //this.dialog.push(message); //Truc: don't need because broadcast to user + contact
@@ -231,24 +232,24 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
         // Truc: Call count unread messages in controller backend
-        this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
+        await this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
             .subscribe(val => { console.log(val + "chatview"); },
                 error => { console.log(error); }
             );
 
-        this._messageService.updateUnreadMessages(this.chatId)
-            .subscribe(val => 
-                {var chatList = this.user.chatList as Array<any>;
+        await this._messageService.updateUnreadMessages(this.chatId)
+            .subscribe(val => {
+                var chatList = this.user.chatList as Array<any>;
                 var chat = chatList.find(x => x.convId == this.chatId);
-                chat.unread = val;}, 
+                chat.unread = val;
+            },
                 err => console.log(err));
-        
+
     }
 
     SayHi(contact: any) {
         this._userContactService.SayHi(contact).subscribe(
             (res: any) => {
-                debugger;
                 this._chatService.contacts.push(res.contact);
                 this._chatService.user.chatList.push(res.chatContact);
                 this._chatService.chats.push(res.diaglog);
@@ -277,5 +278,15 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.replyInput.value += list.item(0).item(0).transcript + " ";
                 console.log("RxComponent:onresult", this.replyForm.form.value.message, list);
             });
+    }
+    messageInput: string = '';
+    addEmoji(event) {
+        if (this.messageInput == null) this.messageInput = '';
+        this.messageInput += event.emoji.native;
+    }
+
+
+    ShowEmoji() {
+        this.isHide = !this.isHide;
     }
 }

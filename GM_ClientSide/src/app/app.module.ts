@@ -38,7 +38,8 @@ import {
     SpeechRecognitionService,
     RxSpeechRecognitionService
 } from "@kamiazya/ngx-speech-recognition";
-
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'; // add this line
 @NgModule({
     declarations: [
         AppComponent,
@@ -77,7 +78,8 @@ import {
             lang: "en-US",
             interimResults: true,
             maxAlternatives: 10,
-        })
+        }),
+        PickerModule
     ],
     bootstrap: [
         AppComponent
@@ -107,8 +109,10 @@ import {
         },
         SpeechRecognitionService,
         RxSpeechRecognitionService
+    ],
+    schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
     ]
-
 })
 export class AppModule {
 }

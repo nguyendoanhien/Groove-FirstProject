@@ -219,7 +219,18 @@ chat-view {
                     right: 60px;
                     bottom: 21px;
                 }
+                .emotion-button {
+                    position: absolute;
+                    right: 100px;
+                    bottom: 21px;
+                }
             }
         }
     }
+}
+.emoji-mart{
+    width: 100% !important;
+}
+.emoji-mart-preview{
+    display: none;
 }

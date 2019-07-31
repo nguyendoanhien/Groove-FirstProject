@@ -17,11 +17,11 @@
 
                 <!-- CHAT CONTACT-->
                 <div class="chat-contact" fxLayout="row" fxLayoutAlign="start center"
-                     fuseMatSidenavToggler="chat-right-sidenav" (click)="selectContact()" *ngIf="contact">
+                    fuseMatSidenavToggler="chat-right-sidenav" (click)="selectContact()" *ngIf="contact">
 
                     <div class="avatar-wrapper">
 
-                        <img [src]="contact.avatar" class="avatar" alt="{{contact.displayName}}"/>
+                        <img [src]="contact.avatar" class="avatar" alt="{{contact.displayName}}" />
 
                         <mat-icon class="s-16 status" [ngClass]="contact?.status">
                         </mat-icon>
@@ -57,15 +57,14 @@
         <!-- CHAT MESSAGES -->
         <div class="chat-messages">
             <div style="text-align: center" *ngIf="!dialog">
-                <img src="../../../../assets/images/profile/say-hi.png"/>
+                <img src="../../../../assets/images/profile/say-hi.png" />
             </div>
             <p *ngIf="!dialog" style="text-align: center">
                 <b>Say hi to {{contact.displayName}} with a wave.</b>
             </p>
             <button *ngIf="!dialog" _ngcontent-bsa-c60="" color="accent" mat-raised-button=""
-                    class="mat-raised-button mat-accent say-hi-button" (click)="SayHi(contact) ">
-                <span
-                    class="mat-button-wrapper">
+                class="mat-raised-button mat-accent say-hi-button" (click)="SayHi(contact) ">
+                <span class="mat-button-wrapper">
                     Say Hi!
                 </span>
                 <div class="mat-button-ripple mat-ripple" matripple=""></div>
@@ -91,7 +90,6 @@
 
         </div>
         <!-- CHAT MESSAGES -->
-
     </div>
     <!-- / CHAT CONTENT -->
 
@@ -100,22 +98,24 @@
 
         <!-- REPLY FORM -->
         <div class="reply-form" fxFlex="0 0 auto" fxLayout="row" fxLayoutAlign="center center">
-
             <form #replyForm="ngForm" (ngSubmit)="reply($event)" (keydown.enter)="reply($event)" fxFlex fxLayout="row"
-                  fxLayoutAlign="start center">
+                fxLayoutAlign="start center">
 
                 <mat-form-field class="message-text" fxFlex floatLabel="never" appearance="standard">
                     <textarea matInput #replyInput placeholder="Type your message" ngModel name="message" [rows]="1"
-                        [matTextareaAutosize]="true"></textarea>
-                </mat-form-field>
+                        [(ngModel)]="messageInput" [matTextareaAutosize]="true"></textarea>
 
+                </mat-form-field>
                 <button class="record-button" mat-icon-button type="submit" type="button" aria-label="Send message"
-                        #voiceButton [disabled]="_rxSpeechRecognitionService.started$ | async" (click)="listen()">
+                    #voiceButton [disabled]="_rxSpeechRecognitionService.started$ | async" (click)="listen()">
                     <mat-icon [ngStyle]="voiceButton.disabled && {'color':'red'}">
                         record_voice_over
                     </mat-icon>
                 </button>
-
+                <button class="emotion-button" mat-icon-button type="submit" aria-label="Emoji"
+                    (click)="isHide = !isHide;">
+                    <mat-icon class="secondary-text">sentiment_satisfied_alt</mat-icon>
+                </button>
                 <button class="send-message-button" mat-icon-button type="submit" aria-label="Send message">
                     <mat-icon class="secondary-text">send</mat-icon>
                 </button>
@@ -124,7 +124,10 @@
 
         </div>
         <!-- / REPLY FORM -->
-
+        <div [hidden]="isHide" id="emotion" style="width: 100%">
+            <emoji-mart title="Pick your emoji…" emoji="point_up" (emojiClick)="addEmoji($event)" set='emojione'>
+            </emoji-mart>
+        </div>
     </div>
     <!-- / CHAT FOOTER-->
 

@@ -33,6 +33,7 @@
         "@angular/router": "8.0.0",
         "@aspnet/signalr": "1.1.4",
         "@auth0/angular-jwt": "2.1.1",
+        "@ctrl/ngx-emoji-mart": "0.17.0",
         "@kamiazya/ngx-speech-recognition": "0.4.3",
         "@ngrx/effects": "8.0.0-beta.2",
         "@ngrx/router-store": "8.0.0-beta.2",
