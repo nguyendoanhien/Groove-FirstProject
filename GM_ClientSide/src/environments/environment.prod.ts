@@ -37,7 +37,14 @@ export const environment = {
     },
     applicationFacebook: {
         appId: "459900294839907",
-        appSecreta: "b473ce1cdf6e6b9b4f8ed69087885175"
+        appSecreta: "b473ce1cdf6e6b9b4f8ed69087885175",
+        access_token:
+            "EAAFCBDVSVbkBAEmGKIgPfakhNnfXnM42ug4xgLN6uGGyIx8OItdoGlrmHouagaZBI8e5ekzr7Dq2y2BMupi3jrxZAJlksFn85GUN7tQjWIQq1F6JpBehiB7niISRHdZBDRd8akzqsmxcXHcNy5qzLTzsIAwbgZAUZBikTItDYmaGTUvWSC5nY"
+    },
+    openGraph:
+    {
+        appId: "1cc1af51-54ef-4c2f-a54d-5d2c3b96d7cb",
+        url: "https://opengraph.io/api/1.1/site"
     },
     apiUserUrl: apiBaseUrl + "/user",
     apiUserContactUrl: apiBaseUrl + "/usercontact",
@@ -52,4 +59,4 @@ export const environment = {
         contactUrl: backendUrl + "/contacthub",
         serverTimeoutInSeconds: 60
     }
-}
+};

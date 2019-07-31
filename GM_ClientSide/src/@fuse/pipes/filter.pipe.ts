@@ -1,7 +1,7 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { FuseUtils } from '@fuse/utils';
+import { Pipe, PipeTransform } from "@angular/core";
+import { FuseUtils } from "@fuse/utils";
 
-@Pipe({ name: 'filter' })
+@Pipe({ name: "filter" })
 export class FilterPipe implements PipeTransform {
     /**
      * Transform
@@ -12,6 +12,6 @@ export class FilterPipe implements PipeTransform {
      * @returns {any}
      */
     transform(mainArr: any[], searchText: string, property: string): any {
-          return FuseUtils.filterArrayByString(mainArr, searchText);
+        return FuseUtils.filterArrayByString(mainArr, searchText);
     }
 }

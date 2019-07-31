@@ -40,7 +40,14 @@ export const environment = {
     },
     applicationFacebook: {
         appId: "354060818601401",
-        appSecreta: "db1a4f4128e269fa6ca6d47e72cdd0a6"
+        appSecreta: "db1a4f4128e269fa6ca6d47e72cdd0a6",
+        access_token:
+            "EAAFCBDVSVbkBAEmGKIgPfakhNnfXnM42ug4xgLN6uGGyIx8OItdoGlrmHouagaZBI8e5ekzr7Dq2y2BMupi3jrxZAJlksFn85GUN7tQjWIQq1F6JpBehiB7niISRHdZBDRd8akzqsmxcXHcNy5qzLTzsIAwbgZAUZBikTItDYmaGTUvWSC5nY"
+    },
+    openGraph:
+    {
+        appId: "1cc1af51-54ef-4c2f-a54d-5d2c3b96d7cb",
+        url: "https://opengraph.io/api/1.1/site"
     },
     apiUserUrl: apiBaseUrl + "/user",
     apiUserContactUrl: apiBaseUrl + "/usercontact",
@@ -56,12 +63,3 @@ export const environment = {
         serverTimeoutInSeconds: 120
     }
 };
-
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.

@@ -11,24 +11,24 @@ namespace GrooveMessengerAPI.Hubs
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class HubBase<T> : Hub<T> where T : class
     {
-        protected HubConnectionStorage connectionStore;
-        protected string topic;
+        protected HubConnectionStorage ConnectionStore;
+        protected string Topic;
 
 
         public HubBase(HubConnectionStorage connectionStore, string topic)
         {
-            this.connectionStore = connectionStore;
-            this.topic = topic;
+            this.ConnectionStore = connectionStore;
+            this.Topic = topic;
         }
 
         public override Task OnConnectedAsync()
         {
             var name = Context.User.Identity.Name;
 
-            if (!connectionStore.GetConnections(topic, name).Contains(Context.ConnectionId))
+            if (!ConnectionStore.GetConnections(Topic, name).Contains(Context.ConnectionId))
             {
                 var conn = Context.ConnectionId;
-                connectionStore.Add(topic, name, conn);
+                ConnectionStore.Add(Topic, name, conn);
             }
 
             return base.OnConnectedAsync();
@@ -37,7 +37,7 @@ namespace GrooveMessengerAPI.Hubs
         public override Task OnDisconnectedAsync(Exception exception)
         {
             var name = Context.User.Identity.Name;
-            connectionStore.Remove(topic, name, Context.ConnectionId);
+            ConnectionStore.Remove(Topic, name, Context.ConnectionId);
             return base.OnDisconnectedAsync(exception);
         }
     }

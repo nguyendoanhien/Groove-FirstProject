@@ -1,14 +1,13 @@
-export interface ContactLatestChatListModel
-    {
-        ConvId: string;
+export interface ContactLatestChatListModel {
+    ConvId: string;
 
-        ContactId: string;
+    ContactId: string;
 
-        DisplayName: string;
+    DisplayName: string;
 
-        Unread: string;
+    Unread: string;
 
-        LastMessage: string;
+    LastMessage: string;
 
-        LastMessageTime: Date | string | null;
-    }
+    LastMessageTime: Date | string | null;
+}

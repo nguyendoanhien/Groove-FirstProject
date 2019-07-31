@@ -4,13 +4,13 @@ namespace GrooveMessengerAPI.Areas.Chat.Models
 {
     public class Message
     {
-        public Message(Guid FromConv, string FromSender, Guid MessageId, string Payload, DateTime Time)
+        public Message(Guid fromConv, string fromSender, Guid messageId, string payload, DateTime time)
         {
-            this.FromConv = FromConv;
-            this.FromSender = FromSender;
-            this.MessageId = MessageId;
-            this.Payload = Payload;
-            this.Time = Time;
+            this.FromConv = fromConv;
+            this.FromSender = fromSender;
+            this.MessageId = messageId;
+            this.Payload = payload;
+            this.Time = time;
         }
 
         public Guid FromConv { get; set; } // Conv Id

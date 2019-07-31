@@ -99,7 +99,7 @@ export class ChatService implements Resolve<any> {
      * @returns {Promise<any>}
      */
     getChat(contactId): Promise<any> {
-        console.log(this.user.chatList);
+
         const chatItem = this.user.chatList.find((item) => {
             return item.contactId === contactId;
         });

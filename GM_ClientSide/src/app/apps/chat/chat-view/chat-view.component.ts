@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewChildren, ViewEncapsulation } from "@angular/core";
-import { NgForm } from "@angular/forms";
+import { NgForm, FormControl } from "@angular/forms";
 import { Subject } from "rxjs";
 import { takeUntil, take } from "rxjs/operators";
 
@@ -7,12 +7,13 @@ import { FusePerfectScrollbarDirective } from
     "@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive";
 
 import { ChatService } from "../chat.service";
+import { MessageModel } from "app/models/message.model";
+import { MessageService } from "app/core/data-api/services/message.service";
+import { IndexMessageModel } from "app/models/indexMessage.model";
+import { UserContactService } from "app/core/account/user-contact.service";
+import { RxSpeechRecognitionService, resultList } from "@kamiazya/ngx-speech-recognition";
+import { ApiMethod, FacebookService } from "ngx-facebook/dist/esm/providers/facebook";
 
-import { MessageModel } from 'app/models/message.model';
-import { MessageService } from 'app/core/data-api/services/message.service';
-import { IndexMessageModel } from 'app/models/indexMessage.model';
-import { UserContactService } from 'app/core/account/user-contact.service';
-import { RxSpeechRecognitionService, resultList } from '@kamiazya/ngx-speech-recognition';
 @Component({
     selector: "chat-view",
     templateUrl: "./chat-view.component.html",
@@ -28,6 +29,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     replyInput: any;
     selectedChat: any;
     isHide: any = true;
+    selectedFile: any = null;
     @ViewChild(FusePerfectScrollbarDirective, { static: false })
     directiveScroll: FusePerfectScrollbarDirective;
 
@@ -50,7 +52,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         private _chatService: ChatService,
         private _messageService: MessageService,
         private _userContactService: UserContactService,
-        public _rxSpeechRecognitionService: RxSpeechRecognitionService
+        public _rxSpeechRecognitionService: RxSpeechRecognitionService,
+        private fbk: FacebookService
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
@@ -73,7 +76,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.selectedChat = chatData;
                     this.contact = chatData.contact;
                     this.dialog = chatData.dialog;
-                    this.chatId = chatData.chatId; // current conversation id
+                    this.chatId = chatData.chatId; // current conversation id              
+
                     this.readyToReply();
                 }
             });
@@ -186,14 +190,29 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.directiveScroll.scrollToBottom(0, speed);
             });
         }
-        this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
-            .subscribe(val => { console.log(val + 'chatview'); }, error => { console.log(error); }
-            );
     }
 
     /**
      * Reply
      */
+
+
+    async getOgImage(urlPath: string) {
+        let imageUrl = "";
+        const apiMethod: ApiMethod = "post";
+
+        await this.fbk.api(
+            "/",
+            apiMethod,
+            { "scrape": "true", "id": "https://www.skype.com/en/" }
+        ).then(function (response) {
+            imageUrl = response.image[0].url;
+
+        }
+        );
+        return imageUrl;
+    }
+
     async reply(event) {
 
         event.preventDefault();
@@ -201,27 +220,32 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         if (!this.replyForm.form.value.message) {
             return;
         }
-
-
         // Message
         const message = {
             who: this.user.userId,
             message: this.replyForm.form.value.message,
             time: new Date().toISOString()
         };
-        this.messageInput = ''; //reset
+
         const newMessage = new IndexMessageModel(this.chatId,
             this.user.userId,
             null,
             message.message,
             "Text",
             this.contact.userId);
-        await this._messageService.addMessage(newMessage).subscribe(success => {
-            console.log("send successfull");
-        },
-            err => console.log("send fail"));
+        // check if exists all spaces
+        const urlRegex = /^(?!\s*$).+/g;
+        const isMatch: boolean = urlRegex.test(this.replyForm.form.value.message);
+        if (isMatch) {
+            await this._messageService.addMessage(newMessage).subscribe(success => {
+                console.log("send successfull");
+            },
+                err => console.log("send fail"));
+            //this.dialog.push(message); //Truc: don't need because broadcast to user + contact
+        }
+
         // Add the message to the chat
-        //this.dialog.push(message); //Truc: don't need because broadcast to user + contact
+
 
         // Reset the reply form
         this.replyForm.reset();
@@ -244,7 +268,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 chat.unread = val;
             },
                 err => console.log(err));
-
+        this.messageInput = ''; //reset
     }
 
     SayHi(contact: any) {
@@ -253,10 +277,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this._chatService.contacts.push(res.contact);
                 this._chatService.user.chatList.push(res.chatContact);
                 this._chatService.chats.push(res.diaglog);
-                console.log(res.contact);
                 this._chatService.unknownContacts =
                     this._chatService.unknownContacts.filter(item => item.userId !== res.contact.userId);
-                console.log(this._chatService.unknownContacts);
                 const chatData = {
                     chatId: res.dialog.id, // This is id of conversation
                     dialog: res.dialog.dialog,
@@ -267,26 +289,54 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         );
     }
 
+    listenSwitch = false;
 
     listen() {
+        if (this.listenSwitch) {
+            this._rxSpeechRecognitionService
+                .listen()
+                .pipe(resultList, take(1))
+                .subscribe((list: SpeechRecognitionResultList) => {
+                    console.log(`chat voice${list.item(0).item(0).transcript}`);
+                    this.replyInput.value += list.item(0).item(0).transcript + " ";
+                    console.log("RxComponent:onresult", this.replyForm.form.value.message, list);
+                },
+                    err => console.log("No Speech"));
 
-        this._rxSpeechRecognitionService
-            .listen()
-            .pipe(resultList, take(1))
-            .subscribe((list: SpeechRecognitionResultList) => {
-                console.log(`chat voice${list.item(0).item(0).transcript}`);
-                this.replyInput.value += list.item(0).item(0).transcript + " ";
-                console.log("RxComponent:onresult", this.replyForm.form.value.message, list);
-            });
+        } else {
+            this._rxSpeechRecognitionService.listen().subscribe().unsubscribe();
+        }
     }
+
+
+    onUpload(event) {
+        this.selectedFile = (event.target.files[0] as File);
+        const fd = new FormData();
+        fd.append("file", this.selectedFile);
+        const message = {
+            who: this.user.userId,
+            message: "",
+            time: new Date().toISOString()
+        };
+        const newMessage = new IndexMessageModel(this.chatId,
+            this.user.userId,
+            null,
+            message.message,
+            "Image",
+            this.contact.userId);
+        this._messageService.onUpload(fd, newMessage).subscribe();
+
+    }
+
     messageInput: string = '';
     addEmoji(event) {
         if (this.messageInput == null) this.messageInput = '';
         this.messageInput += event.emoji.native;
     }
-
-
     ShowEmoji() {
         this.isHide = !this.isHide;
+    }
+    Say() {
+        alert(123);
     }
 }

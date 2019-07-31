@@ -27,7 +27,7 @@ namespace GrooveMessengerDAL.Services
             _userInfoContactRepository;
 
         private readonly IGenericRepository<UserInfoEntity, Guid, GrooveMessengerDbContext> _userRepository;
-        public IUserResolverService _userResolverService;
+        public IUserResolverService UserResolverService;
 
         public UserService(
             IGenericRepository<UserInfoEntity, Guid, GrooveMessengerDbContext> userRepository,
@@ -42,7 +42,7 @@ namespace GrooveMessengerDAL.Services
             _mapper = mapper;
             _uow = uow;
             _userManager = userManager;
-            _userResolverService = userResolverService;
+            UserResolverService = userResolverService;
             _userInfoContactRepository = userInformContactRepository;
         }
 
@@ -74,7 +74,7 @@ namespace GrooveMessengerDAL.Services
             storedData.Avatar = userInfo.Avatar;
             storedData.Mood = userInfo.Mood;
             storedData.Status =
-                (UserInfoEntity.StatusName) Enum.Parse(typeof(UserInfoEntity.StatusName), userInfo.Status, true);
+                (UserInfoEntity.StatusName)Enum.Parse(typeof(UserInfoEntity.StatusName), userInfo.Status, true);
             _userRepository.Edit(storedData);
             _uow.SaveChanges();
         }
@@ -88,7 +88,7 @@ namespace GrooveMessengerDAL.Services
 
         public async Task<IEnumerable<IndexUserInfoModel>> GetAllUserInfo()
         {
-            var currentUser = await _userManager.FindByNameAsync(_userResolverService.CurrentUserName());
+            var currentUser = await _userManager.FindByNameAsync(UserResolverService.CurrentUserName());
             var userInformList = _userRepository.GetBy(x => x.UserId != currentUser.Id.ToString());
             return _mapper.Map<IEnumerable<UserInfoEntity>, IEnumerable<IndexUserInfoModel>>(userInformList);
         }
@@ -117,7 +117,7 @@ namespace GrooveMessengerDAL.Services
 
             var contactList =
                 _userInfoContactRepository.ExecuteReturedStoredProcedure<UserInfoEntity>(spName, parameter);
-            return contactList;
+            return await Task.FromResult(contactList);
         }
 
         public UserInfoEntity GetByUsername(string username)

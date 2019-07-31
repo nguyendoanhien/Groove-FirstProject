@@ -54,9 +54,9 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         }
 
         [HttpGet("dialogs/{UserId}")]
-        public IActionResult GetAll(string UserId)
+        public IActionResult GetAll(string userId)
         {
-            if (UserId == "undefined") return Ok();
+            if (userId == "undefined") return Ok();
             if (ModelState.IsValid)
             {
                 var rs = _conService.GetAllConversationOfAUser(CurrentUserId.ToString());
@@ -66,11 +66,11 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         }
 
         [HttpGet("dialog/{ConversationId}")]
-        public IActionResult Get(string ConversationId)
+        public IActionResult Get(string conversationId)
         {
             if (ModelState.IsValid)
             {
-                var rs = _conService.GetConversationById(ConversationId);
+                var rs = _conService.GetConversationById(conversationId);
                 return Ok(rs);
             }
 

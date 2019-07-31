@@ -16,7 +16,7 @@ import { ProfileHubService } from "app/core/data-api/hubs/profile.hub";
     animations: fuseAnimations
 })
 export class ChatComponent implements OnInit, OnDestroy {
-    selectedChat: any;
+    selectedChat: any = null;
 
     // Private
     private _unsubscribeAll: Subject<any>;
@@ -44,6 +44,8 @@ export class ChatComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
+
+        this.selectedChat = null;
         this._chatService.onChatSelected
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(chatData => {

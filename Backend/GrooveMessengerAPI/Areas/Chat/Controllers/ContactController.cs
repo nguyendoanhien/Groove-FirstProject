@@ -29,7 +29,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             : base(userResolver)
         {
             _contactService = contactService;
-            _userResolverService = userResolverService;
+            _userResolverService = UserResolverService;
             _userService = userService;
         }
 
@@ -46,11 +46,11 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteContact(Guid Id)
+        public IActionResult DeleteContact(Guid id)
         {
             try
             {
-                _contactService.DeleteContact(Id);
+                _contactService.DeleteContact(id);
                 return Ok("Success");
             }
             catch
@@ -78,17 +78,8 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         public IActionResult EditContact(Guid id, [FromBody] EditContactModel editContactModel)
         {
             if (_contactService.GetSingle(id) == null) return BadRequest("Failed");
-
-
-            try
-            {
                 _contactService.EditContact(editContactModel);
                 return Ok("Success");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("Failed");
-            }
         }
 
         [HttpGet("getchatlist")]

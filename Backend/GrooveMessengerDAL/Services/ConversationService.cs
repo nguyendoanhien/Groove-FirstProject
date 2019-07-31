@@ -63,10 +63,10 @@ namespace GrooveMessengerDAL.Services
         //    return result;
         //}
                 
-        public IEnumerable<ChatModel> GetAllConversationOfAUser(string UserId)
+        public IEnumerable<ChatModel> GetAllConversationOfAUser(string userId)
         {
             var chatModels = new List<ChatModel>();
-            var dialogDraftModels = GetAllConversationOfAUserDraft(UserId);
+            var dialogDraftModels = GetAllConversationOfAUserDraft(userId);
 
             var chatBoxes = from chat in dialogDraftModels
                 group chat by chat.Id
@@ -108,7 +108,7 @@ namespace GrooveMessengerDAL.Services
             return contactList;
         }
         
-        public ChatModel GetConversationById(string ConversationId)
+        public ChatModel GetConversationById(string conversationId)
         {
             var spName = "[dbo].[usp_Message_GetByConversationId]";
             var parameter =
@@ -116,7 +116,7 @@ namespace GrooveMessengerDAL.Services
                 {
                     ParameterName = "ConversationId",
                     SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
-                    SqlValue = ConversationId
+                    SqlValue = conversationId
                 };
 
             var contactList = _conRepository.ExecuteReturedStoredProcedure<DialogModel>(spName, parameter);
@@ -127,7 +127,7 @@ namespace GrooveMessengerDAL.Services
                 var dialogModel = new DialogModel {Id = item.Id, Who = item.Who, Message = item.Message, Time = item.Time, Avatar = item.Avatar, DisplayName = item.DisplayName};
                 dialogModels.Add(dialogModel);
             }
-            ChatModel chatModel = new ChatModel() { Id = ConversationId, Dialog = dialogModels };
+            ChatModel chatModel = new ChatModel() { Id = conversationId, Dialog = dialogModels };
             return chatModel;
         }
 

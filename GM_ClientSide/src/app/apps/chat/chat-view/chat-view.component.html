@@ -72,22 +72,60 @@
             </button>
             <!-- MESSAGE -->
             <div *ngFor="let message of dialog; let i = index" class="message-row" [ngClass]="{
-                            'me': message.who === user.userId,
-                            'contact': message.who !== user.userId,
-                            'first-of-group': isFirstMessageOfGroup(message, i),
-                            'last-of-group': isLastMessageOfGroup(message, i)
-                            }">
+                'me': message.who === user.userId,
+                'contact': message.who !== user.userId,
+                'first-of-group': isFirstMessageOfGroup(message, i),
+                'last-of-group': isLastMessageOfGroup(message, i)
+                }">
 
-                <img *ngIf="shouldShowContactAvatar(message, i)" src="{{contact.avatar}}" class="avatar">
+                <!-- <img *ngIf="shouldShowContactAvatar(message, i)" src="{{contact.avatar}}" class="avatar"> -->
 
                 <div class="bubble">
-                    <div class="message">{{message.message}}</div>
-                    <div class="time secondary-text">{{message.time | date:'short'}}</div>
+                    <div class="message" [innerHtml]="message.message | detectUrl">
+                    </div>
+
+                    <!-- <div class="time secondary-text">{{message.time | date:'short'}}</div> -->
+                </div>
+                <div class="bubble" *ngFor="let obj of message.message | extractUrl | async; let l = count"
+                    style="background-color: transparent !important">
+                    <div class="message" *ngIf="obj">
+                        <div style="background-color: white" style="position: relative">
+                            <a href="{{obj.urlLink}}" target="_blank">
+                                <img src="{{obj.imgLink}}" style="height: 150px; width: 200px;"
+                                    class="message-preview-image">
+                                <div
+                                    style="background-color: rgba(60, 60, 60, 0.5); bottom: 0px; position: absolute; width: 100%">
+                                    <div *ngIf="obj.imgTitle" style="color: white; font-weight: bold;">{{obj.imgTitle}}
+                                    </div>
+                                    <div *ngIf="obj.urlLink"
+                                        style="color: white; font-size: xx-small; font-style: italic;">{{obj.urlLink}}
+                                    </div>
+
+                                </div>
+                            </a>
+                        </div>
+
+                    </div>
                 </div>
 
-            </div>
-            <!-- / MESSAGE -->
+                <div class="time secondary-text">
 
+                    {{message.time | date:'short'}}
+
+
+
+                </div>
+                <!-- <div class="bubble">
+                    <div class="time secondary-text">
+
+                        {{message.time | date:'short'}}
+
+
+
+                    </div>
+                </div> -->
+
+            </div>
         </div>
         <!-- CHAT MESSAGES -->
     </div>
@@ -103,18 +141,25 @@
 
                 <mat-form-field class="message-text" fxFlex floatLabel="never" appearance="standard">
                     <textarea matInput #replyInput placeholder="Type your message" ngModel name="message" [rows]="1"
-                        [(ngModel)]="messageInput" [matTextareaAutosize]="true"></textarea>
-
+                        [(ngModel)]="messageInput" [matTextareaAutosize]="true" pattern="[/^(?!\s*$).+/g]"></textarea>
                 </mat-form-field>
+                <button class="file-button" mat-icon-button type="submit" type="button" aria-label="Send message"
+                    (click)="file.click()">
+                    <input type="file" #file (change)="onUpload($event)" style="display: none" />
+                    <mat-icon>
+                        camera_alt
+                    </mat-icon>
+                </button>
+                <!-- [disabled]="_rxSpeechRecognitionService.started$ | async"  -->
                 <button class="record-button" mat-icon-button type="submit" type="button" aria-label="Send message"
-                    #voiceButton [disabled]="_rxSpeechRecognitionService.started$ | async" (click)="listen()">
-                    <mat-icon [ngStyle]="voiceButton.disabled && {'color':'red'}">
+                    #voiceButton (click)="listenSwitch=!listenSwitch;listen();">
+                    <mat-icon [ngStyle]="listenSwitch && {'color':'red'}">
                         record_voice_over
                     </mat-icon>
                 </button>
                 <button class="emotion-button" mat-icon-button type="submit" aria-label="Emoji"
                     (click)="isHide = !isHide;">
-                    <mat-icon class="secondary-text">sentiment_satisfied_alt</mat-icon>
+                    <mat-icon class="secondary-text">mood</mat-icon>
                 </button>
                 <button class="send-message-button" mat-icon-button type="submit" aria-label="Send message">
                     <mat-icon class="secondary-text">send</mat-icon>
@@ -125,7 +170,7 @@
         </div>
         <!-- / REPLY FORM -->
         <div [hidden]="isHide" id="emotion" style="width: 100%">
-            <emoji-mart title="Pick your emoji…" emoji="point_up" (emojiClick)="addEmoji($event)" set='emojione'>
+            <emoji-mart title="Pick your emoji…" emoji="point_up" (emojiClick)="addEmoji($event)">
             </emoji-mart>
         </div>
     </div>

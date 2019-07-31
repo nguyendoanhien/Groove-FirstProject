@@ -69,7 +69,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     }
 
     changeProfile(user: UserInfo) {
-        this._hubConnection.invoke("ChangeUserProfile", user).catch(function (err) {
+        this._hubConnection.invoke("ChangeUserProfile", user).catch(function(err) {
             return console.error(err.toString());
         });
     }
@@ -119,9 +119,8 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                 const chatList = this.user.chatList as Array<any>;
                 const chat = chatList.find(x => x.convId == unreadMessage.conversationId);
                 if (unreadMessage.amount > 100) {
-                    chat.unread = '99+';
-                }
-                else chat.unread = unreadMessage.amount;
+                    chat.unread = "99+";
+                } else chat.unread = unreadMessage.amount;
                 this._chatService._messageHub.unreadMessage.next(null);
             }
         });
@@ -163,12 +162,13 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     }
 
     async setValueSeenBy(conversationId) {
-        await this._messageService.updateUnreadMessages(conversationId).subscribe(val =>{
-        }, err => console.log(err));
-        
-        var chatList = this.user.chatList as Array<any>;
-        var chat = chatList.find(x => x.convId == conversationId);
-        chat.unread = '';
+        await this._messageService.updateUnreadMessages(conversationId).subscribe(val => {
+            },
+            err => console.log(err));
+
+        const chatList = this.user.chatList as Array<any>;
+        const chat = chatList.find(x => x.convId == conversationId);
+        chat.unread = "";
     }
 
     /**
@@ -237,7 +237,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 }
 
 //Global----------------------------------
-Array.prototype.equals = function (array) {
+Array.prototype.equals = function(array) {
     // if the other array is a falsy value, return
     if (!array)
         return false;

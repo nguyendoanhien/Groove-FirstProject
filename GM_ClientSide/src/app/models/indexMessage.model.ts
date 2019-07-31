@@ -21,4 +21,5 @@ export class IndexMessageModel {
         this.type = type;
         this.receiver = receiver;
     }
+
 }

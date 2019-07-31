@@ -40,6 +40,12 @@ import {
 } from "@kamiazya/ngx-speech-recognition";
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'; // add this line
+import { OpenGrapthService } from "./core/data-api/services/open-grapth.service";
+import { AppHelperService } from "./core/utilities/app-helper.service";
+import { FacebookModule, FacebookService } from "ngx-facebook";
+import { CloudinaryModule } from "@cloudinary/angular-5.x";
+import * as Cloudinary from "cloudinary-core";
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -50,6 +56,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'; // add this line
         BrowserAnimationsModule,
         HttpClientModule,
         AppRoutingModule,
+        FacebookModule.forRoot(),
         TranslateModule.forRoot(),
         InMemoryWebApiModule.forRoot(FakeDbService,
             {
@@ -79,7 +86,9 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'; // add this line
             interimResults: true,
             maxAlternatives: 10,
         }),
-        PickerModule
+        PickerModule,
+        CloudinaryModule.forRoot(Cloudinary,
+            { cloud_name: "groovemessenger", upload_preset: "qlbjv3if", private_cdn: "true" })
     ],
     bootstrap: [
         AppComponent
@@ -99,6 +108,8 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'; // add this line
         ResetPasswordService,
         UserContactService,
         MessageService,
+        OpenGrapthService,
+        AppHelperService,
         {
             provide: SpeechRecognitionLang,
             useValue: "en-US",
@@ -111,7 +122,9 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'; // add this line
         RxSpeechRecognitionService
     ],
     schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
+        CUSTOM_ELEMENTS_SCHEMA,
+        RxSpeechRecognitionService,
+        FacebookService
     ]
 })
 export class AppModule {

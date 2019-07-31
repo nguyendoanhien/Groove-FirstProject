@@ -1,8 +1,7 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform } from "@angular/core";
 
-@Pipe({name: 'htmlToPlaintext'})
-export class HtmlToPlaintextPipe implements PipeTransform
-{
+@Pipe({ name: "htmlToPlaintext" })
+export class HtmlToPlaintextPipe implements PipeTransform {
     /**
      * Transform
      *
@@ -10,8 +9,7 @@ export class HtmlToPlaintextPipe implements PipeTransform
      * @param {any[]} args
      * @returns {string}
      */
-    transform(value: string, args: any[] = []): string
-    {
-        return value ? String(value).replace(/<[^>]+>/gm, '') : '';
+    transform(value: string, args: any[] = []): string {
+        return value ? String(value).replace(/<[^>]+>/gm, "") : "";
     }
 }

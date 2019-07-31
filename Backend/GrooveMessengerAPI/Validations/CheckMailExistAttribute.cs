@@ -9,16 +9,16 @@ namespace GrooveMessengerAPI.Validations
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var _userManager =
+            var userManager =
                 (UserManager<ApplicationUser>) validationContext.GetService(typeof(UserManager<ApplicationUser>));
-            var _logger =
+            var logger =
                 (ILogger<CheckMailExistAttribute>) validationContext.GetService(
                     typeof(ILogger<CheckMailExistAttribute>));
             var email = value.ToString();
-            var user = _userManager.FindByEmailAsync(email).Result;
+            var user = userManager.FindByEmailAsync(email).Result;
             if (user == null)
                 return ValidationResult.Success;
-            _logger.LogError("Mail " + email + " already exists");
+            logger.LogError("Mail " + email + " already exists");
             return new ValidationResult("Email already exists");
         }
     }

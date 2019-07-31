@@ -1,4 +1,4 @@
-import { environment } from 'environments/environment';
+import { environment } from "environments/environment";
 
 export class UserInfo {
     id: string;
@@ -9,6 +9,6 @@ export class UserInfo {
     avatar: string;
 
     constructor() {
-        this.avatar = environment.backendUrl + '/Images/avatar.png';        
+        this.avatar = environment.backendUrl + "/Images/avatar.png";
     }
 }

@@ -25,7 +25,7 @@ namespace GrooveMessengerAPI.Hubs
         {
             var emailList = await _contactService.GetUserContactEmailList();
 
-            foreach (var connectionId in connectionStore.GetConnections(topic, emailList))
+            foreach (var connectionId in ConnectionStore.GetConnections(Topic, emailList))
                 await Clients.Client(connectionId).ClientChangeUserProfile(updateUserProfile);
         }
 

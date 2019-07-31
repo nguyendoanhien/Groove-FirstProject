@@ -8,21 +8,21 @@ namespace GrooveMessengerAPI.Controllers
 {
     public class ApiControllerBase : ControllerBase
     {
-        protected readonly IUserResolverService userResolverService;
+        protected readonly IUserResolverService UserResolverService;
 
         public ApiControllerBase(IUserResolverService userResolverService)
         {
-            this.userResolverService = userResolverService;
+            this.UserResolverService = userResolverService;
         }
 
-        protected string CurrentUserName => userResolverService.CurrentUserName();
+        protected string CurrentUserName => UserResolverService.CurrentUserName();
 
-        protected Guid CurrentUserId => string.IsNullOrEmpty(userResolverService.CurrentUserId())
+        protected Guid CurrentUserId => string.IsNullOrEmpty(UserResolverService.CurrentUserId())
             ? Guid.Empty
-            : new Guid(userResolverService.CurrentUserId());
+            : new Guid(UserResolverService.CurrentUserId());
 
-        protected Guid CurrentUserInfoId => string.IsNullOrEmpty(userResolverService.CurrentUserInfoId())
+        protected Guid CurrentUserInfoId => string.IsNullOrEmpty(UserResolverService.CurrentUserInfoId())
             ? Guid.Empty
-            : new Guid(userResolverService.CurrentUserInfoId());
+            : new Guid(UserResolverService.CurrentUserInfoId());
     }
 }
