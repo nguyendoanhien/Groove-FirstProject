@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using GrooveMessengerDAL.Models.Conversation;
 using GrooveMessengerDAL.Models.CustomModel;
+using GrooveMessengerDAL.Models.PagingModel;
 
 namespace GrooveMessengerDAL.Services.Interface
 {
@@ -8,8 +9,8 @@ namespace GrooveMessengerDAL.Services.Interface
     {
         IEnumerable<ChatModel> GetAllConversationOfAUser(string userId);
         void AddConversation(Models.Conversation.CreateConversationModel createMessageModel);
-        ChatModel GetConversationById(string conversationId);
-        IEnumerable<DialogDraftModel> GetAllConversationOfAUserDraft(string userId = null);
+        ChatModel GetConversationById(string conversationId, PagingParameterModel pagingparametermodel);
+        IEnumerable<DialogModel> GetAllConversationOfAUserDraft(string userId = null);
         void AddConversation();
     }
 }

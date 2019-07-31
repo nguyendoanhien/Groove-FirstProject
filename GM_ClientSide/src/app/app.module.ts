@@ -43,7 +43,7 @@ import { AppHelperService } from "./core/utilities/app-helper.service";
 import { FacebookModule, FacebookService } from "ngx-facebook";
 import { CloudinaryModule } from "@cloudinary/angular-5.x";
 import * as Cloudinary from "cloudinary-core";
-
+import { ScrollEventModule } from 'ngx-scroll-event';
 @NgModule({
     declarations: [
         AppComponent,
@@ -56,6 +56,7 @@ import * as Cloudinary from "cloudinary-core";
         AppRoutingModule,
         FacebookModule.forRoot(),
         TranslateModule.forRoot(),
+
         InMemoryWebApiModule.forRoot(FakeDbService,
             {
                 delay: 0,
@@ -85,7 +86,8 @@ import * as Cloudinary from "cloudinary-core";
             maxAlternatives: 10,
         }),
         CloudinaryModule.forRoot(Cloudinary,
-            { cloud_name: "groovemessenger", upload_preset: "qlbjv3if", private_cdn: "true" })
+            { cloud_name: "groovemessenger", upload_preset: "qlbjv3if", private_cdn: "true" }),
+        ScrollEventModule
     ],
     bootstrap: [
         AppComponent
