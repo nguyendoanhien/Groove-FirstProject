@@ -77,7 +77,6 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         public async Task<IActionResult> Post([FromBody] CreateMessageModel createMessageModel)
         {
             if (!ModelState.IsValid) return BadRequest();
-
             var createdMessage = await _mesService.AddMessageAsync(createMessageModel); // add message to db
             if (createdMessage != null) // broadcast message to user
             {
@@ -95,13 +94,11 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             }
             return NotFound();
         }
-
         [HttpDelete("{id}")]
         public IActionResult DeleteMessage(Guid id)
         {
             var isExisting = _mesService.CheckExisting(id);
             if (!isExisting) return new NotFoundResult();
-
             _mesService.DeleteMessage(id);
             return Ok();
         }

@@ -38,7 +38,6 @@ chat-view {
           left: 50%;
           transform: translateX(-50%);
         }
-
         .message-row {
           position: relative;
           display: flex;
@@ -239,10 +238,22 @@ chat-view {
           right: 94px;
           bottom: 21px;
         }
+        .emotion-button {
+          position: absolute;
+          right: 120px;
+          bottom: 21px;
+        }
       }
     }
   }
 }
 .message-preview-image {
   width: 200px;
+}
+
+.emoji-mart {
+  width: 100% !important;
+}
+.emoji-mart-preview {
+  display: none;
 }

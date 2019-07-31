@@ -8,8 +8,8 @@ namespace GrooveMessengerDAL.Services.Interface
     {
         IEnumerable<ChatModel> GetAllConversationOfAUser(string userId);
         void AddConversation(Models.Conversation.CreateConversationModel createMessageModel);
-        ChatModel GetConversationById(string conversationId);
-        IEnumerable<DialogDraftModel> GetAllConversationOfAUserDraft(string userId = null);
+        ChatModel GetConversationById(string ConversationId);
+        IEnumerable<DialogModel> GetAllConversationOfAUserDraft(string UserId = null);
         void AddConversation();
     }
 }
