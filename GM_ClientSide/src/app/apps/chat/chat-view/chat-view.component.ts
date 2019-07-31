@@ -269,6 +269,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             },
                 err => console.log(err));
         this.messageInput = ''; //reset
+        this.isHide = true;
     }
 
     SayHi(contact: any) {
