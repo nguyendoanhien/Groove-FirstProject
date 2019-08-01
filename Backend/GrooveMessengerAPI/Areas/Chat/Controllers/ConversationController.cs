@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using DAL = GrooveMessengerDAL.Models.PagingModel;
 namespace GrooveMessengerAPI.Areas.Chat.Controllers
 {
@@ -36,12 +37,14 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserService _userService;
         private readonly HubConnectionStorage _hubConnectionStore;
+        private readonly IConfiguration _config;
 
         public ConversationController(IConversationService conService, IMessageService messageService,
             IParticipantService participantService,
             UserManager<ApplicationUser> userManager, IContactService contactService, IUserService userService,
             IUserResolverService userResolver, IHubContext<ContactHub, IContactHubClient> contactHubContext,
-            HubConnectionStorage hubConnectionStore
+            HubConnectionStorage hubConnectionStore,
+            IConfiguration config
         ) : base(userResolver)
         {
             _conService = conService;
@@ -52,6 +55,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             _userService = userService;
             _contactHubContext = contactHubContext;
             _hubConnectionStore = hubConnectionStore;
+            _config = config;
         }
 
         [HttpGet("dialogs/{UserId}")]
@@ -114,7 +118,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             // create conversation
             var createConversationModel = new CreateConversationModel
             {
-                Id = Guid.NewGuid(), Avatar = "https://localhost:44383/images/avatar.png", Name = userIndex.DisplayName
+                Id = Guid.NewGuid(), Avatar = $"{_config.GetSection("Server")}/images/avatar.png", Name = userIndex.DisplayName
             };
             _conService.AddConversation(createConversationModel);
 
