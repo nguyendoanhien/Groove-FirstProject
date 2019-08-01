@@ -66,7 +66,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
         this.resetPasswordForm = this._formBuilder.group({
             email: [
                 "",
-                [Validators.required, Validators.pattern(/^[a-z][a-z0-9_\.]{5,32}@[a-z0-9]{3,}(\.[a-z0-9]{2,4}){1,2}$/)]
+                [Validators.required, Validators.pattern(/^\s*(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))\s*$/)]
             ],
             password: [
                 "", [
@@ -111,11 +111,11 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
             newpassword: this.resetPasswordForm.get("password").value,
         };
         this._resetPasswordService.resetPassword(resetPassword).subscribe(val => {
-                this._route.navigate(["/account/login"]);
-                alert("Your password have successfully changed");
+                this._route.navigate(["/account/login"]);  
+                alert("Your Password has been successfully changed");
             },
             err => this.isResetFailture = true);
-
+        this._resetPasswordService.notification(resetPassword.email).subscribe();
     }
 }
 

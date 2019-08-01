@@ -23,6 +23,7 @@ export const environment = {
     authFacebookUrl: authBaseUrl + "/loginfacebook",
     authResetPasswordUrl: authBaseUrl + "/resetpassword",
     authForgotPasswordUrl: authBaseUrl + "/forgotpassword",
+    authNotificationUrl: authBaseUrl + "/notification",
     apigetUserInfo: authBaseUrl + "/user",
     apiContactGetAllInformUrl: apiContactUrl + "/getallcontactinform",
     apiContactGetAllUnknownInformUrl: apiContactUrl + "/getallunknowncontactinform",
