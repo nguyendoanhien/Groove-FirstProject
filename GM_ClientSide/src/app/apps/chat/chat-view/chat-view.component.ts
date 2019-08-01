@@ -1,44 +1,99 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewChildren, ViewEncapsulation } from "@angular/core";
-import { NgForm, FormControl } from "@angular/forms";
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewChildren, ViewEncapsulation, ElementRef, HostListener } from "@angular/core";
+import { NgForm } from "@angular/forms";
 import { Subject } from "rxjs";
-import { takeUntil, take } from "rxjs/operators";
+import { takeUntil, take, debounceTime } from "rxjs/operators";
 
 import { FusePerfectScrollbarDirective } from
     "@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive";
 
 import { ChatService } from "../chat.service";
+
 import { MessageModel } from "app/models/message.model";
 import { MessageService } from "app/core/data-api/services/message.service";
 import { IndexMessageModel } from "app/models/indexMessage.model";
 import { UserContactService } from "app/core/account/user-contact.service";
 import { RxSpeechRecognitionService, resultList } from "@kamiazya/ngx-speech-recognition";
 import { ApiMethod, FacebookService } from "ngx-facebook/dist/esm/providers/facebook";
-
+import { ScrollEvent } from 'ngx-scroll-event';
+export class DialogModel {
+    id: string;
+    who: string;
+    message: string;
+    time: Date;
+    nickName: string;
+    avatar: string;
+}
 @Component({
     selector: "chat-view",
     templateUrl: "./chat-view.component.html",
     styleUrls: ["./chat-view.component.scss"],
     encapsulation: ViewEncapsulation.None
 })
+
 export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     user: any;
     chat: any;
-    dialog: any;
+    dialog: any[];
     chatId: string; // conversation id
     contact: any;
     replyInput: any;
     selectedChat: any;
-    isHide: any = true;
     selectedFile: any = null;
+    @ViewChild('vcChatContent', { static: false }) vcChatContent: ElementRef;
     @ViewChild(FusePerfectScrollbarDirective, { static: false })
     directiveScroll: FusePerfectScrollbarDirective;
 
+    isOver = false;
     @ViewChildren("replyInput")
     replyInputField;
-
+    lastClicked: Date = new Date();
     @ViewChild("replyForm", { static: false })
     replyForm: NgForm;
+    @HostListener('window:scroll', ['$event']) // for window scroll events
+    onScroll(event) {
+        this.LoadMoreMessage();
 
+
+    }
+    LoadMoreMessage() {
+
+        if (this.vcChatContent.nativeElement.scrollTop == 0) {
+
+
+            var now = new Date();
+            console.log(now.getSeconds() - this.lastClicked.getSeconds())
+            if (now.getSeconds() - this.lastClicked.getSeconds() > 2) {
+                this.lastClicked = now;
+                let CreatedOn = this.dialog[0].time;
+                console.log(CreatedOn);
+                this._chatService.getMoreChat(this.chatId, CreatedOn).pipe(
+                    debounceTime(5000)
+                ).subscribe(
+                    (res: any) => {
+
+                        let dialogs = res.dialog as DialogModel[];
+                        if (dialogs.length == 0) this.isOver = true;
+                        console.log(dialogs);
+                        Array.prototype.forEach.call(dialogs.reverse(), child => {
+                            this.dialog.unshift(child);
+                        });
+
+
+
+                    }
+                )
+            }
+
+
+
+
+
+
+
+
+
+        }
+    }
     // Private
     private _unsubscribeAll: Subject<any>;
 
@@ -68,6 +123,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * On init
      */
     ngOnInit(): void {
+
         this.user = this._chatService.user;
         this._chatService.onChatSelected
             .pipe(takeUntil(this._unsubscribeAll))
@@ -76,20 +132,22 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.selectedChat = chatData;
                     this.contact = chatData.contact;
                     this.dialog = chatData.dialog;
-                    this.chatId = chatData.chatId; // current conversation id              
-
+                    this.chatId = chatData.chatId; // current conversation id
                     this.readyToReply();
+
+
                 }
             });
 
         this._chatService._messageHub.newChatMessage.subscribe((message: MessageModel) => {
-            console.log(message);
+
             if (message) {
                 if (this.chatId === message.fromConv) {
-                    this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time });
+                    this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time, id: '', nickName: '', avatar: '' });
                 }
             }
         });
+
     }
 
     /**
@@ -98,6 +156,25 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     ngAfterViewInit(): void {
         this.replyInput = this.replyInputField.first.nativeElement;
         this.readyToReply();
+
+        let CreatedOn = this.dialog[0].time;
+        console.log(CreatedOn);
+        this._chatService.getMoreChat(this.chatId, CreatedOn).pipe(
+            debounceTime(5000)
+        ).subscribe(
+            (res: any) => {
+                let dialogs = res.dialog as DialogModel[];
+                console.log(dialogs);
+                Array.prototype.forEach.call(dialogs.reverse(), child => {
+                    this.dialog.unshift(child);
+                });
+                this.scrollToBottom();
+
+
+            }
+        )
+
+
     }
 
     /**
@@ -196,7 +273,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * Reply
      */
 
-
     async getOgImage(urlPath: string) {
         let imageUrl = "";
         const apiMethod: ApiMethod = "post";
@@ -215,37 +291,31 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
     async reply(event) {
 
+
         event.preventDefault();
 
         if (!this.replyForm.form.value.message) {
             return;
         }
+
         // Message
         const message = {
             who: this.user.userId,
             message: this.replyForm.form.value.message,
             time: new Date().toISOString()
         };
-
         const newMessage = new IndexMessageModel(this.chatId,
             this.user.userId,
             null,
             message.message,
             "Text",
             this.contact.userId);
-        // check if exists all spaces
-        const urlRegex = /^(?!\s*$).+/g;
-        const isMatch: boolean = urlRegex.test(this.replyForm.form.value.message);
-        if (isMatch) {
-            await this._messageService.addMessage(newMessage).subscribe(success => {
-                console.log("send successfull");
-            },
-                err => console.log("send fail"));
-            //this.dialog.push(message); //Truc: don't need because broadcast to user + contact
-        }
+        this._messageService.addMessage(newMessage).subscribe(success => {
 
+        },
+            err => console.log("send fail"));
         // Add the message to the chat
-
+        //this.dialog.push(message); //Truc: don't need because broadcast to user + contact
 
         // Reset the reply form
         this.replyForm.reset();
@@ -254,27 +324,18 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
             this.readyToReply();
         });
+        // Truc: Call controller backend
 
-        // Truc: Call count unread messages in controller backend
-        await this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
+        this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
             .subscribe(val => { console.log(val + "chatview"); },
                 error => { console.log(error); }
             );
-
-        await this._messageService.updateUnreadMessages(this.chatId)
-            .subscribe(val => {
-                var chatList = this.user.chatList as Array<any>;
-                var chat = chatList.find(x => x.convId == this.chatId);
-                chat.unread = val;
-            },
-                err => console.log(err));
-        this.messageInput = ''; //reset
-        this.isHide = true;
     }
 
     SayHi(contact: any) {
         this._userContactService.SayHi(contact).subscribe(
             (res: any) => {
+
                 this._chatService.contacts.push(res.contact);
                 this._chatService.user.chatList.push(res.chatContact);
                 this._chatService.chats.push(res.diaglog);
@@ -329,15 +390,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
     }
 
-    messageInput: string = '';
-    addEmoji(event) {
-        if (this.messageInput == null) this.messageInput = '';
-        this.messageInput += event.emoji.native;
-    }
-    ShowEmoji() {
-        this.isHide = !this.isHide;
-    }
     Say() {
         alert(123);
     }
+
+
+
 }

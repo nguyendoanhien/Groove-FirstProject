@@ -6,6 +6,7 @@ using GrooveMessengerAPI.Constants;
 using GrooveMessengerAPI.Controllers;
 using GrooveMessengerAPI.Hubs;
 using GrooveMessengerAPI.Hubs.Utils;
+using GrooveMessengerAPI.Models;
 using GrooveMessengerDAL.Models;
 using GrooveMessengerDAL.Models.Contact;
 using GrooveMessengerDAL.Models.Conversation;
@@ -19,7 +20,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-
+using DAL = GrooveMessengerDAL.Models.PagingModel;
 namespace GrooveMessengerAPI.Areas.Chat.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -66,11 +67,11 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         }
 
         [HttpGet("dialog/{ConversationId}")]
-        public IActionResult Get(string conversationId)
+        public IActionResult Get(string conversationId, [FromQuery] DAL.PagingParameterModel pagingparametermodel)
         {
             if (ModelState.IsValid)
             {
-                var rs = _conService.GetConversationById(conversationId);
+                var rs = _conService.GetConversationById(conversationId, pagingparametermodel);
                 return Ok(rs);
             }
 

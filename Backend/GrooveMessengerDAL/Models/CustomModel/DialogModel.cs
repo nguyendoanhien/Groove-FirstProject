@@ -8,7 +8,7 @@ namespace GrooveMessengerDAL.Models.CustomModel
         public string Who { get; set; }
         public string Message { get; set; }
         public DateTime? Time { get; set; }
-        public string DisplayName { get; set; }
+        public string NickName { get; set; }
         public string Avatar { get; set; }
     }
 }

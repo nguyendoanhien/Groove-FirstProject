@@ -8,6 +8,7 @@ using GrooveMessengerDAL.Data;
 using GrooveMessengerDAL.Entities;
 using GrooveMessengerDAL.Models.Conversation;
 using GrooveMessengerDAL.Models.CustomModel;
+using GrooveMessengerDAL.Models.PagingModel;
 using GrooveMessengerDAL.Repositories.Interface;
 using GrooveMessengerDAL.Services.Interface;
 using GrooveMessengerDAL.Uow.Interface;
@@ -62,23 +63,24 @@ namespace GrooveMessengerDAL.Services
         //    var result = _conRepository.GetAll().Where(x => conIdList.Contains(x.Id));
         //    return result;
         //}
-                
-        public IEnumerable<ChatModel> GetAllConversationOfAUser(string userId)
+
+        public IEnumerable<ChatModel> GetAllConversationOfAUser(string UserId)
         {
             var chatModels = new List<ChatModel>();
-            var dialogDraftModels = GetAllConversationOfAUserDraft(userId);
+            var dialogDraftModels = GetAllConversationOfAUserDraft(UserId);
 
             var chatBoxes = from chat in dialogDraftModels
-                group chat by chat.Id
-                into chatGroup
-                select new
-                {
-                    chatGroup.Key,
-                    Dialogs = chatGroup
-                };
+                            group chat by chat.Id
+            into chatGroup
+                            select new
+                            {
+                                chatGroup.Key,
+                                Dialogs = chatGroup
+                            };
             foreach (var chatbox in chatBoxes)
             {
-                if (!chatModels.Select(x => x.Id).Contains(chatbox.Key.ToString())) {
+                if (!chatModels.Select(x => x.Id).Contains(chatbox.Key.ToString()))
+                {
                     List<DialogModel> dialogModels = new List<DialogModel>();
                     ChatModel chatModel = new ChatModel() { Id = chatbox.Key.ToString(), Dialog = dialogModels };
                     chatModels.Add(chatModel);
@@ -97,37 +99,36 @@ namespace GrooveMessengerDAL.Services
         {
             var spName = "[dbo].[usp_Message_GetAllConversationsWithMessages]";
             var parameter =
-                new SqlParameter
-                {
-                    ParameterName = "UserId",
-                    SqlDbType = SqlDbType.UniqueIdentifier,
-                    SqlValue = string.IsNullOrEmpty(UserId) ? _userResolverService.CurrentUserInfoId() : UserId
-                };
+            new SqlParameter
+            {
+                ParameterName = "UserId",
+                SqlDbType = SqlDbType.UniqueIdentifier,
+                SqlValue = string.IsNullOrEmpty(UserId) ? _userResolverService.CurrentUserInfoId() : UserId
+            };
 
             var contactList = _conRepository.ExecuteReturedStoredProcedure<DialogModel>(spName, parameter);
             return contactList;
         }
-        
-        public ChatModel GetConversationById(string conversationId)
+
+        public ChatModel GetConversationById(string ConversationId, PagingParameterModel pagingparameterModel)
         {
             var spName = "[dbo].[usp_Message_GetByConversationId]";
             var parameter =
-                new SqlParameter
-                {
-                    ParameterName = "ConversationId",
-                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
-                    SqlValue = conversationId
-                };
-
+               new[]
+               {
+                    new SqlParameter("ConversationId", SqlDbType.UniqueIdentifier) {Value = ConversationId},
+                    new SqlParameter("CreatedOn", SqlDbType.DateTime2) {Value = pagingparameterModel.CreatedOn}
+               };
+        
             var contactList = _conRepository.ExecuteReturedStoredProcedure<DialogModel>(spName, parameter);
 
             var dialogModels = new List<DialogModel>();
             foreach (var item in contactList)
             {
-                var dialogModel = new DialogModel {Id = item.Id, Who = item.Who, Message = item.Message, Time = item.Time, Avatar = item.Avatar, DisplayName = item.DisplayName};
+                var dialogModel = new DialogModel { Id = item.Id, Who = item.Who, Message = item.Message, Time = item.Time, Avatar = item.Avatar, NickName = item.NickName };
                 dialogModels.Add(dialogModel);
             }
-            ChatModel chatModel = new ChatModel() { Id = conversationId, Dialog = dialogModels };
+            ChatModel chatModel = new ChatModel() { Id = ConversationId, Dialog = dialogModels };
             return chatModel;
         }
 
