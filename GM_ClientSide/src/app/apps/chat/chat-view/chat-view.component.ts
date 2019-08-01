@@ -13,6 +13,9 @@ import { IndexMessageModel } from "app/models/indexMessage.model";
 import { UserContactService } from "app/core/account/user-contact.service";
 import { RxSpeechRecognitionService, resultList } from "@kamiazya/ngx-speech-recognition";
 import { ApiMethod, FacebookService } from "ngx-facebook/dist/esm/providers/facebook";
+import { WindowRef } from '@fuse/services/window-ref';
+
+
 export class DialogModel {
     id: string;
     who: string;
@@ -41,39 +44,47 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild(FusePerfectScrollbarDirective, { static: false })
     directiveScroll: FusePerfectScrollbarDirective;
     isOver = false;
-    lastClicked: Date = new Date();
+    lastClicked: Date;
 
     @ViewChildren("replyInput")
     replyInputField;
-    
+
     @ViewChild("replyForm", { static: false })
     replyForm: NgForm;
-
     @HostListener('window:scroll', ['$event']) // for window scroll events
     onScroll(event) {
+
         this.LoadMoreMessage();
     }
+
     LoadMoreMessage() {
-
         if (this.vcChatContent.nativeElement.scrollTop == 0) {
-
             var now = new Date();
             console.log(now.getSeconds() - this.lastClicked.getSeconds())
-            if (now.getSeconds() - this.lastClicked.getSeconds() > 2) {
+            if (now.getSeconds() - this.lastClicked.getSeconds() >= 1) {
                 this.lastClicked = now;
                 let CreatedOn = this.dialog[0].time;
-                console.log(CreatedOn);
+
                 this._chatService.getMoreChat(this.chatId, CreatedOn).pipe(
                     debounceTime(5000)
                 ).subscribe(
                     (res: any) => {
-
+                        var beforeScrollHeight = this.vcChatContent.nativeElement.scrollHeight;
+                        console.log('before' + beforeScrollHeight)
                         let dialogs = res.dialog as DialogModel[];
                         if (dialogs.length == 0) this.isOver = true;
-                        console.log(dialogs);
+
                         Array.prototype.forEach.call(dialogs.reverse(), child => {
                             this.dialog.unshift(child);
                         });
+
+
+
+                        setTimeout(() => {
+                            var afterScrollHeight = this.vcChatContent.nativeElement.scrollHeight;
+                            this.vcChatContent.nativeElement.scrollTop = afterScrollHeight - beforeScrollHeight;
+                        }, 0)
+
 
 
 
@@ -99,7 +110,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         private _messageService: MessageService,
         private _userContactService: UserContactService,
         public _rxSpeechRecognitionService: RxSpeechRecognitionService,
-        private fbk: FacebookService
+        private fbk: FacebookService,
+        private _windowRef: WindowRef
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
@@ -114,6 +126,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * On init
      */
     ngOnInit(): void {
+        this.lastClicked = new Date();
         this.user = this._chatService.user;
         this._chatService.onChatSelected
             .pipe(takeUntil(this._unsubscribeAll))
@@ -122,7 +135,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.selectedChat = chatData;
                     this.contact = chatData.contact;
                     this.dialog = chatData.dialog;
-                    this.chatId = chatData.chatId; // current conversation id              
+                    this.chatId = chatData.chatId; // current conversation id
 
                     this.readyToReply();
                 }
@@ -151,6 +164,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             debounceTime(5000)
         ).subscribe(
             (res: any) => {
+                var beforeScrollHeight = this.vcChatContent.nativeElement.scrollHeight;
                 let dialogs = res.dialog as DialogModel[];
                 console.log(dialogs);
                 Array.prototype.forEach.call(dialogs.reverse(), child => {

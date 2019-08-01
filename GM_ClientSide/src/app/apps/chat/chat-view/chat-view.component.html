@@ -52,7 +52,8 @@
     <!-- / CHAT TOOLBAR -->
 
     <!-- CHAT CONTENT -->
-    <div id="chat-content" #vcChatContent fxFlex="1 1 auto" (scroll)="onScroll($event)" fusePerfectScrollbar>
+    <div id="chat-content" #vcChatContent fxFlex="1 1 auto" (scroll)="onScroll($event)"
+        (DOMContentLoaded)="onContentLoaded($event)" fusePerfectScrollbar>
         <!-- fusePerfectScrollbar> -->
 
         <!-- CHAT MESSAGES -->
