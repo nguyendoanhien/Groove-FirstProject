@@ -103,8 +103,7 @@
                                     <div *ngIf="obj.imgTitle" style="color: white; font-weight: bold;">{{obj.imgTitle}}
                                     </div>
                                     <div *ngIf="obj.urlLink"
-                                        style="color: white; font-size: xx-small; font-style: italic;">
-                                        {{obj.urlLink}}
+                                        style="color: white; font-size: xx-small; font-style: italic;">{{obj.urlLink}}
                                     </div>
 
                                 </div>
@@ -134,7 +133,6 @@
             </div>
         </div>
         <!-- CHAT MESSAGES -->
-
     </div>
     <!-- / CHAT CONTENT -->
 
@@ -143,15 +141,13 @@
 
         <!-- REPLY FORM -->
         <div class="reply-form" fxFlex="0 0 auto" fxLayout="row" fxLayoutAlign="center center">
-
             <form #replyForm="ngForm" (ngSubmit)="reply($event)" (keydown.enter)="reply($event)" fxFlex fxLayout="row"
                 fxLayoutAlign="start center">
 
                 <mat-form-field class="message-text" fxFlex floatLabel="never" appearance="standard">
                     <textarea matInput #replyInput placeholder="Type your message" ngModel name="message" [rows]="1"
-                        [matTextareaAutosize]="true"></textarea>
+                        [(ngModel)]="messageInput" [matTextareaAutosize]="true" pattern="[/^(?!\s*$).+/g]"></textarea>
                 </mat-form-field>
-
                 <button class="file-button" mat-icon-button type="submit" type="button" aria-label="Send message"
                     (click)="file.click()">
                     <input type="file" #file (change)="onUpload($event)" style="display: none" />
@@ -166,7 +162,10 @@
                         record_voice_over
                     </mat-icon>
                 </button>
-
+                <button class="emotion-button" mat-icon-button type="submit" aria-label="Emoji"
+                    (click)="isHide = !isHide;">
+                    <mat-icon class="secondary-text">mood</mat-icon>
+                </button>
                 <button class="send-message-button" mat-icon-button type="submit" aria-label="Send message">
                     <mat-icon class="secondary-text">send</mat-icon>
                 </button>
@@ -175,7 +174,10 @@
 
         </div>
         <!-- / REPLY FORM -->
-
+        <div [hidden]="isHide" id="emotion" style="width: 100%">
+            <emoji-mart title="Pick your emoji…" emoji="point_up" (emojiClick)="addEmoji($event)">
+            </emoji-mart>
+        </div>
     </div>
     <!-- / CHAT FOOTER-->
 

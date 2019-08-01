@@ -9,7 +9,7 @@ namespace GrooveMessengerDAL.Services.Interface
     {
         IEnumerable<ChatModel> GetAllConversationOfAUser(string userId);
         void AddConversation(Models.Conversation.CreateConversationModel createMessageModel);
-        ChatModel GetConversationById(string conversationId, PagingParameterModel pagingparametermodel);
+        ChatModel GetConversationById(string conversationId, PagingParameterModel pagingParameterModel);
         IEnumerable<DialogModel> GetAllConversationOfAUserDraft(string userId = null);
         void AddConversation();
     }
