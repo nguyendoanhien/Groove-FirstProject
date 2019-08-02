@@ -11,7 +11,7 @@ namespace GrooveMessengerDAL.Configurations
             base.Configure(builder);
             builder.ToTable("Conversation");
             builder.Property(x => x.Name).HasColumnName("Name").IsRequired().HasMaxLength(50);
-            builder.Property(x => x.Avatar).HasColumnName("Avatar").IsRequired().HasMaxLength(50);
+            builder.Property(x => x.Avatar).HasColumnName("Avatar").IsRequired().HasMaxLength(1000);
 
             builder.HasMany(x => x.MessageEntity).WithOne(b => b.ConversationEntity)
                 .HasForeignKey(x => x.ConversationId);

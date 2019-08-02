@@ -28,7 +28,7 @@ namespace GrooveMessengerDAL.Migrations
                     b.Property<string>("Avatar")
                         .IsRequired()
                         .HasColumnName("Avatar")
-                        .HasMaxLength(50);
+                        .HasMaxLength(1000);
 
                     b.Property<string>("CreatedBy")
                         .HasColumnName("CreatedBy");
