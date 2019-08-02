@@ -118,7 +118,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             // create conversation
             var createConversationModel = new CreateConversationModel
             {
-                Id = Guid.NewGuid(), Avatar = $"{_config.GetSection("Server")}/images/avatar.png", Name = userIndex.DisplayName
+                Id = Guid.NewGuid(), Avatar = $"{_config.GetSection("Server").Value}/images/avatar.png", Name = userIndex.DisplayName
             };
             _conService.AddConversation(createConversationModel);
 
