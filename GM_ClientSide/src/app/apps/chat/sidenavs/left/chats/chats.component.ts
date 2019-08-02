@@ -70,7 +70,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     }
 
     changeProfile(user: UserInfo) {
-        this._hubConnection.invoke("ChangeUserProfile", user).catch(function(err) {
+        this._hubConnection.invoke("ChangeUserProfile", user).catch(function (err) {
             return console.error(err.toString());
         });
     }
@@ -122,7 +122,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                 const chat = chatList.find(x => x.convId == unreadMessage.conversationId);
                 if (unreadMessage.amount > 100) {
                     chat.unread = "99+";
-                } 
+                }
                 else {
                     chat.unread = unreadMessage.amount;
                 }
@@ -169,7 +169,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 
     async setValueSeenBy(conversationId) {
         await this._messageService.updateUnreadMessages(conversationId).subscribe(val => {
-            },
+        },
             err => console.log(err));
 
         const chatList = this.user.chatList as Array<any>;
@@ -206,7 +206,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         this._userInfoService.userInfo.status = "offline";
         await this._userInfoService.changeDisplayName().subscribe();
         this._userProfileService.logOut();
-        window.location.reload();
+        // window.location.reload();
     }
 
     CountData() {
@@ -244,7 +244,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 }
 
 //Global----------------------------------
-Array.prototype.equals = function(array) {
+Array.prototype.equals = function (array) {
     // if the other array is a falsy value, return
     if (!array)
         return false;

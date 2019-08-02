@@ -52,8 +52,7 @@
     <!-- / CHAT TOOLBAR -->
 
     <!-- CHAT CONTENT -->
-    <div id="chat-content" #vcChatContent fxFlex="1 1 auto" (scroll)="onScroll($event)"
-        (DOMContentLoaded)="onContentLoaded($event)" fusePerfectScrollbar>
+    <div id="chat-content" #vcChatContent fxFlex="1 1 auto" (scroll)="onScroll($event)" fusePerfectScrollbar>
         <!-- fusePerfectScrollbar> -->
 
         <!-- CHAT MESSAGES -->
@@ -100,7 +99,7 @@
                                 <img src="{{obj.imgLink}}" style="height: 150px; width: 200px;"
                                     class="message-preview-image">
                                 <div
-                                    style="background-color: rgba(60, 60, 60, 0.5); bottom: 0px; position: absolute; width: 100%">
+                                    style="background-color: rgba(60, 60, 60, 0.5); bottom: 0px; position: absolute; width: 100%; height:20%">
                                     <div *ngIf="obj.imgTitle" style="color: white; font-weight: bold;">{{obj.imgTitle}}
                                     </div>
                                     <div *ngIf="obj.urlLink"
