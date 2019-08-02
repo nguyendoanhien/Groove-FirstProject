@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation, ViewChildren } from "@angular/core";
+import { Component, OnDestroy, OnInit, ViewEncapsulation, ViewChildren, ChangeDetectorRef } from "@angular/core";
 import { MediaObserver } from "@angular/flex-layout";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -54,7 +54,8 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         public _mediaObserver: MediaObserver,
         public _userInfoService: UserInfoService,
         private profileHubService: ProfileHubService,
-        private _messageService: MessageService
+        private _messageService: MessageService,
+        private cd: ChangeDetectorRef
     ) {
         // Set the defaults
         this.chatSearch = {
@@ -115,12 +116,17 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 
         this._chatService._messageHub.unreadMessage.subscribe((unreadMessage: UnreadMessage) => {
             if (unreadMessage) {
-
+                console.log('Unread message amount:');
+                console.log(unreadMessage);
                 const chatList = this.user.chatList as Array<any>;
                 const chat = chatList.find(x => x.convId == unreadMessage.conversationId);
                 if (unreadMessage.amount > 100) {
                     chat.unread = "99+";
-                } else chat.unread = unreadMessage.amount;
+                } 
+                else {
+                    chat.unread = unreadMessage.amount;
+                }
+                this.cd.detectChanges();
                 this._chatService._messageHub.unreadMessage.next(null);
             }
         });
@@ -230,6 +236,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                         contact.status = res.status;
                     }
                 });
+                this.cd.detectChanges();
             }
         });
     }

@@ -21,9 +21,7 @@ namespace GrooveMessengerDAL.Services
         private readonly IUserResolverService _userResolverService;
         private readonly IGenericRepository<ConversationEntity, Guid, GrooveMessengerDbContext> _conRepository;
         private readonly IMapper _mapper;
-        private IGenericRepository<MessageEntity, Guid, GrooveMessengerDbContext> _mesRepository;
-        private IGenericRepository<ParticipantEntity, Guid, GrooveMessengerDbContext> _parRepository;
-        private IParticipantService _participantService;
+        private readonly IGenericRepository<ParticipantEntity, Guid, GrooveMessengerDbContext> _parRepository;
         private readonly IUowBase<GrooveMessengerDbContext> _uow;
 
         public ConversationService(IGenericRepository<ConversationEntity, Guid, GrooveMessengerDbContext> conRepository,

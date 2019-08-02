@@ -14,6 +14,7 @@ using GrooveMessengerDAL.Repositories.Interface;
 using GrooveMessengerDAL.Services.Interface;
 using GrooveMessengerDAL.Uow.Interface;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 
 namespace GrooveMessengerDAL.Services
 {
@@ -27,7 +28,9 @@ namespace GrooveMessengerDAL.Services
             _userInfoContactRepository;
 
         private readonly IGenericRepository<UserInfoEntity, Guid, GrooveMessengerDbContext> _userRepository;
-        public IUserResolverService UserResolverService;
+        private readonly IUserResolverService _userResolverService;
+
+        private readonly IConfiguration _config;
 
         public UserService(
             IGenericRepository<UserInfoEntity, Guid, GrooveMessengerDbContext> userRepository,
@@ -35,22 +38,24 @@ namespace GrooveMessengerDAL.Services
             IUowBase<GrooveMessengerDbContext> uow,
             UserManager<ApplicationUser> userManager,
             IUserResolverService userResolverService,
-            IGenericRepository<UserInfoContactEntity, Guid, GrooveMessengerDbContext> userInformContactRepository
+            IGenericRepository<UserInfoContactEntity, Guid, GrooveMessengerDbContext> userInformContactRepository,
+            IConfiguration config
         )
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _uow = uow;
             _userManager = userManager;
-            UserResolverService = userResolverService;
+            _userResolverService = userResolverService;
             _userInfoContactRepository = userInformContactRepository;
+            _config = config;
         }
 
         public void AddUserInfo(CreateUserInfoModel userInfo)
         {
             userInfo.Status = "online";
             userInfo.Mood = "";
-            userInfo.Avatar = "https://localhost:44383/images/avatar.png";
+            userInfo.Avatar =  $"{_config.GetSection("Server")}/images/avatar.png";
             var entity = _mapper.Map<CreateUserInfoModel, UserInfoEntity>(userInfo);
             _userRepository.Add(entity);
             _uow.SaveChanges();
@@ -88,7 +93,7 @@ namespace GrooveMessengerDAL.Services
 
         public async Task<IEnumerable<IndexUserInfoModel>> GetAllUserInfo()
         {
-            var currentUser = await _userManager.FindByNameAsync(UserResolverService.CurrentUserName());
+            var currentUser = await _userManager.FindByNameAsync(_userResolverService.CurrentUserName());
             var userInformList = _userRepository.GetBy(x => x.UserId != currentUser.Id.ToString());
             return _mapper.Map<IEnumerable<UserInfoEntity>, IEnumerable<IndexUserInfoModel>>(userInformList);
         }
