@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using GrooveMessengerDAL.Data;
 using GrooveMessengerDAL.Entities;
 using GrooveMessengerDAL.Models;
@@ -16,6 +10,12 @@ using GrooveMessengerDAL.Services.Interface;
 using GrooveMessengerDAL.Uow.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace GrooveMessengerDAL.Services
 {
@@ -218,20 +218,33 @@ namespace GrooveMessengerDAL.Services
             return contactList;
         }
 
-
-        public async Task<List<ApplicationUser>> GetContacts(Guid conversationId)
+        //TODO: Truc> Get ContactId in 1 conversation
+        public List<string> GetContacts(Guid conversationId, Guid userId)
         {
-            var users = new List<ApplicationUser>();
-            var participants = _parRepository.GetAll()
-                .Where(x => x.ConversationId == conversationId && x.UserId != UserResolverService.CurrentUserId())
-                .Select(x => x.UserId);
-            foreach (var item in participants)
-            {
-                var user = await UserManager.FindByIdAsync(item);
-                users.Add(user);
-            }
+            var spName = "[dbo].[usp_Participant_GetContactEmail]";
+            var parameter =
+                new[]
+                {
+                    new SqlParameter("conversationId", SqlDbType.UniqueIdentifier) {Value = conversationId},
+                    new SqlParameter("userId", SqlDbType.UniqueIdentifier) {Value = userId}
+                };
 
-            return users;
+            var contactList =
+                _userInfoRepository.ExecuteReturedStoredProcedure<string>(spName, parameter);
+            return contactList;
         }
+
+        //var users = new List<ApplicationUser>();
+        //var participants = _parRepository.GetAll()
+        //    .Where(x => x.ConversationId == conversationId && x.UserId != UserResolverService.CurrentUserId())
+        //    .Select(x => x.UserId);
+        //    foreach (var item in participants)
+        //    {
+        //        var user = await UserManager.FindByIdAsync(item);
+        //users.Add(user);
+        //    }
+
+        //    return users;
+        //}
     }
 }

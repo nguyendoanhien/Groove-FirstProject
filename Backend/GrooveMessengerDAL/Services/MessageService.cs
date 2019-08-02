@@ -153,7 +153,7 @@ namespace GrooveMessengerDAL.Services
             return dialogs;
         }
 
-        public int GetUnreadMessages(Guid conversationId, string userId)
+        public int GetUnreadMessages(Guid conversationId, string userName)
         {
             var spName = "[dbo].[usp_Message_GetUnreadMessageAmount]";
             var parameter1 =
@@ -166,9 +166,10 @@ namespace GrooveMessengerDAL.Services
             var parameter2 =
                 new SqlParameter
                 {
-                    ParameterName = "userId",
-                    SqlDbType = SqlDbType.UniqueIdentifier,
-                    SqlValue = userId
+                    ParameterName = "userName",
+                    SqlDbType = SqlDbType.NVarChar,
+                    SqlValue = userName,
+                    Size = 256
                 };
 
             return _mesRepository.ExecuteReturedStoredProcedure<int>(spName, parameter2, parameter1).FirstOrDefault();

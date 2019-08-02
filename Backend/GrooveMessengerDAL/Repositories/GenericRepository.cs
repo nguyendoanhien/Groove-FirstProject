@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -184,6 +185,7 @@ namespace GrooveMessengerDAL.Repositories
 
             var commandText =
                 $"exec sp_executesql N'EXECUTE {storedProcedureName} {parameterNames}', N'{parameterDeclaration}',{parameterInput}";
+            if (storedProcedureName== "[dbo].[usp_Message_GetUnreadMessageAmount]") Debug.Write("EXECUTE:______________ " + commandText);
             using (var command = DbContext.Database.GetDbConnection().CreateCommand())
             {
                 command.CommandText = commandText;
@@ -191,6 +193,7 @@ namespace GrooveMessengerDAL.Repositories
                 using (var reader = command.ExecuteReader())
                 {
                     var results = CreateList<TResult>(reader);
+                    if (storedProcedureName == "[dbo].[usp_Message_GetUnreadMessageAmount]") Debug.Write("EXECUTE Result:______________ " + results[0].ToString());
                     return results;
                 }
             }
@@ -218,10 +221,12 @@ namespace GrooveMessengerDAL.Repositories
             var results = new List<TResult>();
             var properties = typeof(TResult).GetProperties();
 
+            Debug.Write("EXECUTE Datareader:______________ " + reader);
             while (reader.Read())
             {
                 if (typeof(TResult).IsPrimitive || typeof(TResult) == typeof(string) || typeof(TResult) == typeof(int))
                 {
+                    Debug.Write("EXECUTE Property Reader0:______________ " + (TResult)reader[0]);
                     var value = (TResult) reader[0];
                     results.Add(value);
                     continue;
@@ -246,12 +251,14 @@ namespace GrooveMessengerDAL.Repositories
                             {
                                 var convertTo = Nullable.GetUnderlyingType(property.PropertyType) ??
                                                 property.PropertyType;
+                                Debug.Write("EXECUTE Property Value:______________ " + reader[property.Name]);
                                 property.SetValue(item, Convert.ChangeType(reader[property.Name], convertTo), null);
                             }
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                         Debug.Write("EXECUTE Catch:______________ " + ex.ToString());
                     }
 
                 results.Add(item);
