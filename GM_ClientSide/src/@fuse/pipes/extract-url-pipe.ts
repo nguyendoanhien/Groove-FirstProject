@@ -42,7 +42,7 @@ export class ExtractUrlPipe implements PipeTransform {
                 if (val.includes("cloudinary")) {
                     var obj = {
                         imgLink: val,
-                        urlLink: val,
+                        urlLink: null,
                         imgTitle: null
                     };
                     return obj;
