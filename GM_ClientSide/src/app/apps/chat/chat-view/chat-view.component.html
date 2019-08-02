@@ -7,14 +7,6 @@
         <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
 
             <div fxLayout="row" fxLayoutAlign="start center">
-
-                <!-- RESPONSIVE CHATS BUTTON-->
-                <!-- <button mat-icon-button fxHide.gt-md class="responsive-chats-button mr-16"
-                             fuseMatSidenavToggler="chat-left-sidenav" aria-label="chats button">
-                    <mat-icon>chat</mat-icon>
-                </button> -->
-                <!-- / RESPONSIVE CHATS BUTTON-->
-
                 <!-- CHAT CONTACT-->
                 <div class="chat-contact" fxLayout="row" fxLayoutAlign="start center"
                     fuseMatSidenavToggler="chat-right-sidenav" (click)="selectContact()" *ngIf="contact">
@@ -29,20 +21,38 @@
 
                     <div class="chat-contact-name">
                         {{contact.displayName}}
+                        <span *ngIf="isGroup" class="group-participant">({{numberOfMembers}} Participants)</span>
                     </div>
+                    <ul *ngIf="isGroup" class="group-member-icon">
+                        <li *ngFor="let member of contact.members; let i = index">
+                            <div class="avatar-wrapper" fxFlex="0 1 auto">
+                                <img [src]="member.avatar" class="mat-avatar avatar avatar-member-group"
+                                    [alt]="member.displayName" />
+                            </div>
+                        </li>
+                    </ul>
 
                 </div>
                 <!-- / CHAT CONTACT-->
             </div>
 
             <div>
-                <button mat-icon-button [matMenuTriggerFor]="contactMenu" aria-label="more">
+                <button *ngIf="!_chatService.isGroup" mat-icon-button [matMenuTriggerFor]="contactMenu"
+                    aria-label="more">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+                <button *ngIf="_chatService.isGroup" mat-icon-button [matMenuTriggerFor]="groupMenu" aria-label="more">
                     <mat-icon>more_vert</mat-icon>
                 </button>
 
                 <mat-menu #contactMenu="matMenu">
                     <button mat-menu-item fuseMatSidenavToggler="chat-right-sidenav" (click)="selectContact()">
                         Contact Info
+                    </button>
+                </mat-menu>
+                <mat-menu #groupMenu="matMenu">
+                    <button mat-menu-item fuseMatSidenavToggler="chat-right-sidenav" (click)="selectChatGroup()">
+                        Group Info
                     </button>
                 </mat-menu>
             </div>
@@ -80,16 +90,19 @@
                 'me': message.who === user.userId,
                 'contact': message.who !== user.userId,
                 'first-of-group': isFirstMessageOfGroup(message, i),
-                'last-of-group': isLastMessageOfGroup(message, i)
+                'last-of-group': isLastMessageOfGroup(message, i),
+                'group-style': isGroup===true
                 }">
 
-                <!-- <img *ngIf="shouldShowContactAvatar(message, i)" src="{{contact.avatar}}" class="avatar"> -->
-
+                <img *ngIf="shouldShowContactAvatar(message, i)" src="{{contact.avatar}}" class="avatar">
+                <img *ngIf="isGroup" [src]="message.avatar" class="mat-avatar avatar avatar-member-group"
+                    [alt]="message.nickName" [ngClass]="{'hidden':message.who===user.userId}" />
                 <div class="bubble">
+                    <div class="sender-name secondary-text" [ngClass]="{'hidden':message.who===user.userId}">
+                        {{message.nickName}}</div>                 
                     <div class="message" [innerHtml]="message.message | detectUrl">
                     </div>
-
-                    <!-- <div class="time secondary-text">{{message.time | date:'short'}}</div> -->
+                    <div class="time secondary-text">{{message.time | date:'short'}}</div>
                 </div>
                 <div class="bubble" *ngFor="let obj of message.message | extractUrl | async; let l = count"
                     style="background-color: transparent !important">
@@ -113,13 +126,13 @@
                     </div>
                 </div>
 
-                <div class="time secondary-text">
+                <!-- <div class="time secondary-text">
 
                     {{message.time | date:'short'}}
 
 
 
-                </div>
+                </div> -->
                 <!-- <div class="bubble">
                     <div class="time secondary-text">
 

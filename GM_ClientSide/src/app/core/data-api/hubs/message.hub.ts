@@ -13,18 +13,24 @@ export class MessageHubService {
 
     newChatMessage: BehaviorSubject<MessageModel>;
     removedChatMessage: BehaviorSubject<MessageModel>;
+    newGroupChatMessage:BehaviorSubject<MessageModel>;
     _hubConnection: signalR.HubConnection;
     unreadMessage: BehaviorSubject<UnreadMessage>;
 
     constructor(private authService: AuthService) {
 
         this.newChatMessage = new BehaviorSubject(null);
+        this.newGroupChatMessage = new BehaviorSubject(null);
         this.unreadMessage = new BehaviorSubject(null);
         this.startConnection();
         this._hubConnection.on("SendMessage",
             (message: MessageModel) => {
                 this.newChatMessage.next(message);
             });
+        this._hubConnection.on("BroadcastMessageToGroup", (messsage: MessageModel) => {
+            console.log(messsage);
+            this.newGroupChatMessage.next(messsage);
+        });
         this._hubConnection.on("SendRemovedMessage",
             (message: MessageModel) => {
                 this.removedChatMessage.next(message);
@@ -48,13 +54,13 @@ export class MessageHubService {
     };
 
     addSendMessageToUser(message: MessageModel, toUser: string) {
-        this._hubConnection.invoke("SendMessageToUser", message, toUser).catch(function(err) {
+        this._hubConnection.invoke("SendMessageToUser", message, toUser).catch(function (err) {
             return console.error(err.toString());
         });
     }
 
     addSendRemovedMessageToUser(chatMessageModel: MessageModel, toUser: string) {
-        this._hubConnection.invoke("SendRemovedMessageToUser", chatMessageModel, toUser).catch(function(err) {
+        this._hubConnection.invoke("SendRemovedMessageToUser", chatMessageModel, toUser).catch(function (err) {
             return console.error(err.toString());
         });
     }

@@ -14,13 +14,15 @@ import { ChatService } from "./chat.service";
 import { ChatComponent } from "./chat.component";
 import { ChatStartComponent } from "./chat-start/chat-start.component";
 import { ChatViewComponent } from "./chat-view/chat-view.component";
-import { ChatChatsSidenavComponent } from "./sidenavs/left/chats/chats.component";
+import { ChatChatsSidenavComponent, DialogOverviewDialog } from "./sidenavs/left/chats/chats.component";
 import { ChatUserSidenavComponent } from "./sidenavs/left/user/user.component";
 import { ChatLeftSidenavComponent } from "./sidenavs/left/left.component";
 import { ChatRightSidenavComponent } from "./sidenavs/right/right.component";
 import { ChatContactSidenavComponent } from "./sidenavs/right/contact/contact.component";
 import { ProfileHubService } from "app/core/data-api/hubs/profile.hub";
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
+import { MatDialogModule } from '@angular/material/dialog';
+import {MatCheckboxModule} from '@angular/material'
 @NgModule({
     declarations: [
         ChatComponent,
@@ -30,8 +32,10 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart';
         ChatUserSidenavComponent,
         ChatLeftSidenavComponent,
         ChatRightSidenavComponent,
-        ChatContactSidenavComponent
+        ChatContactSidenavComponent,
+        DialogOverviewDialog
     ],
+    entryComponents: [DialogOverviewDialog],
     imports: [
         MatButtonModule,
         MatCardModule,
@@ -43,6 +47,8 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart';
         MatRadioModule,
         MatSidenavModule,
         MatToolbarModule,
+        MatDialogModule,
+        MatCheckboxModule,
         FuseSharedModule,
         PickerModule
     ],

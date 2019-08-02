@@ -37,6 +37,9 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     selectedChat: any;
     isHide: any = true;
     selectedFile: any = null;
+    isGroup: boolean;
+    numberOfMembers: number;
+
     @ViewChild('vcChatContent', { static: false }) vcChatContent: ElementRef;
     @ViewChild(FusePerfectScrollbarDirective, { static: false })
     directiveScroll: FusePerfectScrollbarDirective;
@@ -45,7 +48,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @ViewChildren("replyInput")
     replyInputField;
-    
+
     @ViewChild("replyForm", { static: false })
     replyForm: NgForm;
 
@@ -123,7 +126,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.contact = chatData.contact;
                     this.dialog = chatData.dialog;
                     this.chatId = chatData.chatId; // current conversation id              
-
+                    this.isGroup = chatData.isGroup ? chatData.isGroup : false;
+                    if (this.isGroup === true) {
+                        this.numberOfMembers = chatData.contact.members.length;
+                    }
                     this.readyToReply();
                 }
             });
@@ -134,6 +140,20 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 if (this.chatId === message.fromConv) {
                     this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time });
                 }
+            }
+        });
+        this._chatService._messageHub.newGroupChatMessage.subscribe((message: MessageModel) => {
+            if (message) {
+                if (this.chatId === message.fromConv) {
+                    this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time, avatar: message.senderAvatar, nickName: message.senderName });
+                }
+            }
+        });
+
+        this._chatService._contactHub.editGroup.subscribe((edtgroup: any) => {
+            if (edtgroup) {
+                this.contact.avatar = edtgroup.avatar;
+                this.contact.displayName = edtgroup.name;
             }
         });
     }
@@ -222,6 +242,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this._chatService.selectContact(this.contact);
     }
 
+    selectChatGroup(): void {
+        this._chatService.selectChatGroup(this.contact);
+    }
+
     /**
      * Ready to reply
      */
@@ -302,11 +326,22 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         const urlRegex = /^(?!\s*$).+/g;
         const isMatch: boolean = urlRegex.test(this.replyForm.form.value.message);
         if (isMatch) {
-            await this._messageService.addMessage(newMessage).subscribe(success => {
-                console.log("send successfull");
-            },
-                err => console.log("send fail"));
-            //this.dialog.push(message); //Truc: don't need because broadcast to user + contact
+            if (this.isGroup === false) {
+                this._messageService.addMessage(newMessage).subscribe(success => {
+                    console.log("send successfull");
+                },
+                    err => console.log("send fail"));
+                // Add the message to the chat
+            } else {
+                this._messageService.addMessageToFroup(newMessage).subscribe(success => {
+                    console.log("send successfull");
+                },
+                    err => console.log("send fail"));
+                // Add the message to the chat
+
+            }         
+            this.dialog.push(message);
+
         }
 
         // Add the message to the chat

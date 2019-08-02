@@ -7,5 +7,6 @@ namespace GrooveMessengerDAL.Models.Conversation
         public Guid Id { get; set; }
         public string Avatar { get; set; }
         public string Name { get; set; }
+        public bool IsGroup { get; set; }
     }
 }
