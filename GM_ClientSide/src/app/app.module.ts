@@ -151,7 +151,8 @@ export function provideConfig(): AuthServiceConfig {
         },
         SpeechRecognitionService,
         RxSpeechRecognitionService,
-        WindowRef
+        WindowRef,
+        SpeechRecognition
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA,

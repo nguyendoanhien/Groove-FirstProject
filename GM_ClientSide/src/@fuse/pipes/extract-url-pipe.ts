@@ -39,25 +39,25 @@ export class ExtractUrlPipe implements PipeTransform {
         if (res != null) {
             result = Promise.all(res.map(async (val): Promise<any> => {
 
-                    if (val.includes("cloudinary")) {
-                        var obj = {
-                            imgLink: val,
-                            urlLink: null,
-                            imgTitle: null
-                        };
-                        return obj;
-                    }
-
-                    var objOg = await this.getOg(val);
-                    if (objOg != null) {
-                        var obj = {
-                            imgLink: objOg.imageUrl,
-                            urlLink: val,
-                            imgTitle: objOg.titleUrl
-                        };
-                    }
+                if (val.includes("cloudinary")) {
+                    var obj = {
+                        imgLink: val,
+                        urlLink: val,
+                        imgTitle: null
+                    };
                     return obj;
-                })
+                }
+
+                var objOg = await this.getOg(val);
+                if (objOg != null) {
+                    var obj = {
+                        imgLink: objOg.imageUrl,
+                        urlLink: val,
+                        imgTitle: objOg.titleUrl
+                    };
+                }
+                return obj;
+            })
             );
 
 
@@ -87,14 +87,14 @@ export class ExtractUrlPipe implements PipeTransform {
             "/",
             apiMethod,
             { "access_token": accessToken, "scrape": "true", "id": urlPath }
-        ).then(function(response) {
+        ).then(function (response) {
 
-                obj = {
-                    imageUrl: response.image[0].url,
-                    titleUrl: response.title
-                };
+            obj = {
+                imageUrl: response.image[0].url,
+                titleUrl: response.title
+            };
 
-            }
+        }
         ).catch(err => {
             // this._httpClient.get(`https://besticon-demo.herokuapp.com/allicons.json?url=${urlPath}`, httpOptions).pipe(
             //     map((response: any) => {
