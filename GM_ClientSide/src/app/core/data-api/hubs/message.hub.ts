@@ -37,6 +37,7 @@ export class MessageHubService {
             });
         this._hubConnection.on("SendUnreadMessagesAmount",
             (message: UnreadMessage) => {
+                console.log(message);
                 this.unreadMessage.next(message);
             });
     }

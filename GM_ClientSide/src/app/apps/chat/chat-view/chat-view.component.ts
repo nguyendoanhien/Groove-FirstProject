@@ -328,6 +328,18 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         if (isMatch) {
             if (this.isGroup === false) {
                 this._messageService.addMessage(newMessage).subscribe(success => {
+                    this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
+                    .subscribe(val => { console.log(val + "chatview"); },
+                        error => { console.log(error); }
+                    );
+
+                this._messageService.updateUnreadMessages(this.chatId)
+                    .subscribe(val => {
+                        var chatList = this.user.chatList as Array<any>;
+                        var chat = chatList.find(x => x.convId == this.chatId);
+                        chat.unread = val;
+                    },
+                        err => console.log(err));
                     console.log("send successfull");
                 },
                     err => console.log("send fail"));
@@ -341,7 +353,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
             }         
             this.dialog.push(message);
-
         }
 
         // Add the message to the chat
@@ -356,18 +367,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
         // Truc: Call count unread messages in controller backend
-        await this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
-            .subscribe(val => { console.log(val + "chatview"); },
-                error => { console.log(error); }
-            );
 
-        await this._messageService.updateUnreadMessages(this.chatId)
-            .subscribe(val => {
-                var chatList = this.user.chatList as Array<any>;
-                var chat = chatList.find(x => x.convId == this.chatId);
-                chat.unread = val;
-            },
-                err => console.log(err));
         this.messageInput = ''; //reset
         this.isHide = true;
     }

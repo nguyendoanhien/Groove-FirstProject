@@ -102,7 +102,7 @@
                         {{message.nickName}}</div>                 
                     <div class="message" [innerHtml]="message.message | detectUrl">
                     </div>
-                    <div class="time secondary-text">{{message.time | date:'short'}}</div>
+                    <!-- <div class="time secondary-text">{{message.time | date:'short'}}</div> -->
                 </div>
                 <div class="bubble" *ngFor="let obj of message.message | extractUrl | async; let l = count"
                     style="background-color: transparent !important">
