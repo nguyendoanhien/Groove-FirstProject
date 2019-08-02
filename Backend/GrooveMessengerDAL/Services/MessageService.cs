@@ -171,7 +171,6 @@ namespace GrooveMessengerDAL.Services
                     SqlValue = userName,
                     Size = 256
                 };
-
             return _mesRepository.ExecuteReturedStoredProcedure<int>(spName, parameter2, parameter1).FirstOrDefault();
         }
 

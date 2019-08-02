@@ -125,24 +125,17 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         [HttpGet("unread/{conversationId}")]
         public IActionResult GetUnreadMessages(Guid conversationId)
         {
-            Debug.WriteLine("Vo Ham___________________________________________");
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-
-            //var result = _mesService.GetUnreadMessages(conversationId);
             List<string> contactsList = _contactService.GetContacts(conversationId,CurrentUserId);
-
             foreach (var email in contactsList)
                 foreach (var connectionId in _connectionStore.GetConnections("message", email))
                 {
                     var unreadMessageAmount = _mesService.GetUnreadMessages(conversationId,email);
                     var unreadMessageModel = new UnreadMessageModel
                     { ConversationId = conversationId, Amount = unreadMessageAmount };
-                    Debug.WriteLine("");
-                    Debug.Write("Gia Tri La:______________");
-                    Debug.WriteLine(unreadMessageModel.Amount);
                     _hubContext.Clients.Client(connectionId).SendUnreadMessagesAmount(unreadMessageModel);
                 }
 

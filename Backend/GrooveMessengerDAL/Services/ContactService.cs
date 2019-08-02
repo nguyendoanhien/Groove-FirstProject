@@ -228,23 +228,9 @@ namespace GrooveMessengerDAL.Services
                     new SqlParameter("conversationId", SqlDbType.UniqueIdentifier) {Value = conversationId},
                     new SqlParameter("userId", SqlDbType.UniqueIdentifier) {Value = userId}
                 };
-
             var contactList =
                 _userInfoRepository.ExecuteReturedStoredProcedure<string>(spName, parameter);
             return contactList;
         }
-
-        //var users = new List<ApplicationUser>();
-        //var participants = _parRepository.GetAll()
-        //    .Where(x => x.ConversationId == conversationId && x.UserId != UserResolverService.CurrentUserId())
-        //    .Select(x => x.UserId);
-        //    foreach (var item in participants)
-        //    {
-        //        var user = await UserManager.FindByIdAsync(item);
-        //users.Add(user);
-        //    }
-
-        //    return users;
-        //}
     }
 }
