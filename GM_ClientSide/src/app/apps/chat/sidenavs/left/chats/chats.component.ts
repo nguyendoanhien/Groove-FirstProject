@@ -70,7 +70,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     }
 
     changeProfile(user: UserInfo) {
-        this._hubConnection.invoke("ChangeUserProfile", user).catch(function(err) {
+        this._hubConnection.invoke("ChangeUserProfile", user).catch(function (err) {
             return console.error(err.toString());
         });
     }
@@ -120,10 +120,9 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                 console.log(unreadMessage);
                 const chatList = this.user.chatList as Array<any>;
                 const chat = chatList.find(x => x.convId == unreadMessage.conversationId);
-                debugger
-                if (unreadMessage.amount > 100) {
+                if (unreadMessage.amount > 99) {
                     chat.unread = "99+";
-                } 
+                }
                 else {
                     chat.unread = unreadMessage.amount;
                 }
@@ -170,7 +169,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 
     async setValueSeenBy(conversationId) {
         await this._messageService.updateUnreadMessages(conversationId).subscribe(val => {
-            },
+        },
             err => console.log(err));
 
         const chatList = this.user.chatList as Array<any>;
@@ -245,7 +244,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 }
 
 //Global----------------------------------
-Array.prototype.equals = function(array) {
+Array.prototype.equals = function (array) {
     // if the other array is a falsy value, return
     if (!array)
         return false;
