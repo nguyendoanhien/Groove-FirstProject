@@ -31,6 +31,7 @@ export class MessageHubService {
             });
         this._hubConnection.on("SendUnreadMessagesAmount",
             (message: UnreadMessage) => {
+                console.log(message);
                 this.unreadMessage.next(message);
             });
     }
@@ -48,13 +49,13 @@ export class MessageHubService {
     };
 
     addSendMessageToUser(message: MessageModel, toUser: string) {
-        this._hubConnection.invoke("SendMessageToUser", message, toUser).catch(function(err) {
+        this._hubConnection.invoke("SendMessageToUser", message, toUser).catch(function (err) {
             return console.error(err.toString());
         });
     }
 
     addSendRemovedMessageToUser(chatMessageModel: MessageModel, toUser: string) {
-        this._hubConnection.invoke("SendRemovedMessageToUser", chatMessageModel, toUser).catch(function(err) {
+        this._hubConnection.invoke("SendRemovedMessageToUser", chatMessageModel, toUser).catch(function (err) {
             return console.error(err.toString());
         });
     }

@@ -6,7 +6,7 @@ import { environment } from "environments/environment";
 
 const resetPasswordUrl = environment.authResetPasswordUrl;
 const forgotPasswordUrl = environment.authForgotPasswordUrl;
-
+const notificationUrl = environment.authNotificationUrl;
 
 @Injectable({
     providedIn: "root"
@@ -31,6 +31,10 @@ export class ResetPasswordService {
 
     forgotPassword(email: string): Observable<any> {
         return this._http.post<any>(`${forgotPasswordUrl}?email=${email}`, email);
+    }
+
+    notification(email:string): Observable<any>{
+        return this._http.post(`${notificationUrl}?email=${email}`, email);
     }
 
 }

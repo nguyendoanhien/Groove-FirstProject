@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using GrooveMessengerAPI.Areas.Chat.Models;
 using GrooveMessengerAPI.Controllers;
@@ -121,24 +123,20 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
 
         //Truc: Get UnreadMessageAmount
         [HttpGet("unread/{conversationId}")]
-        public async Task<IActionResult> GetUnreadMessages(Guid conversationId)
+        public IActionResult GetUnreadMessages(Guid conversationId)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-
-            //var result = _mesService.GetUnreadMessages(conversationId);
-            var contactsList = await _contactService.GetContacts(conversationId);
-
-            foreach (var contact in contactsList)
-                foreach (var connectionId in _connectionStore.GetConnections("message", contact.UserName))
+            List<string> contactsList = _contactService.GetContacts(conversationId,CurrentUserId);
+            foreach (var email in contactsList)
+                foreach (var connectionId in _connectionStore.GetConnections("message", email))
                 {
-                    var unreadMessageAmount = _mesService.GetUnreadMessages(conversationId, contact.Id);
+                    var unreadMessageAmount = _mesService.GetUnreadMessages(conversationId,email);
                     var unreadMessageModel = new UnreadMessageModel
                     { ConversationId = conversationId, Amount = unreadMessageAmount };
-
-                    await _hubContext.Clients.Client(connectionId).SendUnreadMessagesAmount(unreadMessageModel);
+                    _hubContext.Clients.Client(connectionId).SendUnreadMessagesAmount(unreadMessageModel);
                 }
 
             return Ok();

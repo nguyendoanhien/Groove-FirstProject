@@ -24,6 +24,6 @@ namespace GrooveMessengerDAL.Services.Interface
         void AddContact(AddContactModel addContactModel);
         void EditContact(EditContactModel addContactModel);
         UserInfoContactEntity GetSingle(Guid id);
-        Task<List<ApplicationUser>> GetContacts(Guid conversationId);
+        List<string> GetContacts(Guid conversationId, Guid userId);
     }
 }
