@@ -38,7 +38,7 @@
                         Name can't be over than 120 characters
                     </mat-error>
                     <mat-error *ngIf="registerForm.get('name').hasError('pattern')">
-                        Name can't be have many spaces
+                        Name can't have many spaces
                     </mat-error>
                 </mat-form-field>
 
@@ -62,7 +62,7 @@
                         Password is required
                     </mat-error>
                     <mat-error *ngIf="registerForm.get('password').hasError('pattern')">
-                        Password must be at least 8 characters and no more than 40 characters including upper case,
+                        Password must be at least 8 and less than 40 characters including upper case, 
                         lower case and numbers.
                     </mat-error>
 
@@ -77,7 +77,7 @@
                     </mat-error>
                     <mat-error *ngIf="!registerForm.get('passwordConfirm').hasError('required') &&
                                        registerForm.get('passwordConfirm').hasError('passwordsNotMatching')">
-                        Passwords must match
+                        Password must match
                     </mat-error>
                 </mat-form-field>
 

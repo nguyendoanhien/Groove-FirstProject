@@ -79,8 +79,8 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
                 var body = "<h1>Confirm Your Email</h1>" +
                            "<h3>Hello " + model.DisplayName + " ! </h3>" +
                            "<h3>Tap the button below to confirm your email address.</h3>" +
-                           "<h3>If you didn't create an account with <a href='" + clientAppUrl +
-                           "'>Groove Messenger</a>, you can safely delete this email.</h3>" +
+                           "<h3>If you didn't request a password reset from <a href='" + clientAppUrl +
+                           "'>Groove Messenger</a>, please ignore this email.</h3>" +
                            "<table border='0' cellpadding='0' cellspacing='0' width='40% ' style='background-color:#324FEA; border:1px solid #324FEA; border-radius:5px;'>" +
                            "<tr><td align = 'center' valign = 'middle' style = 'color:#ffffff; font-family:Helvetica, Arial, sans-serif; font-size:20px; font-weight:bold; line-height:150%; padding-top:15px; padding-right:30px; padding-bottom:15px; padding-left:30px;'>" +
                            "<a href = '" + url +
@@ -125,7 +125,7 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
 
             if (!_userManager.IsEmailConfirmedAsync(user).Result)
                 return BadRequest();
-
+            var userInfo = _userService.GetUserInfo(user.Id);
             var token = _userManager.GeneratePasswordResetTokenAsync(user).Result;
 
             var clientAppUrl = _config.GetSection("Client").Value;
@@ -133,16 +133,30 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             var url = _config["ForgotEmailRoute:Url"] + "?token=" + HttpUtility.UrlEncode(token) + "&&userid=" +
                       user.Id;
             var body = "<h1>Reset Password</h1>" +
-                       "<h3>Hello! </h3> " +
-                       "<h3>Tap the button below to go reset your password</h3>" +
-                       "<h3>If you didn't create an account with <a href='" + clientAppUrl +
-                       "'>Groove Messenger</a>, you can safely delete this email.</h3>" +
+                       "<h3>Hello " + userInfo.DisplayName + " ! </h3> " +
+                       "<h3>Tap the button below to reset your password</h3>" +
+                       "<h3>If you didn't request a password reset from <a href='" + clientAppUrl +
+                       "'>Groove Messenger</a>, please ignore this email.</h3>" +
                        "<table border='0' cellpadding='0' cellspacing='0' width='40% ' style='background-color:#324FEA; border:1px solid #324FEA; border-radius:5px;'>" +
                        "<tr><td align = 'center' valign = 'middle' style = 'color:#ffffff; font-family:Helvetica, Arial, sans-serif; font-size:20px; font-weight:bold; line-height:150%; padding-top:15px; padding-right:30px; padding-bottom:15px; padding-left:30px;'>" +
                        "<a href = '" + url +
                        "' target = '_blank' style = 'color:#ffffff; text-decoration:none;display:block' > Click to reset your password </a></td></tr></table> ";
-            _authEmailSender.SendEmail(body, "Registration Confirmation Email", email, _config);
             _authEmailSender.SendEmail(body, "Reset Password", email, _config);
+            return Ok();
+        }
+
+        [HttpPost("notification")]
+        public  async Task<IActionResult> Notification(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            var userInfo = _userService.GetUserInfo(user.Id);
+            var clientAppUrl = _config.GetSection("Client").Value;
+            var body = "<h1>Change Password Notification</h1>" +
+                       "<h3>Hello " + userInfo.DisplayName + " ! </h3> " +
+                       "<h3>Your Password has been changed successfully</h3>" +
+                       "<h3>If you didn't request a password reset from <a href='" + clientAppUrl +
+                       "'>Groove Messenger</a>, please ignore this email.</h3>";
+            _authEmailSender.SendEmail(body, "Change Password Notification", email, _config);
             return Ok();
         }
 
