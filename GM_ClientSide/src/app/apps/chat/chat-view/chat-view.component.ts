@@ -47,7 +47,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild(FusePerfectScrollbarDirective, { static: false })
     directiveScroll: FusePerfectScrollbarDirective;
     isOver = false;
-    lastClicked: Date;
+    lastClicked: Date = new Date();
 
     @ViewChildren("replyInput")
     replyInputField;
