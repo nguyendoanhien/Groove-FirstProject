@@ -17,7 +17,9 @@ export class MessageService {
     addMessage(model: IndexMessageModel): Observable<any> {
         return this.http.post(environment.apiMessageUrl, model);
     }
-
+    addMessageToFroup(model: IndexMessageModel): Observable<any> {
+        return this.http.post(environment.apiMessageWithGroup,model);
+    }
     sendUnreadMessages(conversationId: string): Observable<any> {
         return this.http.get(environment.apiUnreadMessage + conversationId);
     }

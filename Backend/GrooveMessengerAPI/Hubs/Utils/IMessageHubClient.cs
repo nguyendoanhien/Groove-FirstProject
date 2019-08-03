@@ -11,6 +11,7 @@ namespace GrooveMessengerAPI.Hubs.Utils
         Task SendEditedMessage(Message message);
         Task SendMessageViewingStatus(string fromUser);
         Task SendUnreadMessagesAmount(UnreadMessageModel unreadMessage);
+        Task BroadcastMessageToGroup(MessageInGroup message);
     }
 
     public enum MessageEventTypes

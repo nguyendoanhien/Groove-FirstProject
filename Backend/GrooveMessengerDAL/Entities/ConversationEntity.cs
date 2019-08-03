@@ -10,6 +10,8 @@ namespace GrooveMessengerDAL.Entities
 
         public string Avatar { get; set; }
 
+        public bool IsGroup { get; set; }
+
         public ICollection<MessageEntity> MessageEntity { get; set; }
 
         public ICollection<ParticipantEntity> ParticipantEntity { get; set; }

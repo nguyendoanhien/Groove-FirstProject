@@ -230,3 +230,17 @@ chat-chats-sidenav {
     }
   }
 }
+
+.add-group {
+    height: 100%;
+    position: relative;
+    mat-form-field {
+        width: 100%;
+    }
+
+    .mat-dialog-actions {
+        position: absolute;
+        bottom: 0;
+    }
+
+}

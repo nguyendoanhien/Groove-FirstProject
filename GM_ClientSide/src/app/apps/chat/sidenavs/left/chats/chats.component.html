@@ -88,6 +88,9 @@
                 </div>
 
             </div>
+            <button (click)="openDialog()" color="accent" mat-raised-button><span class="mat-button-wrapper">Add
+                    Group</span>
+            </button>
             <!-- / SEARCH -->
 
         </mat-toolbar-row>
@@ -181,6 +184,44 @@
             </button>
 
         </div>
+
+        <!-- GROUP CHAT -->
+
+        <div class="chat-list" fxLayout="column">
+
+            <div *ngIf="user.groupChatList.length > 0" class="group-chat-list" fxLayout="column">
+                <div matSubheader>
+                    Groups
+                </div>
+                <button (click)="getChatOfGroupChat(groupChat)" mat-button class="contact"
+                    *ngFor="let groupChat of user.groupChatList" [@animate]="{value:'*',params:{y:'100%'}}" #someVar>
+
+                    <div fxLayout="row" fxLayoutAlign="start center">
+
+                        <div class="avatar-wrapper" fxFlex="0 1 auto" fxLayoutAlign="center center">
+                            <img src="{{groupChat.avatar}}" class="mat-avatar avatar" alt="{{groupChat.name}}" />
+                        </div>
+                        <div fxLayout="row" fxFlex>
+                            <div class="pr-4" fxFlex fxLayout="column" fxLayoutAlign="center start">
+                                <div class="contact-name">{{groupChat.name}}</div>
+                                <div class="contact-last-message">{{groupChat.lastestMessage}}</div>
+                            </div>
+                            <!-- <div class="pr-4" fxFlex fxLayout="column" fxLayoutAlign="center start">
+                                <div class="contact-last-message">{{groupChat.lastestMessage}}</div>
+                            </div> -->
+                            <div fxLayout="column" fxLayoutAlign="start end">
+                                <div class="contact-last-message-time">
+                                    {{groupChat.lastestMessageTime | date}}
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+        <!-- GROUP CHAT -->
 
         <!-- CONTACTS LIST-->
         <div class="contact-list" fxLayout="column">

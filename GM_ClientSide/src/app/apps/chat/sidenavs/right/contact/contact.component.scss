@@ -6,6 +6,25 @@ chat-contact-sidenav {
     flex-direction: column;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
+    .member-list {
+
+        li {
+            width: 300px;
+            height: 45px;
+
+            margin-bottom: 20px;
+            border-bottom: 1px solid #edeef3;
+
+            .item-left {
+                float: left;
+
+            }
+
+            .item-right {
+                float: right;
+            }
+        }
+    }
 
     mat-toolbar {
 
