@@ -5,7 +5,7 @@ import { Injectable } from "@angular/core";
 })
 export class AppHelperService {
 
-    constructor() {}
+    constructor() { }
 
     ExtractUrl(s: string): Array<any> {
         const urlRegex = /(https?:\/\/[^ ]*)/g;
@@ -22,7 +22,7 @@ export class AppHelperService {
 
     detectUrl(s: string) {
         const urlRegex = /(https?:\/\/[^ ]*)/g;
-        const res = s.replace(urlRegex, `<a href='$1'>$1</a>`);
+        const res = s.replace(urlRegex, `<a href='$1' target='_blank'>$1</a>`);
         return res;
     }
 }

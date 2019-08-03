@@ -7,9 +7,9 @@
     <base href="/">
 
     <meta charset="utf-8">
-    <meta name="description" content="Material design admin template with pre-built apps and pages">
+    <meta name="description" content="Wonderful Groove Messenger">
     <meta name="keywords"
-          content="HTML,CSS,AngularJS,Angular,Angular 2,Angular 4,Angular 5,Angular 6,Angular 7,Material,Material 2">
+        content="HTML,CSS,AngularJS,Angular,Angular 2,Angular 4,Angular 5,Angular 6,Angular 7,Material,Material 2">
     <meta name="author" content="Withinpixels">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
@@ -45,7 +45,9 @@
             width: 128px;
         }
 
-        #fuse-splash-screen .logo img { filter: drop-shadow(0px 10px 6px rgba(0, 0, 0, 0.2)) }
+        #fuse-splash-screen .logo img {
+            filter: drop-shadow(0px 10px 6px rgba(0, 0, 0, 0.2))
+        }
 
         #fuse-splash-screen .spinner-wrapper {
             display: block;
@@ -101,7 +103,9 @@
             width: 100px;
         }
 
-        #fuse-splash-screen .spinner-wrapper .spinner .inner .left { left: 0; }
+        #fuse-splash-screen .spinner-wrapper .spinner .inner .left {
+            left: 0;
+        }
 
         #fuse-splash-screen .spinner-wrapper .spinner .inner .left .half-circle {
             -webkit-animation: left-wobble 1.3125s cubic-bezier(0.35, 0, 0.25, 1) infinite;
@@ -110,7 +114,9 @@
             left: 0;
         }
 
-        #fuse-splash-screen .spinner-wrapper .spinner .inner .right { right: 0; }
+        #fuse-splash-screen .spinner-wrapper .spinner .inner .right {
+            right: 0;
+        }
 
         #fuse-splash-screen .spinner-wrapper .spinner .inner .right .half-circle {
             -webkit-animation: right-wobble 1.3125s cubic-bezier(0.35, 0, 0.25, 1) infinite;
@@ -120,88 +126,118 @@
         }
 
         @keyframes outer-rotate {
-            0% { transform: rotate(0deg) scale(0.5); }
+            0% {
+                transform: rotate(0deg) scale(0.5);
+            }
 
-            100% { transform: rotate(360deg) scale(0.5); }
+            100% {
+                transform: rotate(360deg) scale(0.5);
+            }
         }
 
         @keyframes left-wobble {
-            0%,
-            100% { transform: rotate(130deg); }
 
-            50% { transform: rotate(-5deg); }
+            0%,
+            100% {
+                transform: rotate(130deg);
+            }
+
+            50% {
+                transform: rotate(-5deg);
+            }
         }
 
         @keyframes right-wobble {
-            0%,
-            100% { transform: rotate(-130deg); }
 
-            50% { transform: rotate(5deg); }
+            0%,
+            100% {
+                transform: rotate(-130deg);
+            }
+
+            50% {
+                transform: rotate(5deg);
+            }
         }
 
         @keyframes sporadic-rotate {
-            12.5% { transform: rotate(135deg); }
+            12.5% {
+                transform: rotate(135deg);
+            }
 
-            25% { transform: rotate(270deg); }
+            25% {
+                transform: rotate(270deg);
+            }
 
-            37.5% { transform: rotate(405deg); }
+            37.5% {
+                transform: rotate(405deg);
+            }
 
-            50% { transform: rotate(540deg); }
+            50% {
+                transform: rotate(540deg);
+            }
 
-            62.5% { transform: rotate(675deg); }
+            62.5% {
+                transform: rotate(675deg);
+            }
 
-            75% { transform: rotate(810deg); }
+            75% {
+                transform: rotate(810deg);
+            }
 
-            87.5% { transform: rotate(945deg); }
+            87.5% {
+                transform: rotate(945deg);
+            }
 
-            100% { transform: rotate(1080deg); }
+            100% {
+                transform: rotate(1080deg);
+            }
         }
     </style>
     <!-- / FUSE Splash Screen CSS -->
 </head>
 
 <body>
-<!-- FUSE Splash Screen -->
-<fuse-splash-screen id="fuse-splash-screen">
-    <div class="center">
+    <!-- FUSE Splash Screen -->
+    <fuse-splash-screen id="fuse-splash-screen">
+        <div class="center">
 
-        <div class="logo">
-            <img width="128" src="assets/images/logos/logo.png">
-        </div>
+            <div class="logo">
+                <img width="128" src="assets/images/logos/logo.png">
+            </div>
 
-        <!-- Material Design Spinner -->
-        <div class="spinner-wrapper">
-            <div class="spinner">
-                <div class="inner">
-                    <div class="gap"></div>
-                    <div class="left">
-                        <div class="half-circle"></div>
-                    </div>
-                    <div class="right">
-                        <div class="half-circle"></div>
+            <!-- Material Design Spinner -->
+            <div class="spinner-wrapper">
+                <div class="spinner">
+                    <div class="inner">
+                        <div class="gap"></div>
+                        <div class="left">
+                            <div class="half-circle"></div>
+                        </div>
+                        <div class="right">
+                            <div class="half-circle"></div>
+                        </div>
                     </div>
                 </div>
             </div>
+            <!-- / Material Design Spinner -->
+
         </div>
-        <!-- / Material Design Spinner -->
 
-    </div>
+    </fuse-splash-screen>
+    <!-- / FUSE Splash Screen -->
+    <app></app>
+    <script>
+        window.fbAsyncInit = function () {
 
-</fuse-splash-screen>
-<!-- / FUSE Splash Screen -->
-<app></app>
-<script>
-    window.fbAsyncInit = function() {
-
-        FB.init({
-            appId: '354060818601401',
-            autoLogAppEvents: true,
-            xfbml: true,
-            version: 'v4.0'
-        });
-    };
-</script>
-<script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>
+            FB.init({
+                appId: '354060818601401',
+                autoLogAppEvents: true,
+                xfbml: true,
+                version: 'v4.0'
+            });
+        };
+    </script>
+    <script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>
 </body>
 
 </html>

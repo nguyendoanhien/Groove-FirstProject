@@ -1,5 +1,116 @@
 @import "src/@fuse/scss/fuse";
+body {
+    background: #111;
+}
 
+.shiny {
+    color: black;
+    background: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        from(#0b1318),
+        to(#010f11)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+
+    font-weight: 900;
+    position: relative;
+}
+
+.shiny::before {
+    background-position: -180px;
+    -webkit-animation: flare 5s infinite;
+    -webkit-animation-timing-function: linear;
+    background-image: linear-gradient(
+        65deg,
+        transparent 20%,
+        rgba(255, 255, 255, 0.2) 20%,
+        rgba(255, 255, 255, 0.3) 27%,
+        transparent 27%,
+        transparent 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    content: "Shiny";
+    color: #fff;
+    display: block;
+    padding-right: 140px;
+    position: absolute;
+}
+
+.shiny::after {
+    content: "Shiny";
+    color: #fff;
+    display: block;
+    position: absolute;
+    text-shadow: 0 1px #6e4414, 0 2px #6e4414, 0 3px #6e4414, 0 4px #6e4414,
+        0 5px #6e4414, 0 6px #6e4414, 0 7px #6e4414, 0 8px #6e4414,
+        0 9px #6e4414, 0 10px #6e4414;
+    top: 0;
+    z-index: -1;
+}
+
+.inner-shiny::after,
+.inner-shiny::before {
+    -webkit-animation: sparkle 5s infinite;
+    -webkit-animation-timing-function: linear;
+    background: #fff;
+    border-radius: 100%;
+    box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #fff,
+        0 0 25px #fff, 0 0 30px #fff, 0 0 35px #fff;
+    content: "";
+    display: block;
+    height: 10px;
+    opacity: 0.7;
+    position: absolute;
+    width: 10px;
+}
+
+.inner-shiny::before {
+    -webkit-animation-delay: 0.2s;
+    height: 7px;
+    left: 0.12em;
+    top: 0.8em;
+    width: 7px;
+}
+
+.inner-shiny::after {
+    top: 0.32em;
+    right: -5px;
+}
+
+@-webkit-keyframes flare {
+    0% {
+        background-position: -180px;
+    }
+    30% {
+        background-position: 500px;
+    }
+    100% {
+        background-position: 500px;
+    }
+}
+
+@-webkit-keyframes sparkle {
+    0% {
+        opacity: 0;
+    }
+    30% {
+        opacity: 0;
+    }
+    40% {
+        opacity: 0.8;
+    }
+    60% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+    }
+}
 chat-chats-sidenav {
   display: flex;
   flex: 1;

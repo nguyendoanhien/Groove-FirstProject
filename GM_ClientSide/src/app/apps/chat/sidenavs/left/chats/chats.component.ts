@@ -206,7 +206,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         this._userInfoService.userInfo.status = "offline";
         await this._userInfoService.changeDisplayName().subscribe();
         this._userProfileService.logOut();
-        window.location.reload();
+        // window.location.reload();
     }
 
     CountData() {

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
@@ -54,7 +55,9 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
         [Route("index")]
         public IActionResult Index()
         {
-            return Ok();
+            MyAsyncMethod(); // this generates a warning and swallows exceptions
+            return Ok("fine");
+            //return Ok();
         }
 
         [HttpPost("register")]
@@ -308,6 +311,17 @@ namespace GrooveMessengerAPI.Areas.IdentityServer.Controllers
             var userInfoModel = _userService.GetUserInfo(user.Id);
             var tokenString = AuthTokenUtil.GetJwtTokenString(user, userInfoModel, _config);
             return new OkObjectResult(tokenString);
+        }
+        public async Task MyAsyncMethod()
+        {
+            await Task.Delay(50000);
+            Debug.WriteLine("Went Inside");
+            // do some stuff async, don't return any data
+        }
+        public string GetStringData()
+        {
+            MyAsyncMethod(); // this generates a warning and swallows exceptions
+            return "hello world";
         }
     }
 }

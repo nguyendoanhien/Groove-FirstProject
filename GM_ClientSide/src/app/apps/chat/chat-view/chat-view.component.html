@@ -95,11 +95,11 @@
                     style="background-color: transparent !important">
                     <div class="message" *ngIf="obj">
                         <div style="background-color: white" style="position: relative">
-                            <a href="{{obj.urlLink}}" target="_blank">
+                            <a href="{{obj.urlLink||obj.imgLink}}" target="_blank">
                                 <img src="{{obj.imgLink}}" style="height: 150px; width: 200px;"
                                     class="message-preview-image">
-                                <div
-                                    style="background-color: rgba(60, 60, 60, 0.5); bottom: 0px; position: absolute; width: 100%">
+                                <div *ngIf="obj.imgTitle||obj.urlLink"
+                                    style="background-color: rgba(60, 60, 60, 0.5); bottom: 0px; position: absolute; width: 100%; height:20%">
                                     <div *ngIf="obj.imgTitle" style="color: white; font-weight: bold;">{{obj.imgTitle}}
                                     </div>
                                     <div *ngIf="obj.urlLink"

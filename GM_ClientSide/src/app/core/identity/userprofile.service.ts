@@ -8,7 +8,8 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 import { Subject, Observable, Subscription } from "rxjs";
 import { map } from "rxjs/operators";
 import { UserProfileModel } from "app/account/user-profile/user-profile.model";
-
+import { FacebookService } from 'ngx-facebook';
+import { AuthService as AuthSocialService } from "angularx-social-login";
 const loginUrl = environment.authLoginUrl;
 const authGoogleUrl = environment.authGoogleUrl;
 const authFBUrl = environment.authFacebookUrl;
@@ -28,6 +29,8 @@ export class UserProfileService {
     constructor(private router: Router,
         private authService: AuthService,
         private http: HttpClient,
+        private _fb: FacebookService,
+        private _authService: AuthSocialService
     ) {
         this.userProfile = new UserProfileModel();
     }
@@ -77,7 +80,33 @@ export class UserProfileService {
     }
 
     logOut(): Promise<boolean> {
-        this.authService.clearToken();
+
+
+        // debugger;
+        // this._authService.authState.subscribe((user) => {
+        //     debugger;
+        //     this.authService.clearToken();
+        //     if (user != null)
+        //         this._authService.signOut().then(() => console.log('signout'));
+
+        // }, err => console.log('error'), () => console.log('finished'));
+
+
+        this._fb.getLoginStatus().then((response) => {
+            debugger;
+            if (response.status === 'connected') {
+                console.log('FB Connected')
+                this._fb.logout().then((response) => {
+                    console.log('Log out')
+                });
+            } else if (response.status === 'not_authorized') {
+                console.log('FB Not Authorized')
+            } else {
+                console.log('FB Unconnected')
+            }
+        });
+
+        // return Promise.resolve(null);
         return this.router.navigate(["account", "login"]);
     }
 

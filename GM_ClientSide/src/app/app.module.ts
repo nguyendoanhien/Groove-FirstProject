@@ -46,6 +46,31 @@ import { FacebookModule, FacebookService } from "ngx-facebook";
 import { CloudinaryModule } from "@cloudinary/angular-5.x";
 import * as Cloudinary from "cloudinary-core";
 import { ScrollEventModule } from 'ngx-scroll-event';
+import { WindowRef } from '@fuse/services/window-ref';
+import {
+    SocialLoginModule,
+    AuthServiceConfig,
+    GoogleLoginProvider,
+    FacebookLoginProvider
+} from "angularx-social-login";
+import { environment } from 'environments/environment';
+import { CookieService } from 'ngx-cookie-service';
+const config = new AuthServiceConfig([
+    {
+        id: GoogleLoginProvider.PROVIDER_ID,
+        provider: new GoogleLoginProvider(environment.applicationGoogle.clientId)
+    },
+    {
+        id: FacebookLoginProvider.PROVIDER_ID,
+        provider: new FacebookLoginProvider(environment.applicationFacebook.appId)
+    }
+]);
+
+export function provideConfig(): AuthServiceConfig {
+
+
+    return config;
+}
 @NgModule({
     declarations: [
         AppComponent,
@@ -58,7 +83,7 @@ import { ScrollEventModule } from 'ngx-scroll-event';
         AppRoutingModule,
         FacebookModule.forRoot(),
         TranslateModule.forRoot(),
-
+        SocialLoginModule,
         InMemoryWebApiModule.forRoot(FakeDbService,
             {
                 delay: 0,
@@ -96,6 +121,10 @@ import { ScrollEventModule } from 'ngx-scroll-event';
         AppComponent
     ],
     providers: [
+        CookieService, {
+            provide: AuthServiceConfig,
+            useFactory: provideConfig
+        },
         ChatService,
         {
             provide: HTTP_INTERCEPTORS,
@@ -121,7 +150,9 @@ import { ScrollEventModule } from 'ngx-scroll-event';
             useValue: 1,
         },
         SpeechRecognitionService,
-        RxSpeechRecognitionService
+        RxSpeechRecognitionService,
+        WindowRef,
+        SpeechRecognition
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA,
