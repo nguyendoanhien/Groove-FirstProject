@@ -14,6 +14,8 @@ import { UserContactService } from "app/core/account/user-contact.service";
 import { RxSpeechRecognitionService, resultList } from "@kamiazya/ngx-speech-recognition";
 import { ApiMethod, FacebookService } from "ngx-facebook/dist/esm/providers/facebook";
 import { WindowRef } from '@fuse/services/window-ref';
+import { NotificationMiddlewareService } from 'app/core/notification-middleware.service';
+import { NotificationService, NotificationModel } from 'app/core/generated';
 
 
 export class DialogModel {
@@ -114,7 +116,9 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         private _userContactService: UserContactService,
         public _rxSpeechRecognitionService: RxSpeechRecognitionService,
         private fbk: FacebookService,
-        private _windowRef: WindowRef
+        private _windowRef: WindowRef,
+        public notificationMiddleware: NotificationMiddlewareService,
+        private notificationService: NotificationService
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
@@ -128,7 +132,51 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     /**
      * On init
      */
+
+    requestPermission() {
+        // Let's check if the browser supports notifications
+        if (!("Notification" in window)) {
+            alert("This browser does not support system notifications");
+            // This is not how you would really do things if they aren't supported. :)
+        }
+
+        // Let's check whether notification permissions have already been granted
+        else if (Notification.permission === "granted") {
+            // If it's okay let's create a notification
+            new Notification("Hi there!");
+        }
+
+        // Otherwise, we need to ask the user for permission
+        else if (Notification.permission !== 'denied') {
+            Notification.requestPermission(function (permission) {
+                // If the user accepts, let's create a notification
+                if (permission === "granted") {
+                    var notification = new Notification("Hi there!");
+                }
+            });
+        }
+
+        // Finally, if the user has denied notifications and you 
+        // want to be respectful there is no need to bother them any more.
+    }
+    displayNotification() {
+        if (Notification.permission == 'granted') {
+            navigator.serviceWorker.getRegistration().then(function (reg) {
+                var options = {
+                    body: 'Here is a notification body!',
+                    icon: 'images/example.png',
+                    vibrate: [100, 50, 100],
+                    data: {
+                        dateOfArrival: Date.now(),
+                        primaryKey: 1
+                    }
+                };
+                reg.showNotification('Hello world!', options);
+            });
+        }
+    }
     ngOnInit(): void {
+
         this.lastClicked = new Date();
         this.user = this._chatService.user;
         this._chatService.onChatSelected
@@ -300,6 +348,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      */
 
 
+    model: NotificationModel = { url: "", title: "", message: "" }
+
     async getOgImage(urlPath: string) {
         let imageUrl = "";
         const apiMethod: ApiMethod = "post";
@@ -315,7 +365,16 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         );
         return imageUrl;
     }
+    broadcast() {
+        this.model.message = this.replyForm.form.value.message;
 
+        this.notificationService.broadcast(this.model).subscribe(() => {
+            console.log('Broadcasted')
+            this.model.url = "";
+            this.model.title = "";
+            this.model.message = "";
+        })
+    }
     async reply(event) {
 
         event.preventDefault();
@@ -329,6 +388,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             message: this.replyForm.form.value.message,
             time: new Date().toISOString()
         };
+//Hien test
+        this.model.message = this.replyForm.form.value.message;
+        this.broadcast();
+//------->
 
         const newMessage = new IndexMessageModel(this.chatId,
             this.user.userId,
@@ -343,17 +406,17 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             if (this.isGroup === false) {
                 this._messageService.addMessage(newMessage).subscribe(success => {
                     this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
-                    .subscribe(val => { console.log(val + "chatview"); },
-                        error => { console.log(error); }
-                    );
+                        .subscribe(val => { console.log(val + "chatview"); },
+                            error => { console.log(error); }
+                        );
 
-                this._messageService.updateUnreadMessages(this.chatId)
-                    .subscribe(val => {
-                        var chatList = this.user.chatList as Array<any>;
-                        var chat = chatList.find(x => x.convId == this.chatId);
-                        chat.unread = val;
-                    },
-                        err => console.log(err));
+                    this._messageService.updateUnreadMessages(this.chatId)
+                        .subscribe(val => {
+                            var chatList = this.user.chatList as Array<any>;
+                            var chat = chatList.find(x => x.convId == this.chatId);
+                            chat.unread = val;
+                        },
+                            err => console.log(err));
                     console.log("send successfull");
                 },
                     err => console.log("send fail"));
@@ -365,7 +428,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     err => console.log("send fail"));
                 // Add the message to the chat
 
-            }         
+            }
             this.dialog.push(message);
         }
 
@@ -456,5 +519,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     Say() {
         alert(123);
+    }
+    toggleSubscription() {
+        this.notificationMiddleware.toggleSubscription();
     }
 }
