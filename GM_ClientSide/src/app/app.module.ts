@@ -46,6 +46,8 @@ import { FacebookModule, FacebookService } from "ngx-facebook";
 import { CloudinaryModule } from "@cloudinary/angular-5.x";
 import * as Cloudinary from "cloudinary-core";
 import { ScrollEventModule } from 'ngx-scroll-event';
+import { GroupService } from './core/data-api/services/group.service';
+
 import { WindowRef } from '@fuse/services/window-ref';
 import {
     SocialLoginModule,
@@ -149,6 +151,7 @@ export function provideConfig(): AuthServiceConfig {
             provide: SpeechRecognitionMaxAlternatives,
             useValue: 1,
         },
+        GroupService,
         SpeechRecognitionService,
         RxSpeechRecognitionService,
         WindowRef,

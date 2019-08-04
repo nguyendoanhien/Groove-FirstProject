@@ -5,6 +5,7 @@ export class User {
     mood: string;
     status: Status;
     chatList: any[];
+    groupChatList:any[];
 }
 
 export enum Status {

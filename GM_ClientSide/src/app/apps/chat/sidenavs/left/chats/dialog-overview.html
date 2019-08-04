@@ -1,0 +1,35 @@
+<div class="add-group">
+    <h1 mat-dialog-title>New Group Chat</h1>
+    <mat-toolbar color="primary">
+        <mat-toolbar-row class="toolbar-bottom" fxLayout="column" fxLayoutAlign="center center">
+            <input type="file" #file (change)="onUpload($event)" style="display: none" />
+            <img [src]="this._groupService.avatarGroup" style="cursor: pointer" (click)="file.click()"
+                class="avatar user-avatar huge" alt="" />
+        </mat-toolbar-row>
+    </mat-toolbar>
+    <div mat-dialog-content>
+        <mat-form-field>
+            <input placeholder="Group Name" matInput [(ngModel)]="this._groupService.nameGroup">
+        </mat-form-field>
+        <ul *ngFor="let contact of contacts" style="list-style:none">
+            <mat-checkbox [value]="contact" (change)="onChange($event)">
+                <li>
+                    <div fxLayout="row" fxLayoutAlign="start center">
+
+                        <div class="avatar-wrapper" fxFlex="0 1 auto">
+                            <img src="{{contact.avatar}}" class="mat-avatar avatar" alt="{{contact.displayName}}" />
+                        </div>
+
+                        <div fxLayout="column" fxLayoutAlign="start start">
+                            <div class="contact-name">{{contact.displayName}}</div>
+                        </div>
+                    </div>
+                </li>
+            </mat-checkbox>
+        </ul>
+    </div>
+    <div class="mat-dialog-actions" mat-dialog-actions>
+        <button mat-button (click)="onNoClick()">No Thanks</button>
+        <button mat-button [mat-dialog-close]="" (click)="addGroup()" cdkFocusInitial>Ok</button>
+    </div>
+</div>

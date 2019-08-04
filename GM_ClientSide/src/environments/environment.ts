@@ -30,11 +30,14 @@ export const environment = {
     apiGetContactChatList: apiContactUrl + "/getchatlist",
     apiGetChatListByConvId: apiConvUrl + "/dialog/",
     apiGetChatListByUserId: apiConvUrl + "/dialogs/",
+    apiGetConversationGroup: apiConvUrl + "/group",
+    apiGetMessageByConversation: apiMessageUrl + "/conversation/",
     apiConvUrl: apiConvUrl,
     apiGetUser: apiUserUrl,
     apiMessageUrl: apiMessageUrl,
     apiUnreadMessage: apiMessageUrl + "/unread/",
     apiReadMessage: apiMessageUrl + "/read/",
+    apiMessageWithGroup: apiMessageUrl + '/group',
     applicationGoogle: {
         clientId: "687824117544-nvc2uojbm14hc330gl8qh3lsrtl3tc4a.apps.googleusercontent.com",
         clientSecret: "ugBBsDjYS-Rz20RVlx9r7Blo"

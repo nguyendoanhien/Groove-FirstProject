@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation, ViewChildren, ChangeDetectorRef } from "@angular/core";
+import { Component, OnDestroy, OnInit, ViewEncapsulation, ViewChildren, ChangeDetectorRef,Inject} from "@angular/core";
 import { MediaObserver } from "@angular/flex-layout";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -14,7 +14,8 @@ import { ProfileHubService } from "app/core/data-api/hubs/profile.hub";
 import { MessageModel } from "app/models/message.model";
 import { MessageService } from "app/core/data-api/services/message.service";
 import { UnreadMessage } from "app/models/UnreadMessage.model";
-
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { GroupService } from 'app/core/data-api/services/group.service';
 @Component({
     selector: "chat-chats-sidenav",
     templateUrl: "./chats.component.html",
@@ -55,7 +56,8 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         public _userInfoService: UserInfoService,
         private profileHubService: ProfileHubService,
         private _messageService: MessageService,
-        private cd: ChangeDetectorRef
+        private cd: ChangeDetectorRef,
+        public dialog: MatDialog
     ) {
         // Set the defaults
         this.chatSearch = {
@@ -114,14 +116,19 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             }
         });
 
+        this._chatService._contactHub.newGroup.subscribe((newGroup)=>{
+            if(newGroup){
+                this.user.groupChatList.push(newGroup); 
+            }
+        });
+
         this._chatService._messageHub.unreadMessage.subscribe((unreadMessage: UnreadMessage) => {
             if (unreadMessage) {
                 console.log('Unread message amount:');
                 console.log(unreadMessage);
                 const chatList = this.user.chatList as Array<any>;
                 const chat = chatList.find(x => x.convId == unreadMessage.conversationId);
-                debugger
-                if (unreadMessage.amount > 100) {
+                if (unreadMessage.amount > 99) {
                     chat.unread = "99+";
                 }
                 else {
@@ -242,6 +249,23 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         });
     }
 
+    openDialog(): void {
+        this.dialog.open(DialogOverviewDialog, {
+            width: '400px',
+            height: '700px',
+            data: this.contacts
+        });
+    };
+
+    getChatOfGroupChat(groupchat): void {
+
+        this._chatService.getChatOfGroupChat(groupchat);
+        if (!this._mediaObserver.isActive("gt-md")) {
+            this._fuseMatSidenavHelperService.getSidenav("chat-left-sidenav").toggle();
+        }
+    }
+
+
 }
 
 //Global----------------------------------
@@ -275,5 +299,45 @@ declare global {
         equals: any;
 
         // }
+    }
+}
+
+@Component({
+    selector: 'dialog-overview',
+    templateUrl: 'dialog-overview.html',
+    styleUrls: ["./chats.component.scss"]
+})
+export class DialogOverviewDialog {
+    selectedFile: File = null;
+    constructor(
+        public dialogRef: MatDialogRef<DialogOverviewDialog>,
+        @Inject(MAT_DIALOG_DATA) public contacts: any[],
+        private _groupService: GroupService,
+        public _chatService: ChatService) { }
+
+    onNoClick(): void {
+        this._groupService.initAddGroup();
+        this.dialogRef.close();
+    }
+
+    onUpload(event) {
+        this.selectedFile = (event.target.files[0] as File);
+        const fd = new FormData();
+        fd.append("file", this.selectedFile);
+        this._groupService.onUpload(fd).subscribe();
+
+    }
+
+    onChange(event) {
+        if (event.checked) {
+            this._groupService.contactGroup.push(event.source.value);
+        } else {
+            var i = this._groupService.contactGroup.findIndex(x => x.id === event.source.value.id)
+            this._groupService.contactGroup.splice(i, 1);
+        }
+    }
+    async addGroup() {
+        await this._groupService.addGroup().subscribe(res => {this._chatService.user.groupChatList.push(res)});
+        this._groupService.initAddGroup();
     }
 }

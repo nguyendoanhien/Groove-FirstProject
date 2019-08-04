@@ -2,8 +2,11 @@
 using System.Threading.Tasks;
 using GrooveMessengerAPI.Constants;
 using GrooveMessengerAPI.Hubs.Utils;
+using GrooveMessengerDAL.Models;
+using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace GrooveMessengerAPI.Hubs
 {
@@ -11,8 +14,10 @@ namespace GrooveMessengerAPI.Hubs
     public class MessageHub : HubBase<IMessageHubClient>
     {
         public MessageHub(
-            HubConnectionStorage connectionStore
-        ) : base(connectionStore, HubConstant.MessageHubTopic)
+            HubConnectionStorage connectionStore,
+            IConversationService conversationService,
+            UserManager<ApplicationUser> userManager
+        ) : base(connectionStore, HubConstant.MessageHubTopic, conversationService, userManager)
         {        
         }
 

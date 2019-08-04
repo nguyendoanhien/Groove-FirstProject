@@ -13,18 +13,24 @@ export class MessageHubService {
 
     newChatMessage: BehaviorSubject<MessageModel>;
     removedChatMessage: BehaviorSubject<MessageModel>;
+    newGroupChatMessage:BehaviorSubject<MessageModel>;
     _hubConnection: signalR.HubConnection;
     unreadMessage: BehaviorSubject<UnreadMessage>;
 
     constructor(private authService: AuthService) {
 
         this.newChatMessage = new BehaviorSubject(null);
+        this.newGroupChatMessage = new BehaviorSubject(null);
         this.unreadMessage = new BehaviorSubject(null);
         this.startConnection();
         this._hubConnection.on("SendMessage",
             (message: MessageModel) => {
                 this.newChatMessage.next(message);
             });
+        this._hubConnection.on("BroadcastMessageToGroup", (messsage: MessageModel) => {
+            console.log(messsage);
+            this.newGroupChatMessage.next(messsage);
+        });
         this._hubConnection.on("SendRemovedMessage",
             (message: MessageModel) => {
                 this.removedChatMessage.next(message);

@@ -21,5 +21,8 @@ namespace GrooveMessengerDAL.Services.Interface
         int SetValueSeenBy(string userId, Guid conversationId);
         IEnumerable<DialogModel> GetDialogs(Guid conversationId);
         int GetUnreadMessages(Guid conversationId, string userId);
+
+        List<IndexMessageModel> GetMessagesByConversation(Guid id);
+        IndexMessageModel GetLastestMessagebyConversation(Guid id);
     }
 }

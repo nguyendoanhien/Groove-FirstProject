@@ -8,5 +8,6 @@ namespace GrooveMessengerDAL.Services.Interface
     {
         IEnumerable<Guid> GetAllConversationIdOfAUser(string userId);
         void AddParticipant(ParticipantModel participantModel);
+        IEnumerable<string> GetParticipantUsersByConversation(Guid id);
     }
 }
