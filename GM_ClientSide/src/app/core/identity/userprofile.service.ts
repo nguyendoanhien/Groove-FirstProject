@@ -90,8 +90,7 @@ export class UserProfileService {
         //         this._authService.signOut().then(() => console.log('signout'));
 
         // }, err => console.log('error'), () => console.log('finished'));
-
-
+        this.authService.clearToken();
         this._fb.getLoginStatus().then((response) => {
             debugger;
             if (response.status === 'connected') {
