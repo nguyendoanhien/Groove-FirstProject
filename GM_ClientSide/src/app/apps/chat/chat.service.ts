@@ -10,6 +10,7 @@ import { UserContactService } from "app/core/account/user-contact.service";
 import { MessageHubService } from "../../core/data-api/hubs/message.hub";
 import { UserProfileService } from "app/core/identity/userprofile.service";
 import { ContactHubService } from "app/core/data-api/hubs/contact.hub";
+import { GroupService } from 'app/core/data-api/services/group.service';
 
 @Injectable()
 export class ChatService implements Resolve<any> {
@@ -17,8 +18,10 @@ export class ChatService implements Resolve<any> {
     unknownContacts: any[];
     chats: any[];
     user: User;
+    isGroup:boolean;
     onChatSelected: BehaviorSubject<any>;
     onContactSelected: BehaviorSubject<any>;
+    onChatGroupSelected: BehaviorSubject<any>;
     onChatsUpdated: Subject<any>;
     onUserUpdated: Subject<any>;
     onLeftSidenavViewChanged: Subject<any>;
@@ -40,11 +43,14 @@ export class ChatService implements Resolve<any> {
         private _userInformList: UserInfoService,
         private _messageHubService: MessageHubService,
         private _userProfileService: UserProfileService,
-        private _contactHubService: ContactHubService
+        private _contactHubService: ContactHubService,
+        private _groupService: GroupService
     ) {
         // Set the defaults
         this.onChatSelected = new BehaviorSubject(null);
         this.onContactSelected = new BehaviorSubject(null);
+        this.onChatGroupSelected = new BehaviorSubject(null);
+
         this.onChatsUpdated = new Subject();
         this.onUserUpdated = new Subject();
         this.onLeftSidenavViewChanged = new Subject();
@@ -77,14 +83,16 @@ export class ChatService implements Resolve<any> {
                 this.getUnknownContacts(),
                 this.getChats(),
                 this.getUser(),
-                this.getChatList()
+                this.getChatList(),
+                this.getGroupChat()
             ]).then(
-                ([contacts, unknownContacts, chats, user, chatList]) => {
+                ([contacts, unknownContacts, chats, user, chatList,groupChatList]) => {
                     this.contacts = contacts;
                     this.unknownContacts = unknownContacts;
                     this.chats = (chats === null ? [] : chats);
                     this.user = user;
                     this.user.chatList = chatList;
+                    this.user.groupChatList = groupChatList;
                     resolve();
                 },
                 reject
@@ -103,7 +111,7 @@ export class ChatService implements Resolve<any> {
         const chatItem = this.user.chatList.find((item) => {
             return item.contactId === contactId;
         });
-
+        this.isGroup = false;
         return new Promise((resolve, reject) => {
             if (!chatItem) {
                 const unknowContact = this.unknownContacts.find((unknowContact) => {
@@ -125,10 +133,7 @@ export class ChatService implements Resolve<any> {
                         });
 
                         const chatData = {
-                            // <<<<<<< HEAD
-                            //                         chatId: chat.userId,
-                            // =======
-                            chatId: chat.id, // This is id of conversation
+                            chatId: chat.id, 
                             dialog: chat.dialog,
                             contact: chatContact
                         };
@@ -140,6 +145,21 @@ export class ChatService implements Resolve<any> {
             }
         });
 
+    }
+
+    getChatOfGroupChat(groupchat: any) {
+        var contact = { displayName: groupchat.name, avatar: groupchat.avatar, id: groupchat.id, members:groupchat.members };
+        this._httpClient.get(environment.apiGetMessageByConversation + groupchat.id).subscribe((res: any) => {
+            console.log(res);
+            const chatData = {
+                chatId: groupchat.id,
+                dialog: res.dialog,
+                contact: contact,
+                isGroup: true
+            }
+            this.isGroup = true;
+            this.onChatSelected.next({ ...chatData });
+        })
     }
 
     /**
@@ -154,6 +174,10 @@ export class ChatService implements Resolve<any> {
     }
     selectContact(contact): void {
         this.onContactSelected.next(contact);
+    }
+
+    selectChatGroup(contact):void {
+        this.onChatGroupSelected.next(contact);
     }
 
     /**
@@ -215,6 +239,10 @@ export class ChatService implements Resolve<any> {
     getUnknownContacts(displayNameSearch?: string): Promise<any> {
         return this._userContactService.getUnknownContacts(displayNameSearch).toPromise();
 
+    }
+
+    getGroupChat(): Promise<any> {
+        return this._groupService.getGroupChat().toPromise();
     }
 
 

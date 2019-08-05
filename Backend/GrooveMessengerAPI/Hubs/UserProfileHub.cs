@@ -3,9 +3,11 @@ using System.Threading.Tasks;
 using GrooveMessengerAPI.Areas.Chat.Models;
 using GrooveMessengerAPI.Constants;
 using GrooveMessengerAPI.Hubs.Utils;
+using GrooveMessengerDAL.Models;
 using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace GrooveMessengerAPI.Hubs
 {
@@ -15,7 +17,9 @@ namespace GrooveMessengerAPI.Hubs
         private readonly IContactService _contactService;
 
         public UserProfileHub(HubConnectionStorage connectionStore,
-            IContactService contactService) : base(connectionStore, HubConstant.ProfileHubTopic)
+            IContactService contactService,
+            IConversationService conversationService,
+            UserManager<ApplicationUser> userManager) : base(connectionStore, HubConstant.ProfileHubTopic, conversationService, userManager)
         {
             _contactService = contactService;          
         }

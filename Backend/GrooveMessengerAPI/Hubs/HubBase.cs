@@ -2,8 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using GrooveMessengerAPI.Hubs.Utils;
+using GrooveMessengerDAL.Models;
+using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 
 namespace GrooveMessengerAPI.Hubs
@@ -12,13 +15,18 @@ namespace GrooveMessengerAPI.Hubs
     public class HubBase<T> : Hub<T> where T : class
     {
         protected HubConnectionStorage ConnectionStore;
+        private readonly IConversationService _conversationService;
+        private readonly UserManager<ApplicationUser> _userManager;
         protected string Topic;
 
 
-        public HubBase(HubConnectionStorage connectionStore, string topic)
+        public HubBase(HubConnectionStorage connectionStore, string topic,
+            IConversationService conversationService, UserManager<ApplicationUser> userManager)
         {
             this.ConnectionStore = connectionStore;
             this.Topic = topic;
+            _conversationService = conversationService;
+            _userManager = userManager;
         }
 
         public override Task OnConnectedAsync()

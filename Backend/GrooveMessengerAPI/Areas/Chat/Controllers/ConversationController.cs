@@ -118,7 +118,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             // create conversation
             var createConversationModel = new CreateConversationModel
             {
-                Id = Guid.NewGuid(), Avatar = $"{_config.GetSection("Server")}/images/avatar.png", Name = userIndex.DisplayName
+                Id = Guid.NewGuid(), Avatar = $"{_config.GetSection("Server").Value}/images/avatar.png", Name = userIndex.DisplayName
             };
             _conService.AddConversation(createConversationModel);
 
@@ -166,6 +166,118 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                     .SendNewContactToFriend(userIndexcurrent, chatContactToSend, dialog);
 
             return new ObjectResult(new {Contact = userIndex, ChatContact = chatContact, dialog});
+        }
+
+
+        [HttpGet("group")]
+        public async Task<ActionResult<IEnumerable<GroupConversationModel>>> GetGroups()
+        {
+            var requestUserInform = await _userManager.FindByNameAsync(CurrentUserName);
+            var groupConversations = new List<GroupConversationModel>();
+            var convs = _conService.GetGroupConversationsByUsername(CurrentUserName).Result;
+            foreach (var conv in convs)
+            {
+                var groupConversation = new GroupConversationModel();
+                groupConversation.Members = new List<MemberInformModel>();
+                var membersInConv = _participantService.GetParticipantUsersByConversation(conv.Id);
+                foreach (var member in membersInConv)
+                {
+                    var memberInformContact = _userService.GetUserInfo(member);
+                    var memberInformModel = new MemberInformModel
+                    {
+                        Id = memberInformContact.UserId,
+                        Avatar = memberInformContact.Avatar,
+                        DisplayName = memberInformContact.DisplayName
+                    };
+                    groupConversation.Members.Add(memberInformModel);
+                }
+                var lastestMessage = _messageService.GetLastestMessagebyConversation(conv.Id);
+                groupConversation.Id = conv.Id;
+                groupConversation.Name = conv.Name;
+                groupConversation.Avatar = conv.Avatar;
+                groupConversation.UnreadMessage = _messageService.GetUnreadMessages(conv.Id, requestUserInform.Id);
+                groupConversation.LastestMessage = lastestMessage.Content;
+                groupConversation.LastestMessageTime = lastestMessage.CreatedOn;
+                groupConversations.Add(groupConversation);
+            }
+            return Ok(groupConversations);
+        }
+
+        [HttpPost("group")]
+        public async Task<ActionResult> CreateNewConversationGroup([FromBody] InitialGroupModel model)
+        {
+            var user = await _userManager.FindByEmailAsync(CurrentUserName);
+            // Create a new group conversation
+            var newConversation = new CreateConversationModel { Id = Guid.NewGuid(), Name = model.Name, Avatar = model.Avatar, IsGroup = true };
+            _conService.AddConversation(newConversation);
+            // Add creator to new group conversation
+            var newCreator = new ParticipantModel
+            {
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
+                ConversationId = newConversation.Id,
+                Status = 1
+            };
+            _participantService.AddParticipant(newCreator);
+            // Add message to new group conversation
+            var createMessageModel = new CreateMessageModel
+            {
+                Content = "Hello " + model.Name,
+                SenderId = newCreator.UserId,
+                Type = "text",
+                ConversationId = newConversation.Id
+            };
+            _messageService.AddMessage(createMessageModel);
+            var newGroupInfo = new GroupConversationModel
+            {
+                Id = newConversation.Id,
+                Name = newConversation.Name,
+                Avatar = newConversation.Avatar,
+                Members = new List<MemberInformModel>()
+            };
+            // Add members to new group conversation 
+            foreach (var member in model.Members)
+            {
+                var memberInformContact = _userService.GetUserInfo(member.UserId);
+                var memberInformModel = new MemberInformModel
+                {
+                    Id = member.UserId,
+                    Avatar = memberInformContact.Avatar,
+                    DisplayName = memberInformContact.DisplayName
+                };
+                newGroupInfo.Members.Add(memberInformModel);
+                var newMember = new ParticipantModel
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = member.UserId,
+                    ConversationId = newConversation.Id,
+                    Status = 1
+                };
+                _participantService.AddParticipant(newMember);
+                var memberInfo = await _userManager.FindByIdAsync(newMember.UserId);
+                foreach (var connectionId in _hubConnectionStore.GetConnections(HubConstant.ContactHubTopic, memberInfo.UserName))
+                {
+                    await _contactHubContext.Groups.AddToGroupAsync(connectionId, newConversation.Name);
+                }
+            }
+            await _contactHubContext.Clients.Group(newConversation.Name).BroadcastNewGroupToFriends(newGroupInfo);
+            return Ok(newGroupInfo);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> EditConversation(EditConversationModel editConversation)
+        {
+            _conService.editConversation(editConversation);
+            foreach (var member in editConversation.Members)
+            {
+                var memberInfo = await _userManager.FindByIdAsync(member.Id.ToString());
+                foreach (var connectionId in _hubConnectionStore.GetConnections(HubConstant.ContactHubTopic, memberInfo.UserName))
+                {
+                    await _contactHubContext.Groups.AddToGroupAsync(connectionId, editConversation.Name);
+                }
+                await _contactHubContext.Clients.Group(editConversation.Name).EditConversationToFriends(editConversation);
+            }
+            return Ok();
         }
     }
 }

@@ -179,5 +179,18 @@ namespace GrooveMessengerDAL.Services
             var msgs = _mesRepository.GetAll();
             _uow.SaveChanges();
         }
+
+        public List<IndexMessageModel> GetMessagesByConversation(Guid id)
+        {
+            var messages = _mesRepository.GetBy(x => x.ConversationId == id);
+
+            return _mapper.Map<List<MessageEntity>, List<IndexMessageModel>>(messages.ToList());
+        }
+
+        public IndexMessageModel GetLastestMessagebyConversation(Guid id)
+        {
+            var message = _mesRepository.GetBy(x => x.ConversationId == id).OrderByDescending(o => o.CreatedOn).FirstOrDefault();
+            return _mapper.Map<MessageEntity, IndexMessageModel>(message);
+        }
     }
 }

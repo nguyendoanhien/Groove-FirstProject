@@ -4,14 +4,16 @@ using GrooveMessengerDAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GrooveMessengerDAL.Migrations
 {
     [DbContext(typeof(GrooveMessengerDbContext))]
-    partial class GrooveMessengerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190802050947_updateusp_Message_GetTheLatest_AddMoreCondition")]
+    partial class updateusp_Message_GetTheLatest_AddMoreCondition
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,7 +29,8 @@ namespace GrooveMessengerDAL.Migrations
 
                     b.Property<string>("Avatar")
                         .IsRequired()
-                        .HasColumnName("Avatar");
+                        .HasColumnName("Avatar")
+                        .HasMaxLength(50);
 
                     b.Property<string>("CreatedBy")
                         .HasColumnName("CreatedBy");
