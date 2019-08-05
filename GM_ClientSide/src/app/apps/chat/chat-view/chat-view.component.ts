@@ -48,7 +48,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('vcChatContent', { static: false }) vcChatContent: ElementRef;
     @ViewChild(FusePerfectScrollbarDirective, { static: false })
     directiveScroll: FusePerfectScrollbarDirective;
-    isOver = false;
+    isOver;
     lastClicked: Date = new Date();
 
     @ViewChildren("replyInput")
@@ -65,8 +65,9 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     LoadMoreMessage() {
         if (this.vcChatContent.nativeElement.scrollTop == 0) {
             var now = new Date();
-            console.log(now.getSeconds() - this.lastClicked.getSeconds())
-            if (now.getSeconds() - this.lastClicked.getSeconds() >= 1) {
+
+
+            if (now.getTime() - this.lastClicked.getTime() >= 1000) {
                 this.lastClicked = now;
                 let CreatedOn = this.dialog[0].time;
 
@@ -111,7 +112,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * @param {MessageService} _messageService
      */
     constructor(
-        private _chatService: ChatService,
+        public _chatService: ChatService,
         private _messageService: MessageService,
         private _userContactService: UserContactService,
         public _rxSpeechRecognitionService: RxSpeechRecognitionService,
@@ -156,7 +157,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             });
         }
 
-        // Finally, if the user has denied notifications and you 
+        // Finally, if the user has denied notifications and you
         // want to be respectful there is no need to bother them any more.
     }
     displayNotification() {
@@ -176,17 +177,18 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
     ngOnInit(): void {
-
+        this.isOver = false;
         this.lastClicked = new Date();
         this.user = this._chatService.user;
         this._chatService.onChatSelected
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(chatData => {
                 if (chatData) {
+                    this.isOver = false;
                     this.selectedChat = chatData;
                     this.contact = chatData.contact;
                     this.dialog = chatData.dialog;
-                    this.chatId = chatData.chatId; // current conversation id              
+                    this.chatId = chatData.chatId; // current conversation id
                     this.isGroup = chatData.isGroup ? chatData.isGroup : false;
                     if (this.isGroup === true) {
                         this.numberOfMembers = chatData.contact.members.length;
@@ -388,10 +390,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             message: this.replyForm.form.value.message,
             time: new Date().toISOString()
         };
-//Hien test
+        //Hien test
         this.model.message = this.replyForm.form.value.message;
         this.broadcast();
-//------->
+        //------->
 
         const newMessage = new IndexMessageModel(this.chatId,
             this.user.userId,

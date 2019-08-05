@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation, ViewChildren, ChangeDetectorRef,Inject} from "@angular/core";
+import { Component, OnDestroy, OnInit, ViewEncapsulation, ViewChildren, ChangeDetectorRef, Inject } from "@angular/core";
 import { MediaObserver } from "@angular/flex-layout";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -116,9 +116,9 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             }
         });
 
-        this._chatService._contactHub.newGroup.subscribe((newGroup)=>{
-            if(newGroup){
-                this.user.groupChatList.push(newGroup); 
+        this._chatService._contactHub.newGroup.subscribe((newGroup) => {
+            if (newGroup) {
+                this.user.groupChatList.push(newGroup);
             }
         });
 
@@ -312,7 +312,7 @@ export class DialogOverviewDialog {
     constructor(
         public dialogRef: MatDialogRef<DialogOverviewDialog>,
         @Inject(MAT_DIALOG_DATA) public contacts: any[],
-        private _groupService: GroupService,
+        public _groupService: GroupService,
         public _chatService: ChatService) { }
 
     onNoClick(): void {
@@ -337,7 +337,7 @@ export class DialogOverviewDialog {
         }
     }
     async addGroup() {
-        await this._groupService.addGroup().subscribe(res => {this._chatService.user.groupChatList.push(res)});
+        await this._groupService.addGroup().subscribe(res => { this._chatService.user.groupChatList.push(res) });
         this._groupService.initAddGroup();
     }
 }
