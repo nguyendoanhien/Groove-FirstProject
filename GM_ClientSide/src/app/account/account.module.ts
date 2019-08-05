@@ -19,31 +19,11 @@ import { CookieService } from "ngx-cookie-service";
 import { MailConfirmComponent } from "./mail-confirm/mail-confirm.component";
 import { MailConfirmerComponent } from "./mail-confirmer/mail-confirmer.component";
 import { ResetPasswordService } from "app/core/account/reset-password.service";
-import {
-    SocialLoginModule,
-    AuthServiceConfig,
-    GoogleLoginProvider,
-    FacebookLoginProvider
-} from "angularx-social-login";
+
 import { environment } from "environments/environment";
 
 const matModules = [MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatCheckboxModule];
-const config = new AuthServiceConfig([
-    {
-        id: GoogleLoginProvider.PROVIDER_ID,
-        provider: new GoogleLoginProvider(environment.applicationGoogle.clientId)
-    },
-    {
-        id: FacebookLoginProvider.PROVIDER_ID,
-        provider: new FacebookLoginProvider(environment.applicationFacebook.appId)
-    }
-]);
 
-export function provideConfig(): AuthServiceConfig {
-
-
-    return config;
-}
 
 @NgModule({
     declarations: [
@@ -57,13 +37,10 @@ export function provideConfig(): AuthServiceConfig {
         matModules,
         FormsModule,
         ReactiveFormsModule,
-        SocialLoginModule
+
     ],
     providers: [
-        CookieService, {
-            provide: AuthServiceConfig,
-            useFactory: provideConfig
-        }, ResetPasswordService
+        ResetPasswordService
     ]
 
 

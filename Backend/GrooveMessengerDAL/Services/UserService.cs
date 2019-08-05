@@ -55,7 +55,7 @@ namespace GrooveMessengerDAL.Services
         {
             userInfo.Status = "online";
             userInfo.Mood = "";
-            userInfo.Avatar =  $"{_config.GetSection("Server")}/images/avatar.png";
+            userInfo.Avatar =  $"{_config.GetSection("Server").Value}/images/avatar.png";
             var entity = _mapper.Map<CreateUserInfoModel, UserInfoEntity>(userInfo);
             _userRepository.Add(entity);
             _uow.SaveChanges();

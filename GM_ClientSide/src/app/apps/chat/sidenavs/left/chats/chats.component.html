@@ -13,7 +13,11 @@
                 <img (click)="changeLeftSidenavView('user')" [attr.src]="this._userInfoService.userInfo.avatar"
                     class="mat-avatar avatar" alt="" />
                 <!-- / USER AVATAR -->
-
+                <span class="shiny">
+                    <span class="inner-shiny">
+                        {{this._userInfoService.userInfo.displayName}}
+                    </span>
+                </span>
                 <mat-icon class="s-16 status" [ngClass]="this._userInfoService.userInfo.status"
                     [matMenuTriggerFor]="userStatusMenu">
                 </mat-icon>
@@ -120,7 +124,7 @@
                         <div class="avatar-wrapper" fxFlex="0 1 auto">
                             <img src="{{unknownContacts.avatar}}" class="mat-avatar avatar"
                                 alt="{{unknownContacts.displayName}}" />
-                            <mat-icon class="s-16 status" [ngClass]="Contacts?.status"></mat-icon>
+                            <mat-icon class="s-16 status" [ngClass]="unknownContacts?.status"></mat-icon>
                         </div>
 
                         <div fxLayout="column" fxLayoutAlign="start start">
@@ -168,7 +172,7 @@
                                 {{chat.lastMessageTime | date}}
 
                             </div>
-                            <div *ngIf="chat.unread && chat.unread>0" class="mt-4 unread-message-count accent">
+                            <div *ngIf="chat.unread && (chat.unread>0 || chat.unread=='99+')" class="mt-4 unread-message-count accent">
                                 {{chat.unread}}
                             </div>
                         </div>
