@@ -157,7 +157,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         });
         this._chatService._messageHub.newGroupChatMessage.subscribe((message: MessageModel) => {
             if (message) {
-                var lastItem = this.dialog[this.dialog.length-1];
+                var lastItem = this.dialog[this.dialog.length - 1];
                 if (this.chatId === message.fromConv && lastItem.id !== message.messageId) {
                     this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time, avatar: message.senderAvatar, nickName: message.senderName });
                 }
@@ -205,7 +205,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
- 
+
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -408,24 +408,31 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     listenSwitch = false;
-
-    listen() {
+    willText: string = '';
+    async listen() {
         if (this.listenSwitch) {
 
             console.log('on')
-            this._rxSpeechRecognitionService
-                .listen()
-                .pipe(resultList , take(2) )
-                .subscribe((list: SpeechRecognitionResultList) => {
 
-                    this.replyInput.value += list.item(0).item(0).transcript + " ";
+            this.replyInput.value += this.willText;
+            this.willText = '';
+            var subscriptionHere = this._rxSpeechRecognitionService
+                .listen()
+                .pipe(resultList /* , take(2) */)
+                .subscribe((list: SpeechRecognitionResultList) => {
+                    console.log(list);
+                    this.willText = list.item(list.length - 1).item(list.length - 1).transcript + " ";
+                    // this.replyInput.value = list.item(0).item(0).transcript + " ";
                     console.log("RxComponent:onresult", this.replyForm.form.value.message, list);
+                    this.replyInput.value = this.willText;
+                    this.willText = '';
                 },
                     err => (this.listenSwitch = false));
 
+
         } else {
             console.log('off');
-            this._rxSpeechRecognitionService.listen().subscribe().unsubscribe();
+            subscriptionHere.unsubscribe();
         }
     }
 
