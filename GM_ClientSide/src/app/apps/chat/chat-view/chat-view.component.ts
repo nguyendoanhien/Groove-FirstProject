@@ -452,7 +452,11 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             message.message,
             "Image",
             this.contact.userId);
-        this._messageService.onUpload(fd, newMessage).subscribe();
+
+        this._messageService.onUpload(fd, newMessage).subscribe(data => {
+            this.replyImage(data);
+        });
+
 
     }
 
@@ -466,5 +470,49 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     Say() {
         alert(123);
+    }
+
+    //---Tam thoi
+    replyImage(imageUrl: string) {
+
+
+
+        if (!imageUrl) {
+            return;
+        }
+        // Message
+        const message = {
+            who: this.user.userId,
+            message: imageUrl,
+            time: new Date().toISOString()
+        };
+
+        const newMessage = new IndexMessageModel(this.chatId,
+            this.user.userId,
+            null,
+            message.message,
+            "Text",
+            this.contact.userId);
+        // Truc> Check if exists all spaces
+        const urlRegex = /^(?!\s*$).+/g;
+        const isMatch: boolean = urlRegex.test(imageUrl);
+        if (isMatch) {
+            // Truc> Add the message and broadcast unread message amount 
+
+            this.dialog.push(message);
+        }
+
+        // Reset the reply form
+        this.replyForm.reset();
+
+        // Update the server
+        this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
+            this.readyToReply();
+        });
+
+        // Truc: Call count unread messages in controller backend
+        this.messageInput = ''; //reset
+        //Hide emoji table
+        this.isHide = true;
     }
 }
