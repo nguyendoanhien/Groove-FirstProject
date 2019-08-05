@@ -21,7 +21,7 @@
 
                     <div class="chat-contact-name">
                         {{contact.displayName}}
-                        <span *ngIf="isGroup" class="group-participant">({{numberOfMembers}} Participants)</span>
+                        <span *ngIf="isGroup" class="group-participant">({{numberOfMembers + 1}} Participants)</span>
                     </div>
                     <ul *ngIf="isGroup" class="group-member-icon">
                         <li *ngFor="let member of contact.members; let i = index">

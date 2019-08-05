@@ -180,7 +180,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.readyToReply();
 
         let CreatedOn = this.dialog[0].time;
-        console.log(CreatedOn);
         this._chatService.getMoreChat(this.chatId, CreatedOn).pipe(
             debounceTime(5000)
         ).subscribe(
@@ -353,6 +352,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                             chat.unread = val;
                         },
                             err => console.log(err));
+                    var chatList = this.user.chatList as Array<any>;
+                    var chat = chatList.find(x => x.convId == this.chatId);
+                    chat.lastMessage = message.message;
+                    chat.lastMessageTime = message.time;
                     console.log("Sent successfully");
                 },
                     err => console.log("Sent failed"));
@@ -368,6 +371,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                             groupChat.unreadMessage = val;
                         },
                             err => console.log(err));
+                    var groupChatList = this.user.groupChatList as Array<any>;
+                    var groupChat = groupChatList.find(x => x.id == this.chatId);
+                    groupChat.lastestMessage = message.message;
+                    groupChat.lastestMessageTime = message.time;                    
                     console.log("Chat group: Sent successfully");
                 },
                     err => console.log("Chat group: Sent failed"));

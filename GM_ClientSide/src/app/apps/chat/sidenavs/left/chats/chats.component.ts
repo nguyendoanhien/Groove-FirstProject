@@ -90,6 +90,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         this.updateChangeProfileHub();
 
         this.user = this._chatService.user;
+        
         this.chats = this._chatService.chats;
 
         this.contacts = this._chatService.contacts;
@@ -142,8 +143,8 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                 const groupChatList = this.user.groupChatList as Array<any>;
                 const groupChat = groupChatList.find(x => x.id == message.fromConv);
                 groupChat.message = message.payload;
-                groupChat.latestMessage = message.payload;
-                groupChat.latestMessageTime = message.time;
+                groupChat.lastestMessage = message.payload;
+                groupChat.lastestMessageTime = message.time;
                 this._chatService._messageHub.newGroupChatMessage.next(null);
             }
         });
