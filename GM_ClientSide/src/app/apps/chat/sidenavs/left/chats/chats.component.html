@@ -206,14 +206,14 @@
                         <div fxLayout="row" fxFlex>
                             <div class="pr-4" fxFlex fxLayout="column" fxLayoutAlign="center start">
                                 <div class="contact-name">{{groupChat.name}}</div>
-                                <div class="contact-last-message">{{groupChat.latestMessage}}</div>
+                                <div class="contact-last-message">{{groupChat.lastestMessage}}</div>
                             </div>
                             <!-- <div class="pr-4" fxFlex fxLayout="column" fxLayoutAlign="center start">
                                 <div class="contact-last-message">{{groupChat.lastestMessage}}</div>
                             </div> -->
                             <div fxLayout="column" fxLayoutAlign="start end">
                                 <div class="contact-last-message-time">
-                                    {{groupChat.latestMessageTime | date}}
+                                    {{groupChat.lastestMessageTime | date}}
                                 </div>
                                 <div *ngIf="groupChat.unreadMessage && (groupChat.unreadMessage>0 || groupChat.unreadMessage=='99+')"
                                     class="mt-4 unread-message-count accent">
