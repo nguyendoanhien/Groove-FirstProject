@@ -498,6 +498,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             console.log('off');
             subscriptionHere.unsubscribe();
+            this.listenSwitch = false;
         }
     }
 
@@ -580,7 +581,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         //Hide emoji table
         this.isHide = true;
     }
-    
+
     toggleSubscription() {
         this.notificationMiddleware.toggleSubscription();
 
