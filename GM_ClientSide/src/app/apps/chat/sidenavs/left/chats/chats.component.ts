@@ -337,7 +337,10 @@ export class DialogOverviewDialog {
         }
     }
     async addGroup() {
-        await this._groupService.addGroup().subscribe(res => {this._chatService.user.groupChatList.push(res)});
+        await this._groupService.addGroup().subscribe(res => {
+            res['lastestMessageTime'] = Date.now();
+            this._chatService.user.groupChatList.push(res);
+        });
         this._groupService.initAddGroup();
     }
 }
