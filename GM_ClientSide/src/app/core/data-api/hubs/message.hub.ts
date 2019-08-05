@@ -13,7 +13,7 @@ export class MessageHubService {
 
     newChatMessage: BehaviorSubject<MessageModel>;
     removedChatMessage: BehaviorSubject<MessageModel>;
-    newGroupChatMessage:BehaviorSubject<MessageModel>;
+    newGroupChatMessage: BehaviorSubject<MessageModel>;
     _hubConnection: signalR.HubConnection;
     unreadMessage: BehaviorSubject<UnreadMessage>;
 
@@ -28,6 +28,7 @@ export class MessageHubService {
                 this.newChatMessage.next(message);
             });
         this._hubConnection.on("BroadcastMessageToGroup", (messsage: MessageModel) => {
+            console.log("BroadcastMessageToGroup: ");
             console.log(messsage);
             this.newGroupChatMessage.next(messsage);
         });

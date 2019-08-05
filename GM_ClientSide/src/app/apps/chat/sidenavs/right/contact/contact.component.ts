@@ -27,7 +27,7 @@ export class ChatContactSidenavComponent implements OnInit, OnDestroy {
      * @param {ChatService} _chatService
      */
     constructor(
-        private _chatService: ChatService,
+        public _chatService: ChatService,
         private _userContactService: UserContactService,
         private _groupService: GroupService
     ) {
