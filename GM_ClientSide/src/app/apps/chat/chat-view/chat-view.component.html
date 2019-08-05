@@ -74,7 +74,7 @@
                 <b>Say hi to {{contact.displayName}} with a wave.</b>
             </p>
             <button *ngIf="!dialog" _ngcontent-bsa-c60="" color="accent" mat-raised-button=""
-                class="mat-raised-button mat-accent say-hi-button" (click)="SayHi(contact) ">
+                class="mat-raised-button mat-accent say-hi-button" [disabled]="clicked" (click)="SayHi(contact); clicked=true ;">
                 <span class="mat-button-wrapper">
                     Say Hi!
                 </span>

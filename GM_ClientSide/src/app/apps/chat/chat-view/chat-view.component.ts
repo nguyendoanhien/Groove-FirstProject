@@ -43,6 +43,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     selectedFile: any = null;
     isGroup: boolean;
     numberOfMembers: number;
+    clicked=false;
 
     @ViewChild('vcChatContent', { static: false }) vcChatContent: ElementRef;
     @ViewChild(FusePerfectScrollbarDirective, { static: false })
@@ -136,6 +137,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(chatData => {
                 if (chatData) {
+                   this.clicked=false;
                     this.selectedChat = chatData;
                     this.contact = chatData.contact;
                     this.dialog = chatData.dialog;
