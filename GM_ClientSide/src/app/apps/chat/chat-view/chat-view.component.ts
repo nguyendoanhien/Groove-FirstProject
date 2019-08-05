@@ -407,18 +407,18 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     listenSwitch = false;
 
     listen() {
-        debugger;
         if (this.listenSwitch) {
+
             console.log('on')
             this._rxSpeechRecognitionService
                 .listen()
-                .pipe(resultList/* , take(1) */)
+                .pipe(resultList , take(2) )
                 .subscribe((list: SpeechRecognitionResultList) => {
-                    console.log(`chat voice${list.item(0).item(0).transcript}`);
+
                     this.replyInput.value += list.item(0).item(0).transcript + " ";
                     console.log("RxComponent:onresult", this.replyForm.form.value.message, list);
                 },
-                    err => console.log("No Speech"));
+                    err => (this.listenSwitch = false));
 
         } else {
             console.log('off');
