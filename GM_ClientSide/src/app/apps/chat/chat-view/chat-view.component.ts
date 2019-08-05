@@ -191,8 +191,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.dialog.unshift(child);
                 });
                 this.scrollToBottom();
-
-
             }
         )
 
