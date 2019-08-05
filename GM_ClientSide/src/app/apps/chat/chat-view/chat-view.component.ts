@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewChildren, ViewEncapsulation, ElementRef, HostListener } from "@angular/core";
 import { NgForm, FormControl } from "@angular/forms";
-import { Subject } from "rxjs";
+import { Subject, BehaviorSubject } from "rxjs";
 import { takeUntil, take, debounceTime } from "rxjs/operators";
 
 import { FusePerfectScrollbarDirective } from
@@ -192,6 +192,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
+ 
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -243,6 +244,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     selectChatGroup(): void {
+
         this._chatService.selectChatGroup(this.contact);
     }
 
