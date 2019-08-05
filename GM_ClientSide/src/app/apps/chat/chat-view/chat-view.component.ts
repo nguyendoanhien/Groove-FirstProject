@@ -14,6 +14,8 @@ import { UserContactService } from "app/core/account/user-contact.service";
 import { RxSpeechRecognitionService, resultList } from "@kamiazya/ngx-speech-recognition";
 import { ApiMethod, FacebookService } from "ngx-facebook/dist/esm/providers/facebook";
 import { WindowRef } from '@fuse/services/window-ref';
+import { NotificationMiddlewareService } from 'app/core/notification-middleware.service';
+import { NotificationService, NotificationModel } from 'app/core/generated';
 
 
 export class DialogModel {
@@ -47,7 +49,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('vcChatContent', { static: false }) vcChatContent: ElementRef;
     @ViewChild(FusePerfectScrollbarDirective, { static: false })
     directiveScroll: FusePerfectScrollbarDirective;
-    isOver = false;
+    isOver;
     lastClicked: Date = new Date();
 
     @ViewChildren("replyInput")
@@ -64,8 +66,9 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     LoadMoreMessage() {
         if (this.vcChatContent.nativeElement.scrollTop == 0) {
             var now = new Date();
-            console.log(now.getSeconds() - this.lastClicked.getSeconds())
-            if (now.getSeconds() - this.lastClicked.getSeconds() >= 1) {
+
+
+            if (now.getTime() - this.lastClicked.getTime() >= 1000) {
                 this.lastClicked = now;
                 let CreatedOn = this.dialog[0].time;
 
@@ -115,7 +118,9 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         private _userContactService: UserContactService,
         public _rxSpeechRecognitionService: RxSpeechRecognitionService,
         private fbk: FacebookService,
-        private _windowRef: WindowRef
+        private _windowRef: WindowRef,
+        public notificationMiddleware: NotificationMiddlewareService,
+        private notificationService: NotificationService
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
@@ -129,17 +134,62 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     /**
      * On init
      */
+
+    requestPermission() {
+        // Let's check if the browser supports notifications
+        if (!("Notification" in window)) {
+            alert("This browser does not support system notifications");
+            // This is not how you would really do things if they aren't supported. :)
+        }
+
+        // Let's check whether notification permissions have already been granted
+        else if (Notification.permission === "granted") {
+            // If it's okay let's create a notification
+            new Notification("Hi there!");
+        }
+
+        // Otherwise, we need to ask the user for permission
+        else if (Notification.permission !== 'denied') {
+            Notification.requestPermission(function (permission) {
+                // If the user accepts, let's create a notification
+                if (permission === "granted") {
+                    var notification = new Notification("Hi there!");
+                }
+            });
+        }
+
+        // Finally, if the user has denied notifications and you
+        // want to be respectful there is no need to bother them any more.
+    }
+    displayNotification() {
+        if (Notification.permission == 'granted') {
+            navigator.serviceWorker.getRegistration().then(function (reg) {
+                var options = {
+                    body: 'Here is a notification body!',
+                    icon: 'images/example.png',
+                    vibrate: [100, 50, 100],
+                    data: {
+                        dateOfArrival: Date.now(),
+                        primaryKey: 1
+                    }
+                };
+                reg.showNotification('Hello world!', options);
+            });
+        }
+    }
     ngOnInit(): void {
+        this.isOver = false;
         this.lastClicked = new Date();
         this.user = this._chatService.user;
         this._chatService.onChatSelected
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(chatData => {
                 if (chatData) {
+                    this.isOver = false;
                     this.selectedChat = chatData;
                     this.contact = chatData.contact;
                     this.dialog = chatData.dialog;
-                    this.chatId = chatData.chatId; // current conversation id              
+                    this.chatId = chatData.chatId; // current conversation id
                     this.isGroup = chatData.isGroup ? chatData.isGroup : false;
                     if (this.isGroup === true) {
                         this.numberOfMembers = chatData.contact.members.length;
@@ -301,6 +351,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      */
 
 
+    model: NotificationModel = { url: "", title: "", message: "" }
+
     async getOgImage(urlPath: string) {
         let imageUrl = "";
         const apiMethod: ApiMethod = "post";
@@ -316,7 +368,16 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         );
         return imageUrl;
     }
+    broadcast() {
+        this.model.message = this.replyForm.form.value.message;
 
+        this.notificationService.broadcast(this.model).subscribe(() => {
+            console.log('Broadcasted')
+            this.model.url = "";
+            this.model.title = "";
+            this.model.message = "";
+        })
+    }
     async reply(event) {
 
         event.preventDefault();
@@ -330,6 +391,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             message: this.replyForm.form.value.message,
             time: new Date().toISOString()
         };
+        //Hien test
+        this.model.message = this.replyForm.form.value.message;
+        this.broadcast();
+        //------->
 
         const newMessage = new IndexMessageModel(this.chatId,
             this.user.userId,
@@ -514,5 +579,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.messageInput = ''; //reset
         //Hide emoji table
         this.isHide = true;
+    }
+    
+    toggleSubscription() {
+        this.notificationMiddleware.toggleSubscription();
+
     }
 }
