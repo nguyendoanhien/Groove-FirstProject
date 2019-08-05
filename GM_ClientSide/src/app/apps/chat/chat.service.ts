@@ -18,7 +18,7 @@ export class ChatService implements Resolve<any> {
     unknownContacts: any[];
     chats: any[];
     user: User;
-    isGroup:boolean;
+    isGroup: boolean;
     onChatSelected: BehaviorSubject<any>;
     onContactSelected: BehaviorSubject<any>;
     onChatGroupSelected: BehaviorSubject<any>;
@@ -86,7 +86,7 @@ export class ChatService implements Resolve<any> {
                 this.getChatList(),
                 this.getGroupChat()
             ]).then(
-                ([contacts, unknownContacts, chats, user, chatList,groupChatList]) => {
+                ([contacts, unknownContacts, chats, user, chatList, groupChatList]) => {
                     this.contacts = contacts;
                     this.unknownContacts = unknownContacts;
                     this.chats = (chats === null ? [] : chats);
@@ -133,7 +133,7 @@ export class ChatService implements Resolve<any> {
                         });
 
                         const chatData = {
-                            chatId: chat.id, 
+                            chatId: chat.id,
                             dialog: chat.dialog,
                             contact: chatContact
                         };
@@ -148,7 +148,7 @@ export class ChatService implements Resolve<any> {
     }
 
     getChatOfGroupChat(groupchat: any) {
-        var contact = { displayName: groupchat.name, avatar: groupchat.avatar, id: groupchat.id, members:groupchat.members };
+        var contact = { displayName: groupchat.name, avatar: groupchat.avatar, id: groupchat.id, members: groupchat.members };
         this._httpClient.get(environment.apiGetMessageByConversation + groupchat.id).subscribe((res: any) => {
             console.log(res);
             const chatData = {
@@ -176,7 +176,7 @@ export class ChatService implements Resolve<any> {
         this.onContactSelected.next(contact);
     }
 
-    selectChatGroup(contact):void {
+    selectChatGroup(contact): void {
         this.onChatGroupSelected.next(contact);
     }
 
@@ -242,7 +242,15 @@ export class ChatService implements Resolve<any> {
     }
 
     getGroupChat(): Promise<any> {
-        return this._groupService.getGroupChat().toPromise();
+        return new Promise((resolve, reject) => {
+            this._groupService.getGroupChat().subscribe((response: any) => {
+                response.forEach(element => {
+                    element.unreadMessage = element.unreadMessage > 99 ? '99+' : element.unreadMessage;
+                });
+                resolve(response);
+            },
+                reject);
+        });
     }
 
 

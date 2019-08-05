@@ -353,6 +353,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                         },
                             err => console.log(err));
                     console.log("Sent successfully");
+                    var chatList = this.user.chatList as Array<any>;
+                    var chat = chatList.find(x => x.convId == this.chatId);
+                    chat.lastMessage = message.message;
+                    chat.lastMessageTime = message.time;
                 },
                     err => console.log("Sent failed"));
             } else { // Isgroup
@@ -368,6 +372,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                         },
                             err => console.log(err));
                     console.log("Chat group: Sent successfully");
+                    var groupChatList = this.user.groupChatList as Array<any>;
+                    var groupChat = groupChatList.find(x => x.id == this.chatId);
+                    groupChat.lastestMessage = message.message;
+                    groupChat.lastestMessageTime = message.time;
                 },
                     err => console.log("Chat group: Sent failed"));
             }
