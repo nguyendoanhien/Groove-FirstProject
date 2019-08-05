@@ -180,7 +180,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.readyToReply();
 
         let CreatedOn = this.dialog[0].time;
-        console.log(CreatedOn);
         this._chatService.getMoreChat(this.chatId, CreatedOn).pipe(
             debounceTime(5000)
         ).subscribe(
