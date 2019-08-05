@@ -172,7 +172,8 @@
                                 {{chat.lastMessageTime | date}}
 
                             </div>
-                            <div *ngIf="chat.unread && (chat.unread>0 || chat.unread=='99+')" class="mt-4 unread-message-count accent">
+                            <div *ngIf="chat.unread && (chat.unread>0 || chat.unread=='99+')"
+                                class="mt-4 unread-message-count accent">
                                 {{chat.unread}}
                             </div>
                         </div>
@@ -193,8 +194,9 @@
                 <div matSubheader>
                     Groups
                 </div>
-                <button (click)="getChatOfGroupChat(groupChat)" mat-button class="contact"
-                    *ngFor="let groupChat of user.groupChatList" [@animate]="{value:'*',params:{y:'100%'}}" #someVar>
+                <button (click)="setValueSeenByGroup(groupChat.id);getChatOfGroupChat(groupChat)" mat-button
+                    class="contact" *ngFor="let groupChat of user.groupChatList"
+                    [@animate]="{value:'*',params:{y:'100%'}}" #someVar>
 
                     <div fxLayout="row" fxLayoutAlign="start center">
 
@@ -204,15 +206,18 @@
                         <div fxLayout="row" fxFlex>
                             <div class="pr-4" fxFlex fxLayout="column" fxLayoutAlign="center start">
                                 <div class="contact-name">{{groupChat.name}}</div>
-                                <div class="contact-last-message">{{groupChat.lastestMessage}}</div>
+                                <div class="contact-last-message">{{groupChat.latestMessage}}</div>
                             </div>
                             <!-- <div class="pr-4" fxFlex fxLayout="column" fxLayoutAlign="center start">
                                 <div class="contact-last-message">{{groupChat.lastestMessage}}</div>
                             </div> -->
                             <div fxLayout="column" fxLayoutAlign="start end">
                                 <div class="contact-last-message-time">
-                                    {{groupChat.lastestMessageTime | date}}
-
+                                    {{groupChat.latestMessageTime | date}}
+                                </div>
+                                <div *ngIf="groupChat.unreadMessage && (groupChat.unreadMessage>0 || groupChat.unreadMessage=='99+')"
+                                    class="mt-4 unread-message-count accent">
+                                    {{groupChat.unreadMessage}}
                                 </div>
                             </div>
 

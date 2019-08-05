@@ -9,7 +9,7 @@
             <div fxLayout="row" fxLayoutAlign="start center">
                 <!-- CHAT CONTACT-->
                 <div class="chat-contact" fxLayout="row" fxLayoutAlign="start center"
-                    fuseMatSidenavToggler="chat-right-sidenav" (click)="selectContact()" *ngIf="contact">
+                    fuseMatSidenavToggler="chat-right-sidenav" (click)="isGroup ? selectChatGroup() : selectContact()" *ngIf="contact">
 
                     <div class="avatar-wrapper">
 

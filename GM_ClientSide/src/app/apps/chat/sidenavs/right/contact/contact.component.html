@@ -1,5 +1,5 @@
 <!-- SIDENAV HEADER -->
-<div class="sidenav-header" *ngIf="contact">
+<div class="sidenav-header" *ngIf="contact && !_chatService.isGroup">
 
     <!-- CONTACT TOOLBAR -->
     <mat-toolbar class="accent">
@@ -30,7 +30,7 @@
 </div>
 
 <!-- SIDENAV CONTENT -->
-<div class="sidenav-content py-32 px-24" fxFlex fxLayout="column" *ngIf="contact">
+<div class="sidenav-content py-32 px-24" fxFlex fxLayout="column" *ngIf="contact && !_chatService.isGroup">
 
     <!-- CONTACT MOOD -->
     <div class="secondary-text mb-8">Mood</div>
