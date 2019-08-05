@@ -93,7 +93,6 @@ export class UserProfileService {
 
 
         this._fb.getLoginStatus().then((response) => {
-            debugger;
             if (response.status === 'connected') {
                 console.log('FB Connected')
                 this._fb.logout().then((response) => {

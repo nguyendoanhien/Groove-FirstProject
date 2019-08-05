@@ -35,6 +35,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     chat: any;
     dialog: any[];
     chatId: string; // conversation id
+    groupId: string;
     contact: any;
     replyInput: any;
     selectedChat: any;
@@ -148,7 +149,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             });
 
         this._chatService._messageHub.newChatMessage.subscribe((message: MessageModel) => {
-            console.log(message);
             if (message) {
                 if (this.chatId === message.fromConv) {
                     this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time });
@@ -336,41 +336,43 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             message.message,
             "Text",
             this.contact.userId);
-        // check if exists all spaces
+        // Truc> Check if exists all spaces
         const urlRegex = /^(?!\s*$).+/g;
         const isMatch: boolean = urlRegex.test(this.replyForm.form.value.message);
         if (isMatch) {
+            // Truc> Add the message and broadcast unread message amount 
             if (this.isGroup === false) {
                 this._messageService.addMessage(newMessage).subscribe(success => {
                     this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
-                    .subscribe(val => { console.log(val + "chatview"); },
-                        error => { console.log(error); }
-                    );
-
-                this._messageService.updateUnreadMessages(this.chatId)
-                    .subscribe(val => {
-                        var chatList = this.user.chatList as Array<any>;
-                        var chat = chatList.find(x => x.convId == this.chatId);
-                        chat.unread = val;
-                    },
-                        err => console.log(err));
-                    console.log("send successfull");
+                        .subscribe();
+                    this._messageService.updateUnreadMessages(this.chatId)
+                        .subscribe(val => {
+                            var chatList = this.user.chatList as Array<any>;
+                            var chat = chatList.find(x => x.convId == this.chatId);
+                            chat.unread = val;
+                        },
+                            err => console.log(err));
+                    console.log("Sent successfully");
                 },
-                    err => console.log("send fail"));
-                // Add the message to the chat
-            } else {
+                    err => console.log("Sent failed"));
+            } else { // Isgroup
                 this._messageService.addMessageToFroup(newMessage).subscribe(success => {
-                    console.log("send successfull");
+                    console.log(this.user.groupChatList[0].id);
+                    this._messageService.sendUnreadMessages(this.chatId)
+                        .subscribe();
+                    this._messageService.updateUnreadMessages(this.chatId)
+                        .subscribe(val => {
+                            var groupChatList = this.user.groupChatList as Array<any>;
+                            var groupChat = groupChatList.find(x => x.id == this.chatId);
+                            groupChat.unreadMessage = val;
+                        },
+                            err => console.log(err));
+                    console.log("Chat group: Sent successfully");
                 },
-                    err => console.log("send fail"));
-                // Add the message to the chat
-
-            }         
+                    err => console.log("Chat group: Sent failed"));
+            }
             this.dialog.push(message);
         }
-
-        // Add the message to the chat
-
 
         // Reset the reply form
         this.replyForm.reset();
@@ -381,8 +383,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
         // Truc: Call count unread messages in controller backend
-
         this.messageInput = ''; //reset
+        //Hide emoji table
         this.isHide = true;
     }
 
@@ -407,7 +409,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     listenSwitch = false;
 
     listen() {
-        debugger;
         if (this.listenSwitch) {
             console.log('on')
             this._rxSpeechRecognitionService
