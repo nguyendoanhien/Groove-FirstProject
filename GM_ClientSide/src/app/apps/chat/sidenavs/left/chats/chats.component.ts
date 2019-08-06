@@ -115,7 +115,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                 chat.message = message.payload;
                 chat.lastMessage = message.payload;
                 chat.lastMessageTime = message.time;
-                this.notifyMe(message.payload,chat.displayName);
+                this.notifyMe(message.payload, chat.displayName);
                 this._chatService._messageHub.newChatMessage.next(null);
             }
         });
@@ -148,7 +148,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                 groupChat.message = message.payload;
                 groupChat.lastestMessage = message.payload;
                 groupChat.lastestMessageTime = message.time;
-                const title = message.senderName + ' to [' + groupChat.name + ']'; 
+                const title = message.senderName + ' to [' + groupChat.name + ']';
                 this.notifyMe(message.payload, title);
                 this._chatService._messageHub.newGroupChatMessage.next(null);
             }
@@ -169,7 +169,6 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         });
     }
     notifyMe(payload: string, name: string) {
-        debugger
         var options = {
             body: payload,
             icon: 'http://res.cloudinary.com/groovemessenger/image/upload/v1565061250/gmgcdystndtdrhi5sjdk.png'
@@ -184,10 +183,10 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             // If it's okay let's create a notification
             var notification = new Notification(name, options);
             notification.onshow;
-            notification.onclick = function(event) {
+            notification.onclick = function (event) {
                 event.preventDefault(); // prevent the browser from focusing the Notification's tab
                 window.open('https://groovemessenger.azurewebsites.net/chat', '_blank');
-              };              
+            };
             //setTimeout(notification.close.bind(notification), 1000);  
         }
 
@@ -198,10 +197,10 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                 if (permission === "granted") {
                     var notification = new Notification(name, options);
                     notification.onshow;
-                    notification.onclick = function(event) {
+                    notification.onclick = function (event) {
                         event.preventDefault(); // prevent the browser from focusing the Notification's tab
                         window.open('https://groovemessenger.azurewebsites.net/chat', '_blank');
-                      };
+                    };
                 }
             });
         }
@@ -341,8 +340,6 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             this._fuseMatSidenavHelperService.getSidenav("chat-left-sidenav").toggle();
         }
     }
-
-
 }
 
 //Global----------------------------------

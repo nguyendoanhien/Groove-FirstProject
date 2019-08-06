@@ -146,7 +146,8 @@
                 Chats
             </div>
 
-            <button mat-button class="contact" *ngFor="let chat of user.chatList | orderBy: 'chat.lastMessageTime' | filter: searchText as vars"
+            <button mat-button class="contact"
+                *ngFor="let chat of user.chatList | orderBy:'lastMessageTime' : true | filter: searchText as vars"
                 (click)="setValueSeenBy(chat.convId);getChat(chat.contactId);" ngClass="{'unread':contact.unread}"
                 [@animate]="{value:'*',params:{y:'100%'}}">
 
@@ -195,7 +196,7 @@
                     Groups
                 </div>
                 <button (click)="setValueSeenByGroup(groupChat.id);getChatOfGroupChat(groupChat)" mat-button
-                    class="contact" *ngFor="let groupChat of user.groupChatList"
+                    class="contact" *ngFor="let groupChat of user.groupChatList | orderBy:'lastestMessageTime' : true "
                     [@animate]="{value:'*',params:{y:'100%'}}" #someVar>
 
                     <div fxLayout="row" fxLayoutAlign="start center">
@@ -204,22 +205,25 @@
                             <img src="{{groupChat.avatar}}" class="mat-avatar avatar" alt="{{groupChat.name}}" />
                         </div>
                         <div fxLayout="row" fxFlex>
-                            <div class="pr-4" fxFlex fxLayout="column" fxLayoutAlign="center start">
+
+                            <div class="pr-4"
+                                style="width: 150px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"
+                                fxFlex fxLayout="column" fxLayoutAlign="center start">
                                 <div class="contact-name">{{groupChat.name}}</div>
                                 <div class="contact-last-message">{{groupChat.lastestMessage}}</div>
                             </div>
-                            <!-- <div class="pr-4" fxFlex fxLayout="column" fxLayoutAlign="center start">
-                                <div class="contact-last-message">{{groupChat.lastestMessage}}</div>
-                            </div> -->
+
                             <div fxLayout="column" fxLayoutAlign="start end">
                                 <div class="contact-last-message-time">
                                     {{groupChat.lastestMessageTime | date}}
+
                                 </div>
                                 <div *ngIf="groupChat.unreadMessage && (groupChat.unreadMessage>0 || groupChat.unreadMessage=='99+')"
                                     class="mt-4 unread-message-count accent">
                                     {{groupChat.unreadMessage}}
                                 </div>
                             </div>
+
 
                         </div>
                     </div>

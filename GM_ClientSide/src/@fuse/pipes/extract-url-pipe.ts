@@ -45,6 +45,7 @@ export class ExtractUrlPipe implements PipeTransform {
                         urlLink: null,
                         imgTitle: null
                     };
+                    if (!this.ImageExist(obj.imgLink)) obj.imgLink = null;
                     return obj;
                 }
 
@@ -56,6 +57,7 @@ export class ExtractUrlPipe implements PipeTransform {
                         imgTitle: objOg.titleUrl
                     };
                 }
+                if (!this.ImageExist(obj.imgLink)) obj.imgLink = null;
                 return obj;
             })
             );
@@ -63,7 +65,7 @@ export class ExtractUrlPipe implements PipeTransform {
 
         }
         if (result !== undefined)
-            result = result.then(data => data.filter(v => v));
+            result = result.then(data => data.filter(v => v && v.imgLink != null));
 
         return result;
 
@@ -93,32 +95,30 @@ export class ExtractUrlPipe implements PipeTransform {
                 imageUrl: response.image[0].url,
                 titleUrl: response.title
             };
-
+            if (!this.ImageExist(obj.imageUrl)) obj.imageUrl = null;
         }
         ).catch(err => {
-            // this._httpClient.get(`https://besticon-demo.herokuapp.com/allicons.json?url=${urlPath}`, httpOptions).pipe(
-            //     map((response: any) => {
 
-            //         return response
-            //     })
-
-            //     // obj = null;
-            // ).subscribe(response => {
-            //     console.log(response);
-            //     obj = {
-            //         imageUrl: response.icons[0].url,
-            //         titleUrl: response.url
-            //     }
-            // })
             var arr = urlPath.split("/");
             var result = arr[0] + "//" + arr[2];
             obj = {
                 imageUrl: result + "/favicon.ico",
                 titleUrl: null
             };
+            if (!this.ImageExist(obj.imageUrl)) obj.imageUrl = null;
 
         });
 
         return obj;
+    }
+
+    ImageExist(imageSrc) {
+        var img = new Image();
+        try {
+            img.src = imageSrc;
+            return true;
+        } catch (err) {
+            return false;
+        }
     }
 }

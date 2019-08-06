@@ -31,7 +31,9 @@
                             "./node_modules/@ctrl/ngx-emoji-mart/picker.css",
                             "src/styles.scss"
                         ],
-                        "scripts": [],
+                        "scripts": [
+                            "./node_modules/jquery/dist/jquery.min.js"
+                        ],
                         "showCircularDependencies": false
                     },
                     "configurations": {
