@@ -31,7 +31,12 @@
                             </div>
                         </li>
                     </ul>
-
+                    <!-- <button type="button" (click)="toggleSubscription()"> Test Only
+                        Subcribe
+                    </button>
+                    <button type="button" (click)="broadcast()"> Test Only
+                        Broadcast
+                    </button> -->
                 </div>
                 <!-- / CHAT CONTACT-->
             </div>
@@ -74,7 +79,7 @@
                 <b>Say hi to {{contact.displayName}} with a wave.</b>
             </p>
             <button *ngIf="!dialog" _ngcontent-bsa-c60="" color="accent" mat-raised-button=""
-                class="mat-raised-button mat-accent say-hi-button" (click)="SayHi(contact) ">
+                class="mat-raised-button mat-accent say-hi-button" [disabled]="clicked" (click)="SayHi(contact); clicked=true ;">
                 <span class="mat-button-wrapper">
                     Say Hi!
                 </span>
@@ -100,7 +105,7 @@
                 <div class="bubble">
                     <div class="sender-name secondary-text" [ngClass]="{'hidden':message.who===user.userId}">
                         {{message.nickName}}</div>                 
-                    <div class="message" [innerHtml]="message.message | detectUrl">
+                    <div class="message" [innerHtml]="message.message | detectUrl ">
                     </div>
                     <!-- <div class="time secondary-text">{{message.time | date:'short'}}</div> -->
                 </div>

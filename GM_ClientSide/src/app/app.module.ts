@@ -57,6 +57,8 @@ import {
 } from "angularx-social-login";
 import { environment } from 'environments/environment';
 import { CookieService } from 'ngx-cookie-service';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { NotificationService } from './core/generated';
 const config = new AuthServiceConfig([
     {
         id: GoogleLoginProvider.PROVIDER_ID,
@@ -117,12 +119,14 @@ export function provideConfig(): AuthServiceConfig {
         PickerModule,
         CloudinaryModule.forRoot(Cloudinary,
             { cloud_name: "groovemessenger", upload_preset: "qlbjv3if", private_cdn: "true" }),
-        ScrollEventModule
+        ScrollEventModule,
+        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
     ],
     bootstrap: [
         AppComponent
     ],
     providers: [
+        NotificationService,
         CookieService, {
             provide: AuthServiceConfig,
             useFactory: provideConfig
