@@ -90,10 +90,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                             var afterScrollHeight = this.vcChatContent.nativeElement.scrollHeight;
                             this.vcChatContent.nativeElement.scrollTop = afterScrollHeight - beforeScrollHeight;
                         }, 0)
-
-
-
-
                     }
                 )
             }

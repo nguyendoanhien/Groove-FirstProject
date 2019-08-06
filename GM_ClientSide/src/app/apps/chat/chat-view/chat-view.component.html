@@ -101,7 +101,8 @@
                 <div class="bubble">
                     <div class="sender-name secondary-text" [ngClass]="{'hidden':message.who===user.userId}">
                         {{message.nickName}}</div>
-                    <div class="message" [innerHtml]="message.message | detectUrl">
+                    <div class="message">
+                        {{message.message}}
                     </div>
                     <!-- <div class="time secondary-text">{{message.time | date:'short'}}</div> -->
                 </div>

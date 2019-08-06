@@ -21,5 +21,6 @@ export class DetectUrlPipe implements PipeTransform {
     transform(value: string, args: any[] = []): SafeHtml {
 
         return this._sanitizer.bypassSecurityTrustHtml(this._appHelperService.detectUrl(value));
+        //return this._appHelperService.detectUrl(value);
     }
 }

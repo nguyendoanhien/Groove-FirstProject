@@ -146,7 +146,8 @@
                 Chats
             </div>
 
-            <button mat-button class="contact" *ngFor="let chat of user.chatList | orderBy: 'chat.lastMessageTime' | filter: searchText as vars"
+            <button mat-button class="contact"
+                *ngFor="let chat of user.chatList | orderBy:'lastMessageTime' : true | filter: searchText as vars"
                 (click)="setValueSeenBy(chat.convId);getChat(chat.contactId);" ngClass="{'unread':contact.unread}"
                 [@animate]="{value:'*',params:{y:'100%'}}">
 
@@ -195,7 +196,7 @@
                     Groups
                 </div>
                 <button (click)="setValueSeenByGroup(groupChat.id);getChatOfGroupChat(groupChat)" mat-button
-                    class="contact" *ngFor="let groupChat of user.groupChatList"
+                    class="contact" *ngFor="let groupChat of user.groupChatList | orderBy:'lastestMessageTime' : true "
                     [@animate]="{value:'*',params:{y:'100%'}}" #someVar>
 
                     <div fxLayout="row" fxLayoutAlign="start center">
