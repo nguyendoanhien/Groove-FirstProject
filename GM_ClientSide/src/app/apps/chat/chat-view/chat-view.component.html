@@ -175,7 +175,7 @@
                 </button>
                 <!-- [disabled]="_rxSpeechRecognitionService.started$ | async"  -->
                 <button class="record-button" mat-icon-button type="submit" type="button" aria-label="Send message"
-                    #voiceButton (click)="listenSwitch=!listenSwitch;listen();">
+                    #voiceButton (click)="listen();">
                     <mat-icon [ngStyle]="listenSwitch && {'color':'red'}">
                         record_voice_over
                     </mat-icon>
