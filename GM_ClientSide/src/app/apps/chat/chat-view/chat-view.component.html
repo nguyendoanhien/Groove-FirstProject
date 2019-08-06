@@ -9,7 +9,8 @@
             <div fxLayout="row" fxLayoutAlign="start center">
                 <!-- CHAT CONTACT-->
                 <div class="chat-contact" fxLayout="row" fxLayoutAlign="start center"
-                    fuseMatSidenavToggler="chat-right-sidenav" (click)="isGroup ? selectChatGroup() : selectContact()" *ngIf="contact">
+                    fuseMatSidenavToggler="chat-right-sidenav" (click)="isGroup ? selectChatGroup() : selectContact()"
+                    *ngIf="contact">
 
                     <div class="avatar-wrapper">
 
@@ -31,12 +32,6 @@
                             </div>
                         </li>
                     </ul>
-                    <!-- <button type="button" (click)="toggleSubscription()"> Test Only
-                        Subcribe
-                    </button>
-                    <button type="button" (click)="broadcast()"> Test Only
-                        Broadcast
-                    </button> -->
                 </div>
                 <!-- / CHAT CONTACT-->
             </div>
@@ -79,7 +74,8 @@
                 <b>Say hi to {{contact.displayName}} with a wave.</b>
             </p>
             <button *ngIf="!dialog" _ngcontent-bsa-c60="" color="accent" mat-raised-button=""
-                class="mat-raised-button mat-accent say-hi-button" [disabled]="clicked" (click)="SayHi(contact); clicked=true ;">
+                class="mat-raised-button mat-accent say-hi-button" [disabled]="clicked"
+                (click)="SayHi(contact); clicked=true ;">
                 <span class="mat-button-wrapper">
                     Say Hi!
                 </span>
@@ -104,8 +100,8 @@
                     [alt]="message.nickName" [ngClass]="{'hidden':message.who===user.userId}" />
                 <div class="bubble">
                     <div class="sender-name secondary-text" [ngClass]="{'hidden':message.who===user.userId}">
-                        {{message.nickName}}</div>                 
-                    <div class="message" [innerHtml]="message.message | detectUrl ">
+                        {{message.nickName}}</div>
+                    <div class="message" [innerHtml]="message.message | detectUrl">
                     </div>
                     <!-- <div class="time secondary-text">{{message.time | date:'short'}}</div> -->
                 </div>

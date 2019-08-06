@@ -14,8 +14,6 @@ import { UserContactService } from "app/core/account/user-contact.service";
 import { RxSpeechRecognitionService, resultList } from "@kamiazya/ngx-speech-recognition";
 import { ApiMethod, FacebookService } from "ngx-facebook/dist/esm/providers/facebook";
 import { WindowRef } from '@fuse/services/window-ref';
-import { NotificationMiddlewareService } from 'app/core/notification-middleware.service';
-import { NotificationService, NotificationModel } from 'app/core/generated';
 
 
 export class DialogModel {
@@ -45,7 +43,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     selectedFile: any = null;
     isGroup: boolean;
     numberOfMembers: number;
-    clicked=false;
+    clicked = false;
 
     @ViewChild('vcChatContent', { static: false }) vcChatContent: ElementRef;
     @ViewChild(FusePerfectScrollbarDirective, { static: false })
@@ -119,9 +117,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         private _userContactService: UserContactService,
         public _rxSpeechRecognitionService: RxSpeechRecognitionService,
         private fbk: FacebookService,
-        private _windowRef: WindowRef,
-        public notificationMiddleware: NotificationMiddlewareService,
-        private notificationService: NotificationService
+        private _windowRef: WindowRef
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
@@ -209,7 +205,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         });
         this._chatService._messageHub.newGroupChatMessage.subscribe((message: MessageModel) => {
             if (message) {
-                var lastItem = this.dialog[this.dialog.length-1];
+                var lastItem = this.dialog[this.dialog.length - 1];
                 if (this.chatId === message.fromConv && lastItem.id !== message.messageId) {
                     this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time, avatar: message.senderAvatar, nickName: message.senderName });
                 }
@@ -257,7 +253,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
- 
+
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -351,10 +347,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     /**
      * Reply
      */
-
-
-    model: NotificationModel = { url: "", title: "", message: "" }
-
     async getOgImage(urlPath: string) {
         let imageUrl = "";
         const apiMethod: ApiMethod = "post";
@@ -370,16 +362,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         );
         return imageUrl;
     }
-    broadcast() {
-        this.model.message = this.replyForm.form.value.message;
-
-        this.notificationService.broadcast(this.model).subscribe(() => {
-            console.log('Broadcasted')
-            this.model.url = "";
-            this.model.title = "";
-            this.model.message = "";
-        })
-    }
     async reply(event) {
 
         event.preventDefault();
@@ -393,10 +375,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             message: this.replyForm.form.value.message,
             time: new Date().toISOString()
         };
-        //Hien test
-        this.model.message = this.replyForm.form.value.message;
-        this.broadcast();
-        //------->
 
         const newMessage = new IndexMessageModel(this.chatId,
             this.user.userId,
@@ -425,6 +403,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     chat.lastMessage = message.message;
                     chat.lastMessageTime = message.time;
                     console.log("Sent successfully");
+                    var chatList = this.user.chatList as Array<any>;
+                    var chat = chatList.find(x => x.convId == this.chatId);
+                    chat.lastMessage = message.message;
+                    chat.lastMessageTime = message.time;
                 },
                     err => console.log("Sent failed"));
             } else { // Isgroup
@@ -442,8 +424,12 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     var groupChatList = this.user.groupChatList as Array<any>;
                     var groupChat = groupChatList.find(x => x.id == this.chatId);
                     groupChat.lastestMessage = message.message;
-                    groupChat.lastestMessageTime = message.time;                    
+                    groupChat.lastestMessageTime = message.time;
                     console.log("Chat group: Sent successfully");
+                    var groupChatList = this.user.groupChatList as Array<any>;
+                    var groupChat = groupChatList.find(x => x.id == this.chatId);
+                    groupChat.lastestMessage = message.message;
+                    groupChat.lastestMessageTime = message.time;
                 },
                     err => console.log("Chat group: Sent failed"));
             }
@@ -589,10 +575,5 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.messageInput = ''; //reset
         //Hide emoji table
         this.isHide = true;
-    }
-
-    toggleSubscription() {
-        this.notificationMiddleware.toggleSubscription();
-
     }
 }

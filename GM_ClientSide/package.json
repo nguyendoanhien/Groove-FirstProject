@@ -71,6 +71,7 @@
         "ngx-cookie-service": "2.2.0",
         "ngx-facebook": "2.4.0",
         "ngx-infinite-scroll": "7.2.0",
+        "ngx-order-pipe": "2.0.3",
         "ngx-scroll-event": "1.0.8",
         "open-graph-scraper": "3.6.2",
         "perfect-scrollbar": "1.4.0",
