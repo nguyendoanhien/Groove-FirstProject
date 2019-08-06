@@ -8,7 +8,6 @@ const apiConversationtUrl = backendUrl + "/api/Conversation";
 
 export const environment = {
     production: true,
-    applicationServerPublicKey: 'BOl0GXsqV5gbuceqbf4u8WFC6zLDHXLcxamQpLS5lMvxbIgBS4WOonKct2Eb2xPjq54l32b2dCQ8UJ92L7_vnic',
     hmr: false,
     appName: "Groove Messenger Client",
     backendUrl: backendUrl,
