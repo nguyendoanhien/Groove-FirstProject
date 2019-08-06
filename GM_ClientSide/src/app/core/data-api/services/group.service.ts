@@ -13,7 +13,7 @@ const cloudinaryPreset = environment.cloudinary.upload_preset;
 @Injectable()
 export class GroupService {
     contactGroup: any = [];
-    nameGroup: string;
+    nameGroup: string = '';
     avatarGroup: string = 'https://res.cloudinary.com/groovemessenger/image/upload/v1564275178/kpzefhbl03rklqh58tos.jpg';
     constructor(private _httpClient: HttpClient) {
 

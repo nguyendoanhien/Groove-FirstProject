@@ -30,6 +30,8 @@
     </div>
     <div class="mat-dialog-actions" mat-dialog-actions>
         <button mat-button (click)="onNoClick()">No Thanks</button>
-        <button mat-button [mat-dialog-close]="" (click)="addGroup()" cdkFocusInitial>Ok</button>
+        <button mat-raised-button color="primary" [mat-dialog-close]=""
+            [disabled]="this._groupService.nameGroup === '' || this._groupService.contactGroup.length === 0"
+            (click)="addGroup()" cdkFocusInitial>Ok</button>
     </div>
 </div>
