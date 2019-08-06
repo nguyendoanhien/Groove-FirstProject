@@ -16,6 +16,7 @@ import { MessageService } from "app/core/data-api/services/message.service";
 import { UnreadMessage } from "app/models/UnreadMessage.model";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GroupService } from 'app/core/data-api/services/group.service';
+import { OrderPipe } from 'ngx-order-pipe';
 @Component({
     selector: "chat-chats-sidenav",
     templateUrl: "./chats.component.html",
@@ -57,7 +58,8 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         private profileHubService: ProfileHubService,
         private _messageService: MessageService,
         private cd: ChangeDetectorRef,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        private orderPipe: OrderPipe
     ) {
         // Set the defaults
         this.chatSearch = {
@@ -113,7 +115,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                 chat.message = message.payload;
                 chat.lastMessage = message.payload;
                 chat.lastMessageTime = message.time;
-                this.notifyMe(message.payload);
+                this.notifyMe(message.payload,chat.displayName);
                 this._chatService._messageHub.newChatMessage.next(null);
             }
         });
@@ -146,7 +148,8 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                 groupChat.message = message.payload;
                 groupChat.lastestMessage = message.payload;
                 groupChat.lastestMessageTime = message.time;
-                this.notifyMe(message.payload);
+                const title = message.senderName + ' to [' + groupChat.name + ']'; 
+                this.notifyMe(message.payload, title);
                 this._chatService._messageHub.newGroupChatMessage.next(null);
             }
         });
@@ -165,7 +168,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             }
         });
     }
-    notifyMe(payload: string) {
+    notifyMe(payload: string, name: string) {
         debugger
         var options = {
             body: payload,
@@ -179,8 +182,13 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         // Let's check whether notification permissions have already been granted
         else if (Notification.permission === "granted") {
             // If it's okay let's create a notification
-            var notification = new Notification('Groove Messenger', options);
+            var notification = new Notification(name, options);
             notification.onshow;
+            notification.onclick = function(event) {
+                event.preventDefault(); // prevent the browser from focusing the Notification's tab
+                window.open('https://groovemessenger.azurewebsites.net/chat', '_blank');
+              };              
+            //setTimeout(notification.close.bind(notification), 1000);  
         }
 
         // Otherwise, we need to ask the user for permission
@@ -188,12 +196,15 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             Notification.requestPermission().then(function (permission) {
                 // If the user accepts, let's create a notification
                 if (permission === "granted") {
-                    var notification = new Notification('Groove Messenger', options);
+                    var notification = new Notification(name, options);
                     notification.onshow;
+                    notification.onclick = function(event) {
+                        event.preventDefault(); // prevent the browser from focusing the Notification's tab
+                        window.open('https://groovemessenger.azurewebsites.net/chat', '_blank');
+                      };
                 }
             });
         }
-
         // At last, if the user has denied notifications, and you 
         // want to be respectful there is no need to bother them any more.
     }
@@ -325,7 +336,6 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     };
 
     getChatOfGroupChat(groupchat): void {
-        console.log(groupchat);
         this._chatService.getChatOfGroupChat(groupchat);
         if (!this._mediaObserver.isActive("gt-md")) {
             this._fuseMatSidenavHelperService.getSidenav("chat-left-sidenav").toggle();

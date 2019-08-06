@@ -146,7 +146,7 @@
                 Chats
             </div>
 
-            <button mat-button class="contact" *ngFor="let chat of user.chatList | filter: searchText as vars"
+            <button mat-button class="contact" *ngFor="let chat of user.chatList | orderBy: 'chat.lastMessageTime' | filter: searchText as vars"
                 (click)="setValueSeenBy(chat.convId);getChat(chat.contactId);" ngClass="{'unread':contact.unread}"
                 [@animate]="{value:'*',params:{y:'100%'}}">
 

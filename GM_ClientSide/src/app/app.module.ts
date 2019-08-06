@@ -58,6 +58,7 @@ import {
 import { environment } from 'environments/environment';
 import { CookieService } from 'ngx-cookie-service';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { OrderModule } from 'ngx-order-pipe';
 const config = new AuthServiceConfig([
     {
         id: GoogleLoginProvider.PROVIDER_ID,
@@ -119,7 +120,8 @@ export function provideConfig(): AuthServiceConfig {
         CloudinaryModule.forRoot(Cloudinary,
             { cloud_name: "groovemessenger", upload_preset: "qlbjv3if", private_cdn: "true" }),
         ScrollEventModule,
-        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+        OrderModule
     ],
     bootstrap: [
         AppComponent

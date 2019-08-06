@@ -22,7 +22,8 @@ import { ChatContactSidenavComponent } from "./sidenavs/right/contact/contact.co
 import { ProfileHubService } from "app/core/data-api/hubs/profile.hub";
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { MatDialogModule } from '@angular/material/dialog';
-import {MatCheckboxModule} from '@angular/material'
+import {MatCheckboxModule} from '@angular/material';
+import { OrderModule } from 'ngx-order-pipe';
 @NgModule({
     declarations: [
         ChatComponent,
@@ -50,7 +51,8 @@ import {MatCheckboxModule} from '@angular/material'
         MatDialogModule,
         MatCheckboxModule,
         FuseSharedModule,
-        PickerModule
+        PickerModule,
+        OrderModule
     ],
     providers: [
         ChatService,
