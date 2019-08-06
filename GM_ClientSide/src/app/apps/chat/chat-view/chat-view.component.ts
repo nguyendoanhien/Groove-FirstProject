@@ -26,6 +26,8 @@ export class DialogModel {
     nickName: string;
     avatar: string;
 }
+declare var jquery: any;
+declare var $: any;
 @Component({
     selector: "chat-view",
     templateUrl: "./chat-view.component.html",
@@ -33,6 +35,8 @@ export class DialogModel {
     encapsulation: ViewEncapsulation.None
 })
 export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
+    @ViewChild('file', { static: false }) myFile: ElementRef;
+
     user: any;
     chat: any;
     dialog: any[];
@@ -45,7 +49,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     selectedFile: any = null;
     isGroup: boolean;
     numberOfMembers: number;
-    clicked=false;
+    clicked = false;
 
     @ViewChild('vcChatContent', { static: false }) vcChatContent: ElementRef;
     @ViewChild(FusePerfectScrollbarDirective, { static: false })
@@ -69,7 +73,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             var now = new Date();
 
 
-            if (now.getTime() - this.lastClicked.getTime() >= 1000) {
+            if (now.getTime() - this.lastClicked.getTime() >= 300) {
                 this.lastClicked = now;
                 let CreatedOn = this.dialog[0].time;
 
@@ -191,7 +195,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.selectedChat = chatData;
                     this.contact = chatData.contact;
                     this.dialog = chatData.dialog;
-                    this.chatId = chatData.chatId; // current conversation id              
+                    this.chatId = chatData.chatId; // current conversation id
                     this.isGroup = chatData.isGroup ? chatData.isGroup : false;
                     if (this.isGroup === true) {
                         this.numberOfMembers = chatData.contact.members.length;
@@ -209,7 +213,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         });
         this._chatService._messageHub.newGroupChatMessage.subscribe((message: MessageModel) => {
             if (message) {
-                var lastItem = this.dialog[this.dialog.length-1];
+                var lastItem = this.dialog[this.dialog.length - 1];
                 if (this.chatId === message.fromConv && lastItem.id !== message.messageId) {
                     this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time, avatar: message.senderAvatar, nickName: message.senderName });
                 }
@@ -257,7 +261,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
- 
+
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -408,7 +412,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         const urlRegex = /^(?!\s*$).+/g;
         const isMatch: boolean = urlRegex.test(this.replyForm.form.value.message);
         if (isMatch) {
-            // Truc> Add the message and broadcast unread message amount 
+            // Truc> Add the message and broadcast unread message amount
             if (this.isGroup === false) {
                 this._messageService.addMessage(newMessage).subscribe(success => {
                     this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
@@ -442,7 +446,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     var groupChatList = this.user.groupChatList as Array<any>;
                     var groupChat = groupChatList.find(x => x.id == this.chatId);
                     groupChat.lastestMessage = message.message;
-                    groupChat.lastestMessageTime = message.time;                    
+                    groupChat.lastestMessageTime = message.time;
                     console.log("Chat group: Sent successfully");
                 },
                     err => console.log("Chat group: Sent failed"));
@@ -510,9 +514,12 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
     onUpload(event) {
+        console.log(event.target.files);
+        if (!this.Validate(event.target.files)) { this.myFile.nativeElement.value = ''; return; }
         this.selectedFile = (event.target.files[0] as File);
         const fd = new FormData();
         fd.append("file", this.selectedFile);
+
         const message = {
             who: this.user.userId,
             message: "",
@@ -527,6 +534,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this._messageService.onUpload(fd, newMessage).subscribe(data => {
             this.replyImage(data);
+            this.myFile.nativeElement.value = '';
         });
 
 
@@ -546,6 +554,9 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
     //---Tam thoi
     replyImage(imageUrl: string) {
+
+
+
         if (!imageUrl) {
             return;
         }
@@ -566,7 +577,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         const urlRegex = /^(?!\s*$).+/g;
         const isMatch: boolean = urlRegex.test(imageUrl);
         if (isMatch) {
-            // Truc> Add the message and broadcast unread message amount 
+            // Truc> Add the message and broadcast unread message amount
+
             this.dialog.push(message);
         }
 
@@ -587,5 +599,42 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     toggleSubscription() {
         this.notificationMiddleware.toggleSubscription();
 
+    }
+    _validFileExtensions = [".jpg", ".jpeg", ".bmp", ".gif", ".png"];
+    Validate(files: any[]) {
+
+        var arrInputs = files;
+        for (var i = 0; i < arrInputs.length; i++) {
+            var oInput = arrInputs[i];
+
+            var sFileName = oInput.name;
+            if (sFileName.length > 0) {
+                var blnValid = false;
+                for (var j = 0; j < this._validFileExtensions.length; j++) {
+                    var sCurExtension = this._validFileExtensions[j];
+                    if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                        blnValid = true;
+                        break;
+                    }
+                }
+
+                if (!blnValid) {
+                    alert("Sorry, " + sFileName + " is invalid, allowed extensions are: " + this._validFileExtensions.join(", "));
+                    return false;
+                }
+            }
+
+        }
+
+        return true;
+    }
+    imgError(image) {
+        image.onerror = "";
+        image.src = "/images/noimage.gif";
+        return true;
+    }
+    errorHandler(event, el) {
+        $(event.target).remove();
+        event.target.src = "https://cdn.browshot.com/static/images/not-found.png";
     }
 }

@@ -9,7 +9,8 @@
             <div fxLayout="row" fxLayoutAlign="start center">
                 <!-- CHAT CONTACT-->
                 <div class="chat-contact" fxLayout="row" fxLayoutAlign="start center"
-                    fuseMatSidenavToggler="chat-right-sidenav" (click)="isGroup ? selectChatGroup() : selectContact()" *ngIf="contact">
+                    fuseMatSidenavToggler="chat-right-sidenav" (click)="isGroup ? selectChatGroup() : selectContact()"
+                    *ngIf="contact">
 
                     <div class="avatar-wrapper">
 
@@ -79,7 +80,8 @@
                 <b>Say hi to {{contact.displayName}} with a wave.</b>
             </p>
             <button *ngIf="!dialog" _ngcontent-bsa-c60="" color="accent" mat-raised-button=""
-                class="mat-raised-button mat-accent say-hi-button" [disabled]="clicked" (click)="SayHi(contact); clicked=true ;">
+                class="mat-raised-button mat-accent say-hi-button" [disabled]="clicked"
+                (click)="SayHi(contact); clicked=true ;">
                 <span class="mat-button-wrapper">
                     Say Hi!
                 </span>
@@ -102,10 +104,11 @@
                 <img *ngIf="shouldShowContactAvatar(message, i)" src="{{contact.avatar}}" class="avatar">
                 <img *ngIf="isGroup" [src]="message.avatar" class="mat-avatar avatar avatar-member-group"
                     [alt]="message.nickName" [ngClass]="{'hidden':message.who===user.userId}" />
-                <div class="bubble">
+                <div class="bubble" *ngIf="!message.message.includes('cloudinary')">
                     <div class="sender-name secondary-text" [ngClass]="{'hidden':message.who===user.userId}">
-                        {{message.nickName}}</div>                 
-                    <div class="message" [innerHtml]="message.message | detectUrl">
+                        {{message.nickName}}</div>
+                    <div class="message">
+                        {{message.message }}
                     </div>
                     <!-- <div class="time secondary-text">{{message.time | date:'short'}}</div> -->
                 </div>
@@ -115,7 +118,7 @@
                         <div style="background-color: white" style="position: relative">
                             <a href="{{obj.urlLink||obj.imgLink}}" target="_blank">
                                 <img src="{{obj.imgLink}}" style="height: 150px; width: 200px;"
-                                    class="message-preview-image">
+                                    (error)="errorHandler($event,this)" class="message-preview-image">
                                 <div *ngIf="obj.imgTitle||obj.urlLink"
                                     style="background-color: rgba(60, 60, 60, 0.5); bottom: 0px; position: absolute; width: 100%; height:20%">
                                     <div *ngIf="obj.imgTitle" style="color: white; font-weight: bold;">{{obj.imgTitle}}
