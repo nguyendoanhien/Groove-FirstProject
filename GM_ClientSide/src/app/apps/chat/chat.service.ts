@@ -150,7 +150,6 @@ export class ChatService implements Resolve<any> {
     getChatOfGroupChat(groupchat: any) {
         var contact = { displayName: groupchat.name, avatar: groupchat.avatar, id: groupchat.id, members: groupchat.members };
         this._httpClient.get(environment.apiGetMessageByConversation + groupchat.id).subscribe((res: any) => {
-            console.log(res);
             const chatData = {
                 chatId: groupchat.id,
                 dialog: res.dialog,
@@ -252,6 +251,8 @@ export class ChatService implements Resolve<any> {
                 reject);
         });
     }
+
+
 
 
     /**

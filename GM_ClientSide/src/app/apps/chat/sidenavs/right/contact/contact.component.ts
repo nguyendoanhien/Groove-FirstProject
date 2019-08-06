@@ -29,7 +29,7 @@ export class ChatContactSidenavComponent implements OnInit, OnDestroy {
     constructor(
         public _chatService: ChatService,
         private _userContactService: UserContactService,
-        private _groupService: GroupService
+        public _groupService: GroupService
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
@@ -71,7 +71,6 @@ export class ChatContactSidenavComponent implements OnInit, OnDestroy {
         this.contacts = this._chatService.contacts;
         if (this.chatGroup) {
             this.convGroup = this._chatService.user.groupChatList.filter(group => group.id === this.chatGroup.id);
-            console.log(this.convGroup)
             this.contacts.forEach(async contact => {
                 contact.isMember = false;
                 await this.convGroup[0].members.forEach(member => {

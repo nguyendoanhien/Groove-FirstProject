@@ -90,6 +90,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         this.updateChangeProfileHub();
 
         this.user = this._chatService.user;
+        
         this.chats = this._chatService.chats;
 
         this.contacts = this._chatService.contacts;

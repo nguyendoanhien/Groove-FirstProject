@@ -18,7 +18,7 @@ export class MessageService {
         return this.http.post(environment.apiMessageUrl, model);
     }
     addMessageToFroup(model: IndexMessageModel): Observable<any> {
-        return this.http.post(environment.apiMessageWithGroup,model);
+        return this.http.post(environment.apiMessageWithGroup, model);
     }
     sendUnreadMessages(conversationId: string): Observable<any> {
         return this.http.get(environment.apiUnreadMessage + conversationId);
@@ -35,6 +35,7 @@ export class MessageService {
                 image.content = res.url;
                 image.type = "Image";
                 this.addMessage(image).subscribe();
+                return res.url;
             }));
     }
 }

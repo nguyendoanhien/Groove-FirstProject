@@ -21,7 +21,7 @@
 
                     <div class="chat-contact-name">
                         {{contact.displayName}}
-                        <span *ngIf="isGroup" class="group-participant">({{numberOfMembers}} Participants)</span>
+                        <span *ngIf="isGroup" class="group-participant">({{numberOfMembers + 1}} Participants)</span>
                     </div>
                     <ul *ngIf="isGroup" class="group-member-icon">
                         <li *ngFor="let member of contact.members; let i = index">
@@ -31,7 +31,12 @@
                             </div>
                         </li>
                     </ul>
-
+                    <!-- <button type="button" (click)="toggleSubscription()"> Test Only
+                        Subcribe
+                    </button>
+                    <button type="button" (click)="broadcast()"> Test Only
+                        Broadcast
+                    </button> -->
                 </div>
                 <!-- / CHAT CONTACT-->
             </div>
@@ -74,7 +79,7 @@
                 <b>Say hi to {{contact.displayName}} with a wave.</b>
             </p>
             <button *ngIf="!dialog" _ngcontent-bsa-c60="" color="accent" mat-raised-button=""
-                class="mat-raised-button mat-accent say-hi-button" (click)="SayHi(contact) ">
+                class="mat-raised-button mat-accent say-hi-button" [disabled]="clicked" (click)="SayHi(contact); clicked=true ;">
                 <span class="mat-button-wrapper">
                     Say Hi!
                 </span>

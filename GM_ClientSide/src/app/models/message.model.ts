@@ -3,9 +3,10 @@ export class MessageModel {
     fromSender: string;
     messageId: string;
     payload: string;
+    time: Date;
     senderAvatar: string;
     senderName: string;
-    time: Date;
+   
 
     constructor(fromConv: string, fromSender: string, messageId: string, payload: string, time: Date, senderAvatar: string, senderName: string) {
         this.fromConv = fromConv;
