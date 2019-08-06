@@ -82,9 +82,9 @@ export class UserProfileService {
     logOut(): Promise<boolean> {
 
 
-        // debugger;
+        //
         // this._authService.authState.subscribe((user) => {
-        //     debugger;
+        //
         //     this.authService.clearToken();
         //     if (user != null)
         //         this._authService.signOut().then(() => console.log('signout'));

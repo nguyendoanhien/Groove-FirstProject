@@ -205,22 +205,25 @@
                             <img src="{{groupChat.avatar}}" class="mat-avatar avatar" alt="{{groupChat.name}}" />
                         </div>
                         <div fxLayout="row" fxFlex>
-                            <div class="pr-4" fxFlex fxLayout="column" fxLayoutAlign="center start">
+
+                            <div class="pr-4"
+                                style="width: 150px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"
+                                fxFlex fxLayout="column" fxLayoutAlign="center start">
                                 <div class="contact-name">{{groupChat.name}}</div>
                                 <div class="contact-last-message">{{groupChat.lastestMessage}}</div>
                             </div>
-                            <!-- <div class="pr-4" fxFlex fxLayout="column" fxLayoutAlign="center start">
-                                <div class="contact-last-message">{{groupChat.lastestMessage}}</div>
-                            </div> -->
+
                             <div fxLayout="column" fxLayoutAlign="start end">
                                 <div class="contact-last-message-time">
                                     {{groupChat.lastestMessageTime | date}}
+
                                 </div>
-                                <div *ngIf="groupChat.unreadMessage && (groupChat.unreadMessage>0 || groupChat.unreadMessage=='99+')"
+                                <div *ngIf="groupChat.unread && (groupChat.unread>0 || groupChat.unread=='99+')"
                                     class="mt-4 unread-message-count accent">
                                     {{groupChat.unreadMessage}}
                                 </div>
                             </div>
+
 
                         </div>
                     </div>

@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewChildren, ViewEncapsulation, ElementRef, HostListener } from "@angular/core";
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewChildren, ViewEncapsulation, ElementRef, HostListener, ApplicationRef } from "@angular/core";
 import { NgForm, FormControl } from "@angular/forms";
-import { Subject, BehaviorSubject } from "rxjs";
-import { takeUntil, take, debounceTime } from "rxjs/operators";
+import { Subject, BehaviorSubject, Observable, Subscription } from "rxjs";
+import { takeUntil, take, debounceTime, last } from "rxjs/operators";
 
 import { FusePerfectScrollbarDirective } from
     "@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive";
@@ -11,7 +11,7 @@ import { MessageModel } from "app/models/message.model";
 import { MessageService } from "app/core/data-api/services/message.service";
 import { IndexMessageModel } from "app/models/indexMessage.model";
 import { UserContactService } from "app/core/account/user-contact.service";
-import { RxSpeechRecognitionService, resultList } from "@kamiazya/ngx-speech-recognition";
+import { RxSpeechRecognitionService, resultList, SpeechRecognitionService } from "@kamiazya/ngx-speech-recognition";
 import { ApiMethod, FacebookService } from "ngx-facebook/dist/esm/providers/facebook";
 import { WindowRef } from '@fuse/services/window-ref';
 
@@ -24,6 +24,8 @@ export class DialogModel {
     nickName: string;
     avatar: string;
 }
+declare var jquery: any;
+declare var $: any;
 @Component({
     selector: "chat-view",
     templateUrl: "./chat-view.component.html",
@@ -31,6 +33,8 @@ export class DialogModel {
     encapsulation: ViewEncapsulation.None
 })
 export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
+    @ViewChild('file', { static: false }) myFile: ElementRef;
+
     user: any;
     chat: any;
     dialog: any[];
@@ -67,7 +71,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             var now = new Date();
 
 
-            if (now.getTime() - this.lastClicked.getTime() >= 1000) {
+            if (now.getTime() - this.lastClicked.getTime() >= 300) {
                 this.lastClicked = now;
                 let CreatedOn = this.dialog[0].time;
 
@@ -183,7 +187,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.selectedChat = chatData;
                     this.contact = chatData.contact;
                     this.dialog = chatData.dialog;
-                    this.chatId = chatData.chatId; // current conversation id              
+                    this.chatId = chatData.chatId; // current conversation id
                     this.isGroup = chatData.isGroup ? chatData.isGroup : false;
                     if (this.isGroup === true) {
                         this.numberOfMembers = chatData.contact.members.length;
@@ -382,7 +386,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         const urlRegex = /^(?!\s*$).+/g;
         const isMatch: boolean = urlRegex.test(this.replyForm.form.value.message);
         if (isMatch) {
-            // Truc> Add the message and broadcast unread message amount 
+            // Truc> Add the message and broadcast unread message amount
             if (this.isGroup === false) {
                 this._messageService.addMessage(newMessage).subscribe(success => {
                     this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
@@ -466,38 +470,38 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
     listenSwitch = false;
     willText: string = '';
-    async listen() {
-        if (this.listenSwitch) {
+    subscriptionHere: Subscription;
+    listen() {
+        if (!this.listenSwitch) {
+            this.listenSwitch = true;
             console.log('on')
-
-            this.replyInput.value += this.willText;
-            this.willText = '';
-            var subscriptionHere = this._rxSpeechRecognitionService
+            this.subscriptionHere = this._rxSpeechRecognitionService
                 .listen()
                 .pipe(resultList/* , take(1) */)
                 .subscribe((list: SpeechRecognitionResultList) => {
-                    console.log(list);
-                    this.willText = list.item(list.length - 1).item(list.length - 1).transcript + " ";
-                    // this.replyInput.value = list.item(0).item(0).transcript + " ";
+                    this.willText = list.item(list.length - 1).item(list.item(list.length - 1).item.length - 1).transcript + " ";
                     console.log("RxComponent:onresult", this.replyForm.form.value.message, list);
-                    this.replyInput.value = this.willText;
+                    this.messageInput = this.willText;
                     this.willText = '';
                 },
-                    err => (this.listenSwitch = false));
-
-
+                    err => { this.subscriptionHere.unsubscribe() });
         } else {
+
             console.log('off');
-            subscriptionHere.unsubscribe();
             this.listenSwitch = false;
+            this.subscriptionHere.unsubscribe();
         }
+
     }
 
 
     onUpload(event) {
+        console.log(event.target.files);
+        if (!this.Validate(event.target.files)) { this.myFile.nativeElement.value = ''; return; }
         this.selectedFile = (event.target.files[0] as File);
         const fd = new FormData();
         fd.append("file", this.selectedFile);
+
         const message = {
             who: this.user.userId,
             message: "",
@@ -512,6 +516,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this._messageService.onUpload(fd, newMessage).subscribe(data => {
             this.replyImage(data);
+            this.myFile.nativeElement.value = '';
         });
 
 
@@ -548,13 +553,13 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             this.user.userId,
             null,
             message.message,
-            "Text",
+            "Image",
             this.contact.userId);
         // Truc> Check if exists all spaces
         const urlRegex = /^(?!\s*$).+/g;
         const isMatch: boolean = urlRegex.test(imageUrl);
         if (isMatch) {
-            // Truc> Add the message and broadcast unread message amount 
+            // Truc> Add the message and broadcast unread message amount
 
             this.dialog.push(message);
         }
@@ -571,5 +576,43 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.messageInput = ''; //reset
         //Hide emoji table
         this.isHide = true;
+    }
+
+    _validFileExtensions = [".jpg", ".jpeg", ".bmp", ".gif", ".png"];
+    Validate(files: any[]) {
+
+        var arrInputs = files;
+        for (var i = 0; i < arrInputs.length; i++) {
+            var oInput = arrInputs[i];
+
+            var sFileName = oInput.name;
+            if (sFileName.length > 0) {
+                var blnValid = false;
+                for (var j = 0; j < this._validFileExtensions.length; j++) {
+                    var sCurExtension = this._validFileExtensions[j];
+                    if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                        blnValid = true;
+                        break;
+                    }
+                }
+
+                if (!blnValid) {
+                    alert("Sorry, " + sFileName + " is invalid, allowed extensions are: " + this._validFileExtensions.join(", "));
+                    return false;
+                }
+            }
+
+        }
+
+        return true;
+    }
+    imgError(image) {
+        image.onerror = "";
+        image.src = "/images/noimage.gif";
+        return true;
+    }
+    errorHandler(event, el) {
+        $(event.target).remove();
+        event.target.src = "https://cdn.browshot.com/static/images/not-found.png";
     }
 }
