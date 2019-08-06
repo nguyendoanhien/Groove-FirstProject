@@ -90,7 +90,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         this.updateChangeProfileHub();
 
         this.user = this._chatService.user;
-        
+
         this.chats = this._chatService.chats;
 
         this.contacts = this._chatService.contacts;
@@ -113,6 +113,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                 chat.message = message.payload;
                 chat.lastMessage = message.payload;
                 chat.lastMessageTime = message.time;
+                this.notifyMe(message.payload);
                 this._chatService._messageHub.newChatMessage.next(null);
             }
         });
@@ -145,6 +146,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                 groupChat.message = message.payload;
                 groupChat.lastestMessage = message.payload;
                 groupChat.lastestMessageTime = message.time;
+                this.notifyMe(message.payload);
                 this._chatService._messageHub.newGroupChatMessage.next(null);
             }
         });
@@ -163,6 +165,40 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             }
         });
     }
+    notifyMe(payload: string) {
+        debugger
+        var options = {
+            body: payload,
+            icon: 'http://res.cloudinary.com/groovemessenger/image/upload/v1565061250/gmgcdystndtdrhi5sjdk.png'
+        };
+        // Let's check if the browser supports notifications
+        if (!("Notification" in window)) {
+            alert("This browser does not support desktop notification");
+        }
+
+        // Let's check whether notification permissions have already been granted
+        else if (Notification.permission === "granted") {
+            // If it's okay let's create a notification
+            var notification = new Notification('Groove Messenger', options);
+            notification.onshow;
+        }
+
+        // Otherwise, we need to ask the user for permission
+        else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then(function (permission) {
+                // If the user accepts, let's create a notification
+                if (permission === "granted") {
+                    var notification = new Notification('Groove Messenger', options);
+                    notification.onshow;
+                }
+            });
+        }
+
+        // At last, if the user has denied notifications, and you 
+        // want to be respectful there is no need to bother them any more.
+    }
+
+
 
 
     initGetUserInfo() {

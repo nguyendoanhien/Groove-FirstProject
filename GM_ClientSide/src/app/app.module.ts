@@ -58,7 +58,6 @@ import {
 import { environment } from 'environments/environment';
 import { CookieService } from 'ngx-cookie-service';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { NotificationService } from './core/generated';
 const config = new AuthServiceConfig([
     {
         id: GoogleLoginProvider.PROVIDER_ID,
@@ -126,7 +125,6 @@ export function provideConfig(): AuthServiceConfig {
         AppComponent
     ],
     providers: [
-        NotificationService,
         CookieService, {
             provide: AuthServiceConfig,
             useFactory: provideConfig
