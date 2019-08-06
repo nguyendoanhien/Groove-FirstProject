@@ -218,7 +218,7 @@
                                     {{groupChat.lastestMessageTime | date}}
 
                                 </div>
-                                <div *ngIf="groupChat.unread && (groupChat.unread>0 || groupChat.unread=='99+')"
+                                <div *ngIf="groupChat.unreadMessage && (groupChat.unreadMessage>0 || groupChat.unreadMessage=='99+')"
                                     class="mt-4 unread-message-count accent">
                                     {{groupChat.unreadMessage}}
                                 </div>

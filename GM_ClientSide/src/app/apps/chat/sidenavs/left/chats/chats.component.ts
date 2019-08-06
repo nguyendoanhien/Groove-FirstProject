@@ -169,7 +169,6 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         });
     }
     notifyMe(payload: string, name: string) {
-        debugger
         var options = {
             body: payload,
             icon: 'http://res.cloudinary.com/groovemessenger/image/upload/v1565061250/gmgcdystndtdrhi5sjdk.png'
