@@ -50,6 +50,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      * @param {MediaObserver} _mediaObserver
      */
     constructor(
+        public _groupService: GroupService,
         public _userProfileService: UserProfileService,
         public _chatService: ChatService,
         private _fuseMatSidenavHelperService: FuseMatSidenavHelperService,
@@ -333,6 +334,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     }
 
     openDialog(): void {
+        this._groupService.initAddGroup();
         this.dialog.open(DialogOverviewDialog, {
             width: '400px',
             height: '700px',
