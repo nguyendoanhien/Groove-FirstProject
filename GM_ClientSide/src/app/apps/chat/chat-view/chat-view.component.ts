@@ -473,22 +473,15 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     listen() {
         if (!this.listenSwitch) {
             this.listenSwitch = true;
-            console.log('on')
-            //recognition.continuous = false;
             this.recognition.lang = 'en-US';
             this.recognition.interimResults = false;
             this.recognition.maxAlternatives = 1;
-            //clicked
             this.recognition.start();
-            console.log('Ready to receive a color command.');
-
             this.recognition.onresult = (event) => {
                 var text = event.results[0][0].transcript;
                 this.messageInput += text;
-          
             }
         } else {
-            console.log('off');
             this.listenSwitch = false;
             this.recognition.stop();
         }
