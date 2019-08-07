@@ -28,13 +28,17 @@ export class MessageService {
         return this.http.get(environment.apiReadMessage + conversationId);
     }
 
-    onUpload(fd: FormData, image: IndexMessageModel) {
+    onUpload(fd: FormData, image: IndexMessageModel, isGroup: boolean) {
         fd.append("upload_preset", cloudinaryPreset);
         return this.http.post(cloudinaryUrl, fd).pipe(
             map((res: any) => {
                 image.content = res.url;
                 image.type = "Image";
-                this.addMessage(image).subscribe();
+                if (!isGroup) { this.addMessage(image).subscribe(); }
+                else {
+                    image.receiver = null;
+                    this.addMessageToFroup(image).subscribe();
+                }
                 return res.url;
             }));
     }

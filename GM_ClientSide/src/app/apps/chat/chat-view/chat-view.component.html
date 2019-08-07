@@ -100,7 +100,7 @@
                     [alt]="message.nickName" [ngClass]="{'hidden':message.who===user.userId}" />
                 <div class="bubble" *ngIf="!message.message.includes('cloudinary')">
                     <div class="sender-name secondary-text" [ngClass]="{'hidden':message.who===user.userId}">
-                        {{message.nickName}}</div>
+                        {{message.displayName}}</div>
                     <div class="message">
                         {{message.message}}
                     </div>

@@ -398,20 +398,16 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                             chat.unread = val;
                         },
                             err => console.log(err));
+                    //Truc> Chats of sender
                     var chatList = this.user.chatList as Array<any>;
                     var chat = chatList.find(x => x.convId == this.chatId);
                     chat.lastMessage = message.message;
                     chat.lastMessageTime = message.time;
                     console.log("Sent successfully");
-                    var chatList = this.user.chatList as Array<any>;
-                    var chat = chatList.find(x => x.convId == this.chatId);
-                    chat.lastMessage = message.message;
-                    chat.lastMessageTime = message.time;
                 },
                     err => console.log("Sent failed"));
             } else { // Isgroup
                 this._messageService.addMessageToFroup(newMessage).subscribe(success => {
-                    console.log(this.user.groupChatList[0].id);
                     this._messageService.sendUnreadMessages(this.chatId)
                         .subscribe();
                     this._messageService.updateUnreadMessages(this.chatId)
@@ -421,15 +417,12 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                             groupChat.unreadMessage = val;
                         },
                             err => console.log(err));
+                    //Truc> Chats of sender        
                     var groupChatList = this.user.groupChatList as Array<any>;
                     var groupChat = groupChatList.find(x => x.id == this.chatId);
                     groupChat.lastestMessage = message.message;
                     groupChat.lastestMessageTime = message.time;
                     console.log("Chat group: Sent successfully");
-                    var groupChatList = this.user.groupChatList as Array<any>;
-                    var groupChat = groupChatList.find(x => x.id == this.chatId);
-                    groupChat.lastestMessage = message.message;
-                    groupChat.lastestMessageTime = message.time;
                 },
                     err => console.log("Chat group: Sent failed"));
             }
@@ -515,12 +508,22 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             "Image",
             this.contact.userId);
 
-        this._messageService.onUpload(fd, newMessage).subscribe(data => {
+        this._messageService.onUpload(fd, newMessage, this.isGroup).subscribe(data => {
             this.replyImage(data);
             this.myFile.nativeElement.value = '';
+            if (this.isGroup == false) {
+                var chatList = this.user.chatList as Array<any>;
+                var chat = chatList.find(x => x.convId == this.chatId);
+                chat.lastMessage = '[Image]';
+                chat.lastMessageTime = message.time;
+            }
+            else {
+                var groupChatList = this.user.groupChatList as Array<any>;
+                var groupChat = groupChatList.find(x => x.id == this.chatId);
+                groupChat.lastestMessage = '[Image]';
+                groupChat.lastestMessageTime = message.time;
+            }
         });
-
-
     }
 
     messageInput: string = '';
