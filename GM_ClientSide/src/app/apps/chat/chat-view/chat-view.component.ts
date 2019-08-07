@@ -461,28 +461,29 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         );
     }
 
+    recognition = new SpeechRecognition();
     listenSwitch = false;
-    willText: string = '';
-    subscriptionHere: Subscription;
     listen() {
         if (!this.listenSwitch) {
             this.listenSwitch = true;
             console.log('on')
-            this.subscriptionHere = this._rxSpeechRecognitionService
-                .listen()
-                .pipe(resultList/* , take(1) */)
-                .subscribe((list: SpeechRecognitionResultList) => {
-                    this.willText = list.item(list.length - 1).item(list.item(list.length - 1).item.length - 1).transcript + " ";
-                    console.log("RxComponent:onresult", this.replyForm.form.value.message, list);
-                    this.messageInput = this.willText;
-                    this.willText = '';
-                },
-                    err => { this.subscriptionHere.unsubscribe() });
-        } else {
+            //recognition.continuous = false;
+            this.recognition.lang = 'en-US';
+            this.recognition.interimResults = false;
+            this.recognition.maxAlternatives = 1;
+            //clicked
+            this.recognition.start();
+            console.log('Ready to receive a color command.');
 
+            this.recognition.onresult = (event) => {
+                var text = event.results[0][0].transcript;
+                this.messageInput += text;
+          
+            }
+        } else {
             console.log('off');
             this.listenSwitch = false;
-            this.subscriptionHere.unsubscribe();
+            this.recognition.stop();
         }
 
     }
