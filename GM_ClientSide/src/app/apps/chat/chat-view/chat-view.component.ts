@@ -362,31 +362,26 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         );
         return imageUrl;
     }
+    
     async reply(event) {
-
         event.preventDefault();
-
         if (!this.replyForm.form.value.message) {
             return;
         }
-        // Message
         const message = {
             who: this.user.userId,
             message: this.replyForm.form.value.message,
             time: new Date().toISOString()
         };
-
         const newMessage = new IndexMessageModel(this.chatId,
             this.user.userId,
             null,
             message.message,
             "Text",
             this.contact.userId);
-        // Truc> Check if exists all spaces
         const urlRegex = /^(?!\s*$).+/g;
         const isMatch: boolean = urlRegex.test(this.replyForm.form.value.message);
         if (isMatch) {
-            // Truc> Add the message and broadcast unread message amount
             if (this.isGroup === false) {
                 this._messageService.addMessage(newMessage).subscribe(success => {
                     this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
@@ -409,7 +404,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     chat.lastMessageTime = message.time;
                 },
                     err => console.log("Sent failed"));
-            } else { // Isgroup
+            } else { 
                 this._messageService.addMessageToFroup(newMessage).subscribe(success => {
                     console.log(this.user.groupChatList[0].id);
                     this._messageService.sendUnreadMessages(this.chatId)
@@ -435,18 +430,11 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             }
             this.dialog.push(message);
         }
-
-        // Reset the reply form
         this.replyForm.reset();
-
-        // Update the server
         this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
             this.readyToReply();
         });
-
-        // Truc: Call count unread messages in controller backend
-        this.messageInput = ''; //reset
-        //Hide emoji table
+        this.messageInput = ''; 
         this.isHide = true;
     }
 
@@ -459,7 +447,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this._chatService.unknownContacts =
                     this._chatService.unknownContacts.filter(item => item.userId !== res.contact.userId);
                 const chatData = {
-                    chatId: res.dialog.id, // This is id of conversation
+                    chatId: res.dialog.id, 
                     dialog: res.dialog.dialog,
                     contact: res.contact
                 };
@@ -485,9 +473,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             this.listenSwitch = false;
             this.recognition.stop();
         }
-
     }
-
 
     onUpload(event) {
         console.log(event.target.files);
@@ -507,13 +493,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             message.message,
             "Image",
             this.contact.userId);
-
         this._messageService.onUpload(fd, newMessage).subscribe(data => {
             this.replyImage(data);
             this.myFile.nativeElement.value = '';
         });
-
-
     }
 
     messageInput: string = '';
@@ -521,64 +504,49 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.messageInput == null) this.messageInput = '';
         this.messageInput += event.emoji.native;
     }
+
     ShowEmoji() {
         this.isHide = !this.isHide;
     }
+
     Say() {
         alert(123);
     }
 
-    //---Tam thoi
     replyImage(imageUrl: string) {
-
-
-
         if (!imageUrl) {
             return;
         }
-        // Message
         const message = {
             who: this.user.userId,
             message: imageUrl,
             time: new Date().toISOString()
         };
-
         const newMessage = new IndexMessageModel(this.chatId,
             this.user.userId,
             null,
             message.message,
             "Image",
             this.contact.userId);
-        // Truc> Check if exists all spaces
         const urlRegex = /^(?!\s*$).+/g;
         const isMatch: boolean = urlRegex.test(imageUrl);
         if (isMatch) {
-            // Truc> Add the message and broadcast unread message amount
 
             this.dialog.push(message);
         }
-
-        // Reset the reply form
         this.replyForm.reset();
-
-        // Update the server
         this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
             this.readyToReply();
         });
-
-        // Truc: Call count unread messages in controller backend
-        this.messageInput = ''; //reset
-        //Hide emoji table
+        this.messageInput = ''; 
         this.isHide = true;
     }
 
     _validFileExtensions = [".jpg", ".jpeg", ".bmp", ".gif", ".png"];
     Validate(files: any[]) {
-
         var arrInputs = files;
         for (var i = 0; i < arrInputs.length; i++) {
             var oInput = arrInputs[i];
-
             var sFileName = oInput.name;
             if (sFileName.length > 0) {
                 var blnValid = false;
@@ -589,7 +557,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                         break;
                     }
                 }
-
                 if (!blnValid) {
                     alert("Sorry, " + sFileName + " is invalid, allowed extensions are: " + this._validFileExtensions.join(", "));
                     return false;
@@ -597,14 +564,15 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             }
 
         }
-
         return true;
     }
+
     imgError(image) {
         image.onerror = "";
         image.src = "/images/noimage.gif";
         return true;
     }
+
     errorHandler(event, el) {
         $(event.target).remove();
         event.target.src = "https://cdn.browshot.com/static/images/not-found.png";
