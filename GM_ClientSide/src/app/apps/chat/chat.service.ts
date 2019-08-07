@@ -107,7 +107,6 @@ export class ChatService implements Resolve<any> {
      * @returns {Promise<any>}
      */
     getChat(contactId): Promise<any> {
-
         const chatItem = this.user.chatList.find((item) => {
             return item.contactId === contactId;
         });
@@ -118,7 +117,7 @@ export class ChatService implements Resolve<any> {
                     return unknowContact.userId === contactId;
                 });
                 const chatData = {
-                    chatId: unknowContact.userId, // this is not id of conversation
+                    chatId: unknowContact.userId,
                     dialog: null,
                     contact: unknowContact
                 };
@@ -157,6 +156,7 @@ export class ChatService implements Resolve<any> {
                 contact: contact,
                 isGroup: true
             }
+
             this.isGroup = true;
             this.onChatSelected.next({ ...chatData });
         })

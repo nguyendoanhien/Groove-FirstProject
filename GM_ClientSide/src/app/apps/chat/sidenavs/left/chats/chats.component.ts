@@ -187,7 +187,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                 event.preventDefault(); // prevent the browser from focusing the Notification's tab
                 window.open('https://groovemessenger.azurewebsites.net/chat', '_blank');
             };
-            //setTimeout(notification.close.bind(notification), 1000);  
+            //setTimeout(notification.close.bind(notification), 1000);
         }
 
         // Otherwise, we need to ask the user for permission
@@ -204,7 +204,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                 }
             });
         }
-        // At last, if the user has denied notifications, and you 
+        // At last, if the user has denied notifications, and you
         // want to be respectful there is no need to bother them any more.
     }
 
@@ -241,14 +241,15 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     getChat(contact): void {
         this._chatService.getChat(contact);
         if (!this._mediaObserver.isActive("gt-md")) {
-            this._fuseMatSidenavHelperService.getSidenav("chat-left-sidenav").toggle();
+            {
+                this._fuseMatSidenavHelperService.getSidenav("chat-left-sidenav").toggle();
+            }
         }
     }
 
     async setValueSeenBy(conversationId) {
         await this._messageService.updateUnreadMessages(conversationId).subscribe(val => {
-        },
-            err => console.log(err));
+        });
         const chatList = this.user.chatList as Array<any>;
         const chat = chatList.find(x => x.convId == conversationId);
         chat.unread = "";

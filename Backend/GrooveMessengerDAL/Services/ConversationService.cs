@@ -135,7 +135,7 @@ namespace GrooveMessengerDAL.Services
             var dialogModels = new List<DialogModel>();
             foreach (var item in contactList)
             {
-                var dialogModel = new DialogModel { Id = item.Id, Who = item.Who, Message = item.Message, Time = item.Time, Avatar = item.Avatar, NickName = item.NickName };
+                var dialogModel = new DialogModel { Id = item.Id, Who = item.Who, Message = item.Message, Time = item.Time, Avatar = item.Avatar, DisplayName = item.DisplayName };
                 dialogModels.Add(dialogModel);
             }
             var chatModel = new ChatModel() { Id = conversationId, Dialog = dialogModels };

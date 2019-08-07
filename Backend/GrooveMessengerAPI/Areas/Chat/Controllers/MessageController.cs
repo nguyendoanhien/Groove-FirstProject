@@ -87,7 +87,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                     Who = message.SenderId,
                     Message = message.Content,
                     Avatar = senderInform.Avatar,
-                    NickName = senderInform.DisplayName
+                    DisplayName = senderInform.DisplayName
                 };
                 chatModel.Dialog.Add(diaglogModel);
             }

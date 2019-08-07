@@ -93,6 +93,9 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                         setTimeout(() => {
                             var afterScrollHeight = this.vcChatContent.nativeElement.scrollHeight;
                             this.vcChatContent.nativeElement.scrollTop = afterScrollHeight - beforeScrollHeight;
+                            // if ($('.message-row div').is(':empty')) {
+                            //     $('.message-row div').remove();
+                            // }
                         }, 0)
                     }
                 )
@@ -175,6 +178,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
     ngOnInit(): void {
+        this.selectedChat = null;
         this.isOver = false;
         this.lastClicked = new Date();
         this.user = this._chatService.user;
