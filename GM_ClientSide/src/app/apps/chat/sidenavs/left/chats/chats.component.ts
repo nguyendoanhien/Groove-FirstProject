@@ -246,14 +246,15 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     getChat(contact): void {
         this._chatService.getChat(contact);
         if (!this._mediaObserver.isActive("gt-md")) {
-            this._fuseMatSidenavHelperService.getSidenav("chat-left-sidenav").toggle();
+            {
+                this._fuseMatSidenavHelperService.getSidenav("chat-left-sidenav").toggle();
+            }
         }
     }
 
     async setValueSeenBy(conversationId) {
         await this._messageService.updateUnreadMessages(conversationId).subscribe(val => {
-        },
-            err => console.log(err));
+        });
         const chatList = this.user.chatList as Array<any>;
         const chat = chatList.find(x => x.convId == conversationId);
         chat.unread = "";

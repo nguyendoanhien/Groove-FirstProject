@@ -45,7 +45,7 @@ namespace GrooveMessengerDAL.Services
 
         public void AddConversation()
         {
-            //TODO: do business here
+         
             var conv = new ConversationEntity();
             conv.Avatar = "";
             conv.Name = "";
@@ -53,20 +53,7 @@ namespace GrooveMessengerDAL.Services
             _uow.SaveChanges();
         }
 
-        //public IndexConversationModel getGetConversationById(Guid id)
-        //{
-        //    var entity = _conRepository.FindBy(x => x.Id == id).Include(i => i.MessageEntity).FirstOrDefault();
-        //    var result = _mapper.Map<ConversationEntity, IndexConversationModel>(entity);
-        //    return result;
-        //}
-
-
-        //public IEnumerable<ConversationEntity> GetConversations(string UserId)
-        //{
-        //    List<Guid> conIdList = _participantService.GetAllConversationIdOfAUser(UserId).ToList();
-        //    var result = _conRepository.GetAll().Where(x => conIdList.Contains(x.Id));
-        //    return result;
-        //}
+       
 
         public string GetGroupNameById(Guid id)
         {

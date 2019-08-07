@@ -64,8 +64,7 @@ export class UserProfileService {
                 this.router.navigate(["chat"]);
             })
         ).subscribe(
-            (success) => console.log(`success la${success}`),
-            (error) => console.log(`error la${error}`)
+
         );
     }
 
@@ -82,21 +81,14 @@ export class UserProfileService {
     logOut(): Promise<boolean> {
 
 
-        //
-        // this._authService.authState.subscribe((user) => {
-        //
-        //     this.authService.clearToken();
-        //     if (user != null)
-        //         this._authService.signOut().then(() => console.log('signout'));
 
-        // }, err => console.log('error'), () => console.log('finished'));
         this.authService.clearToken();
 
         this._fb.getLoginStatus().then((response) => {
             if (response.status === 'connected') {
-                console.log('FB Connected')
+
                 this._fb.logout().then((response) => {
-                    console.log('Log out')
+
                 });
             } else if (response.status === 'not_authorized') {
                 console.log('FB Not Authorized')
@@ -105,7 +97,7 @@ export class UserProfileService {
             }
         });
 
-        // return Promise.resolve(null);
+     
         return this.router.navigate(["account", "login"]);
     }
 

@@ -96,7 +96,7 @@ export class LoginComponent implements OnInit {
                 userName: [
                     "",
                     [
-                        
+
                         Validators.required,
                         Validators.pattern(/^\s*(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))\s*$/),
                         Validators.minLength(6)
@@ -147,8 +147,8 @@ export class LoginComponent implements OnInit {
 
                 this._userProfileService.logInGoogle(userData.idToken);
 
-            },
-                (err) => console.log("Error!"));
+            }
+               );
     }
 
     signinWithFB(): void {
@@ -163,11 +163,10 @@ export class LoginComponent implements OnInit {
         from(this._authService.signIn(socialPlatformProvider))
             .subscribe((userData) => {
 
-                console.log(userData)
+
                 this._userProfileService.logInFacebook(userData.authToken);
 
-            },
-                (err) => console.log("Error!"));
+            });
     }
 
 

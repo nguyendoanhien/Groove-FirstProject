@@ -80,6 +80,7 @@ chat-view {
                         position: absolute;
                         left: -32px;
                         margin: 0;
+                        bottom: 23px;
                     }
 
                     .bubble {
@@ -129,7 +130,7 @@ chat-view {
                     }
 
                     &.contact {
-                      margin-top: 15px;
+                        margin-top: 15px;
                         .bubble {
                             border-top-left-radius: 5px;
                             border-bottom-left-radius: 5px;
@@ -203,8 +204,8 @@ chat-view {
                         }
                     }
 
-                    &.contact+.me,
-                    &.me+.contact {
+                    &.contact + .me,
+                    &.me + .contact {
                         padding-top: 20px;
                         margin-top: 20px;
                     }
@@ -317,4 +318,8 @@ chat-view {
 
 .emoji-mart-preview {
     display: none;
+}
+.bg-trans {
+    background-color: transparent !important;
+    display: none !important;
 }
