@@ -118,7 +118,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             var createdMessage = await _mesService.AddMessageAsync(createMessageModel); // add message to db
             if (createdMessage != null) // broadcast message to user
             {
-                Message message = new Message(createdMessage.ConversationId, createdMessage.SenderId, createdMessage.Id, createdMessage.Content, createdMessage.CreatedOn);
+                Message message = new Message(createdMessage.ConversationId, createdMessage.SenderId, createdMessage.Id, createdMessage.Content, createdMessage.CreatedOn, createdMessage.Type);
                 var receiverEmail = await _contactService.GetUserContactEmail(createMessageModel.Receiver);
                 foreach (var connectionId in _connectionStore.GetConnections("message", receiverEmail))
                 {
@@ -149,7 +149,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             if (createdMessage != null) // broadcast message to user
             {
                 var message = new MessageInGroup(createdMessage.ConversationId, createdMessage.SenderId, createdMessage.Id,
-                    senderInform.DisplayName, senderInform.Avatar, createdMessage.Content, createdMessage.CreatedOn);
+                    senderInform.DisplayName, senderInform.Avatar, createdMessage.Content, createdMessage.CreatedOn, createdMessage.Type);
 
                 var groupName = _conversationService.GetGroupNameById(message.FromConv);
 

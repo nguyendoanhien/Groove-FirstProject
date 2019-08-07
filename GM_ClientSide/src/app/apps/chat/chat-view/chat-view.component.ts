@@ -402,20 +402,16 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                             chat.unread = val;
                         },
                             err => console.log(err));
+                    //Truc> Chats of sender
                     var chatList = this.user.chatList as Array<any>;
                     var chat = chatList.find(x => x.convId == this.chatId);
                     chat.lastMessage = message.message;
                     chat.lastMessageTime = message.time;
                     console.log("Sent successfully");
-                    var chatList = this.user.chatList as Array<any>;
-                    var chat = chatList.find(x => x.convId == this.chatId);
-                    chat.lastMessage = message.message;
-                    chat.lastMessageTime = message.time;
                 },
                     err => console.log("Sent failed"));
             } else { // Isgroup
                 this._messageService.addMessageToFroup(newMessage).subscribe(success => {
-                    console.log(this.user.groupChatList[0].id);
                     this._messageService.sendUnreadMessages(this.chatId)
                         .subscribe();
                     this._messageService.updateUnreadMessages(this.chatId)
@@ -425,15 +421,12 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                             groupChat.unreadMessage = val;
                         },
                             err => console.log(err));
+                    //Truc> Chats of sender        
                     var groupChatList = this.user.groupChatList as Array<any>;
                     var groupChat = groupChatList.find(x => x.id == this.chatId);
                     groupChat.lastestMessage = message.message;
                     groupChat.lastestMessageTime = message.time;
                     console.log("Chat group: Sent successfully");
-                    var groupChatList = this.user.groupChatList as Array<any>;
-                    var groupChat = groupChatList.find(x => x.id == this.chatId);
-                    groupChat.lastestMessage = message.message;
-                    groupChat.lastestMessageTime = message.time;
                 },
                     err => console.log("Chat group: Sent failed"));
             }
@@ -472,28 +465,29 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         );
     }
 
+    recognition = new SpeechRecognition();
     listenSwitch = false;
-    willText: string = '';
-    subscriptionHere: Subscription;
     listen() {
         if (!this.listenSwitch) {
             this.listenSwitch = true;
             console.log('on')
-            this.subscriptionHere = this._rxSpeechRecognitionService
-                .listen()
-                .pipe(resultList/* , take(1) */)
-                .subscribe((list: SpeechRecognitionResultList) => {
-                    this.willText = list.item(list.length - 1).item(list.item(list.length - 1).item.length - 1).transcript + " ";
-                    console.log("RxComponent:onresult", this.replyForm.form.value.message, list);
-                    this.messageInput = this.willText;
-                    this.willText = '';
-                },
-                    err => { this.subscriptionHere.unsubscribe() });
-        } else {
+            //recognition.continuous = false;
+            this.recognition.lang = 'en-US';
+            this.recognition.interimResults = false;
+            this.recognition.maxAlternatives = 1;
+            //clicked
+            this.recognition.start();
+            console.log('Ready to receive a color command.');
 
+            this.recognition.onresult = (event) => {
+                var text = event.results[0][0].transcript;
+                this.messageInput += text;
+          
+            }
+        } else {
             console.log('off');
             this.listenSwitch = false;
-            this.subscriptionHere.unsubscribe();
+            this.recognition.stop();
         }
 
     }
@@ -518,12 +512,22 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             "Image",
             this.contact.userId);
 
-        this._messageService.onUpload(fd, newMessage).subscribe(data => {
+        this._messageService.onUpload(fd, newMessage, this.isGroup).subscribe(data => {
             this.replyImage(data);
             this.myFile.nativeElement.value = '';
+            if (this.isGroup == false) {
+                var chatList = this.user.chatList as Array<any>;
+                var chat = chatList.find(x => x.convId == this.chatId);
+                chat.lastMessage = '[Image]';
+                chat.lastMessageTime = message.time;
+            }
+            else {
+                var groupChatList = this.user.groupChatList as Array<any>;
+                var groupChat = groupChatList.find(x => x.id == this.chatId);
+                groupChat.lastestMessage = '[Image]';
+                groupChat.lastestMessageTime = message.time;
+            }
         });
-
-
     }
 
     messageInput: string = '';

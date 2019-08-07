@@ -196,7 +196,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                 groupConversation.Name = conv.Name;
                 groupConversation.Avatar = conv.Avatar;
                 groupConversation.UnreadMessage = _messageService.GetUnreadMessages(conv.Id, requestUserInform.UserName);
-                groupConversation.LastestMessage = lastestMessage.Content;
+                if (lastestMessage.Type == "Image") { groupConversation.LastestMessage = "[Image]"; } else groupConversation.LastestMessage = lastestMessage.Content;
                 groupConversation.LastestMessageTime = lastestMessage.CreatedOn;
                 groupConversations.Add(groupConversation);
             }

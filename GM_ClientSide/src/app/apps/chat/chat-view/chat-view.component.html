@@ -104,9 +104,6 @@
                 <div class="bubble"
                     [ngClass]="{'bg-trans':message.message.includes('cloudinary')&&isFirstMessageOfGroup(message, i)}"
                     *ngIf="!message.message.includes('cloudinary')||isFirstMessageOfGroup(message, i)">
-                    <!-- <div class="sender-name secondary-text"
-                        [ngClass]="{'hidden':message.who===user.userId||!isFirstMessageOfGroup(message, i)}">
-                        {{message.displayName}}</div> -->
                     <div class="message" *ngIf="!message.message.includes('cloudinary')">
                         {{message.message}}
                     </div>

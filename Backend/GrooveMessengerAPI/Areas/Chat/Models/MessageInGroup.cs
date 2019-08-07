@@ -7,7 +7,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Models
 {
     public class MessageInGroup
     {
-        public MessageInGroup(Guid FromConv, string FromSender, Guid MessageId, string SenderName, string SenderAvatar, string Payload, DateTime Time)
+        public MessageInGroup(Guid FromConv, string FromSender, Guid MessageId, string SenderName, string SenderAvatar, string Payload, DateTime Time, string Type)
         {
             this.FromConv = FromConv;
             this.FromSender = FromSender;
@@ -16,6 +16,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Models
             this.Time = Time;
             this.SenderName = SenderName;
             this.SenderAvatar = SenderAvatar;
+            this.Type = Type;
         }
 
         public Guid FromConv { get; set; } // Conv Id
@@ -25,5 +26,6 @@ namespace GrooveMessengerAPI.Areas.Chat.Models
         public Guid MessageId { get; set; }
         public string Payload { get; set; }
         public DateTime Time { get; set; }
+        public string Type { get; set; }
     }
 }
