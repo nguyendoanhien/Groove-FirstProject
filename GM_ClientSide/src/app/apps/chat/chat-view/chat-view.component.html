@@ -95,7 +95,8 @@
                 'group-style': isGroup===true
                 }">
 
-                <img *ngIf="message.who!=user.userId" src="{{contact.avatar}}" class="avatar">
+                <img *ngIf="message.who!=user.userId&&isLastMessageOfGroup(message, i)" src="{{contact.avatar}}"
+                    class="avatar">
                 <img [src]="message.avatar" class="mat-avatar avatar avatar-member-group" [alt]="message.displayName"
                     *ngIf="!message.who===user.userId" />
                 <div class="sender-name secondary-text"
