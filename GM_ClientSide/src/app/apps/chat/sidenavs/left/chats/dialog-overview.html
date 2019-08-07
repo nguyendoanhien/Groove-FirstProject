@@ -1,5 +1,10 @@
 <div class="add-group">
-    <h1 mat-dialog-title>New Group Chat</h1>
+    <h1 mat-dialog-title class="groupName">New Group Chat</h1>
+    <button class="btn-confirm" color="accent" mat-raised-button="" mat-button (click)="onNoClick()">No
+        Thanks</button>
+    <button class="btn-confirm" color="accent" mat-raised-button="" [mat-dialog-close]=""
+        [disabled]="this._groupService.nameGroup === '' || this._groupService.contactGroup.length === 0"
+        (click)="addGroup()" cdkFocusInitial>Ok</button>
     <mat-toolbar color="primary">
         <mat-toolbar-row class="toolbar-bottom" fxLayout="column" fxLayoutAlign="center center">
             <input type="file" #file (change)="onUpload($event)" style="display: none" />
@@ -27,11 +32,5 @@
                 </li>
             </mat-checkbox>
         </ul>
-    </div>
-    <div class="mat-dialog-actions" mat-dialog-actions>
-        <button mat-button (click)="onNoClick()">No Thanks</button>
-        <button mat-raised-button color="primary" [mat-dialog-close]=""
-            [disabled]="this._groupService.nameGroup === '' || this._groupService.contactGroup.length === 0"
-            (click)="addGroup()" cdkFocusInitial>Ok</button>
     </div>
 </div>
