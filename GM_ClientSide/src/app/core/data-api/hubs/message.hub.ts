@@ -27,10 +27,8 @@ export class MessageHubService {
             (message: MessageModel) => {
                 this.newChatMessage.next(message);
             });
-        this._hubConnection.on("BroadcastMessageToGroup", (messsage: MessageModel) => {
-            console.log("BroadcastMessageToGroup: ");
-            console.log(messsage);
-            this.newGroupChatMessage.next(messsage);
+        this._hubConnection.on("BroadcastMessageToGroup", (message: MessageModel) => {
+            this.newGroupChatMessage.next(message);
         });
         this._hubConnection.on("SendRemovedMessage",
             (message: MessageModel) => {
@@ -38,7 +36,6 @@ export class MessageHubService {
             });
         this._hubConnection.on("SendUnreadMessagesAmount",
             (message: UnreadMessage) => {
-                console.log(message);
                 this.unreadMessage.next(message);
             });
     }
