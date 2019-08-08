@@ -124,7 +124,20 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                     chat.lastMessageTime = message.time;
                     this.notifyMe(message.payload, chat.displayName);
                 }
-
+                this._chatService._messageHub.unreadMessage.subscribe((unreadMessage: UnreadMessage) => {
+                    if (unreadMessage) {
+                        const chatList = this.user.chatList as Array<any>;
+                        const chat = chatList.find(x => x.convId == unreadMessage.conversationId);
+                        if (unreadMessage.amount > 99) {
+                            chat.unread = "99+";
+                        }
+                        else {
+                            chat.unread = unreadMessage.amount;
+                        }
+                        this.cd.detectChanges();
+                        this._chatService._messageHub.unreadMessage.next(null);
+                    }
+                });
                 this._chatService._messageHub.newChatMessage.next(null);
             }
         });
@@ -135,20 +148,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             }
         });
 
-        this._chatService._messageHub.unreadMessage.subscribe((unreadMessage: UnreadMessage) => {
-            if (unreadMessage) {
-                const chatList = this.user.chatList as Array<any>;
-                const chat = chatList.find(x => x.convId == unreadMessage.conversationId);
-                if (unreadMessage.amount > 99) {
-                    chat.unread = "99+";
-                }
-                else {
-                    chat.unread = unreadMessage.amount;
-                }
-                this.cd.detectChanges();
-                this._chatService._messageHub.unreadMessage.next(null);
-            }
-        });
+
         // Truc> GroupChat
         this._chatService._messageHub.newGroupChatMessage.subscribe((message: MessageModel) => {
             if (message) {
@@ -167,23 +167,24 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                     const title = message.senderName + ' to [' + groupChat.name + ']';
                     this.notifyMe(message.payload, title);
                 }
+                this._chatService._messageHub.unreadMessage.subscribe((unreadMessage: UnreadMessage) => {
+                    if (unreadMessage) {
+                        const groupChatList = this.user.groupChatList as Array<any>;
+                        const groupChat = groupChatList.find(x => x.id == unreadMessage.conversationId);
+                        if (unreadMessage.amount > 99) {
+                            groupChat.unreadMessage = "99+";
+                        }
+                        else {
+                            groupChat.unreadMessage = unreadMessage.amount;
+                        }
+                        this.cd.detectChanges();
+                        this._chatService._messageHub.unreadMessage.next(null);
+                    }
+                });
                 this._chatService._messageHub.newGroupChatMessage.next(null);
             }
         });
-        this._chatService._messageHub.unreadMessage.subscribe((unreadMessage: UnreadMessage) => {
-            if (unreadMessage) {
-                const groupChatList = this.user.groupChatList as Array<any>;
-                const groupChat = groupChatList.find(x => x.id == unreadMessage.conversationId);
-                if (unreadMessage.amount > 99) {
-                    groupChat.unreadMessage = "99+";
-                }
-                else {
-                    groupChat.unreadMessage = unreadMessage.amount;
-                }
-                this.cd.detectChanges();
-                this._chatService._messageHub.unreadMessage.next(null);
-            }
-        });
+
     }
     notifyMe(payload: string, name: string) {
         var options = {
@@ -199,7 +200,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             var notification = new Notification(name, options);
             notification.onshow;
             notification.onclick = function (event) {
-                event.preventDefault(); 
+                event.preventDefault();
                 window.focus();
             };
         }
@@ -210,7 +211,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                     var notification = new Notification(name, options);
                     notification.onshow;
                     notification.onclick = function (event) {
-                        event.preventDefault(); 
+                        event.preventDefault();
                         window.focus();
                     };
                 }

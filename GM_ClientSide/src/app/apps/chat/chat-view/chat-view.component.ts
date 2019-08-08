@@ -482,7 +482,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             this.recognition.onresult = (event) => {
                 var text = event.results[0][0].transcript;
                 this.messageInput += text;
-          
+
             }
         } else {
             console.log('off');
