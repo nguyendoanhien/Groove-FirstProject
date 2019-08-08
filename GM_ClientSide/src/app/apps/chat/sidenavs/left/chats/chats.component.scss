@@ -225,20 +225,38 @@ chat-chats-sidenav {
 
 .add-group {
   height: 100%;
-  position: relative;
   mat-form-field {
     width: 100%;
   }
 
-  .mat-dialog-actions {
-    position: absolute;
-    bottom: 0;
+  .btn-close {
+    float: right !important;
+    width: 10px;
+    box-shadow: none;
+    .mat-icon {
+      width: 10px;
+    }
   }
+  .list-contact {
+    height: 400px;
+  }
+
+
+  .groupName {
+    float: left !important;
+  }
+
+  .button-dialog {
+    width: 100%;
+    height: 80px;
+    
+    .btn-confirm {
+      margin-top: 20px;
+      margin-left: 10px; 
+      float: right !important;
+    }
+  }
+
+
 }
-.groupName {
-  float: left !important;
-}
-.btn-confirm {
-  float: right !important;
-  height: 30px !important;
-}
+

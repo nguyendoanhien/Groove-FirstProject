@@ -14,7 +14,7 @@ const cloudinaryPreset = environment.cloudinary.upload_preset;
 export class GroupService {
     contactGroup: any = [];
     nameGroup: string = '';
-    avatarGroup: string = 'https://res.cloudinary.com/groovemessenger/image/upload/v1564275178/kpzefhbl03rklqh58tos.jpg';
+    avatarGroup: string = 'http://res.cloudinary.com/groovemessenger/image/upload/v1565257654/hkquyhkaspflddckju43.png';
     constructor(private _httpClient: HttpClient) {
 
     }
@@ -22,7 +22,7 @@ export class GroupService {
     initAddGroup() {
         this.contactGroup = [];
         this.nameGroup = '';
-        this.avatarGroup = 'https://res.cloudinary.com/groovemessenger/image/upload/v1564275178/kpzefhbl03rklqh58tos.jpg'
+        this.avatarGroup = 'http://res.cloudinary.com/groovemessenger/image/upload/v1565257654/hkquyhkaspflddckju43.png'
     }
 
     onUpload(fd: FormData) {

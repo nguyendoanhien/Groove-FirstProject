@@ -1,10 +1,10 @@
 <div class="add-group">
     <h1 mat-dialog-title class="groupName">New Group Chat</h1>
-    <button class="btn-confirm" color="accent" mat-raised-button="" mat-button (click)="onNoClick()">No
-        Thanks</button>
-    <button class="btn-confirm" color="accent" mat-raised-button="" [mat-dialog-close]=""
-        [disabled]="this._groupService.nameGroup === '' || this._groupService.contactGroup.length === 0"
-        (click)="addGroup()" cdkFocusInitial>Ok</button>
+    <button class="btn-close" mat-raised-button="" mat-button (click)="onNoClick()">
+        <mat-icon _ngcontent-csy-c47=""
+            class="secondary-text s-48 mat-icon notranslate material-icons mat-icon-no-color" role="img"
+            aria-hidden="true">close</mat-icon>
+    </button>
     <mat-toolbar color="primary">
         <mat-toolbar-row class="toolbar-bottom" fxLayout="column" fxLayoutAlign="center center">
             <input type="file" #file (change)="onUpload($event)" style="display: none" />
@@ -16,21 +16,29 @@
         <mat-form-field>
             <input placeholder="Group Name" matInput [(ngModel)]="this._groupService.nameGroup">
         </mat-form-field>
-        <ul *ngFor="let contact of contacts" style="list-style:none">
-            <mat-checkbox [value]="contact" (change)="onChange($event)">
-                <li>
-                    <div fxLayout="row" fxLayoutAlign="start center">
+        <div class="list-contact">
+            <ul *ngFor="let contact of contacts" style="list-style:none">
+                <mat-checkbox [value]="contact" (change)="onChange($event)">
+                    <li>
+                        <div fxLayout="row" fxLayoutAlign="start center">
 
-                        <div class="avatar-wrapper" fxFlex="0 1 auto">
-                            <img src="{{contact.avatar}}" class="mat-avatar avatar" alt="{{contact.displayName}}" />
-                        </div>
+                            <div class="avatar-wrapper" fxFlex="0 1 auto">
+                                <img src="{{contact.avatar}}" class="mat-avatar avatar" alt="{{contact.displayName}}" />
+                            </div>
 
-                        <div fxLayout="column" fxLayoutAlign="start start">
-                            <div class="contact-name">{{contact.displayName}}</div>
+                            <div fxLayout="column" fxLayoutAlign="start start">
+                                <div class="contact-name">{{contact.displayName}}</div>
+                            </div>
                         </div>
-                    </div>
-                </li>
-            </mat-checkbox>
-        </ul>
+                    </li>
+                </mat-checkbox>
+            </ul>
+        </div>
+    </div>
+    <div class="button-dialog">
+
+        <button class="btn-confirm" color="accent" mat-raised-button="" [mat-dialog-close]=""
+            [disabled]="this._groupService.nameGroup === '' || this._groupService.contactGroup.length === 0"
+            (click)="addGroup()" cdkFocusInitial>Ok</button>
     </div>
 </div>
