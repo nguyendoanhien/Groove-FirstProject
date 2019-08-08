@@ -93,6 +93,9 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                         setTimeout(() => {
                             var afterScrollHeight = this.vcChatContent.nativeElement.scrollHeight;
                             this.vcChatContent.nativeElement.scrollTop = afterScrollHeight - beforeScrollHeight;
+                            // if ($('.message-row div').is(':empty')) {
+                            //     $('.message-row div').remove();
+                            // }
                         }, 0)
                     }
                 )
@@ -175,6 +178,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
     ngOnInit(): void {
+        this.selectedChat = null;
         this.isOver = false;
         this.lastClicked = new Date();
         this.user = this._chatService.user;
@@ -362,26 +366,31 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         );
         return imageUrl;
     }
-    
     async reply(event) {
+
         event.preventDefault();
+
         if (!this.replyForm.form.value.message) {
             return;
         }
+        // Message
         const message = {
             who: this.user.userId,
             message: this.replyForm.form.value.message,
             time: new Date().toISOString()
         };
+
         const newMessage = new IndexMessageModel(this.chatId,
             this.user.userId,
             null,
             message.message,
             "Text",
             this.contact.userId);
+        // Truc> Check if exists all spaces
         const urlRegex = /^(?!\s*$).+/g;
         const isMatch: boolean = urlRegex.test(this.replyForm.form.value.message);
         if (isMatch) {
+            // Truc> Add the message and broadcast unread message amount
             if (this.isGroup === false) {
                 this._messageService.addMessage(newMessage).subscribe(success => {
                     this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
@@ -393,20 +402,16 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                             chat.unread = val;
                         },
                             err => console.log(err));
+                    //Truc> Chats of sender
                     var chatList = this.user.chatList as Array<any>;
                     var chat = chatList.find(x => x.convId == this.chatId);
                     chat.lastMessage = message.message;
                     chat.lastMessageTime = message.time;
                     console.log("Sent successfully");
-                    var chatList = this.user.chatList as Array<any>;
-                    var chat = chatList.find(x => x.convId == this.chatId);
-                    chat.lastMessage = message.message;
-                    chat.lastMessageTime = message.time;
                 },
                     err => console.log("Sent failed"));
-            } else { 
+            } else { // Isgroup
                 this._messageService.addMessageToFroup(newMessage).subscribe(success => {
-                    console.log(this.user.groupChatList[0].id);
                     this._messageService.sendUnreadMessages(this.chatId)
                         .subscribe();
                     this._messageService.updateUnreadMessages(this.chatId)
@@ -416,25 +421,29 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                             groupChat.unreadMessage = val;
                         },
                             err => console.log(err));
+                    //Truc> Chats of sender        
                     var groupChatList = this.user.groupChatList as Array<any>;
                     var groupChat = groupChatList.find(x => x.id == this.chatId);
                     groupChat.lastestMessage = message.message;
                     groupChat.lastestMessageTime = message.time;
                     console.log("Chat group: Sent successfully");
-                    var groupChatList = this.user.groupChatList as Array<any>;
-                    var groupChat = groupChatList.find(x => x.id == this.chatId);
-                    groupChat.lastestMessage = message.message;
-                    groupChat.lastestMessageTime = message.time;
                 },
                     err => console.log("Chat group: Sent failed"));
             }
             this.dialog.push(message);
         }
+
+        // Reset the reply form
         this.replyForm.reset();
+
+        // Update the server
         this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
             this.readyToReply();
         });
-        this.messageInput = ''; 
+
+        // Truc: Call count unread messages in controller backend
+        this.messageInput = ''; //reset
+        //Hide emoji table
         this.isHide = true;
     }
 
@@ -447,7 +456,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this._chatService.unknownContacts =
                     this._chatService.unknownContacts.filter(item => item.userId !== res.contact.userId);
                 const chatData = {
-                    chatId: res.dialog.id, 
+                    chatId: res.dialog.id, // This is id of conversation
                     dialog: res.dialog.dialog,
                     contact: res.contact
                 };
@@ -461,19 +470,28 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     listen() {
         if (!this.listenSwitch) {
             this.listenSwitch = true;
+            console.log('on')
+            //recognition.continuous = false;
             this.recognition.lang = 'en-US';
             this.recognition.interimResults = false;
             this.recognition.maxAlternatives = 1;
+            //clicked
             this.recognition.start();
+            console.log('Ready to receive a color command.');
+
             this.recognition.onresult = (event) => {
                 var text = event.results[0][0].transcript;
                 this.messageInput += text;
+          
             }
         } else {
+            console.log('off');
             this.listenSwitch = false;
             this.recognition.stop();
         }
+
     }
+
 
     onUpload(event) {
         console.log(event.target.files);
@@ -493,9 +511,22 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             message.message,
             "Image",
             this.contact.userId);
-        this._messageService.onUpload(fd, newMessage).subscribe(data => {
+
+        this._messageService.onUpload(fd, newMessage, this.isGroup).subscribe(data => {
             this.replyImage(data);
             this.myFile.nativeElement.value = '';
+            if (this.isGroup == false) {
+                var chatList = this.user.chatList as Array<any>;
+                var chat = chatList.find(x => x.convId == this.chatId);
+                chat.lastMessage = '[Image]';
+                chat.lastMessageTime = message.time;
+            }
+            else {
+                var groupChatList = this.user.groupChatList as Array<any>;
+                var groupChat = groupChatList.find(x => x.id == this.chatId);
+                groupChat.lastestMessage = '[Image]';
+                groupChat.lastestMessageTime = message.time;
+            }
         });
     }
 
@@ -504,49 +535,64 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.messageInput == null) this.messageInput = '';
         this.messageInput += event.emoji.native;
     }
-
     ShowEmoji() {
         this.isHide = !this.isHide;
     }
-
     Say() {
         alert(123);
     }
 
+    //---Tam thoi
     replyImage(imageUrl: string) {
+
+
+
         if (!imageUrl) {
             return;
         }
+        // Message
         const message = {
             who: this.user.userId,
             message: imageUrl,
             time: new Date().toISOString()
         };
+
         const newMessage = new IndexMessageModel(this.chatId,
             this.user.userId,
             null,
             message.message,
             "Image",
             this.contact.userId);
+        // Truc> Check if exists all spaces
         const urlRegex = /^(?!\s*$).+/g;
         const isMatch: boolean = urlRegex.test(imageUrl);
         if (isMatch) {
+            // Truc> Add the message and broadcast unread message amount
 
             this.dialog.push(message);
         }
+
+        // Reset the reply form
         this.replyForm.reset();
+
+        // Update the server
         this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
             this.readyToReply();
         });
-        this.messageInput = ''; 
+
+        // Truc: Call count unread messages in controller backend
+        this.messageInput = ''; //reset
+        //Hide emoji table
         this.isHide = true;
     }
 
     _validFileExtensions = [".jpg", ".jpeg", ".bmp", ".gif", ".png"];
     Validate(files: any[]) {
+
         var arrInputs = files;
         for (var i = 0; i < arrInputs.length; i++) {
             var oInput = arrInputs[i];
+
             var sFileName = oInput.name;
             if (sFileName.length > 0) {
                 var blnValid = false;
@@ -557,6 +603,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                         break;
                     }
                 }
+
                 if (!blnValid) {
                     alert("Sorry, " + sFileName + " is invalid, allowed extensions are: " + this._validFileExtensions.join(", "));
                     return false;
@@ -564,15 +611,14 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             }
 
         }
+
         return true;
     }
-
     imgError(image) {
         image.onerror = "";
         image.src = "/images/noimage.gif";
         return true;
     }
-
     errorHandler(event, el) {
         $(event.target).remove();
         event.target.src = "https://cdn.browshot.com/static/images/not-found.png";

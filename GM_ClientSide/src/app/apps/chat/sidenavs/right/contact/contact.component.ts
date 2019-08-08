@@ -82,10 +82,7 @@ export class ChatContactSidenavComponent implements OnInit, OnDestroy {
         }
     }
 
-    // addMember(userId) {
-    //     this._chatService.addMember(userId,this.chatGroup.id);
 
-    // }
 
     editGroupChat() {
         var conv = { id: this.chatGroup.id, avatar: this.chatGroup.avatar, name: this.chatGroup.displayName, members: this.convGroup[0].members }
@@ -116,7 +113,7 @@ export class ChatContactSidenavComponent implements OnInit, OnDestroy {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
-    
+
     }
 
     changeNickNameContact() {

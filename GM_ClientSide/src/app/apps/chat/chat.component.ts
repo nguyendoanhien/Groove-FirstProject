@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
 import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { takeUntil, skip } from "rxjs/operators";
 
 import { fuseAnimations } from "@fuse/animations";
 
@@ -47,9 +47,11 @@ export class ChatComponent implements OnInit, OnDestroy {
 
         this.selectedChat = null;
         this._chatService.onChatSelected
-            .pipe(takeUntil(this._unsubscribeAll))
+            .pipe(skip(1), takeUntil(this._unsubscribeAll))
             .subscribe(chatData => {
+
                 this.selectedChat = chatData;
+
             });
     }
 

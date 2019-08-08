@@ -50,6 +50,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      * @param {MediaObserver} _mediaObserver
      */
     constructor(
+        public _groupService: GroupService,
         public _userProfileService: UserProfileService,
         public _chatService: ChatService,
         private _fuseMatSidenavHelperService: FuseMatSidenavHelperService,
@@ -112,10 +113,18 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             if (message) {
                 const chatList = this.user.chatList as Array<any>;
                 const chat = chatList.find(x => x.convId == message.fromConv);
-                chat.message = message.payload;
-                chat.lastMessage = message.payload;
-                chat.lastMessageTime = message.time;
-                this.notifyMe(message.payload, chat.displayName);
+                if (message.type == 'Image') {
+                    chat.lastMessage = '[Image]';
+                    chat.lastMessageTime = message.time;
+                    this.notifyMe('[Image]', chat.displayName);
+                }
+                else {
+                    chat.message = message.payload;
+                    chat.lastMessage = message.payload;
+                    chat.lastMessageTime = message.time;
+                    this.notifyMe(message.payload, chat.displayName);
+                }
+
                 this._chatService._messageHub.newChatMessage.next(null);
             }
         });
@@ -145,11 +154,19 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             if (message) {
                 const groupChatList = this.user.groupChatList as Array<any>;
                 const groupChat = groupChatList.find(x => x.id == message.fromConv);
-                groupChat.message = message.payload;
-                groupChat.lastestMessage = message.payload;
-                groupChat.lastestMessageTime = message.time;
-                const title = message.senderName + ' to [' + groupChat.name + ']';
-                this.notifyMe(message.payload, title);
+                if (message.type == 'Image') {
+                    groupChat.lastestMessage = '[Image]';
+                    groupChat.lastestMessageTime = message.time;
+                    const title = message.senderName + ' to [' + groupChat.name + ']';
+                    this.notifyMe('[Image]', title);
+                }
+                else {
+                    groupChat.message = message.payload;
+                    groupChat.lastestMessage = message.payload;
+                    groupChat.lastestMessageTime = message.time;
+                    const title = message.senderName + ' to [' + groupChat.name + ']';
+                    this.notifyMe(message.payload, title);
+                }
                 this._chatService._messageHub.newGroupChatMessage.next(null);
             }
         });
@@ -178,39 +195,28 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             alert("This browser does not support desktop notification");
         }
 
-        // Let's check whether notification permissions have already been granted
         else if (Notification.permission === "granted") {
-            // If it's okay let's create a notification
             var notification = new Notification(name, options);
             notification.onshow;
             notification.onclick = function (event) {
-                event.preventDefault(); // prevent the browser from focusing the Notification's tab
+                event.preventDefault(); 
                 window.open('https://groovemessenger.azurewebsites.net/chat', '_blank');
             };
-            //setTimeout(notification.close.bind(notification), 1000);  
         }
 
-        // Otherwise, we need to ask the user for permission
         else if (Notification.permission !== "denied") {
             Notification.requestPermission().then(function (permission) {
-                // If the user accepts, let's create a notification
                 if (permission === "granted") {
                     var notification = new Notification(name, options);
                     notification.onshow;
                     notification.onclick = function (event) {
-                        event.preventDefault(); // prevent the browser from focusing the Notification's tab
+                        event.preventDefault(); 
                         window.open('https://groovemessenger.azurewebsites.net/chat', '_blank');
                     };
                 }
             });
         }
-        // At last, if the user has denied notifications, and you 
-        // want to be respectful there is no need to bother them any more.
     }
-
-
-
-
     initGetUserInfo() {
         this._userInfoService.getUserInfo().subscribe(res => {
             if (this._userInfoService.userInfo.status == "offline") {
@@ -241,14 +247,15 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     getChat(contact): void {
         this._chatService.getChat(contact);
         if (!this._mediaObserver.isActive("gt-md")) {
-            this._fuseMatSidenavHelperService.getSidenav("chat-left-sidenav").toggle();
+            {
+                this._fuseMatSidenavHelperService.getSidenav("chat-left-sidenav").toggle();
+            }
         }
     }
 
     async setValueSeenBy(conversationId) {
         await this._messageService.updateUnreadMessages(conversationId).subscribe(val => {
-        },
-            err => console.log(err));
+        });
         const chatList = this.user.chatList as Array<any>;
         const chat = chatList.find(x => x.convId == conversationId);
         chat.unread = "";
@@ -327,6 +334,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     }
 
     openDialog(): void {
+        this._groupService.initAddGroup();
         this.dialog.open(DialogOverviewDialog, {
             width: '400px',
             height: '700px',
