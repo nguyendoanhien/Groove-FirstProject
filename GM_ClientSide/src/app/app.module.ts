@@ -113,7 +113,7 @@ export function provideConfig(): AuthServiceConfig {
         SpeechRecognitionModule.withConfig({
             lang: "en-US",
             interimResults: true,
-            maxAlternatives: 10,
+            maxAlternatives: 1,
         }),
         PickerModule,
         CloudinaryModule.forRoot(Cloudinary,
