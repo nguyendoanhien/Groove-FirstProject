@@ -200,7 +200,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             notification.onshow;
             notification.onclick = function (event) {
                 event.preventDefault(); 
-                window.open('https://groovemessenger.azurewebsites.net/chat', '_blank');
+                window.focus();
             };
         }
 
@@ -211,7 +211,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                     notification.onshow;
                     notification.onclick = function (event) {
                         event.preventDefault(); 
-                        window.open('https://groovemessenger.azurewebsites.net/chat', '_blank');
+                        window.focus();
                     };
                 }
             });
