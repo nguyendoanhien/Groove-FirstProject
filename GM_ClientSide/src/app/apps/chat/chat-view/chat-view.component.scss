@@ -130,11 +130,9 @@ chat-view {
           }
 
           &.contact {
-            margin-top: 15px;
             .bubble {
               border-top-left-radius: 5px;
               border-bottom-left-radius: 5px;
-
               border-top-right-radius: 20px;
               border-bottom-right-radius: 20px;
               background-color: #3c4252;
@@ -288,19 +286,19 @@ chat-view {
 
         .record-button {
           position: absolute;
-          right: 60px;
+          right: 50px;
           bottom: 21px;
         }
 
         .file-button {
           position: absolute;
-          right: 94px;
+          right: 84px;
           bottom: 21px;
         }
 
         .emotion-button {
           position: absolute;
-          right: 120px;
+          right: 118px;
           bottom: 21px;
         }
       }
@@ -310,6 +308,8 @@ chat-view {
 
 .message-preview-image {
   width: 200px;
+  border: 1px solid rgba(165, 162, 162, 0.5);
+  border-radius: 10%;
 }
 
 .emoji-mart {
