@@ -256,6 +256,10 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             }
         }
     }
+    customTB(index, group) { 
+        
+        
+        return group.id }
 
     async setValueSeenBy(conversationId) {
         await this._messageService.updateUnreadMessages(conversationId).subscribe(val => {

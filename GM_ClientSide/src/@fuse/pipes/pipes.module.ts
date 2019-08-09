@@ -9,6 +9,7 @@ import { UnknownContactFilterPipe } from "app/custom-pipe/unknown-contact-filter
 import { ExtractUrlPipe } from "./extract-url-pipe";
 import { DetectUrlPipe } from "./detect-url.pipe";
 import { FilterUnknownContactPipe } from './filter-unknown-contact.pipe';
+import { filterGroupPipe } from './filter-group.pipe';
 
 @NgModule({
     declarations: [
@@ -20,7 +21,8 @@ import { FilterUnknownContactPipe } from './filter-unknown-contact.pipe';
         UnknownContactFilterPipe,
         ExtractUrlPipe,
         DetectUrlPipe,
-        FilterUnknownContactPipe
+        FilterUnknownContactPipe,
+        filterGroupPipe
     ],
     imports: [],
     exports: [
@@ -32,7 +34,8 @@ import { FilterUnknownContactPipe } from './filter-unknown-contact.pipe';
         UnknownContactFilterPipe,
         ExtractUrlPipe,
         DetectUrlPipe,
-        FilterUnknownContactPipe
+        FilterUnknownContactPipe,
+        filterGroupPipe
     ]
 })
 export class FusePipesModule {

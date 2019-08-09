@@ -113,22 +113,33 @@ export class ChatService implements Resolve<any> {
         this.isGroup = false;
         return new Promise((resolve, reject) => {
             {
-                if (chatItem) {
+                if (!chatItem) {
+                    const unknowContact = this.unknownContacts.find((unknowContact) => {
+                        return unknowContact.userId === contactId;
+                    });
+                    const chatData = {
+                        chatId: unknowContact.userId,
+                        dialog: null,
+                        contact: unknowContact
+                    };
+    
+                    this.onChatSelected.next({ ...chatData });
+                } else {
                     this._httpClient.get(environment.apiGetChatListByConvId + chatItem.convId)
                         .subscribe((response: any) => {
                             const chat = response;
                             const chatContact = this.contacts.concat(this.unknownContacts).find((contact) => {
                                 return contact.userId === contactId;
                             });
-
+    
                             const chatData = {
                                 chatId: chat.id,
                                 dialog: chat.dialog,
                                 contact: chatContact
                             };
-
+    
                             this.onChatSelected.next({ ...chatData });
-
+    
                         },
                             reject);
                 }
@@ -159,7 +170,7 @@ export class ChatService implements Resolve<any> {
      * @param contact
      */
     getMoreChat(convId, createdOn: Date): any {
-        debugger;
+        
         const queryPath = createdOn === undefined ? null : `?CreatedOn=${createdOn}`;
         return this._httpClient.get(environment.apiGetChatListByConvId + convId + queryPath)
     }

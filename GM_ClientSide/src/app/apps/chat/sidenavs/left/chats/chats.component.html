@@ -201,7 +201,7 @@
                 </div>
                 <button (click)="setValueSeenByGroup(groupChat.id);getChatOfGroupChat(groupChat)" mat-button
                     class="contact"
-                    *ngFor="let groupChat of _chatService.user.groupChatList | orderBy:'lastestMessageTime' : true "
+                    *ngFor="let groupChat of _chatService.user.groupChatList | filterGroup:searchText | orderBy:'lastestMessageTime' : true;trackBy:customTB"
                     [@animate]="{value:'*',params:{y:'100%'}}" #someVar>
 
                     <div fxLayout="row" fxLayoutAlign="start center">

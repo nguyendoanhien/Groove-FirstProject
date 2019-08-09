@@ -30,6 +30,7 @@ export class FuseUtils
      */
     public static searchInObj(itemObj, searchText): boolean
     {
+        
         for ( const prop in itemObj )
         {
             if ( !itemObj.hasOwnProperty(prop) )

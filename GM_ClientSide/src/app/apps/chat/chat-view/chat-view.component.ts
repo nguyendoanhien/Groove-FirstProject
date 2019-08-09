@@ -203,7 +203,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this._chatService._messageHub.newChatMessage.subscribe((message: MessageModel) => {
             if (message) {
                 if (this.chatId === message.fromConv) {
-                    this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time });
+                    this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time,avatar:message.senderAvatar });
                 }
             }
         });
@@ -227,13 +227,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     /**
      * After view init
      */
-    ngAfterViewInit(): void {
+    async ngAfterViewInit() {
         this.replyInput = this.replyInputField.first.nativeElement;
         this.readyToReply();
-        console.log($("#chat-content").hasScrollBar())
-        // while ($("#chat-content").hasScrollBar()) {
-        //     console.log(1);
-        // }
+  
         let CreatedOn = this.dialog[0].time;
         console.log(CreatedOn);
         this._chatService.getMoreChat(this.chatId, CreatedOn).pipe(
@@ -372,7 +369,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     async reply(event) {
 
         event.preventDefault();
-        debugger;
+        
         if (!this.replyForm.form.value.message) {
             return;
         }
