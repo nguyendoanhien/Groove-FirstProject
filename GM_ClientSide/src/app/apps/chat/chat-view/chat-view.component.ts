@@ -230,7 +230,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     ngAfterViewInit(): void {
         this.replyInput = this.replyInputField.first.nativeElement;
         this.readyToReply();
-
+        console.log($("#chat-content").hasScrollBar())
+        // while ($("#chat-content").hasScrollBar()) {
+        //     console.log(1);
+        // }
         let CreatedOn = this.dialog[0].time;
         console.log(CreatedOn);
         this._chatService.getMoreChat(this.chatId, CreatedOn).pipe(
@@ -369,7 +372,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     async reply(event) {
 
         event.preventDefault();
-
+        debugger;
         if (!this.replyForm.form.value.message) {
             return;
         }
@@ -623,4 +626,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         $(event.target).remove();
         event.target.src = "https://cdn.browshot.com/static/images/not-found.png";
     }
+
+
+
 }

@@ -159,7 +159,7 @@ export class ChatService implements Resolve<any> {
      * @param contact
      */
     getMoreChat(convId, createdOn: Date): any {
-
+        debugger;
         const queryPath = createdOn === undefined ? null : `?CreatedOn=${createdOn}`;
         return this._httpClient.get(environment.apiGetChatListByConvId + convId + queryPath)
     }
