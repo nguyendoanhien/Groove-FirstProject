@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation, ViewChildren, ChangeDetectorRef, Inject } from "@angular/core";
 import { MediaObserver } from "@angular/flex-layout";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { Subject, from } from "rxjs";
+import { takeUntil, switchMap } from "rxjs/operators";
 import { fuseAnimations } from "@fuse/animations";
 import { FuseMatSidenavHelperService } from "@fuse/directives/fuse-mat-sidenav/fuse-mat-sidenav.service";
 import { ChatService } from "../../../chat.service";
@@ -87,6 +87,9 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     /**
      * On init
      */
+    public trackByUnknownContactId(index: number, unknownContactz: any): string {
+        return unknownContactz.id; //more better
+    }
     ngOnInit(): void {
 
         this.initGetUserInfo();
@@ -265,7 +268,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     async setValueSeenByGroup(conversationId) {
         await this._messageService.updateUnreadMessages(conversationId).subscribe(val => {
         },
-            err => console.log(err));
+          );
         const groupChatList = this.user.groupChatList as Array<any>;
         const groupChat = groupChatList.find(x => x.id == conversationId);
         groupChat.unreadMessage = "";
@@ -304,11 +307,11 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 
     CountData() {
 
-        this._chatService.getUnknownContacts(this.searchText).then(
-            data => {
-                if (!this.unknownContacts.equals(data)) this.unknownContacts = data;
-            }
-        );
+        // this._chatService.getUnknownContacts(this.searchText).then(
+        //     data => {
+        //         if (!this.unknownContacts.equals(data)) this.unknownContacts = data;
+        //     }
+        // );
         const pipe = new FilterPipe();
         // const unknownContactPipe = new UnknownContactFilterPipe();
         const arrayContact = pipe.transform(this.user.chatList, this.searchText, "") as Array<any>;
@@ -421,9 +424,23 @@ export class DialogOverviewDialog {
     }
     async addGroup() {
         await this._groupService.addGroup().subscribe(res => {
-            res['lastestMessageTime'] = Date.now();
             this._chatService.user.groupChatList.push(res);
+            this._chatService.user.groupChatList = this._chatService.user.groupChatList.sort(this.compare);
+             this._chatService.getGroupChat();
+            this._groupService.initAddGroup();
+
         });
-        this._groupService.initAddGroup();
+
+
     }
+    compare(a, b) {
+        if (a.last_nom < b.last_nom) {
+            return -1;
+        }
+        if (a.last_nom > b.last_nom) {
+            return 1;
+        }
+        return 0;
+    }
+
 }
