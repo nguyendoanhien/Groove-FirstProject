@@ -28,7 +28,7 @@ namespace GrooveMessengerAPI.Auth
                 config["JWTAuthentication:Issuer"],
                 config["JWTAuthentication:Audience"],
                 claims,
-                DateTime.UtcNow,
+                DateTime.Now,
                 DateTime.Now.AddDays(1),
                 new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
             );
@@ -53,7 +53,7 @@ namespace GrooveMessengerAPI.Auth
                 config["JWTAuthentication:Issuer"],
                 config["JWTAuthentication:Audience"],
                 claims,
-                DateTime.UtcNow,
+                DateTime.Now,
                 DateTime.Now.AddDays(1),
                 new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
             );

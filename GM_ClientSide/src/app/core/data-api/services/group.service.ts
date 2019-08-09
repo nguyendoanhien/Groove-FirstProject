@@ -38,17 +38,17 @@ export class GroupService {
         return this._httpClient.post(cloudinaryUrl, fd).pipe();
     }
 
-    addGroup() {
+    addGroup(): any {
         var group = { name: this.nameGroup, avatar: this.avatarGroup, members: this.contactGroup };
-        return this._httpClient.post(environment.apiGetConversationGroup,group).pipe();  
+        return this._httpClient.post(environment.apiGetConversationGroup, group).pipe();
     }
 
     getGroupChat(): Observable<any[]> {
-        return this._httpClient.get<any[]>(environment.apiGetConversationGroup);    
+        return this._httpClient.get<any[]>(environment.apiGetConversationGroup);
     }
 
-    editGroupChat(conv:any) {
-        return this._httpClient.put(environment.apiConvUrl,conv).pipe();
+    editGroupChat(conv: any) {
+        return this._httpClient.put(environment.apiConvUrl, conv).pipe();
     }
 
 }

@@ -377,7 +377,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         const message = {
             who: this.user.userId,
             message: this.replyForm.form.value.message,
-            time: new Date().toISOString()
+            time: new Date()
         };
 
         const newMessage = new IndexMessageModel(this.chatId,
@@ -421,7 +421,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                             groupChat.unreadMessage = val;
                         },
                             err => console.log(err));
-                    //Truc> Chats of sender        
+                    //Truc> Chats of sender
                     var groupChatList = this.user.groupChatList as Array<any>;
                     var groupChat = groupChatList.find(x => x.id == this.chatId);
                     groupChat.lastestMessage = message.message;
