@@ -58,7 +58,7 @@ namespace GrooveMessengerDAL.Data
                     if (entry.State == EntityState.Modified)
                         entry.Property("UpdatedBy").CurrentValue = _userResolverService.CurrentUserName();
 
-                    if (entry.State == EntityState.Modified) entry.Property("UpdatedOn").CurrentValue = DateTime.UtcNow;
+                    if (entry.State == EntityState.Modified) entry.Property("UpdatedOn").CurrentValue = DateTime.Now;
                 }
 
                 if (entry.Entity.GetType().GetInterface(typeof(IBaseEntity).Name) != null)
@@ -69,7 +69,7 @@ namespace GrooveMessengerDAL.Data
                                 ? "Root"
                                 : _userResolverService.CurrentUserName();
 
-                    if (entry.State == EntityState.Added) entry.Property("CreatedOn").CurrentValue = DateTime.UtcNow;
+                    if (entry.State == EntityState.Added) entry.Property("CreatedOn").CurrentValue = DateTime.Now;
                 }
             }
         }

@@ -38,13 +38,20 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         private readonly IUserService _userService;
         private readonly HubConnectionStorage _hubConnectionStore;
         private readonly IConfiguration _config;
-
+        private readonly IMessageService _mesService;
+        private readonly IConversationService _conversationService;
+        private readonly IHubContext<MessageHub, IMessageHubClient> _hubContext;
+        private readonly HubConnectionStorage _connectionStore;
         public ConversationController(IConversationService conService, IMessageService messageService,
             IParticipantService participantService,
             UserManager<ApplicationUser> userManager, IContactService contactService, IUserService userService,
             IUserResolverService userResolver, IHubContext<ContactHub, IContactHubClient> contactHubContext,
             HubConnectionStorage hubConnectionStore,
-            IConfiguration config
+            IConfiguration config,
+            IMessageService mesService,
+            IConversationService conversationService,
+            IHubContext<MessageHub, IMessageHubClient> hubContext,
+            HubConnectionStorage connectionStore
         ) : base(userResolver)
         {
             _conService = conService;
@@ -56,6 +63,10 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             _contactHubContext = contactHubContext;
             _hubConnectionStore = hubConnectionStore;
             _config = config;
+            _mesService = mesService;
+            _conversationService = conversationService;
+            _hubContext = hubContext;
+            _connectionStore = connectionStore;
         }
 
         [HttpGet("dialogs/{UserId}")]
@@ -143,20 +154,20 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
 
             var diaglogModel = new List<DialogModel>();
             diaglogModel.Add(new DialogModel
-                {Who = createMessageModel.SenderId, Message = createMessageModel.Content, Time = DateTime.UtcNow});
+                {Who = createMessageModel.SenderId, Message = createMessageModel.Content, Time = DateTime.Now});
             var dialog = new {id = createConversationModel.Id, dialog = diaglogModel};
             var chatContact = new ContactChatList
             {
                 ConvId = createConversationModel.Id.ToString(), ContactId = userIndex.UserId,
                 DisplayName = userIndex.DisplayName, LastMessage = createMessageModel.Content,
-                LastMessageTime = DateTime.UtcNow
+                LastMessageTime = DateTime.Now
             };
 
             var chatContactToSend = new ContactChatList
             {
                 ConvId = createConversationModel.Id.ToString(), ContactId = userIndexcurrent.UserId,
                 DisplayName = userIndexcurrent.DisplayName, LastMessage = createMessageModel.Content,
-                LastMessageTime = DateTime.UtcNow
+                LastMessageTime = DateTime.Now
             };
 
             var contactEmail = await _userManager.FindByIdAsync(userIndex.UserId);
@@ -227,13 +238,15 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                 Type = "text",
                 ConversationId = newConversation.Id
             };
-            _messageService.AddMessage(createMessageModel);
+            //_messageService.AddMessage(createMessageModel);
             var newGroupInfo = new GroupConversationModel
             {
                 Id = newConversation.Id,
                 Name = newConversation.Name,
                 Avatar = newConversation.Avatar,
-                Members = new List<MemberInformModel>()
+                Members = new List<MemberInformModel>(),
+                LastestMessage = createMessageModel.Content,
+                LastestMessageTime = DateTime.Now
             };
             // Add members to new group conversation 
             foreach (var member in model.Members)
@@ -251,7 +264,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                     Id = Guid.NewGuid(),
                     UserId = member.UserId,
                     ConversationId = newConversation.Id,
-                    Status = 1
+                    Status = 1,
                 };
                 _participantService.AddParticipant(newMember);
                 var memberInfo = await _userManager.FindByIdAsync(newMember.UserId);
@@ -260,6 +273,40 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                     await _contactHubContext.Groups.AddToGroupAsync(connectionId, newConversation.Name);
                 }
             }
+            //
+            var createdMessage = await _mesService.AddMessageAsync(createMessageModel); // add message to db
+            var senderInform = _userService.GetUserInfo(createMessageModel.SenderId);
+            var memberIds = _participantService.GetParticipantUsersByConversation(createdMessage.ConversationId); // get all member id in group
+            var conversationInform = _conversationService.getConversation(createMessageModel.ConversationId); // get conversation inform    
+            foreach (var id in memberIds)
+            {
+                var memberInfo = await _userManager.FindByIdAsync(id);
+                foreach (var connectionId in _connectionStore.GetConnections(HubConstant.MessageHubTopic, memberInfo.UserName))
+                {
+                    await _hubContext.Groups.AddToGroupAsync(connectionId, conversationInform.Name);
+                }
+            }
+            if (createdMessage != null) // broadcast message to user
+            {
+                var message = new MessageInGroup(createdMessage.ConversationId, createdMessage.SenderId, createdMessage.Id,
+                    senderInform.DisplayName, senderInform.Avatar, createdMessage.Content, createdMessage.CreatedOn, createdMessage.Type);
+
+                var groupName = _conversationService.GetGroupNameById(message.FromConv);
+
+                await _hubContext.Clients.Group(conversationInform.Name).BroadcastMessageToGroup(message);
+
+                foreach (var id in memberIds)
+                {
+                    var memberInfo = await _userManager.FindByIdAsync(id);
+                    foreach (var connectionId in _connectionStore.GetConnections(HubConstant.MessageHubTopic, memberInfo.UserName))
+                    {
+                        await _hubContext.Groups.RemoveFromGroupAsync(connectionId, conversationInform.Name);
+                    }
+                }
+
+               
+            }
+            //
             await _contactHubContext.Clients.Group(newConversation.Name).BroadcastNewGroupToFriends(newGroupInfo);
             return Ok(newGroupInfo);
         }
