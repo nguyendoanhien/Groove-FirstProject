@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using System.Web;
 using GrooveMessengerAPI.Controllers;
 using GrooveMessengerAPI.Models;
 using GrooveMessengerDAL.Models.Contact;
@@ -42,7 +43,7 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
         [HttpGet("getallunknowncontactinform")]
         public async Task<IActionResult> GetUnknown([FromQuery] PagingParameterModel pagingparametermodel)
         {
-            return Ok(await _contactService.GetUserUnknownContact(displayNameSearch: pagingparametermodel.SearchKey));
+            return Ok(await _contactService.GetUserUnknownContact(displayNameSearch: HttpUtility.HtmlDecode(pagingparametermodel.SearchKey)));
         }
 
         [HttpDelete("{id}")]

@@ -246,7 +246,8 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                 Avatar = newConversation.Avatar,
                 Members = new List<MemberInformModel>(),
                 LastestMessage = createMessageModel.Content,
-                LastestMessageTime = DateTime.Now
+                LastestMessageTime = DateTime.Now,
+                UnreadMessage=1
             };
             // Add members to new group conversation 
             foreach (var member in model.Members)

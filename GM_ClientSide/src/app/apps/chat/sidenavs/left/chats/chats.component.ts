@@ -256,6 +256,10 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             }
         }
     }
+    customTB(index, group) { 
+        
+        
+        return group.id }
 
     async setValueSeenBy(conversationId) {
         await this._messageService.updateUnreadMessages(conversationId).subscribe(val => {
@@ -268,7 +272,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     async setValueSeenByGroup(conversationId) {
         await this._messageService.updateUnreadMessages(conversationId).subscribe(val => {
         },
-          );
+        );
         const groupChatList = this.user.groupChatList as Array<any>;
         const groupChat = groupChatList.find(x => x.id == conversationId);
         groupChat.unreadMessage = "";
@@ -399,7 +403,8 @@ export class DialogOverviewDialog {
         public dialogRef: MatDialogRef<DialogOverviewDialog>,
         @Inject(MAT_DIALOG_DATA) public contacts: any[],
         public _groupService: GroupService,
-        public _chatService: ChatService) { }
+        public _chatService: ChatService,
+        private _messageService: MessageService) { }
 
     onNoClick(): void {
         this._groupService.initAddGroup();
@@ -425,13 +430,22 @@ export class DialogOverviewDialog {
     async addGroup() {
         await this._groupService.addGroup().subscribe(res => {
             this._chatService.user.groupChatList.push(res);
+            console.log(res);
             this._chatService.user.groupChatList = this._chatService.user.groupChatList.sort(this.compare);
-             this._chatService.getGroupChat();
+            this._chatService.getGroupChat();
             this._groupService.initAddGroup();
-
+            this.setValueSeenByGroup(res.id)
         });
 
 
+    }
+    async setValueSeenByGroup(conversationId) {
+        await this._messageService.updateUnreadMessages(conversationId).subscribe(val => {
+        },
+        );
+        const groupChatList = this._chatService.user.groupChatList as Array<any>;
+        const groupChat = groupChatList.find(x => x.id == conversationId);
+        groupChat.unreadMessage = "";
     }
     compare(a, b) {
         if (a.last_nom < b.last_nom) {

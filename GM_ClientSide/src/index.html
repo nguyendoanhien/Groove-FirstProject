@@ -231,6 +231,16 @@
     <!-- / FUSE Splash Screen -->
     <app></app>
     <script>
+        $(document).ready(function () {
+
+
+            (function ($) {
+                $.fn.hasScrollBar = function () {
+                    return this.get(0).scrollHeight > this.height();
+                }
+            })(jQuery);
+
+        });
         window.fbAsyncInit = function () {
 
             FB.init({
