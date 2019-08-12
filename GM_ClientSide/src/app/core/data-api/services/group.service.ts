@@ -40,7 +40,10 @@ export class GroupService {
 
     addGroup(): any {
         var group = { name: this.nameGroup, avatar: this.avatarGroup, members: this.contactGroup };
-        return this._httpClient.post(environment.apiGetConversationGroup, group).pipe();
+        return this._httpClient.post(environment.apiGetConversationGroup, group).pipe(map((data: any) => {
+            data.lastestMessageTime = new Date(data.lastestMessageTime);
+            return data;
+        }));
     }
 
     getGroupChat(): Observable<any[]> {

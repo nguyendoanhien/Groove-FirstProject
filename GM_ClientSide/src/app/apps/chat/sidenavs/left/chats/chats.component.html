@@ -157,6 +157,8 @@
 
 
                 <div fxLayout="row" fxLayoutAlign="start center">
+
+
                     <div class="avatar-wrapper" fxFlex="0 1 auto" fxLayoutAlign="center center">
                         <img class="avatar" [attr.src]="contacts | getById:chat.contactId:'avatar'"
                             alt="{{contacts | getById:chat.contactId:'displayName'}}" />
@@ -205,7 +207,6 @@
                     [@animate]="{value:'*',params:{y:'100%'}}" #someVar>
 
                     <div fxLayout="row" fxLayoutAlign="start center">
-
                         <div class="avatar-wrapper" fxFlex="0 1 auto" fxLayoutAlign="center center">
                             <img src="{{groupChat.avatar}}" class="mat-avatar avatar" alt="{{groupChat.name}}" />
                         </div>

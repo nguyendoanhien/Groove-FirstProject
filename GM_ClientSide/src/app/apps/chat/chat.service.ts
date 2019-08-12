@@ -11,6 +11,7 @@ import { MessageHubService } from "../../core/data-api/hubs/message.hub";
 import { UserProfileService } from "app/core/identity/userprofile.service";
 import { ContactHubService } from "app/core/data-api/hubs/contact.hub";
 import { GroupService } from 'app/core/data-api/services/group.service';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class ChatService implements Resolve<any> {
@@ -122,7 +123,7 @@ export class ChatService implements Resolve<any> {
                         dialog: null,
                         contact: unknowContact
                     };
-    
+
                     this.onChatSelected.next({ ...chatData });
                 } else {
                     this._httpClient.get(environment.apiGetChatListByConvId + chatItem.convId)
@@ -131,15 +132,15 @@ export class ChatService implements Resolve<any> {
                             const chatContact = this.contacts.concat(this.unknownContacts).find((contact) => {
                                 return contact.userId === contactId;
                             });
-    
+
                             const chatData = {
                                 chatId: chat.id,
                                 dialog: chat.dialog,
                                 contact: chatContact
                             };
-    
+
                             this.onChatSelected.next({ ...chatData });
-    
+
                         },
                             reject);
                 }
@@ -170,7 +171,7 @@ export class ChatService implements Resolve<any> {
      * @param contact
      */
     getMoreChat(convId, createdOn: Date): any {
-        
+
         const queryPath = createdOn === undefined ? null : `?CreatedOn=${createdOn}`;
         return this._httpClient.get(environment.apiGetChatListByConvId + convId + queryPath)
     }
@@ -245,13 +246,20 @@ export class ChatService implements Resolve<any> {
 
     getGroupChat(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this._groupService.getGroupChat().subscribe((response: any) => {
-                response.forEach(element => {
-                    element.unreadMessage = element.unreadMessage > 99 ? '99+' : element.unreadMessage;
-                });
-                resolve(response);
-            },
-                reject);
+            this._groupService.getGroupChat().
+                pipe(map((data: any[]) => {
+                    data.forEach(data => {
+                        data.lastestMessageTime = new Date(data.lastestMessageTime);
+                    })
+                    return data;
+                })).
+                subscribe((response: any) => {
+                    response.forEach(element => {
+                        element.unreadMessage = element.unreadMessage > 99 ? '99+' : element.unreadMessage;
+                    });
+                    resolve(response);
+                },
+                    reject);
         });
     }
 
@@ -298,7 +306,15 @@ export class ChatService implements Resolve<any> {
     getChatList(): Promise<any> {
         return new Promise((resolve, reject) => {
             this._httpClient.get(environment.apiGetContactChatList)
+                .pipe(map((data: any[]) => {
+                    data.forEach(data => {
+                        data.lastMessageTime = new Date(data.lastMessageTime);
+                    })
+                    return data;
+                }))
                 .subscribe((response: any) => {
+
+                 
                     resolve(response);
                 },
                     reject);

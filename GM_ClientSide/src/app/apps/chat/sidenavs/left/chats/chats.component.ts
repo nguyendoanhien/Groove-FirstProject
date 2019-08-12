@@ -110,43 +110,31 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         this._chatService.onUserUpdated
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(updatedUser => {
+
                 this.user = updatedUser;
             });
         this._chatService._messageHub.newChatMessage.subscribe((message: MessageModel) => {
+
             if (message) {
                 const chatList = this.user.chatList as Array<any>;
                 const chat = chatList.find(x => x.convId == message.fromConv);
                 if (message.type == 'Image') {
                     chat.lastMessage = '[Image]';
-                    chat.lastMessageTime = message.time;
+                    chat.lastMessageTime = new Date(message.time);
                     this.notifyMe('[Image]', chat.displayName);
                 }
                 else {
                     chat.message = message.payload;
                     chat.lastMessage = message.payload;
-                    chat.lastMessageTime = message.time;
+                    chat.lastMessageTime = new Date(message.time);
                     this.notifyMe(message.payload, chat.displayName);
                 }
-                this._chatService._messageHub.unreadMessage.subscribe((unreadMessage: UnreadMessage) => {
-                    if (unreadMessage) {
-                        const chatList = this.user.chatList as Array<any>;
-                        const chat = chatList.find(x => x.convId == unreadMessage.conversationId);
-                        if (unreadMessage.amount > 99) {
-                            chat.unread = "99+";
-                        }
-                        else {
-                            chat.unread = unreadMessage.amount;
-                        }
-                        this.cd.detectChanges();
-                        this._chatService._messageHub.unreadMessage.next(null);
-                    }
-                });
-                this._chatService._messageHub.newChatMessage.next(null);
             }
         });
 
-        this._chatService._contactHub.newGroup.subscribe((newGroup) => {
+        this._chatService._contactHub.newGroup.subscribe((newGroup: any) => {
             if (newGroup) {
+                newGroup.lastestMessageTime = new Date(newGroup.lastestMessageTime);
                 this.user.groupChatList.push(newGroup);
             }
         });
@@ -155,39 +143,66 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         // Truc> GroupChat
         this._chatService._messageHub.newGroupChatMessage.subscribe((message: MessageModel) => {
             if (message) {
+
                 const groupChatList = this.user.groupChatList as Array<any>;
-                const groupChat = groupChatList.find(x => x.id == message.fromConv);
-                if (message.type == 'Image') {
-                    groupChat.lastestMessage = '[Image]';
-                    groupChat.lastestMessageTime = message.time;
-                    const title = message.senderName + ' to [' + groupChat.name + ']';
-                    this.notifyMe('[Image]', title);
-                }
-                else {
-                    groupChat.message = message.payload;
-                    groupChat.lastestMessage = message.payload;
-                    groupChat.lastestMessageTime = message.time;
-                    const title = message.senderName + ' to [' + groupChat.name + ']';
-                    this.notifyMe(message.payload, title);
-                }
-                this._chatService._messageHub.unreadMessage.subscribe((unreadMessage: UnreadMessage) => {
-                    if (unreadMessage) {
-                        const groupChatList = this.user.groupChatList as Array<any>;
-                        const groupChat = groupChatList.find(x => x.id == unreadMessage.conversationId);
-                        if (unreadMessage.amount > 99) {
-                            groupChat.unreadMessage = "99+";
-                        }
-                        else {
-                            groupChat.unreadMessage = unreadMessage.amount;
-                        }
-                        this.cd.detectChanges();
-                        this._chatService._messageHub.unreadMessage.next(null);
-                    }
+                groupChatList.forEach(data => {
+                    data.lastestMessageTime = new Date(data.lastestMessageTime);
                 });
-                this._chatService._messageHub.newGroupChatMessage.next(null);
+
+                const groupChat = groupChatList.find(x => x.id == message.fromConv);
+                if (groupChat)
+                    if (message.type == 'Image') {
+                        groupChat.lastestMessage = '[Image]';
+                        groupChat.lastestMessageTime = new Date(message.time);
+                        const title = message.senderName + ' to [' + groupChat.name + ']';
+                        this.notifyMe('[Image]', title);
+                    }
+                    else {
+                        groupChat.message = message.payload;
+                        groupChat.lastestMessage = message.payload;
+                        groupChat.lastestMessageTime = new Date(message.time);
+                        const title = message.senderName + ' to [' + groupChat.name + ']';
+                        this.notifyMe(message.payload, title);
+                    }
+                // this._chatService._messageHub.newGroupChatMessage.next(null);
             }
         });
+        // this._chatService._messageHub.unreadMessage.subscribe((unreadMessage: UnreadMessage) => {
+        //     debugger;
+        //     if (unreadMessage) {
+        //         const groupChatList = this.user.groupChatList as Array<any>;
+        //         const groupChat = groupChatList.find(x => x.id == unreadMessage.conversationId);
 
+        //         this.cd.detectChanges();
+        //         // this._chatService._messageHub.unreadMessage.next(null);
+        //     }
+        // });
+        this._chatService._messageHub.unreadMessage.subscribe((unreadMessage: UnreadMessage) => {
+            if (unreadMessage) {
+                const chatList = this.user.chatList as Array<any>;
+                const chat = chatList.find(x => x.convId == unreadMessage.conversationId);
+                const groupChatList = this.user.groupChatList as Array<any>;
+                const groupChat = groupChatList.find(x => x.id == unreadMessage.conversationId);
+                if (chat != undefined) {
+                    if (unreadMessage.amount > 99) {
+                        chat.unread = "99+";
+                    }
+                    else {
+                        chat.unread = unreadMessage.amount;
+                    }
+                }
+                else if (groupChat != undefined) {
+                    if (unreadMessage.amount > 99) {
+                        groupChat.unreadMessage = "99+";
+                    }
+                    else {
+                        groupChat.unreadMessage = unreadMessage.amount;
+                    }
+                }
+                this.cd.detectChanges();
+                // this._chatService._messageHub.unreadMessage.next(null);
+            }
+        });
     }
     notifyMe(payload: string, name: string) {
         var options = {
@@ -256,10 +271,11 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             }
         }
     }
-    customTB(index, group) { 
-        
-        
-        return group.id }
+    customTB(index, group) {
+
+
+        return group.id;
+    }
 
     async setValueSeenBy(conversationId) {
         await this._messageService.updateUnreadMessages(conversationId).subscribe(val => {
@@ -423,18 +439,20 @@ export class DialogOverviewDialog {
         if (event.checked) {
             this._groupService.contactGroup.push(event.source.value);
         } else {
-            var i = this._groupService.contactGroup.findIndex(x => x.id === event.source.value.id)
+            var i = this._groupService.contactGroup.findIndex(x => x.id === event.source.value.id);
             this._groupService.contactGroup.splice(i, 1);
         }
     }
     async addGroup() {
         await this._groupService.addGroup().subscribe(res => {
+
+
             this._chatService.user.groupChatList.push(res);
-            console.log(res);
+
             this._chatService.user.groupChatList = this._chatService.user.groupChatList.sort(this.compare);
             this._chatService.getGroupChat();
             this._groupService.initAddGroup();
-            this.setValueSeenByGroup(res.id)
+            this.setValueSeenByGroup(res.id);
         });
 
 
