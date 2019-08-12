@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "environments/environment";
+import { map } from 'rxjs/operators';
 
 const apiContactURl = environment.apiContactUrl;
 
@@ -10,7 +11,7 @@ const apiContactURl = environment.apiContactUrl;
 })
 export class UserContactService {
 
-    constructor(private _httpClient: HttpClient) {}
+    constructor(private _httpClient: HttpClient) { }
 
     getContacts(): Observable<any[]> {
         return this._httpClient.get<any[]>(environment.apiContactGetAllInformUrl);
@@ -29,6 +30,10 @@ export class UserContactService {
 
     SayHi(contact: any) {
         return this._httpClient.post(environment.apiConvUrl, contact).pipe(
+            map((data: any) => {
+                data.chatContact.LastMessageTime = new Date(data.chatContact.LastMessageTime)
+                return data;
+            })
         );
     }
 }

@@ -203,7 +203,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this._chatService._messageHub.newChatMessage.subscribe((message: MessageModel) => {
             if (message) {
                 if (this.chatId === message.fromConv) {
-                    this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time,avatar:message.senderAvatar });
+                    this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time, avatar: message.senderAvatar });
                 }
             }
         });
@@ -211,7 +211,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             if (message) {
                 var lastItem = this.dialog[this.dialog.length - 1];
                 if (this.chatId === message.fromConv && lastItem.id !== message.messageId) {
-                    this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time, avatar: message.senderAvatar, nickName: message.senderName });
+                    this.dialog.push({ who: message.fromSender, message: message.payload, time: message.time, avatar: message.senderAvatar, displayName: message.senderName });
                 }
             }
         });
@@ -230,7 +230,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     async ngAfterViewInit() {
         this.replyInput = this.replyInputField.first.nativeElement;
         this.readyToReply();
-  
+
         let CreatedOn = this.dialog[0].time;
         console.log(CreatedOn);
         this._chatService.getMoreChat(this.chatId, CreatedOn).pipe(
@@ -369,11 +369,12 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     async reply(event) {
 
         event.preventDefault();
-        
+
         if (!this.replyForm.form.value.message) {
             return;
         }
         // Message
+
         const message = {
             who: this.user.userId,
             message: this.replyForm.form.value.message,
@@ -392,35 +393,33 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         if (isMatch) {
             // Truc> Add the message and broadcast unread message amount
             if (this.isGroup === false) {
-                this._messageService.addMessage(newMessage).subscribe(success => {
-                    this._messageService.sendUnreadMessages(this.user.chatList[0].convId)
+                await this._messageService.addMessage(newMessage).subscribe(async success => {
+
+
+                    await this._messageService.sendUnreadMessages(this.chatId)
                         .subscribe();
-                    this._messageService.updateUnreadMessages(this.chatId)
-                        .subscribe(val => {
-                            var chatList = this.user.chatList as Array<any>;
-                            var chat = chatList.find(x => x.convId == this.chatId);
-                            chat.unread = val;
-                        },
-                            err => console.log(err));
-                    //Truc> Chats of sender
                     var chatList = this.user.chatList as Array<any>;
                     var chat = chatList.find(x => x.convId == this.chatId);
                     chat.lastMessage = message.message;
                     chat.lastMessageTime = message.time;
+                    chat.unread = '';
                     console.log("Sent successfully");
+                    // this._messageService.updateUnreadMessages(this.chatId)
+                    //     .subscribe(val => {
+                    //         var chatList = this.user.chatList as Array<any>;
+                    //         var chat = chatList.find(x => x.convId == this.chatId);
+                    //         chat.unread = val;
+                    //     },
+                    //         err => console.log(err));
+                    //Truc> Chats of sender
+
                 },
                     err => console.log("Sent failed"));
             } else { // Isgroup
-                this._messageService.addMessageToFroup(newMessage).subscribe(success => {
-                    this._messageService.sendUnreadMessages(this.chatId)
+                await this._messageService.addMessageToFroup(newMessage).subscribe(async success => {
+                    debugger;
+                    await this._messageService.sendUnreadMessages(this.chatId)
                         .subscribe();
-                    this._messageService.updateUnreadMessages(this.chatId)
-                        .subscribe(val => {
-                            var groupChatList = this.user.groupChatList as Array<any>;
-                            var groupChat = groupChatList.find(x => x.id == this.chatId);
-                            groupChat.unreadMessage = val;
-                        },
-                            err => console.log(err));
                     //Truc> Chats of sender
                     var groupChatList = this.user.groupChatList as Array<any>;
                     var groupChat = groupChatList.find(x => x.id == this.chatId);
@@ -450,6 +449,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     SayHi(contact: any) {
         this._userContactService.SayHi(contact).subscribe(
             (res: any) => {
+
                 this._chatService.contacts.push(res.contact);
                 this._chatService.user.chatList.push(res.chatContact);
                 this._chatService.chats.push(res.diaglog);
@@ -464,7 +464,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         );
     }
-    
+
     recognition = new SpeechRecognition();
     listenSwitch = false;
     listen() {
@@ -482,7 +482,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             this.recognition.onresult = (event) => {
                 var text = event.results[0][0].transcript;
                 this.messageInput += text;
-                
+
             }
         } else {
             console.log('off');

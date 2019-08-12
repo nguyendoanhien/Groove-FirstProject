@@ -23,6 +23,7 @@ namespace GrooveMessengerAPI.Hubs
 
         public override Task OnConnectedAsync()
         {
+            
             // Do something just related to message hub
             return base.OnConnectedAsync();
         }

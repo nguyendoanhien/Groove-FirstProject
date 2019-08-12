@@ -28,6 +28,7 @@ export class MessageHubService {
                 this.newChatMessage.next(message);
             });
         this._hubConnection.on("BroadcastMessageToGroup", (message: MessageModel) => {
+            debugger;
             this.newGroupChatMessage.next(message);
         });
         this._hubConnection.on("SendRemovedMessage",

@@ -171,11 +171,19 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
             };
 
             var contactEmail = await _userManager.FindByIdAsync(userIndex.UserId);
-
+            createMessageModel.Receiver = contactEmail.Email;//moi add 10-8-2019
             foreach (var connectionId in _hubConnectionStore.GetConnections(HubConstant.ContactHubTopic, contactEmail.Email))
                 await _contactHubContext.Clients.Client(connectionId)
                     .SendNewContactToFriend(userIndexcurrent, chatContactToSend, dialog);
-
+            ////Broadcast unread message amount
+            foreach (var connectionId in _connectionStore.GetConnections("message", contactEmail.Email))
+            {
+                var unreadMessageAmount = _mesService.GetUnreadMessages(createConversationModel.Id, contactEmail.Email);
+                var unreadMessageModel = new UnreadMessageModel 
+                { ConversationId = createConversationModel.Id, Amount = unreadMessageAmount };
+                await _hubContext.Clients.Client(connectionId).SendUnreadMessagesAmount(unreadMessageModel);
+            }
+            ////EndBroadcast
             return new ObjectResult(new {Contact = userIndex, ChatContact = chatContact, dialog});
         }
 
