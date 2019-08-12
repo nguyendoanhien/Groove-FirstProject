@@ -417,7 +417,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     err => console.log("Sent failed"));
             } else { // Isgroup
                 await this._messageService.addMessageToFroup(newMessage).subscribe(async success => {
-                    debugger;
                     await this._messageService.sendUnreadMessages(this.chatId)
                         .subscribe();
                     //Truc> Chats of sender
@@ -512,22 +511,23 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             "Image",
             this.contact.userId);
 
-        this._messageService.onUpload(fd, newMessage, this.isGroup).subscribe(data => {
+        this._messageService.onUpload(fd, newMessage, this.isGroup).subscribe(async data => {
             this.replyImage(data);
             this.myFile.nativeElement.value = '';
             if (this.isGroup == false) {
                 var chatList = this.user.chatList as Array<any>;
                 var chat = chatList.find(x => x.convId == this.chatId);
                 chat.lastMessage = '[Image]';
-                chat.lastMessageTime = message.time;
+                chat.lastMessageTime = new Date(message.time);
             }
             else {
                 var groupChatList = this.user.groupChatList as Array<any>;
                 var groupChat = groupChatList.find(x => x.id == this.chatId);
                 groupChat.lastestMessage = '[Image]';
-                groupChat.lastestMessageTime = message.time;
+                groupChat.lastestMessageTime = new Date(message.time);
             }
         });
+
     }
 
     messageInput: string = '';

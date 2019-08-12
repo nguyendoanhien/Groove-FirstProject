@@ -142,7 +142,6 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
 
         // Truc> GroupChat
         this._chatService._messageHub.newGroupChatMessage.subscribe((message: MessageModel) => {
-            debugger;
             if (message) {
 
                 const groupChatList = this.user.groupChatList as Array<any>;
@@ -179,7 +178,6 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         //     }
         // });
         this._chatService._messageHub.unreadMessage.subscribe((unreadMessage: UnreadMessage) => {
-            debugger
             if (unreadMessage) {
                 const chatList = this.user.chatList as Array<any>;
                 const chat = chatList.find(x => x.convId == unreadMessage.conversationId);

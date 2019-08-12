@@ -34,10 +34,17 @@ export class MessageService {
             map((res: any) => {
                 image.content = res.url;
                 image.type = "Image";
-                if (!isGroup) { this.addMessage(image).subscribe(); }
+                if (!isGroup) {
+                    this.addMessage(image).subscribe(data => {
+                        this.sendUnreadMessages(image.conversationId).subscribe();
+                    });
+
+                }
                 else {
                     image.receiver = null;
-                    this.addMessageToFroup(image).subscribe();
+                    this.addMessageToFroup(image).subscribe(data => {
+                        this.sendUnreadMessages(image.conversationId).subscribe();
+                    });
                 }
                 return res.url;
             }));
